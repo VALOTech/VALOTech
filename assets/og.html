@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<style>
+  @font-face{font-family:'Plex Sans';font-weight:700;src:url('fonts/plex-sans-700.woff2') format('woff2')}
+  @font-face{font-family:'Plex Sans';font-weight:400;src:url('fonts/plex-sans-400.woff2') format('woff2')}
+  @font-face{font-family:'Plex Mono';font-weight:500;src:url('fonts/plex-mono-500.woff2') format('woff2')}
+  *{margin:0;box-sizing:border-box}
+  body{width:1200px;height:630px;overflow:hidden;
+    background:radial-gradient(circle at 78% 30%,#0F6B63,#0D5A54 55%,#0A4A45);
+    color:#fff;font-family:'Plex Sans',sans-serif;display:flex;flex-direction:column;
+    justify-content:center;padding:84px 80px;position:relative}
+  .eyebrow{font-family:'Plex Mono',monospace;font-weight:500;font-size:21px;letter-spacing:.18em;
+    text-transform:uppercase;color:#62E2BC;margin-bottom:30px}
+  h1{font-size:66px;font-weight:700;letter-spacing:-.03em;line-height:1.06;max-width:18ch}
+  .sub{font-size:27px;color:rgba(255,255,255,.82);margin-top:30px;max-width:34ch;line-height:1.45}
+  .brand{position:absolute;top:64px;left:80px;display:flex;align-items:center;gap:16px}
+  .brand img{height:60px}
+  .brand .nm{font-size:26px;font-weight:700;letter-spacing:-.01em}
+  .sym{position:absolute;right:-40px;bottom:-60px;width:460px;opacity:.16}
+  .rule{position:absolute;left:80px;bottom:70px;font-family:'Plex Mono',monospace;font-size:20px;color:rgba(255,255,255,.6)}
+</style>
+</head>
+<body>
+  <div class="brand"><img src="valo-symbol-white.png" alt="" /><span class="nm">VALO Tech</span></div>
+  <img class="sym" src="valo-symbol-white.png" alt="" />
+  <div class="eyebrow">AI workforce &middot; regulated industries</div>
+  <h1>An AI workforce, deployed on your own clean data.</h1>
+  <div class="sub">Audit-defensible from day one. Built inside your environment.</div>
+  <div class="rule">valotech.org</div>
+</body>
+</html>
