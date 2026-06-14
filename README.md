@@ -65,6 +65,6 @@ python3 -m http.server 8000
 
 - **Contact email** `hello@valotech.org` (every CTA + footer).
 - **Production URL** `https://valotech.org/` (canonical, Open Graph, `sitemap.xml`, `robots.txt`, JSON-LD).
-- **VALO Compliance** is shown as a new product with no outbound link yet (a "New" badge). Add its URL once the site is live.
-- The four live products link to `valoads.io`, `valopocket.io`, `shimmra.live`, `amavo.app`. (To keep the whole ecosystem in sync, add a VALO Compliance card to the other four products' footer strips too.)
+- **All five products** carry an outbound link, including **VALO Compliance** → `valocompliance.io`, which keeps a "New" badge as the newest (B2B) line.
+- Product links: `valoads.io`, `valopocket.io`, `valocompliance.io`, `shimmra.live`, `amavo.app` — each product also appears in every other product's footer strip, so the whole ecosystem stays in sync.
 - Translations: all 20 locales are authored in full; to revise copy, edit the locale's block in `assets/i18n.js` (English first — it is the source).
