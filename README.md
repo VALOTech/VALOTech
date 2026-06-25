@@ -1,70 +1,80 @@
-# VALO Tech homepage
+# VALO Tech
 
-Static marketing homepage for **VALO Tech Pte. Ltd.** (Singapore), served as-is from GitHub Pages. No build step, no framework, no runtime dependencies.
+Corporate homepage and ecosystem hub for **VALO TECH PTE. LTD.** (Singapore), served as a static site from GitHub Pages at **[valotech.org](https://valotech.org)**.
 
-VALO Tech is the parent of the **VALO ecosystem**. This page leads with **ValoLab** (a multi-agent AI workforce deployed on a client's own clean data, audit-defensible by design) and showcases the five ecosystem products: VALO Ads, VALO Pocket, Shimmra, Amavo, and **VALO Compliance**.
+The page leads with **ValoLab** — a multi-agent AI workforce deployed on a client's own clean data, audit-defensible by design — and presents the five products of the VALO ecosystem.
 
-## Design language: "Lattice"
+## Highlights
 
-A teal-themed sibling of the VALO family languages (VALO Ads "Aurora", VALO Pocket "Verdant", Shimmra "Halo", Amavo "Ember"). It shares the family's chrome so all sites read as one ecosystem:
+- **Zero-dependency static site.** Hand-authored HTML, CSS, and vanilla JavaScript — no framework, no build step, no runtime dependencies. The repository is the deployed artifact.
+- **"Lattice" design system.** A teal-themed member of the VALO family languages: CSS-variable tokens, three-way light / dark / system theming, an animated brand logo and ecosystem hub, and a custom cursor ribbon — all motion-safe.
+- **20-language localization.** Runtime locale switching with RTL support; the page is fully readable without JavaScript.
+- **Accessible by default.** Localized skip link and `aria-label`s, visible focus, ARIA tabs, semantic landmarks, WCAG AA contrast, and `prefers-reduced-motion` support.
 
-- **Token architecture** (CSS variables), brand teal `#0D5A54` sampled from the logo + jade accent, three-way **light / dark / system** theming.
-- **Sticky blur header** with brand lockup, anchor nav, **20-language switcher**, a **3-way light/dark/auto** segmented toggle, and the primary CTA.
-- **Ecosystem-strip footer** linking every VALO product (each keeps its own brand mark + color).
-- **Custom teal scrollbar**, themed **SVG cursors + a cursor wake-ribbon**, scroll-reveal at `cubic-bezier(.16,1,.3,1)`, hover-lift + glow.
-- **Animated brand logo** in the hero (circuit traces draw in, nodes pulse, data sparks converge, breathing glow, orbit ring).
-- **Animated ecosystem hub** (VALO Tech at the center, products orbiting with flowing particles).
-- Type: **IBM Plex Sans + Plex Mono** (self-hosted). Icons: **Phosphor** (inline sprite).
-- Fully accessible: localized skip link + `aria-label`s, focus-visible rings, ARIA tabs, native `<details>` accordion, semantic landmarks; everything respects `prefers-reduced-motion` and is readable without JS.
+## Tech
 
-## Structure
+| Concern | Choice |
+|---|---|
+| Markup | Semantic HTML — `index.html`, `404.html` |
+| Styling | Vanilla CSS design system — `assets/site.css` |
+| Behaviour | Dependency-free vanilla JS — `assets/site.js` |
+| i18n | 20-locale dictionaries + runtime switch — `assets/i18n.js` |
+| Type | IBM Plex Sans + Plex Mono, self-hosted — `assets/fonts/` |
+| Icons | Phosphor, inlined as an SVG sprite in `index.html` |
+| Hosting | GitHub Pages, custom domain `valotech.org` |
+
+## Repository layout
 
 ```
-index.html              Markup + inline SVG sprite (icons + 6 brand marks)
+index.html              Markup + inline SVG sprite (Phosphor icons + 6 product brand marks)
+404.html                Custom not-found page
 assets/
-  site.css              The full Lattice design system
-  site.js               Behavior: i18n apply, language switcher, 3-way theme,
-                        scroll-reveal, header scroll, cursor ribbon, mobile menu,
-                        tabs, back-to-top, ecosystem-hub particle animation
-  i18n.js               20-locale config + full dictionaries (English is the source)
-  valo-symbol-teal.png  Brand mark, teal (light surfaces)
-  valo-symbol-white.png Brand mark, white (dark / teal surfaces)
-  valo-lockup-white.png Full vertical lockup, white
-  icon-512 / apple-touch / favicon.ico / -16 / -32 / -48
-  og-cover.png          1200x630 social-share card  (og.html is its render source)
-  fonts/                Self-hosted IBM Plex Sans (400-700) + Mono (400-600), woff2
-  icons/                Source Phosphor SVGs (inlined into the sprite at build)
-404.html · robots.txt · sitemap.xml · .nojekyll
-VALO Tech Logo.jpg                   Original logo (asset source of truth)
-VALO Tech Content for Homepage.html  BD-prepared source content
+  site.css              "Lattice" design system — tokens, layout, components, theming
+  site.js               Behaviour — i18n, language switcher, theme, scroll-reveal,
+                        mobile menu, tabs, ecosystem-hub animation, cursor ribbon
+  i18n.js               20-locale configuration + dictionaries (English is the source)
+  fonts/                Self-hosted IBM Plex Sans (400-700) + Plex Mono (400-600), woff2
+  icons/                Source Phosphor SVGs, inlined into the sprite in index.html
+  flags/                20 locale flag SVGs for the language switcher
+  og.html               Render source for the social-share card (og-cover.png, 1200x630)
+  *.png / favicon.*     Brand marks, favicons, and the social-share image
+CNAME · robots.txt · sitemap.xml · .nojekyll   GitHub Pages and SEO configuration
 ```
 
 ## Internationalization
 
-20 ecosystem locales (order, RTL, endonyms synced with the VALO standard):
-SEA-priority `en zh zt vi th id ms tl` + Global `hi es ar fr bn pt ru ur de ja tr ko`.
+20 ecosystem locales, with order, RTL, and endonyms synced to the VALO standard:
+SEA-priority `en zh zt vi th id ms tl` + global `hi es ar fr bn pt ru ur de ja tr ko`.
 
-- **English is the source of truth.** Every other locale is authored in full to a formal, natural register, with product names and technical terms (agent, cloud, audit, CRM, ERP, PoC, BI, markdown) kept in English.
-- All 20 are authored in full: the page copy, the skip link, and the `aria-label`s on controls, regions, and diagrams are translated, applied by `site.js` via `data-i18n` / `data-i18n-html` / `data-i18n-aria`. Brand names and the small fixed-position labels inside the ValoStack SVG diagram stay in English by design (the circles are too tight to hold localized text).
-- RTL (`ar`, `ur`) flips `dir`; the user's choice persists in `localStorage`, otherwise the browser language is matched.
+- **English is the source of truth.** Every other locale is authored in full to a formal, natural register; product names and technical terms stay in English.
+- Page copy, the skip link, and control / region / diagram `aria-label`s are localized and applied by `site.js` through `data-i18n` / `data-i18n-html` / `data-i18n-aria`.
+- RTL (`ar`, `ur`) flips `dir`. The visitor's choice persists in `localStorage`; otherwise the browser language is matched.
 
-## Preview locally
+## Local preview
 
 ```bash
 python3 -m http.server 8000
 # open http://localhost:8000/
 ```
 
-## Deploy to GitHub Pages
+No build or install step is required.
 
-1. Push to GitHub (branch `main`).
-2. **Settings -> Pages**: Source = *Deploy from a branch*, Branch = **main**, Folder = **/ (root)**, Save.
-3. For the `valotech.org` custom domain: add it under Settings -> Pages -> Custom domain (creates a `CNAME`), then point DNS at GitHub Pages.
+## Deployment
 
-## Confirm before going live
+GitHub Pages serves the site from the `main` branch (root folder) at the `valotech.org` custom domain set in `CNAME`. Pushing to `main` publishes. The canonical URL, Open Graph tags, `sitemap.xml`, `robots.txt`, and the JSON-LD organization block all reference `https://valotech.org/`.
 
-- **Contact email** `hello@valotech.org` (every CTA + footer).
-- **Production URL** `https://valotech.org/` (canonical, Open Graph, `sitemap.xml`, `robots.txt`, JSON-LD).
-- **All five products** carry an outbound link, including **VALO Compliance** → `valocompliance.io`, which keeps a "New" badge as the newest (B2B) line.
-- Product links: `valoads.io`, `valopocket.io`, `valocompliance.io`, `shimmra.live`, `amavo.app` — each product also appears in every other product's footer strip, so the whole ecosystem stays in sync.
-- Translations: all 20 locales are authored in full; to revise copy, edit the locale's block in `assets/i18n.js` (English first — it is the source).
+## Ecosystem
+
+VALO Tech is the parent of the **VALO ecosystem** — four consumer products and one B2B line, each with its own brand and domain:
+
+| Product | Domain | What it is |
+|---|---|---|
+| VALO Ads | [valoads.io](https://valoads.io) | Ad network, affiliate and commerce hub; the platform substrate |
+| VALO Pocket | [valopocket.io](https://valopocket.io) | Consumer e-wallet; the money and identity layer |
+| Shimmra | [shimmra.live](https://shimmra.live) | Idol live-streaming platform |
+| Amavo | [amavo.app](https://amavo.app) | Online dating with 1:1 video dates |
+| VALO Compliance | [valocompliance.io](https://valocompliance.io) | B2B GRC and compliance platform |
+
+## License
+
+Proprietary. © VALO TECH PTE. LTD. All rights reserved.
