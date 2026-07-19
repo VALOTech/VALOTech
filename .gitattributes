@@ -1,2 +1,6 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Hooks are executed by sh; a CRLF shebang resolves to an interpreter
+# name ending in CR and fails as "bad interpreter".
+.githooks/** text eol=lf
