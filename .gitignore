@@ -1,0 +1,20 @@
+# === OS noise ===
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# === Editors ===
+.idea/
+.vscode/
+
+# === Merge + edit residue ===
+*.orig
+*.rej
+*.bak
+*.tmp
+
+# === Logs ===
+*.log
+
+# === Local agent settings (per-machine, never shared) ===
+.claude/settings.local.json

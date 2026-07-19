@@ -1,0 +1,38 @@
+#!/usr/bin/env sh
+# Refuses force-pushes, ref deletions, and pushes to any branch outside the
+# allowed set.
+#
+# Git passes a hook no flags, so a force-push is not directly observable. It is
+# detected structurally instead: an update whose current remote tip is not an
+# ancestor of the pushed commit can only land by discarding remote history.
+
+set -eu
+
+ALLOWED_REFS="refs/heads/main"
+ZERO=$(git hash-object --stdin </dev/null | tr '0-9a-f' '0')
+
+while read -r _local_ref local_sha remote_ref remote_sha; do
+	[ -z "${remote_ref:-}" ] && continue
+
+	case " $ALLOWED_REFS " in
+		*" $remote_ref "*) ;;
+		*)
+			echo "pre-push: refusing to push $remote_ref" >&2
+			echo "pre-push: allowed refs are: $ALLOWED_REFS" >&2
+			exit 1
+			;;
+	esac
+
+	if [ "$local_sha" = "$ZERO" ]; then
+		echo "pre-push: refusing to delete $remote_ref" >&2
+		exit 1
+	fi
+
+	if [ "$remote_sha" != "$ZERO" ] && ! git merge-base --is-ancestor "$remote_sha" "$local_sha"; then
+		echo "pre-push: refusing non-fast-forward update of $remote_ref" >&2
+		echo "pre-push: the remote tip is not an ancestor of $local_sha (force-push)" >&2
+		exit 1
+	fi
+done
+
+exit 0
