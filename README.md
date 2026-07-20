@@ -65,13 +65,15 @@ GitHub Pages serves the site from the `main` branch (root folder) at the `valote
 
 ## Git hooks
 
-The repository ships a `pre-push` guard (`.githooks/pre-push`) that refuses force-pushes, branch deletions, and pushes to any branch other than `main` — because pushing to `main` publishes, the deployed history is the audit trail. `core.hooksPath` is per-clone local config and is never committed, so arm it once after cloning:
+The repository ships a `pre-push` guard (`.githooks/pre-push`) that refuses force-pushes, branch deletions, and pushes to any branch other than `main` — because pushing to `main` publishes, the deployed history is the audit trail. `core.hooksPath` (and the pull/push safety below) is per-clone local config and is never committed, so arm it once after cloning:
 
 ```bash
-git config core.hooksPath .githooks
+git config core.hooksPath .githooks   # pre-push guard (force-push / deletion / non-main refusal)
+git config pull.ff only               # git pull fast-forwards or stops — never a surprise merge commit
+git config push.default simple        # git push sends only the current branch to its same-name upstream
 ```
 
-Undo with `git config --unset core.hooksPath`.
+Undo the hook with `git config --unset core.hooksPath`.
 
 ## Ecosystem
 
