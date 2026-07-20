@@ -63,6 +63,16 @@ No build or install step is required.
 
 GitHub Pages serves the site from the `main` branch (root folder) at the `valotech.org` custom domain set in `CNAME`. Pushing to `main` publishes. The canonical URL, Open Graph tags, `sitemap.xml`, `robots.txt`, and the JSON-LD organization block all reference `https://valotech.org/`.
 
+## Git hooks
+
+The repository ships a `pre-push` guard (`.githooks/pre-push`) that refuses force-pushes, branch deletions, and pushes to any branch other than `main` — because pushing to `main` publishes, the deployed history is the audit trail. `core.hooksPath` is per-clone local config and is never committed, so arm it once after cloning:
+
+```bash
+git config core.hooksPath .githooks
+```
+
+Undo with `git config --unset core.hooksPath`.
+
 ## Ecosystem
 
 VALO Tech is the parent of the **VALO ecosystem** — four consumer products and one B2B line, each with its own brand and domain:
