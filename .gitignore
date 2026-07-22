@@ -18,3 +18,6 @@ desktop.ini
 
 # === Local agent settings (per-machine, never shared) ===
 .claude/settings.local.json
+
+# Playwright-MCP tool cache (never committed)
+.playwright-mcp/
