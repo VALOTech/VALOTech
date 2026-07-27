@@ -87,7 +87,7 @@ VALO Tech is the parent of the **VALO ecosystem** — four consumer products and
 | VALO Pocket | [valopocket.io](https://valopocket.io) | Consumer e-wallet; the money and identity layer |
 | Shimmra | [shimmra.live](https://shimmra.live) | Video social network for idols & fans |
 | Amavo | [amavo.app](https://amavo.app) | Play-together dating with 1:1 video dates |
-| VALO Compliance | [valocompliance.io](https://valocompliance.io) | B2B GRC and compliance platform |
+| Pridwen | [pridwen.io](https://pridwen.io) | B2B GRC and compliance platform |
 
 ## License
 
