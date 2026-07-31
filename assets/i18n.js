@@ -158,6 +158,7 @@
     "eco.compliance":"The standard, proven.",
     "eco.shimmra":"Shine together.",
     "eco.amavo":"Sparks start with play.",
+    "eco.farola":"The far shore, in plain sight.",
     "eco.soon":"New",
     "eco.hubcap":"VALO Tech at the center. Every product runs on the same governed foundation.",
 
@@ -312,6 +313,7 @@
     "eco.compliance":"Tiêu chuẩn, đã được chứng minh.",
     "eco.shimmra":"Cùng nhau toả sáng.",
     "eco.amavo":"Bắt lửa từ một cuộc chơi.",
+    "eco.farola":"Bờ bên kia, trong tầm mắt.",
     "eco.soon":"Mới",
     "eco.hubcap":"VALO Tech ở vị trí trung tâm. Mọi sản phẩm đều chạy trên cùng một nền tảng được quản trị.",
 
@@ -466,6 +468,7 @@
     "eco.compliance":"标准，已获实证。",
     "eco.shimmra":"一起闪耀。",
     "eco.amavo":"从玩乐开始擦出火花。",
+    "eco.farola":"彼岸，清晰可见。",
     "eco.soon":"全新",
     "eco.hubcap":"VALO Tech 居于中心。每一款产品，都运行在同一套受治理的基座之上。",
 
@@ -620,6 +623,7 @@
     "eco.compliance":"標準，已獲實證。",
     "eco.shimmra":"一起閃耀。",
     "eco.amavo":"從玩樂開始擦出火花。",
+    "eco.farola":"彼岸，清晰可見。",
     "eco.soon":"全新",
     "eco.hubcap":"VALO Tech 居於中心。每一款產品，都運行在同一套受治理的基座之上。",
 
@@ -774,6 +778,7 @@
     "eco.compliance":"มาตรฐาน ที่พิสูจน์แล้ว",
     "eco.shimmra":"เปล่งประกายไปด้วยกัน",
     "eco.amavo":"ประกายรักเริ่มจากการเล่นด้วยกัน",
+    "eco.farola":"ฝั่งไกล ในระยะสายตา",
     "eco.soon":"ใหม่",
     "eco.hubcap":"VALO Tech อยู่ตรงศูนย์กลาง ทุกผลิตภัณฑ์ล้วนทำงานบนรากฐานที่อยู่ภายใต้การกำกับดูแลเดียวกัน",
 
@@ -928,6 +933,7 @@
     "eco.compliance":"Standarnya, terbukti.",
     "eco.shimmra":"Bersinar bersama.",
     "eco.amavo":"Percikan dimulai dari bermain.",
+    "eco.farola":"Pantai seberang, tampak jelas.",
     "eco.soon":"Baru",
     "eco.hubcap":"VALO Tech berada di pusatnya. Setiap produk berjalan di atas fondasi yang sama dan terkelola.",
 
@@ -1082,6 +1088,7 @@
     "eco.compliance":"Standardnya, terbukti.",
     "eco.shimmra":"Bersinar bersama.",
     "eco.amavo":"Percikan bermula dengan bermain.",
+    "eco.farola":"Pantai seberang, jelas di mata.",
     "eco.soon":"Baharu",
     "eco.hubcap":"VALO Tech berada di tengah-tengah. Setiap produk beroperasi di atas asas tertadbir yang sama.",
 
@@ -1236,6 +1243,7 @@
     "eco.compliance":"Ang pamantayan, napatunayan.",
     "eco.shimmra":"Sabay tayong magningning.",
     "eco.amavo":"Nagsisimula sa laro ang spark.",
+    "eco.farola":"Ang malayong pampang, malinaw sa paningin.",
     "eco.soon":"Bago",
     "eco.hubcap":"Ang VALO Tech sa gitna. Bawat produkto ay tumatakbo sa parehong pinamamahalaang pundasyon.",
 
@@ -1390,6 +1398,7 @@
     "eco.compliance":"मानक, प्रमाणित.",
     "eco.shimmra":"साथ में चमकें।",
     "eco.amavo":"चिंगारी खेल से शुरू होती है।",
+    "eco.farola":"दूर का तट, साफ़ नज़र में।",
     "eco.soon":"नया",
     "eco.hubcap":"केंद्र में VALO Tech। हर उत्पाद, उसी एक शासित फ़ाउंडेशन पर चलता है।",
 
@@ -1544,6 +1553,7 @@
     "eco.compliance":"El estándar, demostrado.",
     "eco.shimmra":"Brillemos juntos.",
     "eco.amavo":"La chispa empieza jugando.",
+    "eco.farola":"La orilla lejana, a plena vista.",
     "eco.soon":"Nuevo",
     "eco.hubcap":"VALO Tech en el centro. Cada producto se ejecuta sobre el mismo cimiento gobernado.",
 
@@ -1698,6 +1708,7 @@
     "eco.compliance":"المعيار، مُثبَتًا.",
     "eco.shimmra":"لنتألق معًا.",
     "eco.amavo":"الشرارة تبدأ باللعب.",
+    "eco.farola":"الشاطئ البعيد، واضح للعيان.",
     "eco.soon":"جديد",
     "eco.hubcap":"VALO Tech في القلب، وكل منتجٍ يعمل على الأساس المحكوم نفسه.",
 
@@ -1852,6 +1863,7 @@
     "eco.compliance":"La référence, prouvée.",
     "eco.shimmra":"Brillons ensemble.",
     "eco.amavo":"L'étincelle commence par le jeu.",
+    "eco.farola":"La rive lointaine, bien en vue.",
     "eco.soon":"Nouveau",
     "eco.hubcap":"VALO Tech au centre. Chaque produit tourne sur la même fondation gouvernée.",
 
@@ -2006,6 +2018,7 @@
     "eco.compliance":"মানদণ্ড, প্রমাণিত.",
     "eco.shimmra":"একসাথে আলো ছড়াই।",
     "eco.amavo":"খেলা থেকেই শুরু হয় স্ফুলিঙ্গ।",
+    "eco.farola":"সুদূর তীর, স্পষ্ট দৃষ্টিতে।",
     "eco.soon":"নতুন",
     "eco.hubcap":"কেন্দ্রে VALO Tech। প্রতিটি পণ্য চলে একই সুশাসিত ভিত্তির উপর।",
 
@@ -2160,6 +2173,7 @@
     "eco.compliance":"O padrão, comprovado.",
     "eco.shimmra":"Brilhar juntos.",
     "eco.amavo":"A faísca começa com o jogo.",
+    "eco.farola":"A margem distante, bem à vista.",
     "eco.soon":"Novo",
     "eco.hubcap":"A VALO Tech no centro. Cada produto corre sobre a mesma base governada.",
 
@@ -2314,6 +2328,7 @@
     "eco.compliance":"Стандарт, подтверждённый.",
     "eco.shimmra":"Сияйте вместе.",
     "eco.amavo":"Искра начинается с игры.",
+    "eco.farola":"Дальний берег — как на ладони.",
     "eco.soon":"Новинка",
     "eco.hubcap":"VALO Tech в центре. Каждый продукт работает на одном и том же управляемом фундаменте.",
 
@@ -2468,6 +2483,7 @@
     "eco.compliance":"معیار، ثابت شدہ۔",
     "eco.shimmra":"مل کر چمکیں۔",
     "eco.amavo":"چنگاری کھیل سے شروع ہوتی ہے۔",
+    "eco.farola":"دور کنارہ، صاف نظر میں۔",
     "eco.soon":"نیا",
     "eco.hubcap":"VALO Tech بالکل مرکز میں۔ ہر پروڈکٹ اُسی ایک، باقاعدہ governance والی بنیاد پر چلتا ہے۔",
 
@@ -2622,6 +2638,7 @@
     "eco.compliance":"Der Standard, bewiesen.",
     "eco.shimmra":"Gemeinsam strahlen.",
     "eco.amavo":"Funken beginnen beim Spielen.",
+    "eco.farola":"Das ferne Ufer, klar in Sicht.",
     "eco.soon":"Neu",
     "eco.hubcap":"VALO Tech im Zentrum. Jedes Produkt läuft auf demselben geregelten Fundament.",
 
@@ -2776,6 +2793,7 @@
     "eco.compliance":"基準を、確かな証明とともに。",
     "eco.shimmra":"一緒に輝こう。",
     "eco.amavo":"ときめきは遊びから。",
+    "eco.farola":"遠い岸辺が、はっきりと。",
     "eco.soon":"新着",
     "eco.hubcap":"中心には VALO Tech。どの製品も、同じ統制された基盤の上で動きます。",
 
@@ -2930,6 +2948,7 @@
     "eco.compliance":"Standart, kanıtlanmış.",
     "eco.shimmra":"Birlikte parla.",
     "eco.amavo":"Kıvılcım oyunla başlar.",
+    "eco.farola":"Uzak kıyı, apaçık görünürde.",
     "eco.soon":"Yeni",
     "eco.hubcap":"Merkezde VALO Tech. Her ürün, aynı yönetilen temelin üzerinde çalışır.",
 
@@ -3084,6 +3103,7 @@
     "eco.compliance":"기준을, 증명으로.",
     "eco.shimmra":"함께 빛나요.",
     "eco.amavo":"설렘은 놀이에서 시작돼요.",
+    "eco.farola":"먼 해안이, 또렷하게.",
     "eco.soon":"신규",
     "eco.hubcap":"중심에는 VALO Tech가 있습니다. 모든 제품이 동일한, 거버넌스가 적용된 기반 위에서 돌아갑니다.",
 
