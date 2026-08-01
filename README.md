@@ -79,7 +79,7 @@ Undo the hook with `git config --unset core.hooksPath`.
 
 ## Ecosystem
 
-VALO Tech is the parent of the **VALO ecosystem** — four consumer products and one B2B line, each with its own brand and domain:
+VALO Tech is the parent of the **VALO ecosystem** — five consumer products and one B2B line, each with its own brand and domain:
 
 | Product | Domain | What it is |
 |---|---|---|
@@ -87,6 +87,7 @@ VALO Tech is the parent of the **VALO ecosystem** — four consumer products and
 | VALO Pocket | [valopocket.io](https://valopocket.io) | Consumer e-wallet; the money and identity layer |
 | Shimmra | [shimmra.live](https://shimmra.live) | Video social network for idols & fans |
 | Amavo | [amavo.app](https://amavo.app) | Play-together dating with 1:1 video dates |
+| Farola | [farola.io](https://farola.io) | Vietnam ↔ Europe mobility platform; relocation, study and work |
 | Pridwen | [pridwen.io](https://pridwen.io) | B2B GRC and compliance platform |
 
 ## License
