@@ -2,7 +2,7 @@
 
 Corporate homepage and ecosystem hub for **VALO TECH PTE. LTD.** (Singapore), served as a static site from GitHub Pages at **[valotech.org](https://valotech.org)**.
 
-The page leads with **ValoLab** — a multi-agent AI workforce deployed on a client's own clean data, audit-defensible by design — and presents the five products of the VALO ecosystem.
+The page leads with **ValoLab** — a multi-agent AI workforce deployed on a client's own clean data, audit-defensible by design — and presents the six products of the VALO ecosystem.
 
 ## Highlights
 
