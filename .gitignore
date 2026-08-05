@@ -1,23 +1,87 @@
-# === OS noise ===
+# ======================================================================
+# VALO Tech — .gitignore
+#
+# Organised by blast radius: what must never leak comes first, what
+# merely clutters comes last.
+#
+#   1. Secrets, credentials, key material
+#   2. Environment files
+#   3. Node tooling
+#   4. IDE / editor / OS residue
+#   5. Agent + session scratch
+#
+# This repository IS the deployed artifact — GitHub Pages serves the
+# tree verbatim at valotech.org. Ignoring a served file removes it from
+# the site, so no rule here may ever match an asset, page, or config
+# the site loads. There is no build step and nothing to regenerate.
+#
+# Conventions:
+#   · Entries are alphabetised within each section.
+#   · A negation (`!`) must follow a pattern that excludes directory
+#     ENTRIES (`dir/*`), never the directory itself (`dir/`) — git
+#     cannot re-include a file whose parent directory is excluded.
+#   · A blanket extension rule (`*.key`) is paired with an explicit
+#     directory rule (`keys/`), so relocating a file cannot bypass it.
+# ======================================================================
+
+# ----------------------------------------------------------------------
+# 1. Secrets, credentials, key material — never commit, no exceptions
+#    Pure insurance: this site uses none. But the repo publishes to a
+#    public host on every push, so a committed key is public instantly.
+# ----------------------------------------------------------------------
+*.cer
+*.crt
+*.jks
+*.key
+*.keystore
+*.p12
+*.pem
+*.pfx
+credentials.json
+keys/
+
+# ----------------------------------------------------------------------
+# 2. Environment files
+# ----------------------------------------------------------------------
+.env
+.env.*
+.envrc
+
+# ----------------------------------------------------------------------
+# 3. Node tooling — the ecosystem raster pipeline (sharp, png-to-ico) is
+#    run ad hoc; its install must never land in the published tree.
+#    Debug logs need no rule here: section 4's `*.log` already covers
+#    them. A lockfile deliberately has no rule — if this repo ever gains
+#    a real Node project, its lockfile must be committed.
+# ----------------------------------------------------------------------
+node_modules/
+
+# ----------------------------------------------------------------------
+# 4. IDE / editor / OS residue
+# ----------------------------------------------------------------------
+*.bak
+*.log
+*.old
+*.orig
+*.rej
+*.swo
+*.swp
+*.tmp
+*~
 .DS_Store
+.idea/
+.vscode/
 Thumbs.db
 desktop.ini
 
-# === Editors ===
-.idea/
-.vscode/
-
-# === Merge + edit residue ===
-*.orig
-*.rej
-*.bak
-*.tmp
-
-# === Logs ===
-*.log
-
-# === Local agent settings (per-machine, never shared) ===
-.claude/settings.local.json
-
-# Playwright-MCP tool cache (never committed)
+# ----------------------------------------------------------------------
+# 5. Agent + session scratch
+#    Claude Code state is per-machine and regenerated; only the shared,
+#    reviewed configuration below is committed. An allowlist cannot be
+#    outrun by a new runtime directory the way a blocklist can — and it
+#    is why the vendored `.claude/skills/` removed in c77ae08 cannot
+#    silently return.
+# ----------------------------------------------------------------------
+.claude/*
+!.claude/settings.json
 .playwright-mcp/
