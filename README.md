@@ -11,7 +11,7 @@ The page leads with **ValoLab** — a multi-agent AI workforce deployed on a cli
 - **20-language localization.** Runtime locale switching with RTL support; the page is fully readable without JavaScript.
 - **Accessible by default.** Localized skip link and `aria-label`s, visible focus, ARIA tabs, semantic landmarks, WCAG AA contrast, and `prefers-reduced-motion` support.
 
-## Tech
+## Tech stack
 
 | Concern | Choice |
 |---|---|
