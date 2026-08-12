@@ -1,0 +1,45 @@
+{
+  "skill_name": "write-native-professional-english",
+  "trigger": {
+    "positive": [
+      "Rewrite this product one-pager so it stops sounding like ChatGPT wrote it — it's for our investor update.",
+      "Draft the executive summary for our SOC 2 readiness report in English, consultant voice not AI.",
+      "Tighten the button labels and empty-state copy on our English settings screen."
+    ],
+    "negative": [
+      "Translate this English file into Vietnamese.",
+      "Summarize this 12-page English paper into three bullets."
+    ],
+    "boundary": [
+      {"query": "Make this English text sound more human.", "note": "Original-language English revision = write-EN. Only route elsewhere if a non-English source must be matched."}
+    ]
+  },
+  "quality_cases": [
+    {
+      "id": "en-exec-deflate",
+      "prompt": "Rewrite this platform overview so it reads like copy a competent B2B trust-and-safety marketer would publish. Keep it honest — do not invent capabilities, numbers, or outcomes the source does not support.",
+      "input": "evals/inputs/en-exec-weak.md",
+      "assertions": [
+        {"id": "no-corporate-filler", "check": "no leverage/robust/seamless/comprehensive/transformative/pivotal/cutting-edge", "method": "lint"},
+        {"id": "no-cosmetic-transition", "check": "no Furthermore/Moreover used without a real relation", "method": "lint"},
+        {"id": "no-false-certainty", "check": "'ensures harmful content is eliminated' / 'safe for all users' downgraded to a bounded, honest claim", "method": "review"},
+        {"id": "no-invented-specifics", "check": "no invented harm categories, integrations, SLAs, or metrics", "method": "review"},
+        {"id": "meaning-preserved", "check": "AI-assisted moderation + human review + workflow fit + scale still present", "method": "review"}
+      ]
+    },
+    {
+      "id": "en-connection-deAI",
+      "prompt": "Rewrite this marketing intro as natural English copy a competent human writer would publish. It currently reads as AI-generated. Keep the meaning; do not invent features the source doesn't support.",
+      "input": "evals/inputs/en-connection-hard.md",
+      "assertions": [
+        {"id": "no-grand-opener", "check": "no 'in today's fast-paced digital world'", "method": "lint"},
+        {"id": "no-ai-signpost", "check": "no 'it's worth noting'", "method": "lint"},
+        {"id": "no-ai-vocab", "check": "no delve/tapestry/realm/foster-filler", "method": "lint"},
+        {"id": "controlled-tricolon-emdash", "check": "at most one intentional tricolon and sparse em-dashes, not one per sentence", "method": "review"},
+        {"id": "varied-rhythm", "check": "sentence length varies; not uniform medium-length", "method": "review"},
+        {"id": "no-invented-features", "check": "no video dates / games / gifts imported that the source didn't state", "method": "review"}
+      ]
+    }
+  ],
+  "notes": "Trigger routing across the 4-skill family lives in _shared/trigger-evals.json. method:lint assertions are checkable with scripts/lint_style_patterns.py (a clean lint is a floor, not proof); method:review needs a human reviewer. See references/native-english.md for the tell definitions."
+}

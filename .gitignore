@@ -78,10 +78,12 @@ desktop.ini
 # 5. Agent + session scratch
 #    Claude Code state is per-machine and regenerated; only the shared,
 #    reviewed configuration below is committed. An allowlist cannot be
-#    outrun by a new runtime directory the way a blocklist can — and it
-#    is why the vendored `.claude/skills/` removed in c77ae08 cannot
-#    silently return.
+#    outrun by a new runtime directory the way a blocklist can. The
+#    reviewed hand-authored skills under .claude/skills/ are committed as
+#    shared, reviewed configuration; a regenerated or vendored skills
+#    tree (the kind removed in c77ae08) stays out as runtime state.
 # ----------------------------------------------------------------------
 .claude/*
 !.claude/settings.json
+!.claude/skills/
 .playwright-mcp/

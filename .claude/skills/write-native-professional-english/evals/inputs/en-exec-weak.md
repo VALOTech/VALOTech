@@ -1,0 +1,3 @@
+# Amavo Trust & Safety Platform — Overview
+
+Amavo leverages a robust and comprehensive trust and safety framework that enables organizations to seamlessly enhance member protection while optimizing operational efficiency. By utilizing cutting-edge, AI-powered moderation capabilities, the platform empowers teams to proactively address a wide range of safety challenges in a scalable manner. Furthermore, our transformative approach to content moderation ensures that harmful content is eliminated, thereby fostering a safe and inclusive environment for all users. This pivotal solution is designed to facilitate seamless integration with existing workflows, delivering unparalleled value and driving meaningful outcomes across the entire organization.

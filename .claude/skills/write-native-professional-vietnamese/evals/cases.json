@@ -1,0 +1,47 @@
+{
+  "skill_name": "write-native-professional-vietnamese",
+  "trigger": {
+    "positive": [
+      "Viết lại đoạn giới thiệu tính năng này bằng tiếng Việt cho tự nhiên, bọn mình là app hẹn hò cho người Việt.",
+      "Soạn thông báo bảo trì hệ thống bằng tiếng Việt gửi người dùng, giọng thân thiện.",
+      "Đoạn tiếng Việt này đọc cứng quá, làm cho mượt và đúng register hơn."
+    ],
+    "negative": [
+      "Dịch đoạn tiếng Anh này sang tiếng Việt.",
+      "Translate this English JSON into Vietnamese."
+    ],
+    "boundary": [
+      {"query": "Đoạn tiếng Việt này vốn được dịch tự động từ trang tiếng Anh, đọc rất sượng — sửa lại cho tự nhiên.", "note": "Sửa văn bản đích đã tồn tại = write-VI. Nhưng nếu ưu tiên là trung thành với bản nguồn tiếng Anh được cung cấp, chuyển sang skill dịch (bilingual pass). Xem _shared/trigger-evals.json."}
+    ]
+  },
+  "quality_cases": [
+    {
+      "id": "vi-mtese-rebuild",
+      "prompt": "Viết lại đoạn giới thiệu 'Hẹn hò qua Video' bằng tiếng Việt tự nhiên, đúng giọng app hẹn hò nói với người dùng Việt. Giữ đúng ý; không thêm cam kết/tính năng ngoài dữ kiện.",
+      "input": "evals/inputs/vi-mtese.md",
+      "assertions": [
+        {"id": "no-adverbial-calque", "check": "không còn 'một cách <tính từ>'", "method": "lint"},
+        {"id": "no-empty-tech", "check": "không còn 'công nghệ (hiện đại|tiên tiến)' rỗng", "method": "lint"},
+        {"id": "no-cliche-uu-tien", "check": "không còn 'đặt lên hàng đầu'", "method": "lint"},
+        {"id": "no-this-means", "check": "không mở câu bằng 'Điều này có nghĩa là'", "method": "lint"},
+        {"id": "pronoun-consistent", "check": "xưng hô với người đọc nhất quán một register (vd 'bạn' xuyên suốt)", "method": "review"},
+        {"id": "no-invented-commitment", "check": "không thêm cam kết an toàn tuyệt đối hay tính năng nguồn không nêu", "method": "review"},
+        {"id": "meaning-preserved", "check": "giữ đủ các ý gốc: gặp qua video, trò chuyện có ý nghĩa, an toàn/riêng tư", "method": "review"}
+      ]
+    },
+    {
+      "id": "vi-safety-rebuild",
+      "prompt": "Viết lại đoạn 'Trung tâm An toàn' bằng tiếng Việt tự nhiên, đúng giọng app hẹn hò nói với người dùng Việt. Giữ đúng ý; không thêm cam kết/tính năng ngoài dữ kiện.",
+      "input": "evals/inputs/vi-safety-hard.md",
+      "assertions": [
+        {"id": "no-duoc-xay-dung-nham", "check": "không còn 'được xây dựng/thiết kế nhằm'", "method": "lint"},
+        {"id": "no-passive-boi", "check": "không dùng chuỗi bị động 'được ... bởi' kiểu Anh", "method": "review"},
+        {"id": "no-cosmetic-connectors", "check": "'Không chỉ ... mà còn' / 'Bên cạnh đó' chỉ dùng khi có quan hệ thật", "method": "review"},
+        {"id": "no-dam-bao-rang", "check": "không còn 'nhằm đảm bảo rằng'", "method": "lint"},
+        {"id": "no-adverbial-calque", "check": "không còn 'một cách <tính từ>'", "method": "lint"},
+        {"id": "meaning-preserved", "check": "giữ ý: công cụ tự bảo vệ, báo cáo dễ, đội ngũ xử lý", "method": "review"}
+      ]
+    }
+  ],
+  "notes": "Trigger routing across the 4-skill family lives in _shared/trigger-evals.json. method:lint assertions are checkable with scripts/lint_style_patterns.py (advisory — a clean lint is a floor, not proof); method:review needs a native reviewer. See references/native-vietnamese.md for the tell definitions each assertion targets."
+}

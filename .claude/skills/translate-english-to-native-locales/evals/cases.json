@@ -1,0 +1,32 @@
+{
+  "skill_name": "translate-english-to-native-locales",
+  "trigger": {
+    "positive": [
+      "Dịch file JSON tiếng Anh này sang tiếng Việt cho app, giữ nguyên key và placeholder.",
+      "Localize these English onboarding strings into Traditional Chinese for our Taiwan launch.",
+      "Translate our English privacy policy into Vietnamese and keep the legal effect exact."
+    ],
+    "negative": [
+      "Viết một bài giới thiệu sản phẩm bằng tiếng Việt.",
+      "Translate this Python dict into a YAML config."
+    ],
+    "boundary": [
+      {"query": "Take this English landing page and make a Vietnamese version that reads like it was written for Vietnamese users.", "note": "English source + target language = translate (transcreation lane), even when the ask stresses nativeness."}
+    ]
+  },
+  "quality_cases": [
+    {
+      "id": "ui-json-vi",
+      "prompt": "Localize these English UI strings into natural Vietnamese for members of the Amavo dating app. Preserve JSON structure, keys, placeholders ({name}, %1$d) and HTML tags (<b>). 'Rose' is the paid gift currency; 'match' is a mutual like.",
+      "input": "evals/inputs/en-ui-strings.json",
+      "assertions": [
+        {"id": "integrity-ok", "check": "check_localization_integrity.py source target -> OK (keys, order, tokens {name}/%1$d/<b> preserved)", "method": "integrity"},
+        {"id": "no-duplicate-token", "check": "each protected token appears the same number of times as source (no extra {name})", "method": "integrity"},
+        {"id": "per-term-judgment", "check": "'Rose'/'match' handled by established VN usage, not blanket-preserved or blanket-literal; choice noted if house term undecided", "method": "review"},
+        {"id": "native-microcopy", "check": "buttons are verbs, error message is action-first and non-blaming", "method": "review"},
+        {"id": "no-vi-tells", "check": "no adverbial calque / no 'được thiết kế nhằm' in the Vietnamese", "method": "lint"}
+      ]
+    }
+  ],
+  "notes": "Trigger routing across the 4-skill family lives in _shared/trigger-evals.json. method:integrity uses scripts/check_localization_integrity.py (blocking on syntax/token failure); method:lint uses the target language's lint_style_patterns.py; method:review needs a native reviewer. Native realization per target lives in references/native-<lang>.md."
+}
