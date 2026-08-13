@@ -8,7 +8,7 @@ The page leads with **ValoLab** — a multi-agent AI workforce deployed on a cli
 
 - **Zero-dependency static site.** Hand-authored HTML, CSS, and vanilla JavaScript — no framework, no build step, no runtime dependencies. The repository is the deployed artifact.
 - **"Lattice" design system.** A teal-themed member of the VALO family languages: CSS-variable tokens, three-way light / dark / system theming, an animated brand logo and ecosystem hub, and a custom cursor ribbon — all motion-safe.
-- **20-language localization.** Runtime locale switching with RTL support; the page is fully readable without JavaScript.
+- **20-language localization.** Dependency-free runtime locale switching with RTL support; English is the source of truth, pre-rendered above the fold as a no-JS fallback and swapped for the visitor's locale on load.
 - **Accessible by default.** Localized skip link and `aria-label`s, visible focus, ARIA tabs, semantic landmarks, WCAG AA contrast, and `prefers-reduced-motion` support.
 
 ## Tech stack
