@@ -62,14 +62,33 @@
     menu.appendChild(frag);
   }
   var langEl = doc.getElementById("lang");
-  function openLang() { if (langEl) { langEl.setAttribute("data-open", "1"); doc.getElementById("langBtn").setAttribute("aria-expanded", "true"); } }
+  function openLang() {
+    if (!langEl) return;
+    langEl.setAttribute("data-open", "1");
+    doc.getElementById("langBtn").setAttribute("aria-expanded", "true");
+    var menu = doc.getElementById("langMenu");
+    if (menu) { var sel = menu.querySelector('.lang-opt[aria-selected="true"]') || menu.querySelector(".lang-opt"); if (sel) sel.focus(); }
+  }
   function closeLang() { if (langEl) { langEl.removeAttribute("data-open"); var b = doc.getElementById("langBtn"); if (b) b.setAttribute("aria-expanded", "false"); } }
   (function initLang() {
     buildLangMenu();
     var btn = doc.getElementById("langBtn");
     if (btn) btn.addEventListener("click", function (e) { e.stopPropagation(); langEl.hasAttribute("data-open") ? closeLang() : openLang(); });
+    var menu = doc.getElementById("langMenu");
+    if (menu) menu.addEventListener("keydown", function (e) {
+      var opts = [].slice.call(menu.querySelectorAll(".lang-opt"));
+      if (!opts.length) return;
+      var i = opts.indexOf(doc.activeElement), n = -1;
+      if (e.key === "ArrowDown") n = (i + 1) % opts.length;
+      else if (e.key === "ArrowUp") n = (i - 1 + opts.length) % opts.length;
+      else if (e.key === "Home") n = 0;
+      else if (e.key === "End") n = opts.length - 1;
+      if (n >= 0) { e.preventDefault(); opts[n].focus(); }
+    });
     doc.addEventListener("click", function (e) { if (langEl && !langEl.contains(e.target)) closeLang(); });
-    doc.addEventListener("keydown", function (e) { if (e.key === "Escape") closeLang(); });
+    doc.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && langEl && langEl.hasAttribute("data-open")) { closeLang(); if (btn) btn.focus(); }
+    });
     applyLang(currentLang());
   })();
 
@@ -80,7 +99,9 @@
     if (mode === "light" || mode === "dark") root.setAttribute("data-theme", mode);
     else root.removeAttribute("data-theme");
     doc.querySelectorAll(".theme-seg button").forEach(function (b) {
-      b.classList.toggle("on", b.getAttribute("data-theme-set") === mode);
+      var on = b.getAttribute("data-theme-set") === mode;
+      b.classList.toggle("on", on);
+      b.setAttribute("aria-pressed", String(on));
     });
     movePill(mode);
   }
