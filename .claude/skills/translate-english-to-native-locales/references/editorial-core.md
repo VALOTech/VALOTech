@@ -85,9 +85,11 @@ Use this order:
 
 1. Explicit user decision or approved glossary.
 2. Controlling source artifact.
-3. Verified professional usage in the target market.
+3. Verified professional usage in the target market — how the market's incumbent products in the *same industry* actually word the concept, not a literal translation of the English.
 4. Common native usage.
 5. Conservative retention of English for uncertain technical names.
+
+Establish level 3 by reference, not by memory: check how the leading in-market products in the same vertical render the term (a wallet term against the market's top payment apps, a live-streaming term against its top streaming apps, a compliance term against its established GRC tools). The market's settled wording outranks a dictionary-faithful translation — a term no local competitor uses reads as foreign even when technically correct, and a loanword the market has adopted outranks a coined native calque. Do not assert competitor or market usage you have not actually seen: cite the reference, or mark the choice `uncertain` and flag it. A repository glossary that records these references is a level-1 source — consult it before minting new wording.
 
 Classify material choices internally as `approved`, `artifact-supported`, `market-verified`, `common-usage`, or `uncertain`. Never call wording an industry standard without support. Flag uncertain high-risk terminology for qualified review.
 
