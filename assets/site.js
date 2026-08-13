@@ -127,12 +127,16 @@
   /* ---------------- mobile menu ---------------- */
   (function initMenu() {
     var burger = doc.getElementById("burger"), menu = doc.getElementById("mmenu"); if (!burger || !menu) return;
-    function close() { menu.classList.remove("open"); burger.setAttribute("aria-expanded", "false"); }
-    burger.addEventListener("click", function () {
-      var open = menu.classList.toggle("open"); burger.setAttribute("aria-expanded", String(open));
-    });
-    menu.querySelectorAll("a").forEach(function (a) { a.addEventListener("click", close); });
-    doc.addEventListener("keydown", function (e) { if (e.key === "Escape") close(); });
+    var icon = burger.querySelector("use");
+    function setOpen(open) {
+      menu.classList.toggle("open", open);
+      burger.setAttribute("aria-expanded", String(open));
+      if (icon) icon.setAttribute("href", open ? "#i-x" : "#i-list");
+    }
+    burger.addEventListener("click", function (e) { e.stopPropagation(); setOpen(!menu.classList.contains("open")); });
+    menu.querySelectorAll("a").forEach(function (a) { a.addEventListener("click", function () { setOpen(false); }); });
+    doc.addEventListener("click", function (e) { if (menu.classList.contains("open") && !menu.contains(e.target) && !burger.contains(e.target)) setOpen(false); });
+    doc.addEventListener("keydown", function (e) { if (e.key === "Escape") setOpen(false); });
   })();
 
   /* ---------------- tabs ---------------- */
