@@ -1,0 +1,32 @@
+# VALOTech — editor defaults
+# https://editorconfig.org — keeps indentation + line endings consistent
+# across editors so doc/source diffs stay byte-clean (pairs with .gitattributes).
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 2
+
+# Markdown — trailing whitespace can be a hard line break; do not trim.
+[*.md]
+trim_trailing_whitespace = false
+
+# Python (the design validators) — PEP 8 four-space indent.
+[*.py]
+indent_size = 4
+
+# Go — tabs (gofmt).
+[*.go]
+indent_style = tab
+
+# Makefile — tabs are syntactically required for recipes.
+[Makefile]
+indent_style = tab
+
+# Windows-native shells — CRLF (matches .gitattributes).
+[*.{ps1,bat,cmd}]
+end_of_line = crlf
