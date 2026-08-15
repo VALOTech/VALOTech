@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
-# Refuses force-pushes, ref deletions, and pushes to any branch outside the
-# allowed set.
+# Refuses force-pushes, ref deletions, pushes to any branch outside the allowed
+# set, and any commit whose .gitattributes has lost the line-ending canon.
 #
 # Git passes a hook no flags, so a force-push is not directly observable. It is
 # detected structurally instead: an update whose current remote tip is not an
@@ -31,6 +31,16 @@ while read -r _local_ref local_sha remote_ref remote_sha; do
 	if [ "$remote_sha" != "$ZERO" ] && ! git merge-base --is-ancestor "$remote_sha" "$local_sha"; then
 		echo "pre-push: refusing non-fast-forward update of $remote_ref" >&2
 		echo "pre-push: the remote tip is not an ancestor of $local_sha (force-push)" >&2
+		exit 1
+	fi
+
+	# The attribute, not the platform, must decide the checkout form. Read the
+	# pushed commit rather than the working tree: with eol=lf in force a Windows
+	# checkout already shows LF, so the working tree cannot reveal the loss.
+	if ! git show "$local_sha:.gitattributes" 2>/dev/null |
+		grep -qE '^\*[[:space:]]+text=auto[[:space:]]+eol=lf'; then
+		echo "pre-push: $local_sha lacks the line-ending canon" >&2
+		echo "pre-push: .gitattributes must pin '* text=auto eol=lf'" >&2
 		exit 1
 	fi
 done
