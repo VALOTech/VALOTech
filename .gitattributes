@@ -1,6 +1,33 @@
-# Auto detect text files and perform LF normalization
-* text=auto
+# Line-ending policy.
+#
+# `text=auto eol=lf` normalises every text file to LF in the repository AND
+# checks it out as LF on every platform. The `eol=lf` half is the load-bearing
+# one. Without it the working tree takes the platform's native ending, and two
+# failures follow: a hook edited on Windows carries CRLF, so its
+# `#!/usr/bin/env sh\r` line resolves to an interpreter name ending in CR and
+# fails as "bad interpreter"; and a CRLF checkout leaves the index caching a
+# CRLF-sized stat, so once any tool rewrites the file as LF git compares sizes,
+# never rechecks the content, and reports the file modified forever.
+* text=auto eol=lf
 
-# Hooks are executed by sh; a CRLF shebang resolves to an interpreter
-# name ending in CR and fails as "bad interpreter".
-.githooks/** text eol=lf
+# Windows-only scripts are the exception: PowerShell and cmd read their own
+# files, and they expect CRLF.
+*.ps1 text eol=crlf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Binary assets — never normalised, never diffed as text. SVG is XML and stays
+# text so its diffs stay readable.
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.ico   binary
+*.webp  binary
+*.woff  binary
+*.woff2 binary
+*.ttf   binary
+*.otf   binary
+*.pdf   binary
+*.zip   binary
+*.gz    binary
