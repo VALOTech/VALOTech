@@ -38,6 +38,9 @@ assets/
   flags/                20 locale flag SVGs for the language switcher
   og.html               Render source for the social-share card (og-cover.png, 1200x630)
   *.png / favicon.*     Brand marks, favicons, and the social-share image
+glossary-vi.json        Authoritative Vietnamese glossary — concept → approved / forbidden term (machine-checkable)
+glossary-vi.md          Provenance + voice notes behind each glossary-vi.json rendering, cited by i18n key
+.claude/skills/         Reviewed localization tooling — EN → locale translation + native EN / ZH / VI writing
 CNAME · robots.txt · sitemap.xml · .nojekyll   GitHub Pages and SEO configuration
 ```
 
@@ -88,7 +91,7 @@ VALO Tech is the parent of the **VALO ecosystem** — five consumer products and
 | Shimmra | [shimmra.live](https://shimmra.live) | Video social network for idols & fans |
 | Amavo | [amavo.app](https://amavo.app) | Play-together dating with 1:1 video dates |
 | Farola | [farola.io](https://farola.io) | Vietnam ↔ Europe mobility platform; relocation, study and work |
-| Pridwen | [pridwen.io](https://pridwen.io) | B2B GRC and compliance platform |
+| Verdiq | [verdiq.io](https://verdiq.io) | B2B GRC and compliance platform |
 
 ## License
 

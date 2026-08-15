@@ -22,7 +22,7 @@ This file records where each Vietnamese rendering in `glossary-vi.json` comes fr
 | ValoStack | ValoStack | The cross-client shared-learning network. Proper noun — keep as-is; current site never translates it (`valostack.h2` renders "ValoStack. Bộ não càng dùng càng thông minh."). |
 | VALO Ads | VALO Ads | Sibling product (valoads.io). Proper noun — keep as-is. |
 | VALO Pocket | VALO Pocket | Sibling product (valopocket.io). Proper noun — keep as-is. |
-| Pridwen | Pridwen | Sibling product, B2B GRC platform (pridwen.io), marked "New" on-site. Proper noun — keep as-is. |
+| Verdiq | Verdiq | Sibling product, B2B GRC platform (verdiq.io), marked "New" on-site. Proper noun — keep as-is. |
 | Shimmra | Shimmra | Sibling product (shimmra.live). Proper noun — keep as-is. |
 | Amavo | Amavo | Sibling product (amavo.app). Proper noun — keep as-is. |
 | Farola | Farola | Sibling product (farola.io), marked "New" on-site. Proper noun — keep as-is. |
