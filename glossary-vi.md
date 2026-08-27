@@ -106,6 +106,8 @@ English keeps two structural tiers distinct: 2 **Stages** (Digitalization; AI an
 
 **Decision:** reserve "Giai đoạn" for Phase — the smaller, more frequently referenced unit — and mark Stage as "Chặng". The two-tier structure is a real piece of the page's information architecture (the tab layout literally groups 5 phases under 2 stages), English marks it on purpose with two words, and "Chặng" reads naturally beside the "bệ phóng" (runway) metaphor the page already uses. Applied at `deliver.s1tag`, `deliver.s2tag`, `deliver.lede`, and `deliver.p2a`; every other numbered reference is a Phase and keeps "Giai đoạn".
 
+**Extended to the rest of the catalogue.** Seven locales had the same collapse — zh, zt, ko, th, hi, ar, ur — while the other thirteen already marked the two tiers. The same shape was applied to all seven at the same four keys, keeping each locale's established Phase word and minting a distinct one for Stage: 板块 (zh), 板塊 (zt), 파트 (ko), ช่วง (th), खंड (hi), القسم (ar), حصہ (ur). The ~21 prose strings per locale that carry the Phase word are untouched, which is where a rename would have cost the most and been reviewed the least.
+
 ### 4. Verdiq's slogan — translated, without "tuyệt đối"
 
 "Enter the Era of Absolute Compliance." is Verdiq's registered brand slogan (`brand/tokens.json` in the VALOCompliance repository), and it was the only one of the six product slogans left in English in all nineteen non-English locales while the other five were translated.
