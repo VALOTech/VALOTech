@@ -3,7 +3,6 @@
 (function () {
   "use strict";
   var doc = document, root = doc.documentElement;
-  root.classList.add("js");
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var I = window.VALO_I18N;
 
@@ -32,6 +31,7 @@
     doc.querySelectorAll("[data-i18n-aria]").forEach(function (el) {
       el.setAttribute("aria-label", tr(loc, el.getAttribute("data-i18n-aria")));
     });
+    doc.title = "VALO Tech | " + tr(loc, "hero.h1").replace(/<[^>]*>/g, "").replace(/[.\u3002\u0964\u06D4]\s*$/, "");
     var lbl = doc.getElementById("langLabel");
     if (lbl) lbl.textContent = loc.toUpperCase();
     var lf = doc.getElementById("langFlag");
@@ -46,7 +46,7 @@
   }
   function buildLangMenu() {
     var menu = doc.getElementById("langMenu"); if (!menu) return;
-    var have = I.dict; var frag = doc.createDocumentFragment();
+    var frag = doc.createDocumentFragment();
     I.locales.forEach(function (loc) {
       var b = doc.createElement("button");
       b.type = "button"; b.className = "lang-opt"; b.setAttribute("data-loc", loc); b.setAttribute("role", "option");
@@ -54,9 +54,11 @@
         '<img class="lang-fl" src="assets/flags/' + I.flag[loc] + '.svg" alt="" loading="lazy" />' +
         '<span class="code">' + loc.toUpperCase() + '</span>' +
         '<span class="nm">' + I.labels[loc] + '</span>' +
-        (have[loc] ? '<svg class="i tick" aria-hidden="true"><use href="#i-check"/></svg>'
-                   : '<span class="lang-seed" title="Shows English until translated">EN</span>');
-      b.addEventListener("click", function () { setLang(loc); closeLang(); });
+        '<svg class="i tick" aria-hidden="true"><use href="#i-check"/></svg>';
+      b.addEventListener("click", function () {
+        setLang(loc); closeLang();
+        var t = doc.getElementById("langBtn"); if (t) t.focus();
+      });
       frag.appendChild(b);
     });
     menu.appendChild(frag);
@@ -86,6 +88,9 @@
       if (n >= 0) { e.preventDefault(); opts[n].focus(); }
     });
     doc.addEventListener("click", function (e) { if (langEl && !langEl.contains(e.target)) closeLang(); });
+    doc.addEventListener("focusin", function (e) {
+      if (langEl && langEl.hasAttribute("data-open") && !langEl.contains(e.target)) closeLang();
+    });
     doc.addEventListener("keydown", function (e) {
       if (e.key === "Escape" && langEl && langEl.hasAttribute("data-open")) { closeLang(); if (btn) btn.focus(); }
     });
@@ -138,11 +143,18 @@
   /* ---------------- scroll reveal ---------------- */
   (function initReveal() {
     var els = doc.querySelectorAll(".reveal");
+    root.classList.add("reveal-on");
     if (reduce || !("IntersectionObserver" in window)) { els.forEach(function (el) { el.classList.add("in"); }); return; }
     var io = new IntersectionObserver(function (ents) {
       ents.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); } });
     }, { threshold: 0.14, rootMargin: "0px 0px -8% 0px" });
     els.forEach(function (el) { io.observe(el); });
+    // Tabbing lands on a control before the block around it has met the observer's
+    // threshold, so focus reveals its own block rather than waiting for the scroll.
+    doc.addEventListener("focusin", function (e) {
+      var block = e.target.closest && e.target.closest(".reveal:not(.in)");
+      if (block) { block.classList.add("in"); io.unobserve(block); }
+    });
   })();
 
   /* ---------------- mobile menu ---------------- */
@@ -157,14 +169,28 @@
     burger.addEventListener("click", function (e) { e.stopPropagation(); setOpen(!menu.classList.contains("open")); });
     menu.querySelectorAll("a").forEach(function (a) { a.addEventListener("click", function () { setOpen(false); }); });
     doc.addEventListener("click", function (e) { if (menu.classList.contains("open") && !menu.contains(e.target) && !burger.contains(e.target)) setOpen(false); });
-    doc.addEventListener("keydown", function (e) { if (e.key === "Escape") setOpen(false); });
+    doc.addEventListener("keydown", function (e) {
+      if (e.key !== "Escape" || !menu.classList.contains("open")) return;
+      var inside = menu.contains(doc.activeElement);
+      setOpen(false);
+      if (inside) burger.focus();
+    });
   })();
 
   /* ---------------- tabs ---------------- */
   (function initTabs() {
     var tabs = [].slice.call(doc.querySelectorAll(".tab-btn")); if (!tabs.length) return;
     var panels = tabs.map(function (t) { return doc.getElementById(t.getAttribute("aria-controls")); });
-    function sel(i) { tabs.forEach(function (t, j) { var on = i === j; t.setAttribute("aria-selected", String(on)); t.tabIndex = on ? 0 : -1; panels[j].hidden = !on; }); }
+    function sel(i) {
+      tabs.forEach(function (t, j) {
+        var on = i === j;
+        t.setAttribute("aria-selected", String(on));
+        t.tabIndex = on ? 0 : -1;
+        panels[j].classList.toggle("on", on);
+        panels[j].hidden = !on;
+      });
+    }
+    sel(0);
     tabs.forEach(function (t, i) {
       t.addEventListener("click", function () { sel(i); });
       t.addEventListener("keydown", function (e) {
@@ -185,6 +211,25 @@
     doc.body.appendChild(probe);
     new IntersectionObserver(function (e) { btn.classList.toggle("show", !e[0].isIntersecting); }).observe(probe);
     btn.addEventListener("click", function () { window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" }); });
+  })();
+
+  /* ---------------- print: expand what is collapsed ---------------- */
+  (function initPrint() {
+    var reopened = [];
+    function expand() {
+      reopened = [];
+      doc.querySelectorAll(".acc details:not([open])").forEach(function (d) { d.open = true; reopened.push(d); });
+      doc.querySelectorAll(".reveal:not(.in)").forEach(function (el) { el.classList.add("in"); });
+    }
+    function restore() { reopened.forEach(function (d) { d.open = false; }); reopened = []; }
+    window.addEventListener("beforeprint", expand);
+    window.addEventListener("afterprint", restore);
+    if (window.matchMedia) {
+      var mq = window.matchMedia("print");
+      var onChange = function (e) { e.matches ? expand() : restore(); };
+      if (mq.addEventListener) mq.addEventListener("change", onChange);
+      else if (mq.addListener) mq.addListener(onChange);
+    }
   })();
 
   /* ---------------- cursor wake ribbon ---------------- */

@@ -1,31 +1,161 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Page not found | VALO Tech</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>This page could not be found | VALO Tech</title>
   <meta name="robots" content="noindex" />
-  <meta name="theme-color" content="#0D5A54" />
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#F2F7F5" />
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#06120E" />
+  <link rel="icon" href="assets/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+  <script>(function(){try{var t=localStorage.getItem('valotech-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
   <style>
-    *{margin:0;box-sizing:border-box}
-    body{min-height:100dvh;display:grid;place-items:center;text-align:center;padding:24px;
-      background:#0D5A54;color:#fff;
-      font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6}
-    .code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.8rem;letter-spacing:.18em;
-      text-transform:uppercase;color:#62E2BC;margin-bottom:18px}
-    h1{font-size:clamp(1.6rem,5vw,2.4rem);letter-spacing:-.02em;margin-bottom:14px}
-    p{color:rgba(255,255,255,.8);max-width:42ch;margin:0 auto 28px}
-    a{display:inline-block;background:#fff;color:#0D5A54;font-weight:600;text-decoration:none;
-      padding:13px 24px;border-radius:10px;transition:transform .15s}
-    a:hover{transform:translateY(-1px)}
+    @font-face{font-family:'Plex Sans';font-weight:400;font-style:normal;font-display:swap;src:url('assets/fonts/plex-sans-400.woff2') format('woff2')}
+    @font-face{font-family:'Plex Sans';font-weight:600;font-style:normal;font-display:swap;src:url('assets/fonts/plex-sans-600.woff2') format('woff2')}
+    @font-face{font-family:'Plex Sans';font-weight:700;font-style:normal;font-display:swap;src:url('assets/fonts/plex-sans-700.woff2') format('woff2')}
+    @font-face{font-family:'Plex Mono';font-weight:500;font-style:normal;font-display:swap;src:url('assets/fonts/plex-mono-500.woff2') format('woff2')}
+
+    /* Tokens mirror assets/site.css so the error page is the same brand, not a lookalike. */
+    :root{
+      --bg:#F2F7F5; --elev:#FFFFFF; --t1:#0B1A17; --t2:#42534E;
+      --ink:#0A6B5C; --brand:#139A82; --line:#D7E3DF; --line-strong:#C1D2CC;
+      --fill:#0D5A54; --fill-hover:#0A4A45; --on-fill:#FFFFFF; --jade:#1AA67E;
+      --glow:rgba(26,166,126,.42); --jade-bright:#2FD9A8;
+      --font:'Plex Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+      --mono:'Plex Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+    }
+    :root[data-theme="dark"]{
+      --bg:#06120E; --elev:#0C1F18; --t1:#EAF7F1; --t2:#A2BBB1;
+      --ink:#34E2B0; --brand:#34E2B0; --line:rgba(255,255,255,.10); --line-strong:rgba(255,255,255,.18);
+      --fill:#16C79B; --fill-hover:#23D6A8; --on-fill:#04130E; --jade:#34E2B0;
+      --glow:rgba(52,226,176,.4); --jade-bright:#5EEFC2;
+    }
+    @media (prefers-color-scheme:dark){
+      :root:not([data-theme="light"]):not([data-theme="dark"]){
+        --bg:#06120E; --elev:#0C1F18; --t1:#EAF7F1; --t2:#A2BBB1;
+        --ink:#34E2B0; --brand:#34E2B0; --line:rgba(255,255,255,.10); --line-strong:rgba(255,255,255,.18);
+        --fill:#16C79B; --fill-hover:#23D6A8; --on-fill:#04130E; --jade:#34E2B0;
+        --glow:rgba(52,226,176,.4); --jade-bright:#5EEFC2;
+      }
+    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    html{-webkit-text-size-adjust:100%}
+    body{min-height:100dvh;display:grid;place-items:center;padding:32px 24px;
+      background:var(--bg);color:var(--t1);font-family:var(--font);line-height:1.6;
+      -webkit-font-smoothing:antialiased;position:relative;overflow-x:hidden}
+    body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+      background:
+        radial-gradient(54% 44% at 14% 4%, color-mix(in srgb,var(--brand) 18%,transparent) 0%, transparent 60%),
+        radial-gradient(70% 56% at 52% 110%, color-mix(in srgb,var(--ink) 14%,transparent) 0%, transparent 62%)}
+    main{text-align:center;max-width:46ch}
+    .mark{display:inline-flex;align-items:center;gap:11px;margin-bottom:34px;text-decoration:none;
+      font-weight:700;font-size:18.5px;letter-spacing:-.02em;color:var(--t1)}
+    .mark img{height:30px;width:auto;display:block}
+    .mark .b2{color:var(--ink)}
+    .mark .logo-dark{display:none}
+    :root[data-theme="dark"] .mark .logo-light{display:none}
+    :root[data-theme="dark"] .mark .logo-dark{display:block}
+    @media (prefers-color-scheme:dark){
+      :root:not([data-theme="light"]):not([data-theme="dark"]) .mark .logo-light{display:none}
+      :root:not([data-theme="light"]):not([data-theme="dark"]) .mark .logo-dark{display:block}
+    }
+    .code{font-family:var(--mono);font-weight:500;font-size:12.5px;letter-spacing:.16em;
+      text-transform:uppercase;color:var(--ink);margin-bottom:16px}
+    h1{font-size:clamp(1.7rem,4.4vw,2.5rem);font-weight:700;letter-spacing:-.02em;
+      line-height:1.14;text-wrap:balance}
+    p{color:var(--t2);margin:16px auto 32px;text-wrap:pretty}
+    a.btn{display:inline-flex;align-items:center;gap:.5em;background:var(--fill);color:var(--on-fill);
+      font-weight:600;font-size:15px;line-height:1;text-decoration:none;padding:13px 22px;
+      border:1.5px solid var(--fill);border-radius:999px;
+      transition:transform .18s cubic-bezier(.16,1,.3,1),background .2s,border-color .2s,box-shadow .25s}
+    a.btn:hover{background:var(--fill-hover);border-color:var(--fill-hover);transform:translateY(-1px);
+      box-shadow:0 14px 30px -14px var(--glow)}
+    a.btn:active{transform:translateY(1px)}
+    a.btn svg{width:1.12em;height:1.12em;fill:currentColor;transition:transform .2s}
+    a.btn:hover svg{transform:translateX(3px)}
+    [dir="rtl"] a.btn svg{transform:scaleX(-1)}
+    [dir="rtl"] a.btn:hover svg{transform:scaleX(-1) translateX(3px)}
+    :where(a):focus-visible{outline:2.5px solid var(--jade);outline-offset:3px;border-radius:6px}
+    /* Vietnamese stacks two marks over a vowel; CJK has no sidebearing to tighten. */
+    :lang(vi) h1{line-height:1.28;letter-spacing:-.015em}
+    :lang(zh) h1,:lang(ja) h1,:lang(ko) h1{line-height:1.4;letter-spacing:normal}
+    :lang(zh) body,:lang(ja) body,:lang(ko) body{line-height:1.8}
+    :lang(th) h1,:lang(hi) h1,:lang(bn) h1,:lang(ar) h1,:lang(ur) h1{line-height:1.4;letter-spacing:normal}
+    :lang(th) body,:lang(hi) body,:lang(bn) body,:lang(ar) body,:lang(ur) body{line-height:1.78}
+    @media (prefers-reduced-motion:reduce){*{transition:none!important}a.btn:hover{transform:none}}
   </style>
 </head>
 <body>
   <main>
+    <a class="mark" href="/" aria-label="VALO Tech home">
+      <img class="logo-light" src="assets/valo-symbol-teal.png" alt="" width="33" height="30" />
+      <img class="logo-dark" src="assets/valo-symbol-white.png" alt="" width="33" height="30" />
+      <span>VALO <span class="b2">Tech</span></span>
+    </a>
     <div class="code">Error 404</div>
-    <h1>This page could not be found</h1>
-    <p>The page you are looking for may have moved. Let us take you back to the homepage.</p>
-    <a href="/">Return home</a>
+    <h1 id="nfTitle">This page could not be found</h1>
+    <p id="nfBody">The page you are looking for may have moved. Let us take you back to the homepage.</p>
+    <a class="btn" href="/"><span id="nfHome">Return home</span><svg viewBox="0 0 256 256" aria-hidden="true"><path d="M221.66 133.66l-72 72a8 8 0 0 1-11.32-11.32L196.69 136H40a8 8 0 0 1 0-16h156.69l-58.35-58.34a8 8 0 0 1 11.32-11.32l72 72a8 8 0 0 1 0 11.32Z"/></svg></a>
   </main>
+
+  <script>
+  /* The strings below are generated from assets/i18n.js by scripts/sync-static-copy.mjs.
+     They are inlined rather than fetched so a 404 costs one request and still renders
+     in the visitor's language; without JavaScript the English above stands. */
+  (function () {
+    "use strict";
+    /* NF-TABLE-START */
+    var NF = {
+      "en": ["This page could not be found", "The page you are looking for may have moved. Let us take you back to the homepage.", "Return home"],
+      "zh": ["找不到这个页面", "您要找的页面可能已经移走了。让我们带您回到首页。", "返回首页"],
+      "zt": ["找不到這個頁面", "您要找的頁面可能已經移走了。讓我們帶您回到首頁。", "返回首頁"],
+      "vi": ["Không tìm thấy trang này", "Trang bạn tìm có thể đã được chuyển đi. Hãy để chúng tôi đưa bạn về trang chủ.", "Về trang chủ"],
+      "th": ["ไม่พบหน้านี้", "หน้าที่คุณกำลังมองหาอาจถูกย้ายไปแล้ว ให้เราพาคุณกลับไปที่หน้าแรก", "กลับหน้าแรก"],
+      "id": ["Halaman ini tidak ditemukan", "Halaman yang Anda cari mungkin sudah dipindahkan. Mari kami antar kembali ke beranda.", "Kembali ke beranda"],
+      "ms": ["Halaman ini tidak ditemui", "Halaman yang anda cari mungkin telah dipindahkan. Biar kami bawa anda kembali ke laman utama.", "Kembali ke laman utama"],
+      "tl": ["Hindi mahanap ang page na ito", "Maaaring nailipat na ang page na hinahanap ninyo. Ibabalik namin kayo sa homepage.", "Bumalik sa homepage"],
+      "hi": ["यह पृष्ठ नहीं मिला", "आप जो पृष्ठ खोज रहे हैं, वह शायद कहीं और चला गया है। हम आपको मुखपृष्ठ पर वापस ले चलते हैं।", "मुखपृष्ठ पर लौटें"],
+      "es": ["No encontramos esta página", "La página que busca puede haberse movido. Le llevamos de vuelta al inicio.", "Volver al inicio"],
+      "ar": ["تعذّر العثور على هذه الصفحة", "ربما انتقلت الصفحة التي تبحث عنها. دعنا نعيدك إلى الصفحة الرئيسية.", "العودة إلى الرئيسية"],
+      "fr": ["Cette page est introuvable", "La page que vous cherchez a peut-être été déplacée. Nous vous ramenons à l'accueil.", "Retour à l'accueil"],
+      "bn": ["এই পাতাটি পাওয়া গেল না", "আপনি যে পাতাটি খুঁজছেন সেটি হয়তো সরে গেছে। আমরা আপনাকে হোমপেজে ফিরিয়ে নিচ্ছি।", "হোমপেজে ফিরুন"],
+      "pt": ["Não encontrámos esta página", "A página que procura pode ter mudado de sítio. Levamo-lo de volta à página inicial.", "Voltar ao início"],
+      "ru": ["Эта страница не найдена", "Возможно, страница, которую вы ищете, переехала. Вернём вас на главную.", "На главную"],
+      "ur": ["یہ صفحہ نہیں مل سکا", "جو صفحہ آپ ڈھونڈ رہے ہیں شاید وہ کہیں اور منتقل ہو گیا ہے۔ ہم آپ کو ہوم پیج پر واپس لے چلتے ہیں۔", "ہوم پیج پر واپس"],
+      "de": ["Diese Seite wurde nicht gefunden", "Die gesuchte Seite ist womöglich umgezogen. Wir bringen Sie zurück zur Startseite.", "Zur Startseite"],
+      "ja": ["このページは見つかりませんでした", "お探しのページは移動した可能性があります。トップページへお戻しします。", "トップへ戻る"],
+      "tr": ["Bu sayfa bulunamadı", "Aradığınız sayfa taşınmış olabilir. Sizi ana sayfaya geri götürelim.", "Ana sayfaya dön"],
+      "ko": ["이 페이지를 찾을 수 없습니다", "찾으시는 페이지가 옮겨졌을 수 있습니다. 홈으로 모셔다 드릴게요.", "홈으로 돌아가기"]
+    };
+    /* NF-TABLE-END */
+    var locales = ["en","zh","zt","vi","th","id","ms","tl","hi","es","ar","fr","bn","pt","ru","ur","de","ja","tr","ko"];
+    var rtl = ["ar","ur"];
+    var bcp47 = {en:"en",zh:"zh-Hans",zt:"zh-Hant",vi:"vi",th:"th",id:"id",ms:"ms",tl:"fil",hi:"hi",es:"es",ar:"ar",fr:"fr",bn:"bn",pt:"pt",ru:"ru",ur:"ur",de:"de",ja:"ja",tr:"tr",ko:"ko"};
+    function match(prefs) {
+      for (var i = 0; i < prefs.length; i++) {
+        var tag = String(prefs[i]).toLowerCase(), base = tag.split("-")[0];
+        if (base === "zh") return (tag.indexOf("hant") >= 0 || tag.indexOf("tw") >= 0 || tag.indexOf("hk") >= 0 || tag.indexOf("mo") >= 0) ? "zt" : "zh";
+        if (base === "fil" || base === "tl") return "tl";
+        if (locales.indexOf(base) >= 0) return base;
+      }
+      return "en";
+    }
+    var saved = null;
+    try { saved = localStorage.getItem("valotech-lang"); } catch (e) {}
+    var loc = (saved && locales.indexOf(saved) >= 0) ? saved
+            : match(navigator.languages || [navigator.language || "en"]);
+    var s = NF[loc] || NF.en;
+    if (!s) return;
+    var root = document.documentElement;
+    root.setAttribute("lang", bcp47[loc] || loc);
+    root.setAttribute("dir", rtl.indexOf(loc) >= 0 ? "rtl" : "ltr");
+    document.getElementById("nfTitle").textContent = s[0];
+    document.getElementById("nfBody").textContent = s[1];
+    document.getElementById("nfHome").textContent = s[2];
+    document.title = s[0] + " | VALO Tech";
+  })();
+  </script>
 </body>
 </html>

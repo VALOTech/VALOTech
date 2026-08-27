@@ -8,6 +8,19 @@
 
 set -eu
 
+# The served English copy is generated from the English dictionary, so the two
+# can drift apart in a commit that edits only one of them. Pushing publishes,
+# so the drift would ship. Check before the ref walk: it holds for every push.
+if ! command -v node >/dev/null 2>&1; then
+	echo "pre-push: node is required to verify the served copy" >&2
+	echo "pre-push: install Node, or run 'node scripts/sync-static-copy.mjs --check' elsewhere" >&2
+	exit 1
+fi
+if ! node scripts/sync-static-copy.mjs --check; then
+	echo "pre-push: index.html does not match assets/i18n.js" >&2
+	exit 1
+fi
+
 ALLOWED_REFS="refs/heads/main"
 ZERO=$(git hash-object --stdin </dev/null | tr '0-9a-f' '0')
 
