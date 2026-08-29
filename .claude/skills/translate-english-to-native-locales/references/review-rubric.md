@@ -7,6 +7,7 @@ review:
   protected_meaning:
   reasoning_and_claims:
   evidence_and_qualifications:
+  claim_currency:
   information_structure:
   paragraph_purpose_and_progression:
   sentence_clarity_and_cohesion:

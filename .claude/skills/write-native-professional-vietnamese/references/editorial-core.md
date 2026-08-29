@@ -104,20 +104,33 @@ Preserve as applicable:
 
 Treat Unicode normalization differences, bidirectional controls, invisible characters, and script mixing as review risks in keys, identifiers, legal names, and code-adjacent text.
 
-## 8. Handle ambiguity
+## 8. Write claims that stay true
+
+Most of what goes wrong in a professional document is not a false sentence. It is a sentence that was true when it was written and describes a state that has since ended. It survives review because reviewing it means leaving the document and checking, and the prose gives no sign that anything needs checking.
+
+**Take the measurement; do not recall it.** A count, a total, a version, a date, a path, a filename, a status, a person's title — each is a measurement, and it comes from the artifact at the moment you write it. Not from memory, not from an earlier draft of the same document, not from a summary someone else wrote. Two tells that a figure was recalled rather than taken: it is round, and it agrees exactly with a figure stated elsewhere in the same document. Both are what summarizing produces and neither is what counting produces.
+
+**Prefer the form that does not rot.** "The directory holds seven files" ages; "the directory holds the certificate scans" does not. Name a thing by what it is for rather than by a property that will change without anyone editing this sentence. Where a changing figure genuinely carries the point — a measured result, a price, a total someone will rely on — keep it and say where it came from, so the next reader can take it again instead of trusting yours.
+
+**A statement about the present tense is a promise to maintain it.** "The files have been removed", "the service runs behind a flag", "copies are kept at X" are all true at the instant of writing and say nothing about now. The edit that changes the state is the edit that carries the sentence: when you change something, the sentence describing it is part of the change, in the same revision, or the document begins misleading the next reader at the moment your change lands.
+
+**When you revise an existing document, re-verify the claims you did not touch.** That is a different and much shorter list than the prose you did not touch: every number, every path, every named artifact, and every present-tense statement about something outside the document. A revision that improves the writing while carrying a stale figure forward has made the document worse, because it now reads as freshly checked.
+
+## 9. Handle ambiguity
 
 - Resolve ambiguity from the controlling artifact, glossary, adjacent content, and supplied context.
 - If ambiguity is not material, choose the most conservative interpretation and continue.
 - If ambiguity may change legal effect, responsibility, safety, factual meaning, or a public commitment, do not resolve it silently. Preserve it or identify the exact decision required.
 - Never fabricate context to make a string, claim, or paragraph easier to write.
+- When a required fact is genuinely absent — an unverified figure, an unnamed customer, an undecided CTA — leave a labelled placeholder (`[figure to verify]`, `[customer name]`, `[CTA]`) rather than inventing a value to fill the gap. A placeholder is an honest hole the owner closes; a fabricated number is a defect the reader cannot see.
 
-## 9. Review by risk
+## 10. Review by risk
 
 - Low risk: routine internal drafts and complete-context strings. Automated review may suffice.
 - Medium risk: internal presentations, training, documentation, and web content. Use structured review and sampling.
 - High risk: client-facing, executive, legal, regulatory, external publication, commitments, and capability claims. Require qualified human approval before publication.
 
-## 10. Learn from corrections
+## 11. Learn from corrections
 Capture material reviewer decisions:
 
 ```yaml

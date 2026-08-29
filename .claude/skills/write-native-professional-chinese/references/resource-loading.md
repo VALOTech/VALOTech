@@ -9,6 +9,7 @@ Load only what the task needs.
 | Weak, repetitive, translated-sounding, or AI-like source | `editorial-core.md`; the native-language guide (`native-*.md`); `examples.md`; `anti-patterns.md` |
 | Legal, regulatory, contractual, or commitment-bearing content | `editorial-core.md`; `surface-profiles.md`; `review-rubric.md`; qualified review |
 | Structured localization file | translation workflow; the target native-language guide; integrity scripts; `vendor-parser-policy.md` when applicable |
+| Revising a document that already exists, or writing one that will be read later | `editorial-core.md` §8; `anti-patterns.md`; the artifact each claim refers to, reopened |
 | Repeated terminology decisions | approved glossary and recorded language decisions |
 | Formal evaluation | `evaluation-protocol.md` and the top-level evaluation kit |
 

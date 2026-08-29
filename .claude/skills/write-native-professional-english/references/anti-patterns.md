@@ -7,4 +7,6 @@
 - Do not use transitions to conceal a missing logical relationship.
 - Do not remove qualifications, exceptions, uncertainty, or actors to meet a length limit.
 - Do not silently reconcile conflicting sources.
+- Do not carry a claim forward from an earlier draft without re-taking its measurement. A figure that was right when it was first written is the most common false statement in a revised document.
+- Do not describe a state you have not checked in this revision. "Currently", "now" and the present tense are commitments to have looked.
 - Do not claim publication readiness for high-risk content without qualified review.
