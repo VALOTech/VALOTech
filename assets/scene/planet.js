@@ -168,7 +168,7 @@ function buildPlanetGeometry() {
 
 /* ---------------------------------------------------------------- Mount */
 
-export function mount(container, motion) {
+export function mount(container, motion, onReady) {
   const state =
     motion ||
     { scroll: 0, growth: 0, pointerX: 0, reducedMotion: false, visualScale: 1 };
@@ -287,6 +287,7 @@ export function mount(container, motion) {
     material.displacementMap = map;
     material.needsUpdate = true;
     container.classList.add('is-ready');
+    if (onReady) onReady();
   });
 
   /* ------------------------------------------------------ The living Earth */

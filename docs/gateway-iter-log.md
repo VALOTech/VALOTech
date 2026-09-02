@@ -157,3 +157,23 @@ PARTIAL / BROKEN: the planet still holds the centre of the frame everywhere.
 It does not recede through the argument, return to centre at the people
 chapter, or settle into the footer's column gap.
 NEXT: the placement orchestration.
+
+## 09 — Placement: the planet follows the argument
+WHAT CHANGED: `assets/scene/boot.js` now places the planet against the
+document — a 4p(1-p) recede curve through the chapters, a return to centre
+while the people chapter is on screen, full presence on the right at the
+close, and an approach on first paint that starts when the surface is ready.
+Everything eases toward its target rather than being set, so a fast scroll
+reads as the planet following. `--stone-x`, `--stone-y` and `--stone-r` are
+published every frame for markers to anchor to.
+VERIFIED: Chrome 1440x900 at scroll 0.3, 0.55, 0.62, 0.78 and 1.0 — the planet
+is small and aside through the argument and large on the right in the footer,
+with the pricing text clear of it.
+⭐ I ported the reference's footer rule and then measured what it does: it
+compares the column gap to the full container width, so `(gap - 48) / 691`
+lands under the 0.5 floor at every realistic gap. The branch is dead in
+practice. Replaced with the placement its own screenshots actually show.
+PARTIAL / BROKEN: nothing consumes `--stone-r` yet; the hero markers are still
+laid out by the grid rather than anchored to the planet.
+NEXT: the quality pass — a11y, no-JS, a fallback for machines without WebGL,
+and retiring the parts of `site.js` that look for a theme switch.
