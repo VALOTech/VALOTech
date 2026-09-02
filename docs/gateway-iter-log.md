@@ -277,3 +277,19 @@ marker correctly at the start of its line.
      skip link now hides by size and clip, which has no direction.
 PARTIAL / BROKEN: — none —
 NEXT: the README, which still describes the site this replaced.
+
+## 15 — The README, and something the rewrite dropped
+WHAT CHANGED: the README rewritten for the site that now exists rather than
+patched. Font credits checked against the source repositories — Roboto
+Condensed, DM Mono and IBM Plex Mono are all OFL-1.1. The JSON-LD organization
+block is restored to `index.html`.
+VERIFIED: degradation probe green in all four contexts; contrast 65/65; tab
+order 26/26 outlined and on screen; `--check` 215/215.
+⭐ Writing the README is what caught the JSON-LD. The sentence "the JSON-LD
+organization block references https://valotech.org/" was true of the old page,
+and I was about to ship it as a description of the new one — which no longer
+had the block, because my rewrite of `index.html` silently dropped it. A claim
+in a document is worth checking against the tree even when you wrote both.
+PARTIAL / BROKEN: — none —
+NEXT: nothing outstanding. The site is not pushed — publishing to `main` is
+the owner's call.
