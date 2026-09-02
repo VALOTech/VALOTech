@@ -51,3 +51,31 @@ The absence of an idle loop is a fact about the code — `frame()` returns
 without rescheduling — not something that run established.
 PARTIAL / BROKEN: — none —
 NEXT: vendor three.js and put the lunar sphere in the sky.
+
+## 03 — The lunar body
+WHAT CHANGED: vendored three.js 0.166.0 (MIT, licence beside it) under
+`assets/scene/`; `assets/scene/planet.js` builds the cratered sphere —
+`SphereGeometry(1.32, 160, 120)` with seven crater displacements, a
+`MeshStandardMaterial` over the regolith map, and the designer's four-light
+rig; `assets/scene/boot.js` loads it only where WebGL exists and feeds it the
+page's motion state. The regolith map was re-encoded to WebP: 3212 KB -> 434 KB.
+VERIFIED: clip screenshots of both planet elements at an identical 691px box,
+then luminance over the same 400x400 window. Reference median 26, mine 29;
+p90 49 against 63. Chrome 1440x900 and 390x844 both render the moon behind
+legible text.
+⭐ Three corrections, all mine:
+  1. I ported `ROCK_FRAGMENT_SHADER` faithfully — and it is dead code in the
+     reference. Nothing references it; the visible surface is the textured
+     standard material. Reading a file is not the same as reading what runs.
+  2. My first luminance comparison used windows centred on different parts of
+     the two discs, so the numbers were not comparable. Re-measured.
+  3. The p99 gap that survives (245 against 91) is the white headline inside
+     the sample window, not the planet. A measurement window that includes the
+     UI measures the UI.
+The real cause of the 2.7x brightness gap was the `<map_fragment>` injection:
+a contrast curve with a 0.28 pivot, applied in linear space where every sample
+sits far below it, so it crushes rather than expands. Ported.
+PARTIAL / BROKEN: no Earth, clouds, atmosphere or moss yet — `growth` is
+computed and fed to the scene but nothing consumes it. There is no still-image
+fallback for a machine without WebGL; it currently gets the star field alone.
+NEXT: the Earth surface and its transition frontier.

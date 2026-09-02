@@ -51,10 +51,16 @@ single hairline edge. The brand stays recognisable and the page stays one page.
 
 | Role | Face | Treatment |
 |---|---|---|
-| Display | Roboto Condensed | `clamp(34px, 4.2vw, 58px)`, weight 400, tracking `-0.02em`, leading `1.03` |
+| Hero display | Roboto Condensed | `clamp(52px, 4.35vw, 84px)`, weight 400, leading `1.15` |
+| Feature heading | Roboto Condensed | `clamp(34px, 4.2vw, 58px)`, tracking `-0.02em`, leading `1.03` |
 | Chapter heading | Roboto Condensed | `clamp(30px, 3.6vw, 44px)` |
-| Body | IBM Plex Sans | 16px / 1.6; intro paragraphs 17px |
-| Marker, eyebrow, annotation | DM Mono | 12–13px, `0.08em` tracking, uppercase for eyebrows |
+| Body | Roboto Condensed | 16px / 1.6; intro paragraphs 17px |
+| Marker, eyebrow, annotation | DM Mono | 11–13px, `0.22em` tracking on eyebrows, uppercase |
+
+One face carries the whole page. That is what makes it read as one surface
+rather than as a headline sitting on top of a document, and it is why the
+narrow-screen scale is a separate set of clamps rather than the same ones: at
+390px the display clamp alone pushes the call to action off the first screen.
 
 Roboto Condensed and DM Mono are self-hosted as `woff2` and cover Latin,
 Latin-ext, Cyrillic and Vietnamese. Thai, Arabic, the Indic scripts, Korean and
@@ -107,10 +113,14 @@ as presence rather than motion.
 
 ### When it does not run
 
-The scene is loaded asynchronously and only when WebGL is available and the
-visitor has not asked for reduced motion. Otherwise a single still frame of the
-planet stands in its place, and the page reads exactly the same. Nothing in the
-argument depends on the animation.
+The scene is loaded asynchronously and only where WebGL is available; a
+browser without it, or without module support, never requests the graphics
+library at all and keeps the star field, which is a sky on its own.
+
+Reduced motion does not remove the planet. Scrolling is direct manipulation, so
+the surface still changes as the reader moves; what stops is everything that
+moves on its own — the idle rotation, the intro approach, the pointer drift.
+Nothing in the argument depends on any of it.
 
 ### Markers
 
