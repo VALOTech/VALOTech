@@ -1103,6 +1103,180 @@ p:last-child {
   }
 }
 
+/* ============================================================ 10h. Fit */
+
+/* Two columns that mean something: what the reader keeps on the left, what
+   the workforce takes on the right, on one row each so the trade is legible
+   line by line rather than as two separate lists. */
+.fit {
+  display: grid;
+  gap: 10px;
+}
+
+.fit-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 28px minmax(0, 1fr);
+  gap: 12px;
+  font-family: var(--mono);
+  font-size: var(--type-meta);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+
+.fit-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 28px minmax(0, 1fr);
+  gap: 12px;
+  align-items: stretch;
+}
+
+.fit-cell {
+  padding: 14px 18px;
+  border-radius: 10px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  font-size: var(--type-card-body);
+  color: var(--text);
+}
+
+.fit-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+}
+
+.fit-arrow .i {
+  width: 16px;
+  height: 16px;
+}
+
+.fit-tag {
+  margin-top: 20px;
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--accent-bright);
+}
+
+/* ====================================================== 10i. Ecosystem */
+
+/* Six sibling brands whose own palettes would fight this ground. Each sits
+   in a recess: the tray goes darker, and the product's colour appears only
+   in its mark and one hairline. */
+.eco-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.eco-tile {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 20px;
+  border-radius: var(--r-panel);
+  background: rgba(4, 5, 12, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 18px 40px rgba(0, 0, 0, 0.45);
+  color: var(--text);
+  transition: transform 0.3s var(--ease), border-color 0.3s var(--ease);
+}
+
+.eco-tile::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: 20px;
+  inset-block-end: -1px;
+  width: 46px;
+  height: 2px;
+  background: var(--hue, var(--accent));
+  border-radius: 2px;
+}
+
+.eco-tile:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+.eco-mark {
+  flex: none;
+  width: 40px;
+  height: 40px;
+}
+
+.eco-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 17px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.eco-slogan {
+  font-size: var(--type-card-body);
+  color: var(--text-dim);
+}
+
+.eco-domain {
+  display: block;
+  margin-top: 8px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+}
+
+.eco-new {
+  padding: 2px 7px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--accent-dim);
+  background: var(--accent-wash);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-bright);
+}
+
+/* ========================================================= 10j. Custom */
+
+.customs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 900px) {
+  .footer-cols {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .fit-head,
+  .fit-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .fit-head span:nth-child(2) {
+    display: none;
+  }
+
+  .fit-arrow {
+    transform: rotate(90deg);
+    padding: 2px 0;
+  }
+
+  .eco-grid,
+  .customs {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 /* ============================================================ 11. Footer */
 
 .footer {
@@ -1117,6 +1291,45 @@ p:last-child {
   display: grid;
   grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
   gap: clamp(32px, 6vw, 120px);
+}
+
+.footer-cols {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 32px;
+  padding-top: 8px;
+}
+
+.foot-h {
+  display: block;
+  font-family: var(--mono);
+  font-size: var(--type-meta);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+
+.foot-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 7px;
+}
+
+.foot-list a {
+  color: var(--text-muted);
+  font-size: var(--type-card-body);
+}
+
+.foot-list a:hover {
+  color: #fff;
+}
+
+.footer-tagline {
+  margin-top: 48px;
+  max-width: 60ch;
 }
 
 .footer-legal {

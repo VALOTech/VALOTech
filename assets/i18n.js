@@ -190,7 +190,9 @@
     "phases.eyebrow":"How we deliver",
     "workforce.eyebrow":"The workforce",
     "valostack.eyebrow":"ValoStack",
-    "cap.eyebrow":"Why ValoLab"
+    "cap.eyebrow":"Why ValoLab",
+    "people.eyebrow":"Your team",
+    "custom.eyebrow":"Yours, not ours"
   };
 
   var vi = {
@@ -361,7 +363,9 @@
     "phases.eyebrow":"How we deliver",
     "workforce.eyebrow":"The workforce",
     "valostack.eyebrow":"ValoStack",
-    "cap.eyebrow":"Why ValoLab"
+    "cap.eyebrow":"Why ValoLab",
+    "people.eyebrow":"Your team",
+    "custom.eyebrow":"Yours, not ours"
   };
 
   var zh = {
@@ -532,7 +536,9 @@
     "phases.eyebrow":"How we deliver",
     "workforce.eyebrow":"The workforce",
     "valostack.eyebrow":"ValoStack",
-    "cap.eyebrow":"Why ValoLab"
+    "cap.eyebrow":"Why ValoLab",
+    "people.eyebrow":"Your team",
+    "custom.eyebrow":"Yours, not ours"
   };
 
   var zt = {
@@ -703,7 +709,9 @@
     "phases.eyebrow":"How we deliver",
     "workforce.eyebrow":"The workforce",
     "valostack.eyebrow":"ValoStack",
-    "cap.eyebrow":"Why ValoLab"
+    "cap.eyebrow":"Why ValoLab",
+    "people.eyebrow":"Your team",
+    "custom.eyebrow":"Yours, not ours"
   };
 
   var th = {
@@ -874,7 +882,9 @@
     "phases.eyebrow":"How we deliver",
     "workforce.eyebrow":"The workforce",
     "valostack.eyebrow":"ValoStack",
-    "cap.eyebrow":"Why ValoLab"
+    "cap.eyebrow":"Why ValoLab",
+    "people.eyebrow":"Your team",
+    "custom.eyebrow":"Yours, not ours"
   };
 
   var id = {
@@ -1045,7 +1055,9 @@
     "phases.eyebrow":"How we deliver",
     "workforce.eyebrow":"The workforce",
     "valostack.eyebrow":"ValoStack",
-    "cap.eyebrow":"Why ValoLab"
+    "cap.eyebrow":"Why ValoLab",
+    "people.eyebrow":"Your team",
+    "custom.eyebrow":"Yours, not ours"
   };
 
   var ms = {
@@ -1216,7 +1228,9 @@
     "phases.eyebrow":"How we deliver",
     "workforce.eyebrow":"The workforce",
     "valostack.eyebrow":"ValoStack",
-    "cap.eyebrow":"Why ValoLab"
+    "cap.eyebrow":"Why ValoLab",
+    "people.eyebrow":"Your team",
+    "custom.eyebrow":"Yours, not ours"
   };
 
   var tl = {
@@ -1387,7 +1401,9 @@
     "phases.eyebrow":"How we deliver",
     "workforce.eyebrow":"The workforce",
     "valostack.eyebrow":"ValoStack",
-    "cap.eyebrow":"Why ValoLab"
+    "cap.eyebrow":"Why ValoLab",
+    "people.eyebrow":"Your team",
+    "custom.eyebrow":"Yours, not ours"
   };
 
   var hi = {
@@ -1558,7 +1574,9 @@
     "phases.eyebrow":"How we deliver",
     "workforce.eyebrow":"The workforce",
     "valostack.eyebrow":"ValoStack",
-    "cap.eyebrow":"Why ValoLab"
+    "cap.eyebrow":"Why ValoLab",
+    "people.eyebrow":"Your team",
+    "custom.eyebrow":"Yours, not ours"
   };
 
   var es = {
@@ -1729,7 +1747,9 @@
     "phases.eyebrow":"How we deliver",
     "workforce.eyebrow":"The workforce",
     "valostack.eyebrow":"ValoStack",
-    "cap.eyebrow":"Why ValoLab"
+    "cap.eyebrow":"Why ValoLab",
+    "people.eyebrow":"Your team",
+    "custom.eyebrow":"Yours, not ours"
   };
 
   var ar = {
@@ -1900,7 +1920,9 @@
     "phases.eyebrow":"How we deliver",
     "workforce.eyebrow":"The workforce",
     "valostack.eyebrow":"ValoStack",
-    "cap.eyebrow":"Why ValoLab"
+    "cap.eyebrow":"Why ValoLab",
+    "people.eyebrow":"Your team",
+    "custom.eyebrow":"Yours, not ours"
   };
 
   var fr = {
@@ -2071,7 +2093,9 @@
     "phases.eyebrow":"How we deliver",
     "workforce.eyebrow":"The workforce",
     "valostack.eyebrow":"ValoStack",
-    "cap.eyebrow":"Why ValoLab"
+    "cap.eyebrow":"Why ValoLab",
+    "people.eyebrow":"Your team",
+    "custom.eyebrow":"Yours, not ours"
   };
 
   var bn = {
@@ -2242,7 +2266,9 @@
     "phases.eyebrow":"How we deliver",
     "workforce.eyebrow":"The workforce",
     "valostack.eyebrow":"ValoStack",
-    "cap.eyebrow":"Why ValoLab"
+    "cap.eyebrow":"Why ValoLab",
+    "people.eyebrow":"Your team",
+    "custom.eyebrow":"Yours, not ours"
   };
 
   var pt = {
@@ -2413,7 +2439,9 @@
     "phases.eyebrow":"How we deliver",
     "workforce.eyebrow":"The workforce",
     "valostack.eyebrow":"ValoStack",
-    "cap.eyebrow":"Why ValoLab"
+    "cap.eyebrow":"Why ValoLab",
+    "people.eyebrow":"Your team",
+    "custom.eyebrow":"Yours, not ours"
   };
 
   var ru = {
@@ -2584,7 +2612,9 @@
     "phases.eyebrow":"How we deliver",
     "workforce.eyebrow":"The workforce",
     "valostack.eyebrow":"ValoStack",
-    "cap.eyebrow":"Why ValoLab"
+    "cap.eyebrow":"Why ValoLab",
+    "people.eyebrow":"Your team",
+    "custom.eyebrow":"Yours, not ours"
   };
 
   var ur = {
@@ -2755,7 +2785,9 @@
     "phases.eyebrow":"How we deliver",
     "workforce.eyebrow":"The workforce",
     "valostack.eyebrow":"ValoStack",
-    "cap.eyebrow":"Why ValoLab"
+    "cap.eyebrow":"Why ValoLab",
+    "people.eyebrow":"Your team",
+    "custom.eyebrow":"Yours, not ours"
   };
 
   var de = {
@@ -2926,7 +2958,9 @@
     "phases.eyebrow":"How we deliver",
     "workforce.eyebrow":"The workforce",
     "valostack.eyebrow":"ValoStack",
-    "cap.eyebrow":"Why ValoLab"
+    "cap.eyebrow":"Why ValoLab",
+    "people.eyebrow":"Your team",
+    "custom.eyebrow":"Yours, not ours"
   };
 
   var ja = {
@@ -3097,7 +3131,9 @@
     "phases.eyebrow":"How we deliver",
     "workforce.eyebrow":"The workforce",
     "valostack.eyebrow":"ValoStack",
-    "cap.eyebrow":"Why ValoLab"
+    "cap.eyebrow":"Why ValoLab",
+    "people.eyebrow":"Your team",
+    "custom.eyebrow":"Yours, not ours"
   };
 
   var tr = {
@@ -3268,7 +3304,9 @@
     "phases.eyebrow":"How we deliver",
     "workforce.eyebrow":"The workforce",
     "valostack.eyebrow":"ValoStack",
-    "cap.eyebrow":"Why ValoLab"
+    "cap.eyebrow":"Why ValoLab",
+    "people.eyebrow":"Your team",
+    "custom.eyebrow":"Yours, not ours"
   };
 
   var ko = {
@@ -3439,7 +3477,9 @@
     "phases.eyebrow":"How we deliver",
     "workforce.eyebrow":"The workforce",
     "valostack.eyebrow":"ValoStack",
-    "cap.eyebrow":"Why ValoLab"
+    "cap.eyebrow":"Why ValoLab",
+    "people.eyebrow":"Your team",
+    "custom.eyebrow":"Yours, not ours"
   };
 
   w.VALO_I18N = {

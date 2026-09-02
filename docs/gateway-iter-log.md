@@ -142,3 +142,18 @@ Earth is fully formed by the trust chapter, which is where the argument turns
 from what breaks to what holds.
 PARTIAL / BROKEN: — none —
 NEXT: the ecosystem's six products, then pricing and the real footer.
+
+## 08 — Chapters 8 to 10 and the real footer
+WHAT CHANGED: the people/workforce mapping as five paired rows rather than two
+lists, so the trade reads line by line; the ownership chapter; the six-product
+ecosystem; and a footer carrying the pricing argument, the company block and
+the ecosystem links. Two new keys. `EXPECTED_NODES` 161 -> 205.
+VERIFIED: `--check` 205/205, no console errors, no request over 400. Chrome
+1440x900 at scroll 0.72, 0.86, 0.95 and 1.0. The six product marks sit in
+recessed trays with their own colour confined to the mark and one hairline —
+the concern I raised when the indigo palette was chosen, resolved in layout
+rather than by changing the palette.
+PARTIAL / BROKEN: the planet still holds the centre of the frame everywhere.
+It does not recede through the argument, return to centre at the people
+chapter, or settle into the footer's column gap.
+NEXT: the placement orchestration.
