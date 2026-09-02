@@ -17,6 +17,75 @@ import * as THREE from './three.module.min.js';
 const PLANET_RADIUS = 1.32;
 const SELF_ROTATION = THREE.MathUtils.degToRad(1.5); /* a four-minute turn */
 
+/* Earth at true proportion against a 6371 km mean radius: the 15 km cloud
+   base and the 100 km Karman line. The 0.335% polar flattening is below a
+   visible silhouette change at this size, so the mesh stays spherical and
+   the geometry budget goes to map detail instead. */
+const EARTH_RADIUS = 1.322;
+const CLOUD_SCALE = 1 + 15 / 6371;
+const ATMOSPHERE_SCALE = 1 + 100 / 6371;
+const EARTH_LONGITUDE = THREE.MathUtils.degToRad(-55);
+
+/* One directional frontier sweeps across the sphere, dithered so that each
+   pixel belongs to exactly one surface. Without that, displaced crater rims
+   punch through the smooth Earth along the seam. */
+const TRANSITION_GLSL = /* glsl */ `
+  float valoFrontier(float progress, vec3 direction) {
+    vec3 sweepDirection = normalize(vec3(-0.44, 0.28, 0.85));
+    float field = dot(normalize(direction), sweepDirection);
+    field += sin(direction.y * 9.0 + direction.x * 5.0) * 0.10;
+    field += sin(direction.z * 13.0 - direction.y * 4.0) * 0.06;
+    float frontier = mix(1.34, -1.34, progress);
+    return smoothstep(frontier - 0.10, frontier + 0.10, field);
+  }
+
+  float valoFrontierDither() {
+    return fract(
+      sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453
+    );
+  }
+`;
+
+const ATMOSPHERE_VERTEX = /* glsl */ `
+  varying vec3 vAirNormal;
+  varying vec3 vAirView;
+
+  void main() {
+    vec4 viewPosition = modelViewMatrix * vec4(position, 1.0);
+    vAirNormal = normalize(normalMatrix * normal);
+    vAirView = normalize(-viewPosition.xyz);
+    gl_Position = projectionMatrix * viewPosition;
+  }
+`;
+
+const ATMOSPHERE_FRAGMENT = /* glsl */ `
+  precision highp float;
+
+  uniform float uOpacity;
+  varying vec3 vAirNormal;
+  varying vec3 vAirView;
+
+  void main() {
+    vec3 normal = normalize(vAirNormal);
+    vec3 viewDirection = normalize(vAirView);
+    vec3 sunDirection = normalize(vec3(-0.52, 0.64, 0.57));
+
+    float viewFacing = abs(dot(normal, viewDirection));
+    float horizon = pow(1.0 - clamp(viewFacing, 0.0, 1.0), 3.4);
+    float sunlight = smoothstep(-0.28, 0.46, dot(normal, sunDirection));
+    float forwardScatter = pow(max(dot(viewDirection, sunDirection), 0.0), 8.0);
+
+    vec3 rayleighBlue = vec3(0.055, 0.30, 0.78);
+    vec3 sunlitCyan = vec3(0.20, 0.68, 1.0);
+    vec3 color = mix(rayleighBlue, sunlitCyan, sunlight * 0.72);
+    color += vec3(0.12, 0.28, 0.46) * forwardScatter * horizon;
+
+    gl_FragColor = vec4(color, horizon * mix(0.035, 0.30, sunlight) * uOpacity);
+    #include <tonemapping_fragment>
+    #include <colorspace_fragment>
+  }
+`;
+
 /* Seven impact basins, each a bowl with a raised rim. */
 const CRATERS = [
   { dir: new THREE.Vector3(-0.42, 0.46, 0.78).normalize(), radius: 0.34, depth: 0.064 },
@@ -139,6 +208,12 @@ export function mount(container, motion) {
   const group = new THREE.Group();
   scene.add(group);
 
+  /* One scrub drives every layer; these are the windows it is read through. */
+  const uLife = { value: 0 };
+  const uSurface = { value: 0 };
+  const uCloud = { value: 0 };
+  const uAir = { value: 0 };
+
   const geometry = buildPlanetGeometry();
   const material = new THREE.MeshStandardMaterial({
     color: 0xaeb4b8,
@@ -153,9 +228,31 @@ export function mount(container, motion) {
      so the curve crushes the blacks rather than merely adding contrast —
      that crush is the whole character of the surface. */
   material.onBeforeCompile = (shader) => {
+    shader.uniforms.uLife = uLife;
+    shader.vertexShader = shader.vertexShader
+      .replace(
+        '#include <common>',
+        `#include <common>
+        varying vec3 vLunarDirection;`
+      )
+      .replace(
+        '#include <begin_vertex>',
+        `#include <begin_vertex>
+        vLunarDirection = normalize(mat3(modelMatrix) * position);`
+      );
+    shader.fragmentShader = shader.fragmentShader.replace(
+      '#include <common>',
+      `#include <common>
+      uniform float uLife;
+      varying vec3 vLunarDirection;
+
+      ${TRANSITION_GLSL}`
+    );
     shader.fragmentShader = shader.fragmentShader.replace(
       '#include <map_fragment>',
       `#include <map_fragment>
+      if (valoFrontier(smoothstep(0.08, 0.68, uLife), vLunarDirection) >
+          valoFrontierDither()) discard;
       diffuseColor.rgb = clamp(
         (diffuseColor.rgb - vec3(0.28)) * 1.15 + vec3(0.28),
         0.0,
@@ -171,7 +268,7 @@ export function mount(container, motion) {
       );`
     );
   };
-  material.customProgramCacheKey = () => 'valo-lunar-v1';
+  material.customProgramCacheKey = () => 'valo-lunar-v2';
 
   const lunar = new THREE.Mesh(geometry, material);
   group.add(lunar);
@@ -190,6 +287,180 @@ export function mount(container, motion) {
     material.displacementMap = map;
     material.needsUpdate = true;
     container.classList.add('is-ready');
+  });
+
+  /* ------------------------------------------------------ The living Earth */
+
+  const earthGroup = new THREE.Group();
+  earthGroup.rotation.y = EARTH_LONGITUDE;
+  earthGroup.visible = false;
+  group.add(earthGroup);
+
+  const earthGeometry = new THREE.SphereGeometry(EARTH_RADIUS, 128, 96);
+
+  const earthMaterial = new THREE.MeshPhysicalMaterial({
+    color: 0xffffff,
+    roughness: 0.82,
+    metalness: 0,
+    ior: 1.333,
+    specularIntensity: 0.62,
+    specularColor: new THREE.Color(0xd8e8f3)
+  });
+  earthMaterial.onBeforeCompile = (shader) => {
+    shader.uniforms.uSurface = uSurface;
+    shader.vertexShader = shader.vertexShader
+      .replace(
+        '#include <common>',
+        `#include <common>
+        varying vec3 vEarthViewNormal;
+        varying vec3 vEarthDirection;`
+      )
+      .replace(
+        '#include <defaultnormal_vertex>',
+        `#include <defaultnormal_vertex>
+        vEarthViewNormal = normalize(transformedNormal);
+        vEarthDirection = normalize(mat3(modelMatrix) * position);`
+      );
+    shader.fragmentShader = shader.fragmentShader
+      .replace(
+        '#include <common>',
+        `#include <common>
+        uniform float uSurface;
+        varying vec3 vEarthViewNormal;
+        varying vec3 vEarthDirection;
+
+        ${TRANSITION_GLSL}`
+      )
+      .replace(
+        '#include <map_fragment>',
+        `#include <map_fragment>
+        if (uSurface < 0.001) discard;
+        if (valoFrontier(uSurface, vEarthDirection) <= valoFrontierDither())
+          discard;
+
+        // Ocean and land are separated from the map itself rather than from a
+        // second mask, so the two read with different roughness and specular.
+        float earthLuma = dot(diffuseColor.rgb, vec3(0.299, 0.587, 0.114));
+        float blueDominance =
+          diffuseColor.b - max(diffuseColor.r, diffuseColor.g * 0.82);
+        float oceanMask =
+          smoothstep(0.015, 0.12, blueDominance + (1.0 - earthLuma) * 0.055);
+        diffuseColor.rgb = mix(vec3(earthLuma), diffuseColor.rgb, 0.84);
+        diffuseColor.rgb *= mix(0.89, 0.78, oceanMask);`
+      )
+      .replace(
+        '#include <roughnessmap_fragment>',
+        `#include <roughnessmap_fragment>
+        roughnessFactor = mix(0.88, 0.27, oceanMask);`
+      )
+      .replace(
+        '#include <lights_physical_fragment>',
+        `#include <lights_physical_fragment>
+        material.specularF90 = mix(material.specularF90, 0.88, oceanMask);
+        material.specularColor = mix(
+          material.specularColor * 0.70,
+          vec3(0.055, 0.070, 0.085),
+          oceanMask
+        );`
+      )
+      .replace(
+        'vec3 outgoingLight = totalDiffuse + totalSpecular + totalEmissiveRadiance;',
+        `vec3 outgoingLight = totalDiffuse + totalSpecular + totalEmissiveRadiance;
+        float daylight = smoothstep(
+          -0.18,
+          0.42,
+          dot(normalize(vEarthViewNormal), normalize(vec3(-0.52, 0.64, 0.57)))
+        );
+        outgoingLight *= mix(0.055, 1.0, daylight);
+        outgoingLight += diffuseColor.rgb * (1.0 - daylight) * 0.012;`
+      );
+  };
+  earthMaterial.customProgramCacheKey = () => 'valo-earth-v1';
+
+  const earth = new THREE.Mesh(earthGeometry, earthMaterial);
+  earth.renderOrder = 2;
+  earthGroup.add(earth);
+
+  /* The cloud composite drives opacity on a lit shell rather than being baked
+     into the surface, so it keeps its own drift and its own night side. */
+  const cloudMaterial = new THREE.MeshStandardMaterial({
+    color: 0xf4f8fa,
+    opacity: 0.56,
+    roughness: 0.92,
+    metalness: 0,
+    transparent: true,
+    depthWrite: false,
+    alphaTest: 0.035
+  });
+  cloudMaterial.onBeforeCompile = (shader) => {
+    shader.uniforms.uCloud = uCloud;
+    shader.vertexShader = shader.vertexShader
+      .replace(
+        '#include <common>',
+        `#include <common>
+        varying vec3 vCloudViewNormal;`
+      )
+      .replace(
+        '#include <defaultnormal_vertex>',
+        `#include <defaultnormal_vertex>
+        vCloudViewNormal = normalize(transformedNormal);`
+      );
+    shader.fragmentShader = shader.fragmentShader
+      .replace(
+        '#include <common>',
+        `#include <common>
+        uniform float uCloud;
+        varying vec3 vCloudViewNormal;`
+      )
+      .replace(
+        '#include <alphamap_fragment>',
+        `#include <alphamap_fragment>
+        float cloudDaylight = smoothstep(
+          -0.18,
+          0.42,
+          dot(normalize(vCloudViewNormal), normalize(vec3(-0.52, 0.64, 0.57)))
+        );
+        diffuseColor.a *= mix(0.08, 1.0, cloudDaylight) * uCloud;`
+      );
+  };
+  cloudMaterial.customProgramCacheKey = () => 'valo-cloud-v1';
+
+  const clouds = new THREE.Mesh(earthGeometry, cloudMaterial);
+  clouds.scale.setScalar(CLOUD_SCALE);
+  clouds.renderOrder = 3;
+  earthGroup.add(clouds);
+
+  const airMaterial = new THREE.ShaderMaterial({
+    uniforms: { uOpacity: uAir },
+    vertexShader: ATMOSPHERE_VERTEX,
+    fragmentShader: ATMOSPHERE_FRAGMENT,
+    transparent: true,
+    depthWrite: false,
+    side: THREE.BackSide,
+    blending: THREE.AdditiveBlending,
+    toneMapped: true
+  });
+  const air = new THREE.Mesh(earthGeometry, airMaterial);
+  air.scale.setScalar(ATMOSPHERE_SCALE);
+  air.renderOrder = 4;
+  earthGroup.add(air);
+
+  loader.load('assets/textures/earth-surface.webp', (map) => {
+    map.colorSpace = THREE.SRGBColorSpace;
+    map.wrapS = THREE.RepeatWrapping;
+    map.wrapT = THREE.ClampToEdgeWrapping;
+    map.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+    earthMaterial.map = map;
+    earthMaterial.needsUpdate = true;
+  });
+
+  loader.load('assets/textures/earth-clouds.webp', (map) => {
+    map.colorSpace = THREE.NoColorSpace;
+    map.wrapS = THREE.RepeatWrapping;
+    map.wrapT = THREE.ClampToEdgeWrapping;
+    map.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+    cloudMaterial.alphaMap = map;
+    cloudMaterial.needsUpdate = true;
   });
 
   function resize() {
@@ -217,6 +488,18 @@ export function mount(container, motion) {
     const still = state.reducedMotion;
     if (!still) selfRotation = (selfRotation + delta * SELF_ROTATION) % (Math.PI * 2);
 
+    /* One scrub, read through three windows. The frontier is complementary:
+       whatever the Earth claims, the lunar surface discards. */
+    uLife.value = state.growth;
+    uSurface.value = THREE.MathUtils.smoothstep(state.growth, 0.08, 0.68);
+    uCloud.value = THREE.MathUtils.smoothstep(state.growth, 0.54, 0.88);
+    uAir.value = THREE.MathUtils.smoothstep(state.growth, 0.46, 0.92);
+    earthGroup.visible =
+      uSurface.value > 0.001 || uCloud.value > 0.001 || uAir.value > 0.001;
+
+    if (still) clouds.rotation.y = 0.035;
+    else clouds.rotation.y += delta * 0.006;
+
     /* Scroll turns the planet as well as advancing the story, so the face the
        reader sees at the close is not the one they arrived on. */
     const targetY = state.scroll * 0.46 + (still ? 0 : state.pointerX * 0.18) + selfRotation;
@@ -240,8 +523,14 @@ export function mount(container, motion) {
       cancelAnimationFrame(raf);
       observer.disconnect();
       geometry.dispose();
+      earthGeometry.dispose();
       if (material.map) material.map.dispose();
+      if (earthMaterial.map) earthMaterial.map.dispose();
+      if (cloudMaterial.alphaMap) cloudMaterial.alphaMap.dispose();
       material.dispose();
+      earthMaterial.dispose();
+      cloudMaterial.dispose();
+      airMaterial.dispose();
       renderer.dispose();
       if (renderer.domElement.parentNode) {
         renderer.domElement.parentNode.removeChild(renderer.domElement);

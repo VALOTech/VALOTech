@@ -79,3 +79,25 @@ PARTIAL / BROKEN: no Earth, clouds, atmosphere or moss yet — `growth` is
 computed and fed to the scene but nothing consumes it. There is no still-image
 fallback for a machine without WebGL; it currently gets the star field alone.
 NEXT: the Earth surface and its transition frontier.
+
+## 04 — The living Earth
+WHAT CHANGED: `assets/scene/planet.js` gains the Earth group — a 128x96 sphere
+under the Blue Marble map with ocean and land separated out of the map itself,
+a cloud shell at the 15 km base driving opacity on a lit surface, and a
+back-face Rayleigh atmosphere at the 100 km line. One scrub reads through three
+windows: surface 0.08-0.68, atmosphere 0.46-0.92, clouds 0.54-0.88. The lunar
+surface discards wherever the Earth claims a pixel, so one directional frontier
+owns each pixel exactly once. Earth and cloud maps re-encoded to WebP:
+603 KB -> 303 KB and 810 KB -> 505 KB.
+VERIFIED: Chrome 1440x900 at scroll 0.35, 0.6 and 1.0. At 0.35 the frontier is
+visibly mid-sweep — living continents on one side, cratered rock on the other,
+dithered across the seam. At 1.0 the Earth carries clouds, a day/night
+terminator and a blue limb. No console errors on any of the three.
+⭐ A second piece of dead code caught before porting it: the reference paints a
+whole procedural Earth — ellipse continents, ice caps, deserts — onto the lunar
+surface, then mixes it in at `earthReveal = 0.0`. Roughly a hundred lines that
+never reach a pixel. The separate Earth sphere superseded it.
+PARTIAL / BROKEN: `growth` still comes from a 1555px page, so the transition is
+only observable by scrolling a nearly empty document. The planet does not yet
+recede, re-centre or settle into the footer — it holds the middle throughout.
+NEXT: the chapters, so the scrub has a story to run along.
