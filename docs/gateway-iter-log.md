@@ -235,3 +235,21 @@ colours, and the image is opaque. Flattening the card's ground to exactly the
 still's `#080a10` removed it; the depth is painted over the top instead.
 PARTIAL / BROKEN: — none —
 NEXT: the per-locale translation pass, one language per iteration.
+
+## 13 — Vietnamese
+WHAT CHANGED: the fifteen new keys translated against `glossary-vi.json` and
+the register the dictionary already holds ("bạn" / "chúng tôi"). Terminology
+follows the glossary: workforce → "đội ngũ AI", phase → "giai đoạn", foundation
+→ "nền tảng". The asides keep the machine's voice without translationese —
+"// cái giá — mọi sáng kiến AI đều tắc ở tầng dữ liệu".
+Vietnamese also takes IBM Plex Mono for the whole mono role, self-hosted.
+VERIFIED: Chrome's own `CSS.getPlatformFontsForNode`, before and after.
+Before, every mono element in Vietnamese was painted by two typefaces —
+`.eyebrow` came out "DM Mono Medium:39  Consolas:5". After, each is a single
+face: "IBM Plex Mono Medium:44". English is untouched: still DM Mono.
+⭐ I would not have found this by looking. DM Mono ships no Vietnamese subset —
+its latin-ext stops at U+1E9F and resumes at U+1EF2, so the whole U+1EA0-1EF9
+block that Vietnamese lives in falls through to the system. The screenshot
+looked fine; the font readout did not.
+PARTIAL / BROKEN: eighteen locales still carry the English seed.
+NEXT: Chinese (Simplified).

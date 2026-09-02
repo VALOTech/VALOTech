@@ -76,6 +76,14 @@
   color-scheme: dark;
 }
 
+/* DM Mono has no Vietnamese: its latin-ext stops short of U+1EA0-1EF9, so a
+   Vietnamese line comes out part DM Mono and part whatever the system has.
+   Vietnamese therefore takes one typeface for the whole mono role rather than
+   a hybrid — a mixed line is worse than a different face. */
+:root:lang(vi) {
+  --mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+}
+
 /* ============================================================ 2. Base */
 
 *,
