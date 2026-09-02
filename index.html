@@ -24,7 +24,21 @@
   <link rel="preload" as="font" type="font/woff2" href="assets/fonts/dm-mono-400-latin.woff2" crossorigin />
   <link rel="stylesheet" href="assets/fonts.css" />
   <link rel="stylesheet" href="assets/site.css" />
-  <script>document.documentElement.className += ' js';</script>
+  <script>
+    /* Decide before first paint whether the scene can run at all, so the still
+       frame is fetched only by the machines that will actually need it. */
+    (function (r) {
+      r.className += ' js';
+      try {
+        var c = document.createElement('canvas');
+        if (
+          'noModule' in HTMLScriptElement.prototype &&
+          window.WebGLRenderingContext &&
+          (c.getContext('webgl2') || c.getContext('webgl'))
+        ) r.className += ' can-scene';
+      } catch (e) {}
+    })(document.documentElement);
+  </script>
 </head>
 <body>
 <a class="skip" href="#main" data-i18n="a11y.skip">Skip to content</a>
@@ -574,6 +588,10 @@
     </div>
   </div>
 </footer>
+
+<button class="to-top" id="toTop" type="button" aria-label="Back to top" data-i18n-aria="a11y.top">
+  <svg class="i" aria-hidden="true"><use href="#i-arrow-up"/></svg>
+</button>
 
 <script src="assets/scene/stars.js" defer></script>
 <script type="module" src="assets/scene/boot.js"></script>

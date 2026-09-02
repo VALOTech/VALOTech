@@ -177,3 +177,22 @@ PARTIAL / BROKEN: nothing consumes `--stone-r` yet; the hero markers are still
 laid out by the grid rather than anchored to the planet.
 NEXT: the quality pass — a11y, no-JS, a fallback for machines without WebGL,
 and retiring the parts of `site.js` that look for a theme switch.
+
+## 10 — Degradation: what happens when the page's supports are taken away
+WHAT CHANGED: `assets/site.js` rewritten for the markup that now exists — i18n,
+the language menu with its keyboard handling, header state, scroll reveal,
+mobile menu, back-to-top and a scroll-spy that sets `aria-current`. The theme
+switch, the tab widget, the ecosystem-hub animation, the print expander and
+the cursor ribbon are gone: none of them had markup left to act on. A still
+frame of the planet (29 KB) now stands in where the scene cannot run, and an
+inline probe decides before first paint whether WebGL and module support are
+both present, so only the machines that need the still ever fetch it.
+VERIFIED: a Playwright probe drove four contexts and read the DOM in each.
+Baseline: 2 canvases, no still fetched, 75 reveals still below the fold.
+No WebGL: still frame served, 1 canvas, identical document height.
+No JavaScript: still frame, **0 reveals hidden** — the whole page reads, in
+English, from the markup. Reduced motion: scene runs, 0 reveals hidden.
+No page errors in any of the four.
+PARTIAL / BROKEN: — none —
+NEXT: contrast and keyboard measured against the painted pixel, then the
+per-locale translation pass.

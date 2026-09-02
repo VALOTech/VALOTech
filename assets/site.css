@@ -639,6 +639,13 @@ p:last-child {
   transform: translate(-50%, -50%);
 }
 
+/* Where the scene cannot run — no WebGL, no module support — a still frame of
+   the same planet stands in its place. It is fetched only by those machines:
+   the class that suppresses it is set before first paint. */
+html:not(.can-scene) .planet {
+  background: center / contain no-repeat url('textures/planet-still.webp');
+}
+
 .planet canvas,
 .planet img {
   width: 100%;
@@ -1341,6 +1348,42 @@ p:last-child {
   gap: 8px 24px;
   font-size: 13px;
   color: var(--text-dim);
+}
+
+/* ======================================================= 11b. To top */
+
+.to-top {
+  position: fixed;
+  inset-block-end: 24px;
+  inset-inline-end: 24px;
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--glass-border);
+  background: rgba(11, 10, 35, 0.9);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: var(--accent-bright);
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(8px);
+  pointer-events: none;
+  transition: opacity 0.3s var(--ease), transform 0.3s var(--ease);
+}
+
+.to-top.show {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+.hdr.scrolled {
+  background: rgba(8, 10, 16, 0.9);
+  border-bottom-color: rgba(140, 170, 255, 0.2);
 }
 
 /* ============================================================ 12. Motion */
