@@ -177,7 +177,14 @@
     "foot.product":"Product","foot.company":"Company","foot.legal":"Legal",
     "foot.about":"About","foot.careers":"Careers","foot.press":"Press","foot.contact":"Contact",
     "foot.privacy":"Privacy","foot.terms":"Terms","foot.cookies":"Cookies",
-    "foot.rights":"© 2026 VALO Tech Pte. Ltd. All rights reserved.","foot.loc":"Singapore"
+    "foot.rights":"© 2026 VALO Tech Pte. Ltd. All rights reserved.","foot.loc":"Singapore",
+    "problem.eyebrow":"The problem",
+    "problem.1nl":"the gap",
+    "problem.1n":"technology arrives, but the data, the people and the regulatory ground are not ready",
+    "problem.2nl":"the cost",
+    "problem.2n":"every AI initiative stalls at the data layer",
+    "problem.3nl":"the fix",
+    "problem.3n":"lay the foundation first, then deploy the workforce on it"
   };
 
   var vi = {
@@ -335,7 +342,14 @@
     "foot.product":"Sản phẩm","foot.company":"Công ty","foot.legal":"Pháp lý",
     "foot.about":"Về VALO Tech","foot.careers":"Tuyển dụng","foot.press":"Báo chí","foot.contact":"Liên hệ",
     "foot.privacy":"Chính sách bảo mật","foot.terms":"Điều khoản sử dụng","foot.cookies":"Cookie",
-    "foot.rights":"© 2026 VALO Tech Pte. Ltd. Bảo lưu mọi quyền.","foot.loc":"Singapore"
+    "foot.rights":"© 2026 VALO Tech Pte. Ltd. Bảo lưu mọi quyền.","foot.loc":"Singapore",
+    "problem.eyebrow":"The problem",
+    "problem.1nl":"the gap",
+    "problem.1n":"technology arrives, but the data, the people and the regulatory ground are not ready",
+    "problem.2nl":"the cost",
+    "problem.2n":"every AI initiative stalls at the data layer",
+    "problem.3nl":"the fix",
+    "problem.3n":"lay the foundation first, then deploy the workforce on it"
   };
 
   var zh = {
@@ -493,7 +507,14 @@
     "foot.product":"产品","foot.company":"公司","foot.legal":"法务",
     "foot.about":"关于","foot.careers":"招聘","foot.press":"媒体","foot.contact":"联系",
     "foot.privacy":"隐私","foot.terms":"条款","foot.cookies":"Cookie",
-    "foot.rights":"© 2026 VALO Tech Pte. Ltd. 保留所有权利。","foot.loc":"新加坡"
+    "foot.rights":"© 2026 VALO Tech Pte. Ltd. 保留所有权利。","foot.loc":"新加坡",
+    "problem.eyebrow":"The problem",
+    "problem.1nl":"the gap",
+    "problem.1n":"technology arrives, but the data, the people and the regulatory ground are not ready",
+    "problem.2nl":"the cost",
+    "problem.2n":"every AI initiative stalls at the data layer",
+    "problem.3nl":"the fix",
+    "problem.3n":"lay the foundation first, then deploy the workforce on it"
   };
 
   var zt = {
@@ -651,7 +672,14 @@
     "foot.product":"產品","foot.company":"公司","foot.legal":"法務",
     "foot.about":"關於","foot.careers":"招募","foot.press":"媒體","foot.contact":"聯絡",
     "foot.privacy":"隱私","foot.terms":"條款","foot.cookies":"Cookie",
-    "foot.rights":"© 2026 VALO Tech Pte. Ltd. 保留一切權利。","foot.loc":"新加坡"
+    "foot.rights":"© 2026 VALO Tech Pte. Ltd. 保留一切權利。","foot.loc":"新加坡",
+    "problem.eyebrow":"The problem",
+    "problem.1nl":"the gap",
+    "problem.1n":"technology arrives, but the data, the people and the regulatory ground are not ready",
+    "problem.2nl":"the cost",
+    "problem.2n":"every AI initiative stalls at the data layer",
+    "problem.3nl":"the fix",
+    "problem.3n":"lay the foundation first, then deploy the workforce on it"
   };
 
   var th = {
@@ -809,7 +837,14 @@
     "foot.product":"ผลิตภัณฑ์","foot.company":"บริษัท","foot.legal":"กฎหมาย",
     "foot.about":"เกี่ยวกับเรา","foot.careers":"ร่วมงานกับเรา","foot.press":"ข่าวสาร","foot.contact":"ติดต่อ",
     "foot.privacy":"ความเป็นส่วนตัว","foot.terms":"เงื่อนไขการใช้งาน","foot.cookies":"Cookie",
-    "foot.rights":"© 2026 VALO Tech Pte. Ltd. สงวนลิขสิทธิ์ทั้งหมด","foot.loc":"สิงคโปร์"
+    "foot.rights":"© 2026 VALO Tech Pte. Ltd. สงวนลิขสิทธิ์ทั้งหมด","foot.loc":"สิงคโปร์",
+    "problem.eyebrow":"The problem",
+    "problem.1nl":"the gap",
+    "problem.1n":"technology arrives, but the data, the people and the regulatory ground are not ready",
+    "problem.2nl":"the cost",
+    "problem.2n":"every AI initiative stalls at the data layer",
+    "problem.3nl":"the fix",
+    "problem.3n":"lay the foundation first, then deploy the workforce on it"
   };
 
   var id = {
@@ -967,7 +1002,14 @@
     "foot.product":"Produk","foot.company":"Perusahaan","foot.legal":"Hukum",
     "foot.about":"Tentang","foot.careers":"Karier","foot.press":"Pers","foot.contact":"Kontak",
     "foot.privacy":"Privasi","foot.terms":"Ketentuan","foot.cookies":"Cookie",
-    "foot.rights":"© 2026 VALO Tech Pte. Ltd. Semua hak dilindungi.","foot.loc":"Singapura"
+    "foot.rights":"© 2026 VALO Tech Pte. Ltd. Semua hak dilindungi.","foot.loc":"Singapura",
+    "problem.eyebrow":"The problem",
+    "problem.1nl":"the gap",
+    "problem.1n":"technology arrives, but the data, the people and the regulatory ground are not ready",
+    "problem.2nl":"the cost",
+    "problem.2n":"every AI initiative stalls at the data layer",
+    "problem.3nl":"the fix",
+    "problem.3n":"lay the foundation first, then deploy the workforce on it"
   };
 
   var ms = {
@@ -1125,7 +1167,14 @@
     "foot.product":"Produk","foot.company":"Syarikat","foot.legal":"Perundangan",
     "foot.about":"Perihal","foot.careers":"Kerjaya","foot.press":"Akhbar","foot.contact":"Hubungi",
     "foot.privacy":"Privasi","foot.terms":"Terma","foot.cookies":"Cookie",
-    "foot.rights":"© 2026 VALO Tech Pte. Ltd. Hak cipta terpelihara.","foot.loc":"Singapura"
+    "foot.rights":"© 2026 VALO Tech Pte. Ltd. Hak cipta terpelihara.","foot.loc":"Singapura",
+    "problem.eyebrow":"The problem",
+    "problem.1nl":"the gap",
+    "problem.1n":"technology arrives, but the data, the people and the regulatory ground are not ready",
+    "problem.2nl":"the cost",
+    "problem.2n":"every AI initiative stalls at the data layer",
+    "problem.3nl":"the fix",
+    "problem.3n":"lay the foundation first, then deploy the workforce on it"
   };
 
   var tl = {
@@ -1283,7 +1332,14 @@
     "foot.product":"Produkto","foot.company":"Kompanya","foot.legal":"Legal",
     "foot.about":"Tungkol","foot.careers":"Mga Karera","foot.press":"Press","foot.contact":"Kontak",
     "foot.privacy":"Privacy","foot.terms":"Mga Tuntunin","foot.cookies":"Cookies",
-    "foot.rights":"© 2026 VALO Tech Pte. Ltd. Nakalaan ang lahat ng karapatan.","foot.loc":"Singapore"
+    "foot.rights":"© 2026 VALO Tech Pte. Ltd. Nakalaan ang lahat ng karapatan.","foot.loc":"Singapore",
+    "problem.eyebrow":"The problem",
+    "problem.1nl":"the gap",
+    "problem.1n":"technology arrives, but the data, the people and the regulatory ground are not ready",
+    "problem.2nl":"the cost",
+    "problem.2n":"every AI initiative stalls at the data layer",
+    "problem.3nl":"the fix",
+    "problem.3n":"lay the foundation first, then deploy the workforce on it"
   };
 
   var hi = {
@@ -1441,7 +1497,14 @@
     "foot.product":"उत्पाद","foot.company":"कंपनी","foot.legal":"कानूनी",
     "foot.about":"परिचय","foot.careers":"करियर","foot.press":"प्रेस","foot.contact":"संपर्क",
     "foot.privacy":"निजता","foot.terms":"शर्तें","foot.cookies":"Cookie",
-    "foot.rights":"© 2026 VALO Tech Pte. Ltd. सर्वाधिकार सुरक्षित।","foot.loc":"सिंगापुर"
+    "foot.rights":"© 2026 VALO Tech Pte. Ltd. सर्वाधिकार सुरक्षित।","foot.loc":"सिंगापुर",
+    "problem.eyebrow":"The problem",
+    "problem.1nl":"the gap",
+    "problem.1n":"technology arrives, but the data, the people and the regulatory ground are not ready",
+    "problem.2nl":"the cost",
+    "problem.2n":"every AI initiative stalls at the data layer",
+    "problem.3nl":"the fix",
+    "problem.3n":"lay the foundation first, then deploy the workforce on it"
   };
 
   var es = {
@@ -1599,7 +1662,14 @@
     "foot.product":"Producto","foot.company":"Empresa","foot.legal":"Legal",
     "foot.about":"Quiénes somos","foot.careers":"Empleo","foot.press":"Prensa","foot.contact":"Contacto",
     "foot.privacy":"Privacidad","foot.terms":"Términos","foot.cookies":"Cookie",
-    "foot.rights":"© 2026 VALO Tech Pte. Ltd. Todos los derechos reservados.","foot.loc":"Singapur"
+    "foot.rights":"© 2026 VALO Tech Pte. Ltd. Todos los derechos reservados.","foot.loc":"Singapur",
+    "problem.eyebrow":"The problem",
+    "problem.1nl":"the gap",
+    "problem.1n":"technology arrives, but the data, the people and the regulatory ground are not ready",
+    "problem.2nl":"the cost",
+    "problem.2n":"every AI initiative stalls at the data layer",
+    "problem.3nl":"the fix",
+    "problem.3n":"lay the foundation first, then deploy the workforce on it"
   };
 
   var ar = {
@@ -1757,7 +1827,14 @@
     "foot.product":"المنتج","foot.company":"الشركة","foot.legal":"الشؤون القانونية",
     "foot.about":"من نحن","foot.careers":"الوظائف","foot.press":"الصحافة","foot.contact":"تواصل معنا",
     "foot.privacy":"الخصوصية","foot.terms":"الشروط","foot.cookies":"ملفات تعريف الارتباط (Cookie)",
-    "foot.rights":"© 2026 VALO Tech Pte. Ltd. جميع الحقوق محفوظة.","foot.loc":"سنغافورة"
+    "foot.rights":"© 2026 VALO Tech Pte. Ltd. جميع الحقوق محفوظة.","foot.loc":"سنغافورة",
+    "problem.eyebrow":"The problem",
+    "problem.1nl":"the gap",
+    "problem.1n":"technology arrives, but the data, the people and the regulatory ground are not ready",
+    "problem.2nl":"the cost",
+    "problem.2n":"every AI initiative stalls at the data layer",
+    "problem.3nl":"the fix",
+    "problem.3n":"lay the foundation first, then deploy the workforce on it"
   };
 
   var fr = {
@@ -1915,7 +1992,14 @@
     "foot.product":"Produit","foot.company":"Entreprise","foot.legal":"Mentions légales",
     "foot.about":"À propos","foot.careers":"Carrières","foot.press":"Presse","foot.contact":"Contact",
     "foot.privacy":"Confidentialité","foot.terms":"Conditions","foot.cookies":"Cookies",
-    "foot.rights":"© 2026 VALO Tech Pte. Ltd. Tous droits réservés.","foot.loc":"Singapour"
+    "foot.rights":"© 2026 VALO Tech Pte. Ltd. Tous droits réservés.","foot.loc":"Singapour",
+    "problem.eyebrow":"The problem",
+    "problem.1nl":"the gap",
+    "problem.1n":"technology arrives, but the data, the people and the regulatory ground are not ready",
+    "problem.2nl":"the cost",
+    "problem.2n":"every AI initiative stalls at the data layer",
+    "problem.3nl":"the fix",
+    "problem.3n":"lay the foundation first, then deploy the workforce on it"
   };
 
   var bn = {
@@ -2073,7 +2157,14 @@
     "foot.product":"পণ্য","foot.company":"কোম্পানি","foot.legal":"আইনি",
     "foot.about":"পরিচিতি","foot.careers":"ক্যারিয়ার","foot.press":"প্রেস","foot.contact":"যোগাযোগ",
     "foot.privacy":"গোপনীয়তা","foot.terms":"শর্তাবলি","foot.cookies":"Cookie",
-    "foot.rights":"© 2026 VALO Tech Pte. Ltd. সর্বস্বত্ব সংরক্ষিত।","foot.loc":"সিঙ্গাপুর"
+    "foot.rights":"© 2026 VALO Tech Pte. Ltd. সর্বস্বত্ব সংরক্ষিত।","foot.loc":"সিঙ্গাপুর",
+    "problem.eyebrow":"The problem",
+    "problem.1nl":"the gap",
+    "problem.1n":"technology arrives, but the data, the people and the regulatory ground are not ready",
+    "problem.2nl":"the cost",
+    "problem.2n":"every AI initiative stalls at the data layer",
+    "problem.3nl":"the fix",
+    "problem.3n":"lay the foundation first, then deploy the workforce on it"
   };
 
   var pt = {
@@ -2231,7 +2322,14 @@
     "foot.product":"Produto","foot.company":"Empresa","foot.legal":"Aspetos legais",
     "foot.about":"Sobre","foot.careers":"Carreiras","foot.press":"Imprensa","foot.contact":"Contacto",
     "foot.privacy":"Privacidade","foot.terms":"Termos","foot.cookies":"Cookies",
-    "foot.rights":"© 2026 VALO Tech Pte. Ltd. Todos os direitos reservados.","foot.loc":"Singapura"
+    "foot.rights":"© 2026 VALO Tech Pte. Ltd. Todos os direitos reservados.","foot.loc":"Singapura",
+    "problem.eyebrow":"The problem",
+    "problem.1nl":"the gap",
+    "problem.1n":"technology arrives, but the data, the people and the regulatory ground are not ready",
+    "problem.2nl":"the cost",
+    "problem.2n":"every AI initiative stalls at the data layer",
+    "problem.3nl":"the fix",
+    "problem.3n":"lay the foundation first, then deploy the workforce on it"
   };
 
   var ru = {
@@ -2389,7 +2487,14 @@
     "foot.product":"Продукт","foot.company":"Компания","foot.legal":"Юридическая информация",
     "foot.about":"О нас","foot.careers":"Карьера","foot.press":"Пресса","foot.contact":"Контакты",
     "foot.privacy":"Конфиденциальность","foot.terms":"Условия","foot.cookies":"Файлы Cookie",
-    "foot.rights":"© 2026 VALO Tech Pte. Ltd. Все права защищены.","foot.loc":"Сингапур"
+    "foot.rights":"© 2026 VALO Tech Pte. Ltd. Все права защищены.","foot.loc":"Сингапур",
+    "problem.eyebrow":"The problem",
+    "problem.1nl":"the gap",
+    "problem.1n":"technology arrives, but the data, the people and the regulatory ground are not ready",
+    "problem.2nl":"the cost",
+    "problem.2n":"every AI initiative stalls at the data layer",
+    "problem.3nl":"the fix",
+    "problem.3n":"lay the foundation first, then deploy the workforce on it"
   };
 
   var ur = {
@@ -2547,7 +2652,14 @@
     "foot.product":"پروڈکٹ","foot.company":"کمپنی","foot.legal":"قانونی",
     "foot.about":"تعارف","foot.careers":"روزگار","foot.press":"پریس","foot.contact":"رابطہ",
     "foot.privacy":"privacy","foot.terms":"شرائط","foot.cookies":"Cookie",
-    "foot.rights":"© 2026 VALO Tech Pte. Ltd. جملہ حقوق محفوظ ہیں۔","foot.loc":"سنگاپور"
+    "foot.rights":"© 2026 VALO Tech Pte. Ltd. جملہ حقوق محفوظ ہیں۔","foot.loc":"سنگاپور",
+    "problem.eyebrow":"The problem",
+    "problem.1nl":"the gap",
+    "problem.1n":"technology arrives, but the data, the people and the regulatory ground are not ready",
+    "problem.2nl":"the cost",
+    "problem.2n":"every AI initiative stalls at the data layer",
+    "problem.3nl":"the fix",
+    "problem.3n":"lay the foundation first, then deploy the workforce on it"
   };
 
   var de = {
@@ -2705,7 +2817,14 @@
     "foot.product":"Produkt","foot.company":"Unternehmen","foot.legal":"Rechtliches",
     "foot.about":"Über uns","foot.careers":"Karriere","foot.press":"Presse","foot.contact":"Kontakt",
     "foot.privacy":"Datenschutz","foot.terms":"AGB","foot.cookies":"Cookies",
-    "foot.rights":"© 2026 VALO Tech Pte. Ltd. Alle Rechte vorbehalten.","foot.loc":"Singapur"
+    "foot.rights":"© 2026 VALO Tech Pte. Ltd. Alle Rechte vorbehalten.","foot.loc":"Singapur",
+    "problem.eyebrow":"The problem",
+    "problem.1nl":"the gap",
+    "problem.1n":"technology arrives, but the data, the people and the regulatory ground are not ready",
+    "problem.2nl":"the cost",
+    "problem.2n":"every AI initiative stalls at the data layer",
+    "problem.3nl":"the fix",
+    "problem.3n":"lay the foundation first, then deploy the workforce on it"
   };
 
   var ja = {
@@ -2863,7 +2982,14 @@
     "foot.product":"製品","foot.company":"会社","foot.legal":"法務",
     "foot.about":"会社概要","foot.careers":"採用","foot.press":"プレス","foot.contact":"お問い合わせ",
     "foot.privacy":"プライバシー","foot.terms":"利用規約","foot.cookies":"Cookie",
-    "foot.rights":"© 2026 VALO Tech Pte. Ltd. All rights reserved.","foot.loc":"シンガポール"
+    "foot.rights":"© 2026 VALO Tech Pte. Ltd. All rights reserved.","foot.loc":"シンガポール",
+    "problem.eyebrow":"The problem",
+    "problem.1nl":"the gap",
+    "problem.1n":"technology arrives, but the data, the people and the regulatory ground are not ready",
+    "problem.2nl":"the cost",
+    "problem.2n":"every AI initiative stalls at the data layer",
+    "problem.3nl":"the fix",
+    "problem.3n":"lay the foundation first, then deploy the workforce on it"
   };
 
   var tr = {
@@ -3021,7 +3147,14 @@
     "foot.product":"Ürün","foot.company":"Şirket","foot.legal":"Hukuki",
     "foot.about":"Hakkımızda","foot.careers":"Kariyer","foot.press":"Basın","foot.contact":"İletişim",
     "foot.privacy":"Gizlilik","foot.terms":"Koşullar","foot.cookies":"Cookie",
-    "foot.rights":"© 2026 VALO Tech Pte. Ltd. Tüm hakları saklıdır.","foot.loc":"Singapur"
+    "foot.rights":"© 2026 VALO Tech Pte. Ltd. Tüm hakları saklıdır.","foot.loc":"Singapur",
+    "problem.eyebrow":"The problem",
+    "problem.1nl":"the gap",
+    "problem.1n":"technology arrives, but the data, the people and the regulatory ground are not ready",
+    "problem.2nl":"the cost",
+    "problem.2n":"every AI initiative stalls at the data layer",
+    "problem.3nl":"the fix",
+    "problem.3n":"lay the foundation first, then deploy the workforce on it"
   };
 
   var ko = {
@@ -3179,7 +3312,14 @@
     "foot.product":"제품","foot.company":"회사","foot.legal":"법무",
     "foot.about":"소개","foot.careers":"채용","foot.press":"보도","foot.contact":"문의",
     "foot.privacy":"개인정보","foot.terms":"약관","foot.cookies":"Cookie",
-    "foot.rights":"© 2026 VALO Tech Pte. Ltd. 모든 권리 보유.","foot.loc":"싱가포르"
+    "foot.rights":"© 2026 VALO Tech Pte. Ltd. 모든 권리 보유.","foot.loc":"싱가포르",
+    "problem.eyebrow":"The problem",
+    "problem.1nl":"the gap",
+    "problem.1n":"technology arrives, but the data, the people and the regulatory ground are not ready",
+    "problem.2nl":"the cost",
+    "problem.2n":"every AI initiative stalls at the data layer",
+    "problem.3nl":"the fix",
+    "problem.3n":"lay the foundation first, then deploy the workforce on it"
   };
 
   w.VALO_I18N = {

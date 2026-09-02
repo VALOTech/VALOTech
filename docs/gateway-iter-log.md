@@ -101,3 +101,18 @@ PARTIAL / BROKEN: `growth` still comes from a 1555px page, so the transition is
 only observable by scrolling a nearly empty document. The planet does not yet
 recede, re-centre or settle into the footer — it holds the middle throughout.
 NEXT: the chapters, so the scrub has a story to run along.
+
+## 05 — Chapter 2, The Problem
+WHAT CHANGED: the orbit constellation — three dark panels with a blinking
+outline glyph and a mono aside, beside a chapter head over a left-to-right
+scrim. Seven new keys carry the asides, seeded across all twenty dictionaries.
+`EXPECTED_NODES` 31 -> 46.
+VERIFIED: `--check` 46/46. Chrome 1440x900 at scroll 0.45 — the headline, the
+lede and all three panels are legible over the planet, and nothing overlaps
+anything. The reference places these nodes absolutely against a 1440 viewport
+and they land on its headline; here the stagger is a margin inside a grid
+track, so no width can produce that collision.
+PARTIAL / BROKEN: the nineteen non-English dictionaries carry the English
+string for the seven new keys. That is the seed, not a translation, and the
+per-locale pass replaces it.
+NEXT: chapters 3 and 4 — The Answer, and How we deliver.

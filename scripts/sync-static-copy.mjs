@@ -26,7 +26,7 @@ const en = I.dict.en;
 const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
 /* A node that stops matching the scanner would otherwise vanish without a sound. */
-const EXPECTED_NODES = 31;
+const EXPECTED_NODES = 46;
 
 /* Nothing else enforces that the twenty dictionaries carry the same keys, and a
    locale missing one silently falls back to English at runtime. */

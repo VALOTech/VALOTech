@@ -727,6 +727,132 @@ p:last-child {
   padding-top: clamp(0px, 6vh, 72px);
 }
 
+/* ========================================================= 10b. Chapters */
+
+/* A left-to-right scrim keeps the argument legible while the planet holds
+   the right of the frame. It is a gradient rather than a panel, so the sky
+   is never cut by an edge. */
+.chapter--rails {
+  background: linear-gradient(
+    90deg,
+    rgba(8, 10, 18, 0.95) 0%,
+    rgba(8, 10, 18, 0.86) 46%,
+    rgba(8, 10, 18, 0.55) 66%,
+    rgba(8, 10, 18, 0.18) 82%,
+    transparent 92%
+  );
+}
+
+[dir='rtl'] .chapter--rails {
+  background: linear-gradient(
+    270deg,
+    rgba(8, 10, 18, 0.95) 0%,
+    rgba(8, 10, 18, 0.86) 46%,
+    rgba(8, 10, 18, 0.55) 66%,
+    rgba(8, 10, 18, 0.18) 82%,
+    transparent 92%
+  );
+}
+
+/* The constellation. The reference places these absolutely against a
+   1440-wide viewport, where they land on the headline; here the stagger is
+   a margin inside a grid track, so no width can put a card over the text. */
+.orbit {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  gap: clamp(32px, 5vw, 80px);
+  align-items: start;
+}
+
+.orbit-nodes {
+  display: grid;
+  gap: clamp(28px, 4vh, 52px);
+}
+
+.orbit-node {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.orbit-node:nth-child(2) {
+  margin-inline-start: 14%;
+}
+
+.orbit-node:nth-child(3) {
+  margin-inline-start: 5%;
+}
+
+/* An outline square with a lit core. The four blink at coprime durations so
+   the constellation never pulses in unison. */
+.orbit-box {
+  flex: none;
+  position: relative;
+  width: 22px;
+  height: 22px;
+  margin-top: 10px;
+  border: 1px solid rgba(200, 220, 255, 0.5);
+}
+
+.orbit-box::after {
+  content: '';
+  position: absolute;
+  inset: 5px;
+  background: rgba(200, 220, 255, 0.55);
+}
+
+.js .orbit-node:nth-child(1) .orbit-box::after {
+  animation: orbit-blink 3.1s ease-in-out infinite;
+}
+
+.js .orbit-node:nth-child(2) .orbit-box::after {
+  animation: orbit-blink 4.3s ease-in-out infinite;
+}
+
+.js .orbit-node:nth-child(3) .orbit-box::after {
+  animation: orbit-blink 5.7s ease-in-out infinite;
+}
+
+@keyframes orbit-blink {
+  0%, 100% { opacity: 0.25; }
+  50% { opacity: 0.9; }
+}
+
+.orbit-card {
+  flex: 1;
+  min-width: 0;
+  max-width: 46ch;
+}
+
+@media (max-width: 900px) {
+  .chapter--rails {
+    background: linear-gradient(
+      180deg,
+      rgba(8, 10, 18, 0.9) 0%,
+      rgba(8, 10, 18, 0.94) 22%,
+      rgba(8, 10, 18, 0.94) 100%
+    );
+  }
+
+  [dir='rtl'] .chapter--rails {
+    background: linear-gradient(
+      180deg,
+      rgba(8, 10, 18, 0.9) 0%,
+      rgba(8, 10, 18, 0.94) 22%,
+      rgba(8, 10, 18, 0.94) 100%
+    );
+  }
+
+  .orbit {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .orbit-node:nth-child(2),
+  .orbit-node:nth-child(3) {
+    margin-inline-start: 0;
+  }
+}
+
 /* ============================================================ 11. Footer */
 
 .footer {
