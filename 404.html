@@ -5,93 +5,81 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>This page could not be found | VALO Tech</title>
   <meta name="robots" content="noindex" />
-  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#F2F7F5" />
-  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#06120E" />
+  <meta name="theme-color" content="#080a10" />
   <link rel="icon" href="assets/favicon.ico" sizes="any" />
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
-  <script>(function(){try{var t=localStorage.getItem('valotech-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
   <style>
-    @font-face{font-family:'Plex Sans';font-weight:400;font-style:normal;font-display:swap;src:url('assets/fonts/plex-sans-400.woff2') format('woff2')}
-    @font-face{font-family:'Plex Sans';font-weight:600;font-style:normal;font-display:swap;src:url('assets/fonts/plex-sans-600.woff2') format('woff2')}
-    @font-face{font-family:'Plex Sans';font-weight:700;font-style:normal;font-display:swap;src:url('assets/fonts/plex-sans-700.woff2') format('woff2')}
-    @font-face{font-family:'Plex Mono';font-weight:500;font-style:normal;font-display:swap;src:url('assets/fonts/plex-mono-500.woff2') format('woff2')}
+    /* Self-contained on purpose: an error page costs one request, and still
+       renders in the visitor's language. Tokens mirror assets/site.css so this
+       is the same brand rather than a lookalike. */
+    @font-face{font-family:'Roboto Condensed';font-weight:400;font-style:normal;font-display:swap;src:url('assets/fonts/roboto-condensed-400-latin.woff2') format('woff2')}
+    @font-face{font-family:'Roboto Condensed';font-weight:600;font-style:normal;font-display:swap;src:url('assets/fonts/roboto-condensed-600-latin.woff2') format('woff2')}
+    @font-face{font-family:'Roboto Condensed';font-weight:700;font-style:normal;font-display:swap;src:url('assets/fonts/roboto-condensed-700-latin.woff2') format('woff2')}
+    @font-face{font-family:'DM Mono';font-weight:500;font-style:normal;font-display:swap;src:url('assets/fonts/dm-mono-500-latin.woff2') format('woff2')}
 
-    /* Tokens mirror assets/site.css so the error page is the same brand, not a lookalike. */
     :root{
-      --bg:#F2F7F5; --elev:#FFFFFF; --t1:#0B1A17; --t2:#42534E;
-      --ink:#0A6B5C; --brand:#139A82; --line:#D7E3DF; --line-strong:#C1D2CC;
-      --fill:#0D5A54; --fill-hover:#0A4A45; --on-fill:#FFFFFF; --jade:#1AA67E;
-      --glow:rgba(26,166,126,.42); --jade-bright:#2FD9A8;
-      --font:'Plex Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
-      --mono:'Plex Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+      --void:#080a10; --indigo-1:#0b0a23;
+      --accent:#8c9eff; --accent-bright:#b9c2ff;
+      --text:rgba(248,248,255,.98); --text-muted:rgba(228,232,248,.86);
+      --font:'Roboto Condensed',system-ui,'Segoe UI',sans-serif;
+      --mono:'DM Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+      color-scheme:dark;
     }
-    :root[data-theme="dark"]{
-      --bg:#06120E; --elev:#0C1F18; --t1:#EAF7F1; --t2:#A2BBB1;
-      --ink:#34E2B0; --brand:#34E2B0; --line:rgba(255,255,255,.10); --line-strong:rgba(255,255,255,.18);
-      --fill:#16C79B; --fill-hover:#23D6A8; --on-fill:#04130E; --jade:#34E2B0;
-      --glow:rgba(52,226,176,.4); --jade-bright:#5EEFC2;
-    }
-    @media (prefers-color-scheme:dark){
-      :root:not([data-theme="light"]):not([data-theme="dark"]){
-        --bg:#06120E; --elev:#0C1F18; --t1:#EAF7F1; --t2:#A2BBB1;
-        --ink:#34E2B0; --brand:#34E2B0; --line:rgba(255,255,255,.10); --line-strong:rgba(255,255,255,.18);
-        --fill:#16C79B; --fill-hover:#23D6A8; --on-fill:#04130E; --jade:#34E2B0;
-        --glow:rgba(52,226,176,.4); --jade-bright:#5EEFC2;
-      }
-    }
-    *{margin:0;padding:0;box-sizing:border-box}
-    html{-webkit-text-size-adjust:100%}
-    body{min-height:100dvh;display:grid;place-items:center;padding:32px 24px;
-      background:var(--bg);color:var(--t1);font-family:var(--font);line-height:1.6;
-      -webkit-font-smoothing:antialiased;position:relative;overflow-x:hidden}
-    body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+    *,*::before,*::after{box-sizing:border-box}
+    body{
+      margin:0;min-height:100svh;
+      display:flex;align-items:center;justify-content:center;
+      padding:48px 24px;
       background:
-        radial-gradient(54% 44% at 14% 4%, color-mix(in srgb,var(--brand) 18%,transparent) 0%, transparent 60%),
-        radial-gradient(70% 56% at 52% 110%, color-mix(in srgb,var(--ink) 14%,transparent) 0%, transparent 62%)}
-    main{text-align:center;max-width:46ch}
-    .mark{display:inline-flex;align-items:center;gap:11px;margin-bottom:34px;text-decoration:none;
-      font-weight:700;font-size:18.5px;letter-spacing:-.02em;color:var(--t1)}
-    .mark img{height:30px;width:auto;display:block}
-    .mark .b2{color:var(--ink)}
-    .mark .logo-dark{display:none}
-    :root[data-theme="dark"] .mark .logo-light{display:none}
-    :root[data-theme="dark"] .mark .logo-dark{display:block}
-    @media (prefers-color-scheme:dark){
-      :root:not([data-theme="light"]):not([data-theme="dark"]) .mark .logo-light{display:none}
-      :root:not([data-theme="light"]):not([data-theme="dark"]) .mark .logo-dark{display:block}
+        radial-gradient(ellipse 70% 60% at 50% 38%, rgba(20,18,58,.9) 0%, transparent 70%),
+        var(--void);
+      color:var(--text);font-family:var(--font);font-size:16px;line-height:1.6;
+      -webkit-font-smoothing:antialiased;
     }
-    .code{font-family:var(--mono);font-weight:500;font-size:12.5px;letter-spacing:.16em;
-      text-transform:uppercase;color:var(--ink);margin-bottom:16px}
-    h1{font-size:clamp(1.7rem,4.4vw,2.5rem);font-weight:700;letter-spacing:-.02em;
-      line-height:1.14;text-wrap:balance}
-    p{color:var(--t2);margin:16px auto 32px;text-wrap:pretty}
-    a.btn{display:inline-flex;align-items:center;gap:.5em;background:var(--fill);color:var(--on-fill);
-      font-weight:600;font-size:15px;line-height:1;text-decoration:none;padding:13px 22px;
-      border:1.5px solid var(--fill);border-radius:999px;
-      transition:transform .18s cubic-bezier(.16,1,.3,1),background .2s,border-color .2s,box-shadow .25s}
-    a.btn:hover{background:var(--fill-hover);border-color:var(--fill-hover);transform:translateY(-1px);
-      box-shadow:0 14px 30px -14px var(--glow)}
-    a.btn:active{transform:translateY(1px)}
-    a.btn svg{width:1.12em;height:1.12em;fill:currentColor;transition:transform .2s}
-    a.btn:hover svg{transform:translateX(3px)}
-    [dir="rtl"] a.btn svg{transform:scaleX(-1)}
-    [dir="rtl"] a.btn:hover svg{transform:scaleX(-1) translateX(3px)}
-    :where(a):focus-visible{outline:2.5px solid var(--jade);outline-offset:3px;border-radius:6px}
-    /* Vietnamese stacks two marks over a vowel; CJK has no sidebearing to tighten. */
-    :lang(vi) h1{line-height:1.28;letter-spacing:-.015em}
-    :lang(zh) h1,:lang(ja) h1,:lang(ko) h1{line-height:1.4;letter-spacing:normal}
-    :lang(zh) body,:lang(ja) body,:lang(ko) body{line-height:1.8}
-    :lang(th) h1,:lang(hi) h1,:lang(bn) h1,:lang(ar) h1,:lang(ur) h1{line-height:1.4;letter-spacing:normal}
-    :lang(th) body,:lang(hi) body,:lang(bn) body,:lang(ar) body,:lang(ur) body{line-height:1.78}
-    @media (prefers-reduced-motion:reduce){*{transition:none!important}a.btn:hover{transform:none}}
+    main{max-width:56ch;text-align:center}
+    .mark{
+      display:flex;justify-content:center;align-items:center;gap:10px;margin-bottom:40px;
+      color:var(--text);text-decoration:none;font-size:19px;font-weight:700;letter-spacing:-.01em;
+    }
+    .mark img{display:block;width:28px;height:auto}
+    .mark .b2{color:var(--accent)}
+    .code{
+      display:inline-block;margin-bottom:20px;padding:6px 12px;
+      border:1px solid rgba(140,158,255,.3);border-radius:999px;
+      background:rgba(140,158,255,.08);
+      font-family:var(--mono);font-size:11px;font-weight:500;
+      letter-spacing:.22em;text-transform:uppercase;color:var(--accent-bright);
+    }
+    h1{
+      margin:0 0 16px;font-weight:400;letter-spacing:-.02em;line-height:1.05;
+      font-size:clamp(34px,6vw,58px);
+    }
+    p{margin:0 0 32px;color:var(--text-muted)}
+    .btn{
+      display:inline-flex;align-items:center;gap:10px;
+      padding:12px 22px;border-radius:999px;border:1px solid transparent;
+      background:var(--accent-bright);color:#07071a;
+      font-family:inherit;font-size:15px;font-weight:600;line-height:1;text-decoration:none;
+      box-shadow:0 0 34px rgba(140,158,255,.34);
+      transition:background .25s cubic-bezier(.16,1,.3,1),transform .25s cubic-bezier(.16,1,.3,1);
+    }
+    .btn:hover{background:#fff;transform:translateY(-1px)}
+    .btn svg{width:16px;height:16px;fill:currentColor}
+    a:focus-visible,.btn:focus-visible{outline:2px solid var(--accent-bright);outline-offset:3px}
+    @media (prefers-reduced-motion:reduce){*{transition-duration:.001ms!important}}
+    @media print{
+      body{background:#fff;color:#000}
+      h1,p,.code,.mark{color:#000}
+      .code{border-color:#999;background:none}
+      .btn{background:none;color:#000;border-color:#999;box-shadow:none}
+    }
   </style>
 </head>
 <body>
   <main>
     <a class="mark" href="/" aria-label="VALO Tech home">
-      <img class="logo-light" src="assets/valo-symbol-teal.png" alt="" width="33" height="30" />
-      <img class="logo-dark" src="assets/valo-symbol-white.png" alt="" width="33" height="30" />
+      <img src="assets/valo-symbol-white.png" alt="" width="33" height="30" />
       <span>VALO <span class="b2">Tech</span></span>
     </a>
     <div class="code">Error 404</div>

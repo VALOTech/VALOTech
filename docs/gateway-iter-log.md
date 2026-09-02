@@ -217,3 +217,21 @@ The narrow-screen mapping had a real defect too: both column headings stacked
 above everything and labelled nothing.
 PARTIAL / BROKEN: — none —
 NEXT: the per-locale translation pass, one language per iteration.
+
+## 12 — The two pages that are not the homepage
+WHAT CHANGED: `404.html` rebuilt on the Gateway system, still self-contained
+and still carrying its inlined twenty-locale table, so an error page costs one
+request and renders in the visitor's language. `assets/og.html` rebuilt and
+`og-cover.png` re-rendered from it, using the same still the page falls back
+to, so a shared link looks like the page it opens. The seven IBM Plex faces
+are removed: nothing referenced them once the card was rebuilt (144 KB).
+`assets/valo-symbol-teal.png` is kept — it is a brand mark rather than dead
+code, and the brand kit is not the place to prune by reference count.
+VERIFIED: `--check` green on both files. Chrome at 1440x900 for the 404 and at
+1200x630 for the card.
+⭐ The first card render had a visible vertical seam where the veil gradient
+ended: the card's radial ground and the still's own ground are different
+colours, and the image is opaque. Flattening the card's ground to exactly the
+still's `#080a10` removed it; the depth is painted over the top instead.
+PARTIAL / BROKEN: — none —
+NEXT: the per-locale translation pass, one language per iteration.

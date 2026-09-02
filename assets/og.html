@@ -3,31 +3,49 @@
 <head>
 <meta charset="UTF-8" />
 <style>
-  @font-face{font-family:'Plex Sans';font-weight:700;src:url('fonts/plex-sans-700.woff2') format('woff2')}
-  @font-face{font-family:'Plex Sans';font-weight:400;src:url('fonts/plex-sans-400.woff2') format('woff2')}
-  @font-face{font-family:'Plex Mono';font-weight:500;src:url('fonts/plex-mono-500.woff2') format('woff2')}
+  /* Render source for og-cover.png (1200x630). Open it at that size and
+     screenshot the body; the planet is the same still the page falls back to,
+     so a shared link looks like the page it opens. */
+  @font-face{font-family:'Roboto Condensed';font-weight:400;src:url('fonts/roboto-condensed-400-latin.woff2') format('woff2')}
+  @font-face{font-family:'Roboto Condensed';font-weight:700;src:url('fonts/roboto-condensed-700-latin.woff2') format('woff2')}
+  @font-face{font-family:'DM Mono';font-weight:500;src:url('fonts/dm-mono-500-latin.woff2') format('woff2')}
   *{margin:0;box-sizing:border-box}
-  body{width:1200px;height:630px;overflow:hidden;
-    background:radial-gradient(circle at 78% 30%,#0F6B63,#0D5A54 55%,#0A4A45);
-    color:#fff;font-family:'Plex Sans',sans-serif;display:flex;flex-direction:column;
-    justify-content:center;padding:84px 80px;position:relative}
-  .eyebrow{font-family:'Plex Mono',monospace;font-weight:500;font-size:21px;letter-spacing:.18em;
-    text-transform:uppercase;color:#62E2BC;margin-bottom:30px}
-  h1{font-size:66px;font-weight:700;letter-spacing:-.03em;line-height:1.06;max-width:18ch}
-  .sub{font-size:27px;color:rgba(255,255,255,.82);margin-top:30px;max-width:34ch;line-height:1.45}
-  .brand{position:absolute;top:64px;left:80px;display:flex;align-items:center;gap:16px}
-  .brand img{height:60px}
+  body{width:1200px;height:630px;overflow:hidden;position:relative;
+    /* Flat, and exactly the still's own ground, so the image has no visible
+       edge. Depth is added over the top instead. */
+    background:#080a10;
+    color:rgba(248,248,255,.98);font-family:'Roboto Condensed',sans-serif;
+    display:flex;flex-direction:column;justify-content:center;padding:96px 80px}
+  .planet{position:absolute;right:-70px;top:50%;transform:translateY(-50%);
+    width:620px;height:620px;object-fit:contain}
+  .veil{position:absolute;inset:0;
+    background:
+      radial-gradient(ellipse 62% 78% at 74% 48%, rgba(90,104,196,.20) 0%, transparent 68%),
+      linear-gradient(90deg,rgba(8,10,16,.94) 0%,rgba(8,10,16,.84) 44%,rgba(8,10,16,.30) 70%,transparent 88%)}
+  .layer{position:relative}
+  .brand{position:absolute;top:60px;left:80px;display:flex;align-items:center;gap:14px;z-index:2}
+  .brand img{height:44px}
   .brand .nm{font-size:26px;font-weight:700;letter-spacing:-.01em}
-  .sym{position:absolute;right:-40px;bottom:-60px;width:460px;opacity:.16}
-  .rule{position:absolute;left:80px;bottom:70px;font-family:'Plex Mono',monospace;font-size:20px;color:rgba(255,255,255,.6)}
+  .brand .b2{color:#8c9eff}
+  .eyebrow{display:inline-block;font-family:'DM Mono',monospace;font-weight:500;font-size:17px;
+    letter-spacing:.22em;text-transform:uppercase;color:#b9c2ff;margin-bottom:26px;
+    padding:8px 16px;border:1px solid rgba(140,158,255,.3);border-radius:999px;
+    background:rgba(140,158,255,.08)}
+  h1{font-size:72px;font-weight:400;letter-spacing:-.02em;line-height:1.04;max-width:15ch}
+  .sub{font-size:25px;color:rgba(228,232,248,.86);margin-top:26px;max-width:30ch;line-height:1.45}
+  .rule{position:absolute;left:80px;bottom:60px;font-family:'DM Mono',monospace;
+    font-size:19px;letter-spacing:.06em;color:#8c9eff;z-index:2}
 </style>
 </head>
 <body>
-  <div class="brand"><img src="valo-symbol-white.png" alt="" /><span class="nm">VALO Tech</span></div>
-  <img class="sym" src="valo-symbol-white.png" alt="" />
-  <div class="eyebrow">AI workforce &middot; regulated industries</div>
-  <h1>An AI workforce, deployed on your own clean data.</h1>
-  <div class="sub">Audit-defensible from day one. Built inside your environment.</div>
+  <img class="planet" src="textures/planet-still.webp" alt="" />
+  <div class="veil"></div>
+  <div class="brand"><img src="valo-symbol-white.png" alt="" /><span class="nm">VALO <span class="b2">Tech</span></span></div>
+  <div class="layer">
+    <div><span class="eyebrow">AI workforce &middot; regulated industries</span></div>
+    <h1>An AI workforce, deployed on your own clean data.</h1>
+    <div class="sub">Audit-defensible from day one. Built inside your environment.</div>
+  </div>
   <div class="rule">valotech.org</div>
 </body>
 </html>
