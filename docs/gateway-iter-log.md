@@ -253,3 +253,27 @@ block that Vietnamese lives in falls through to the system. The screenshot
 looked fine; the font readout did not.
 PARTIAL / BROKEN: eighteen locales still carry the English seed.
 NEXT: Chinese (Simplified).
+
+## 14 — The remaining eighteen locales, and two defects they exposed
+WHAT CHANGED: the fifteen keys translated into zh, zt, th, id, ms, tl, hi, es,
+ar, fr, bn, pt, ru, ur, de, ja, tr and ko, each against the register and
+terminology its own dictionary already holds. Per-script font stacks declared
+for CJK, Thai, Arabic and the Indic scripts. The skip link no longer hides
+itself off-screen.
+VERIFIED: an audit over all twenty dictionaries reports no locale still
+carrying an English seed. Chrome font readouts: Chinese moved from NSimSun to
+Microsoft YaHei, Thai from Tahoma to Leelawadee UI, Arabic from Courier New to
+Segoe UI. Arabic rendered at 1440x900 with the layout mirrored and the `//`
+marker correctly at the start of its line.
+⭐ Two real defects, both found only by rendering:
+  1. `monospace` is not a font. On Windows the generic resolves to NSimSun for
+     Chinese and Courier New for Arabic — faces that are fixed-width and little
+     else. Every non-Latin script now names a face designed for it.
+  2. **The Arabic and Urdu pages were blank.** `.skip { left: -9999px }` is a
+     direction-dependent trick: in a right-to-left document that offset
+     overflows the inline end, which widened the page to 11439px against a
+     1440px viewport — and since a right-to-left document opens scrolled to its
+     inline start, the reader landed on ten thousand pixels of empty space. The
+     skip link now hides by size and clip, which has no direction.
+PARTIAL / BROKEN: — none —
+NEXT: the README, which still describes the site this replaced.

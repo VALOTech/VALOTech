@@ -63,8 +63,7 @@
      Thai, Arabic, the Indic scripts and CJK fall through to a face that
      has them — a condensed display that lacks a script is worse than a
      system face that does not. */
-  --font: 'Roboto Condensed', system-ui, 'Noto Sans Thai', 'Noto Sans Arabic',
-    'Noto Sans SC', 'Noto Sans JP', 'Noto Sans KR', 'Segoe UI', sans-serif;
+  --font: 'Roboto Condensed', system-ui, 'Segoe UI', 'Helvetica Neue', sans-serif;
   --mono: 'DM Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
 
   /* Published every frame by the scene so markers can hold their position
@@ -76,12 +75,55 @@
   color-scheme: dark;
 }
 
-/* DM Mono has no Vietnamese: its latin-ext stops short of U+1EA0-1EF9, so a
-   Vietnamese line comes out part DM Mono and part whatever the system has.
-   Vietnamese therefore takes one typeface for the whole mono role rather than
-   a hybrid — a mixed line is worse than a different face. */
+/* Neither face carries every script the page is translated into, and the
+   generic families are where quality goes to die: `monospace` on Windows
+   resolves to NSimSun for Chinese and Courier New for Arabic — faces that are
+   fixed-width and little else. Each script therefore names a face designed for
+   it. DM Mono still leads the mono stacks, so Latin and digits inside a
+   translated line keep the page's voice, which is how mixed-script setting is
+   done anyway. */
 :root:lang(vi) {
+  /* DM Mono has no Vietnamese at all: its latin-ext stops short of U+1EA0-1EF9,
+     so the block Vietnamese lives in fell through to the system. One typeface
+     for the whole role beats a line set in two. */
   --mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+}
+
+:root:lang(zh-Hans) {
+  --font: 'Roboto Condensed', 'Microsoft YaHei', 'PingFang SC', 'Noto Sans SC', sans-serif;
+  --mono: 'DM Mono', 'Microsoft YaHei', 'PingFang SC', 'Noto Sans SC', sans-serif;
+}
+
+:root:lang(zh-Hant) {
+  --font: 'Roboto Condensed', 'Microsoft JhengHei', 'PingFang TC', 'Noto Sans TC', sans-serif;
+  --mono: 'DM Mono', 'Microsoft JhengHei', 'PingFang TC', 'Noto Sans TC', sans-serif;
+}
+
+:root:lang(ja) {
+  --font: 'Roboto Condensed', 'Yu Gothic UI', 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+  --mono: 'DM Mono', 'Yu Gothic UI', 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+}
+
+:root:lang(ko) {
+  --font: 'Roboto Condensed', 'Malgun Gothic', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+  --mono: 'DM Mono', 'Malgun Gothic', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+}
+
+:root:lang(th) {
+  --font: 'Roboto Condensed', 'Leelawadee UI', 'Noto Sans Thai', 'Thonburi', sans-serif;
+  --mono: 'DM Mono', 'Leelawadee UI', 'Noto Sans Thai', 'Thonburi', sans-serif;
+}
+
+:root:lang(ar),
+:root:lang(ur) {
+  --font: 'Roboto Condensed', 'Segoe UI', 'Geeza Pro', 'Noto Naskh Arabic', sans-serif;
+  --mono: 'DM Mono', 'Segoe UI', 'Geeza Pro', 'Noto Naskh Arabic', sans-serif;
+}
+
+:root:lang(hi),
+:root:lang(bn) {
+  --font: 'Roboto Condensed', 'Nirmala UI', 'Kohinoor Devanagari', 'Noto Sans Devanagari', 'Noto Sans Bengali', sans-serif;
+  --mono: 'DM Mono', 'Nirmala UI', 'Kohinoor Devanagari', 'Noto Sans Devanagari', 'Noto Sans Bengali', sans-serif;
 }
 
 /* ============================================================ 2. Base */
@@ -137,12 +179,21 @@ a:hover {
   color: #fff;
 }
 
+/* Hidden by size and clip, never by an off-screen offset. `left: -9999px`
+   overflows the inline end of a right-to-left document, which both widens the
+   page by ten thousand pixels and — because a right-to-left document starts
+   scrolled to its inline start — opens it on empty space. */
 .skip {
   position: absolute;
-  left: -9999px;
-  top: 0;
+  inset-block-start: 16px;
+  inset-inline-start: 16px;
   z-index: 200;
-  padding: 12px 18px;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
   background: var(--indigo-2);
   color: var(--text);
   border: 1px solid var(--glass-border);
@@ -150,8 +201,11 @@ a:hover {
 }
 
 .skip:focus {
-  left: 16px;
-  top: 16px;
+  width: auto;
+  height: auto;
+  padding: 12px 18px;
+  overflow: visible;
+  clip-path: none;
 }
 
 .sr-only {
