@@ -130,3 +130,15 @@ the display headline broke into six lines. The heading now takes a measure in
 its own terms and the paragraph keeps a reading measure.
 PARTIAL / BROKEN: — none —
 NEXT: chapters 5 to 7 — the workforce, ValoStack, and the seven trust answers.
+
+## 07 — Chapters 5 to 7, the workforce, ValoStack and the seven answers
+WHAT CHANGED: nine department panels, each leading with the need rather than
+our label for it; ValoStack as a statement chapter with no cards, because the
+claim carries itself; seven capability panels with a mono headline and three
+checked points each. Three new keys. `EXPECTED_NODES` 86 -> 161.
+VERIFIED: `--check` 161/161, no console errors. Chrome 1440x900 at scroll 0.5,
+0.62 and 0.78. With the page now 8012px the growth scrub paces properly — the
+Earth is fully formed by the trust chapter, which is where the argument turns
+from what breaks to what holds.
+PARTIAL / BROKEN: — none —
+NEXT: the ecosystem's six products, then pricing and the real footer.

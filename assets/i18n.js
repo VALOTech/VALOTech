@@ -187,7 +187,10 @@
     "problem.3n":"lay the foundation first, then deploy the workforce on it",
     "answer.covers":"Covers phases",
     "answer.standalone":"Standalone, at any time",
-    "phases.eyebrow":"How we deliver"
+    "phases.eyebrow":"How we deliver",
+    "workforce.eyebrow":"The workforce",
+    "valostack.eyebrow":"ValoStack",
+    "cap.eyebrow":"Why ValoLab"
   };
 
   var vi = {
@@ -355,7 +358,10 @@
     "problem.3n":"lay the foundation first, then deploy the workforce on it",
     "answer.covers":"Covers phases",
     "answer.standalone":"Standalone, at any time",
-    "phases.eyebrow":"How we deliver"
+    "phases.eyebrow":"How we deliver",
+    "workforce.eyebrow":"The workforce",
+    "valostack.eyebrow":"ValoStack",
+    "cap.eyebrow":"Why ValoLab"
   };
 
   var zh = {
@@ -523,7 +529,10 @@
     "problem.3n":"lay the foundation first, then deploy the workforce on it",
     "answer.covers":"Covers phases",
     "answer.standalone":"Standalone, at any time",
-    "phases.eyebrow":"How we deliver"
+    "phases.eyebrow":"How we deliver",
+    "workforce.eyebrow":"The workforce",
+    "valostack.eyebrow":"ValoStack",
+    "cap.eyebrow":"Why ValoLab"
   };
 
   var zt = {
@@ -691,7 +700,10 @@
     "problem.3n":"lay the foundation first, then deploy the workforce on it",
     "answer.covers":"Covers phases",
     "answer.standalone":"Standalone, at any time",
-    "phases.eyebrow":"How we deliver"
+    "phases.eyebrow":"How we deliver",
+    "workforce.eyebrow":"The workforce",
+    "valostack.eyebrow":"ValoStack",
+    "cap.eyebrow":"Why ValoLab"
   };
 
   var th = {
@@ -859,7 +871,10 @@
     "problem.3n":"lay the foundation first, then deploy the workforce on it",
     "answer.covers":"Covers phases",
     "answer.standalone":"Standalone, at any time",
-    "phases.eyebrow":"How we deliver"
+    "phases.eyebrow":"How we deliver",
+    "workforce.eyebrow":"The workforce",
+    "valostack.eyebrow":"ValoStack",
+    "cap.eyebrow":"Why ValoLab"
   };
 
   var id = {
@@ -1027,7 +1042,10 @@
     "problem.3n":"lay the foundation first, then deploy the workforce on it",
     "answer.covers":"Covers phases",
     "answer.standalone":"Standalone, at any time",
-    "phases.eyebrow":"How we deliver"
+    "phases.eyebrow":"How we deliver",
+    "workforce.eyebrow":"The workforce",
+    "valostack.eyebrow":"ValoStack",
+    "cap.eyebrow":"Why ValoLab"
   };
 
   var ms = {
@@ -1195,7 +1213,10 @@
     "problem.3n":"lay the foundation first, then deploy the workforce on it",
     "answer.covers":"Covers phases",
     "answer.standalone":"Standalone, at any time",
-    "phases.eyebrow":"How we deliver"
+    "phases.eyebrow":"How we deliver",
+    "workforce.eyebrow":"The workforce",
+    "valostack.eyebrow":"ValoStack",
+    "cap.eyebrow":"Why ValoLab"
   };
 
   var tl = {
@@ -1363,7 +1384,10 @@
     "problem.3n":"lay the foundation first, then deploy the workforce on it",
     "answer.covers":"Covers phases",
     "answer.standalone":"Standalone, at any time",
-    "phases.eyebrow":"How we deliver"
+    "phases.eyebrow":"How we deliver",
+    "workforce.eyebrow":"The workforce",
+    "valostack.eyebrow":"ValoStack",
+    "cap.eyebrow":"Why ValoLab"
   };
 
   var hi = {
@@ -1531,7 +1555,10 @@
     "problem.3n":"lay the foundation first, then deploy the workforce on it",
     "answer.covers":"Covers phases",
     "answer.standalone":"Standalone, at any time",
-    "phases.eyebrow":"How we deliver"
+    "phases.eyebrow":"How we deliver",
+    "workforce.eyebrow":"The workforce",
+    "valostack.eyebrow":"ValoStack",
+    "cap.eyebrow":"Why ValoLab"
   };
 
   var es = {
@@ -1699,7 +1726,10 @@
     "problem.3n":"lay the foundation first, then deploy the workforce on it",
     "answer.covers":"Covers phases",
     "answer.standalone":"Standalone, at any time",
-    "phases.eyebrow":"How we deliver"
+    "phases.eyebrow":"How we deliver",
+    "workforce.eyebrow":"The workforce",
+    "valostack.eyebrow":"ValoStack",
+    "cap.eyebrow":"Why ValoLab"
   };
 
   var ar = {
@@ -1867,7 +1897,10 @@
     "problem.3n":"lay the foundation first, then deploy the workforce on it",
     "answer.covers":"Covers phases",
     "answer.standalone":"Standalone, at any time",
-    "phases.eyebrow":"How we deliver"
+    "phases.eyebrow":"How we deliver",
+    "workforce.eyebrow":"The workforce",
+    "valostack.eyebrow":"ValoStack",
+    "cap.eyebrow":"Why ValoLab"
   };
 
   var fr = {
@@ -2035,7 +2068,10 @@
     "problem.3n":"lay the foundation first, then deploy the workforce on it",
     "answer.covers":"Covers phases",
     "answer.standalone":"Standalone, at any time",
-    "phases.eyebrow":"How we deliver"
+    "phases.eyebrow":"How we deliver",
+    "workforce.eyebrow":"The workforce",
+    "valostack.eyebrow":"ValoStack",
+    "cap.eyebrow":"Why ValoLab"
   };
 
   var bn = {
@@ -2203,7 +2239,10 @@
     "problem.3n":"lay the foundation first, then deploy the workforce on it",
     "answer.covers":"Covers phases",
     "answer.standalone":"Standalone, at any time",
-    "phases.eyebrow":"How we deliver"
+    "phases.eyebrow":"How we deliver",
+    "workforce.eyebrow":"The workforce",
+    "valostack.eyebrow":"ValoStack",
+    "cap.eyebrow":"Why ValoLab"
   };
 
   var pt = {
@@ -2371,7 +2410,10 @@
     "problem.3n":"lay the foundation first, then deploy the workforce on it",
     "answer.covers":"Covers phases",
     "answer.standalone":"Standalone, at any time",
-    "phases.eyebrow":"How we deliver"
+    "phases.eyebrow":"How we deliver",
+    "workforce.eyebrow":"The workforce",
+    "valostack.eyebrow":"ValoStack",
+    "cap.eyebrow":"Why ValoLab"
   };
 
   var ru = {
@@ -2539,7 +2581,10 @@
     "problem.3n":"lay the foundation first, then deploy the workforce on it",
     "answer.covers":"Covers phases",
     "answer.standalone":"Standalone, at any time",
-    "phases.eyebrow":"How we deliver"
+    "phases.eyebrow":"How we deliver",
+    "workforce.eyebrow":"The workforce",
+    "valostack.eyebrow":"ValoStack",
+    "cap.eyebrow":"Why ValoLab"
   };
 
   var ur = {
@@ -2707,7 +2752,10 @@
     "problem.3n":"lay the foundation first, then deploy the workforce on it",
     "answer.covers":"Covers phases",
     "answer.standalone":"Standalone, at any time",
-    "phases.eyebrow":"How we deliver"
+    "phases.eyebrow":"How we deliver",
+    "workforce.eyebrow":"The workforce",
+    "valostack.eyebrow":"ValoStack",
+    "cap.eyebrow":"Why ValoLab"
   };
 
   var de = {
@@ -2875,7 +2923,10 @@
     "problem.3n":"lay the foundation first, then deploy the workforce on it",
     "answer.covers":"Covers phases",
     "answer.standalone":"Standalone, at any time",
-    "phases.eyebrow":"How we deliver"
+    "phases.eyebrow":"How we deliver",
+    "workforce.eyebrow":"The workforce",
+    "valostack.eyebrow":"ValoStack",
+    "cap.eyebrow":"Why ValoLab"
   };
 
   var ja = {
@@ -3043,7 +3094,10 @@
     "problem.3n":"lay the foundation first, then deploy the workforce on it",
     "answer.covers":"Covers phases",
     "answer.standalone":"Standalone, at any time",
-    "phases.eyebrow":"How we deliver"
+    "phases.eyebrow":"How we deliver",
+    "workforce.eyebrow":"The workforce",
+    "valostack.eyebrow":"ValoStack",
+    "cap.eyebrow":"Why ValoLab"
   };
 
   var tr = {
@@ -3211,7 +3265,10 @@
     "problem.3n":"lay the foundation first, then deploy the workforce on it",
     "answer.covers":"Covers phases",
     "answer.standalone":"Standalone, at any time",
-    "phases.eyebrow":"How we deliver"
+    "phases.eyebrow":"How we deliver",
+    "workforce.eyebrow":"The workforce",
+    "valostack.eyebrow":"ValoStack",
+    "cap.eyebrow":"Why ValoLab"
   };
 
   var ko = {
@@ -3379,7 +3436,10 @@
     "problem.3n":"lay the foundation first, then deploy the workforce on it",
     "answer.covers":"Covers phases",
     "answer.standalone":"Standalone, at any time",
-    "phases.eyebrow":"How we deliver"
+    "phases.eyebrow":"How we deliver",
+    "workforce.eyebrow":"The workforce",
+    "valostack.eyebrow":"ValoStack",
+    "cap.eyebrow":"Why ValoLab"
   };
 
   w.VALO_I18N = {

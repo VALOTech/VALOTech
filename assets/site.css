@@ -996,6 +996,113 @@ p:last-child {
   }
 }
 
+/* ======================================================= 10e. Workforce */
+
+.depts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.dept {
+  padding: 20px 22px;
+}
+
+/* The job comes before the department name: a reader recognises the need
+   they have long before they recognise our label for it. */
+.dept-need {
+  display: block;
+  font-family: var(--mono);
+  font-size: var(--type-meta);
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.dept h3 {
+  font-size: 18px;
+  margin-bottom: 6px;
+}
+
+.dept p {
+  font-size: var(--type-card-body);
+}
+
+/* ========================================================= 10f. Trust */
+
+.caps {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.cap h3 {
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.cap-head {
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--accent-bright);
+  margin-bottom: 14px;
+}
+
+.cap-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.cap-list li {
+  display: flex;
+  gap: 10px;
+  font-size: var(--type-card-body);
+  color: var(--text-muted);
+}
+
+.cap-list .i {
+  flex: none;
+  width: 15px;
+  height: 15px;
+  margin-top: 4px;
+  color: var(--accent);
+}
+
+/* ===================================================== 10g. Statement */
+
+/* A chapter that is one sentence and its consequences. No cards: the
+   claim carries itself. */
+.statement {
+  display: grid;
+  gap: 20px;
+  max-width: 60ch;
+}
+
+.statement p {
+  font-size: var(--type-intro);
+}
+
+.statement .keep {
+  padding: 18px 22px;
+  border-radius: var(--r-panel);
+  border-inline-start: 2px solid var(--accent);
+  background: rgba(140, 158, 255, 0.07);
+  color: var(--text);
+  font-size: var(--type-intro);
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .depts,
+  .caps {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 /* ============================================================ 11. Footer */
 
 .footer {
