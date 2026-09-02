@@ -203,6 +203,10 @@
     doc.addEventListener("focusin", function (e) {
       var block = e.target.closest && e.target.closest(".reveal:not(.in)");
       if (block) {
+        /* The staggered delay is for reading down a page. A keyboard user has
+           already arrived, so it would leave them on something invisible for
+           the better part of a second. */
+        block.style.transitionDelay = "0s";
         block.classList.add("in");
         io.unobserve(block);
       }

@@ -1160,6 +1160,19 @@ html:not(.can-scene) .planet {
   height: 16px;
 }
 
+/* On a wide screen the column headings do the labelling. Stacked, they would
+   both sit above everything and label nothing, so each cell names its own
+   side instead. */
+.fit-role {
+  display: none;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 5px;
+}
+
 .fit-tag {
   margin-top: 20px;
   font-family: var(--mono);
@@ -1264,13 +1277,22 @@ html:not(.can-scene) .planet {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .fit-head,
   .fit-row {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .fit-head span:nth-child(2) {
+  /* Stacked, the pairs need more air between them than inside them, or the
+     row boundary disappears. */
+  .fit {
+    gap: 26px;
+  }
+
+  .fit-head {
     display: none;
+  }
+
+  .fit-role {
+    display: block;
   }
 
   .fit-arrow {

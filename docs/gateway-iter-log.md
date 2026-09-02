@@ -196,3 +196,24 @@ No page errors in any of the four.
 PARTIAL / BROKEN: — none —
 NEXT: contrast and keyboard measured against the painted pixel, then the
 per-locale translation pass.
+
+## 11 — Accessibility, measured
+WHAT CHANGED: focus now reveals its block immediately rather than after the
+staggered delay; on narrow screens each mapping cell names its own side.
+VERIFIED: contrast measured against the painted pixel — the glyphs are made
+transparent, the page screenshotted, and the median luminance inside each text
+box taken as its true background, panel fill over planet over star field.
+65 text boxes across five scroll positions: all pass. Tab order: 26 stops,
+every one on screen with a visible focus ring.
+⭐ Two findings my own probe manufactured before it found the real one.
+  1. Fifteen stops read OFFSCREEN because `scroll-behavior: smooth` was still
+     carrying the element into view when the reading was taken. Turning smooth
+     scrolling off for the walk cleared all fifteen.
+  2. Then three read `opacity: 0`, which looked like the same artifact and was
+     not: focus was landing on a reveal block that waits out a 0.27s delay
+     before a 0.7s fade, so a keyboard user stood on something invisible for
+     the better part of a second. That one was real, and is fixed.
+The narrow-screen mapping had a real defect too: both column headings stacked
+above everything and labelled nothing.
+PARTIAL / BROKEN: — none —
+NEXT: the per-locale translation pass, one language per iteration.
