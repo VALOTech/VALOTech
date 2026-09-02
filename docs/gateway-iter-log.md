@@ -37,3 +37,17 @@ PARTIAL / BROKEN: the scene is an empty canvas — no star field, no planet.
 `assets/site.js` is still the old file; it drives i18n, the language menu and
 the burger correctly but also looks for a theme switch that no longer exists.
 NEXT: star field, so the void stops being flat black.
+
+## 02 — The star field
+WHAT CHANGED: `assets/scene/stars.js` — a 2D-canvas sky in three depth tiers
+that scroll at different rates, plus a 1.4% minority carrying a soft halo.
+Linked `defer` from `index.html`.
+VERIFIED: a Playwright probe read the canvas signature at scrollY 0 and 500 —
+it changes, so the parallax is real and not a still image. Chrome 1440x900
+shows the field at the reference's density.
+⭐ The same probe counted requestAnimationFrame ticks to check for an idle
+loop. That measures the probe's own loop, not the page's, and proves nothing.
+The absence of an idle loop is a fact about the code — `frame()` returns
+without rescheduling — not something that run established.
+PARTIAL / BROKEN: — none —
+NEXT: vendor three.js and put the lunar sphere in the sky.
