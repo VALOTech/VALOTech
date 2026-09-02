@@ -116,3 +116,17 @@ PARTIAL / BROKEN: the nineteen non-English dictionaries carry the English
 string for the seven new keys. That is the seed, not a translation, and the
 per-locale pass replaces it.
 NEXT: chapters 3 and 4 — The Answer, and How we deliver.
+
+## 06 — Chapters 3 and 4, The Answer and How we deliver
+WHAT CHANGED: three service panels, each carrying a five-square strip that
+shows which phases it covers, so the shape of an engagement is legible before
+a word of it is read; then the five-phase track, markers joined by a rule so
+the panels read as one sequence. Three new keys. `EXPECTED_NODES` 46 -> 86.
+VERIFIED: `--check` 86/86, no console errors. Chrome 1440x900 at scroll 0.33
+and 0.55.
+⭐ Caught in the browser, not in review: `.chapter-head { max-width: 52ch }`
+resolves `ch` against the container's 16px font, not the heading's 58px, so
+the display headline broke into six lines. The heading now takes a measure in
+its own terms and the paragraph keeps a reading measure.
+PARTIAL / BROKEN: — none —
+NEXT: chapters 5 to 7 — the workforce, ValoStack, and the seven trust answers.

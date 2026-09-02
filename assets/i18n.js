@@ -184,7 +184,10 @@
     "problem.2nl":"the cost",
     "problem.2n":"every AI initiative stalls at the data layer",
     "problem.3nl":"the fix",
-    "problem.3n":"lay the foundation first, then deploy the workforce on it"
+    "problem.3n":"lay the foundation first, then deploy the workforce on it",
+    "answer.covers":"Covers phases",
+    "answer.standalone":"Standalone, at any time",
+    "phases.eyebrow":"How we deliver"
   };
 
   var vi = {
@@ -349,7 +352,10 @@
     "problem.2nl":"the cost",
     "problem.2n":"every AI initiative stalls at the data layer",
     "problem.3nl":"the fix",
-    "problem.3n":"lay the foundation first, then deploy the workforce on it"
+    "problem.3n":"lay the foundation first, then deploy the workforce on it",
+    "answer.covers":"Covers phases",
+    "answer.standalone":"Standalone, at any time",
+    "phases.eyebrow":"How we deliver"
   };
 
   var zh = {
@@ -514,7 +520,10 @@
     "problem.2nl":"the cost",
     "problem.2n":"every AI initiative stalls at the data layer",
     "problem.3nl":"the fix",
-    "problem.3n":"lay the foundation first, then deploy the workforce on it"
+    "problem.3n":"lay the foundation first, then deploy the workforce on it",
+    "answer.covers":"Covers phases",
+    "answer.standalone":"Standalone, at any time",
+    "phases.eyebrow":"How we deliver"
   };
 
   var zt = {
@@ -679,7 +688,10 @@
     "problem.2nl":"the cost",
     "problem.2n":"every AI initiative stalls at the data layer",
     "problem.3nl":"the fix",
-    "problem.3n":"lay the foundation first, then deploy the workforce on it"
+    "problem.3n":"lay the foundation first, then deploy the workforce on it",
+    "answer.covers":"Covers phases",
+    "answer.standalone":"Standalone, at any time",
+    "phases.eyebrow":"How we deliver"
   };
 
   var th = {
@@ -844,7 +856,10 @@
     "problem.2nl":"the cost",
     "problem.2n":"every AI initiative stalls at the data layer",
     "problem.3nl":"the fix",
-    "problem.3n":"lay the foundation first, then deploy the workforce on it"
+    "problem.3n":"lay the foundation first, then deploy the workforce on it",
+    "answer.covers":"Covers phases",
+    "answer.standalone":"Standalone, at any time",
+    "phases.eyebrow":"How we deliver"
   };
 
   var id = {
@@ -1009,7 +1024,10 @@
     "problem.2nl":"the cost",
     "problem.2n":"every AI initiative stalls at the data layer",
     "problem.3nl":"the fix",
-    "problem.3n":"lay the foundation first, then deploy the workforce on it"
+    "problem.3n":"lay the foundation first, then deploy the workforce on it",
+    "answer.covers":"Covers phases",
+    "answer.standalone":"Standalone, at any time",
+    "phases.eyebrow":"How we deliver"
   };
 
   var ms = {
@@ -1174,7 +1192,10 @@
     "problem.2nl":"the cost",
     "problem.2n":"every AI initiative stalls at the data layer",
     "problem.3nl":"the fix",
-    "problem.3n":"lay the foundation first, then deploy the workforce on it"
+    "problem.3n":"lay the foundation first, then deploy the workforce on it",
+    "answer.covers":"Covers phases",
+    "answer.standalone":"Standalone, at any time",
+    "phases.eyebrow":"How we deliver"
   };
 
   var tl = {
@@ -1339,7 +1360,10 @@
     "problem.2nl":"the cost",
     "problem.2n":"every AI initiative stalls at the data layer",
     "problem.3nl":"the fix",
-    "problem.3n":"lay the foundation first, then deploy the workforce on it"
+    "problem.3n":"lay the foundation first, then deploy the workforce on it",
+    "answer.covers":"Covers phases",
+    "answer.standalone":"Standalone, at any time",
+    "phases.eyebrow":"How we deliver"
   };
 
   var hi = {
@@ -1504,7 +1528,10 @@
     "problem.2nl":"the cost",
     "problem.2n":"every AI initiative stalls at the data layer",
     "problem.3nl":"the fix",
-    "problem.3n":"lay the foundation first, then deploy the workforce on it"
+    "problem.3n":"lay the foundation first, then deploy the workforce on it",
+    "answer.covers":"Covers phases",
+    "answer.standalone":"Standalone, at any time",
+    "phases.eyebrow":"How we deliver"
   };
 
   var es = {
@@ -1669,7 +1696,10 @@
     "problem.2nl":"the cost",
     "problem.2n":"every AI initiative stalls at the data layer",
     "problem.3nl":"the fix",
-    "problem.3n":"lay the foundation first, then deploy the workforce on it"
+    "problem.3n":"lay the foundation first, then deploy the workforce on it",
+    "answer.covers":"Covers phases",
+    "answer.standalone":"Standalone, at any time",
+    "phases.eyebrow":"How we deliver"
   };
 
   var ar = {
@@ -1834,7 +1864,10 @@
     "problem.2nl":"the cost",
     "problem.2n":"every AI initiative stalls at the data layer",
     "problem.3nl":"the fix",
-    "problem.3n":"lay the foundation first, then deploy the workforce on it"
+    "problem.3n":"lay the foundation first, then deploy the workforce on it",
+    "answer.covers":"Covers phases",
+    "answer.standalone":"Standalone, at any time",
+    "phases.eyebrow":"How we deliver"
   };
 
   var fr = {
@@ -1999,7 +2032,10 @@
     "problem.2nl":"the cost",
     "problem.2n":"every AI initiative stalls at the data layer",
     "problem.3nl":"the fix",
-    "problem.3n":"lay the foundation first, then deploy the workforce on it"
+    "problem.3n":"lay the foundation first, then deploy the workforce on it",
+    "answer.covers":"Covers phases",
+    "answer.standalone":"Standalone, at any time",
+    "phases.eyebrow":"How we deliver"
   };
 
   var bn = {
@@ -2164,7 +2200,10 @@
     "problem.2nl":"the cost",
     "problem.2n":"every AI initiative stalls at the data layer",
     "problem.3nl":"the fix",
-    "problem.3n":"lay the foundation first, then deploy the workforce on it"
+    "problem.3n":"lay the foundation first, then deploy the workforce on it",
+    "answer.covers":"Covers phases",
+    "answer.standalone":"Standalone, at any time",
+    "phases.eyebrow":"How we deliver"
   };
 
   var pt = {
@@ -2329,7 +2368,10 @@
     "problem.2nl":"the cost",
     "problem.2n":"every AI initiative stalls at the data layer",
     "problem.3nl":"the fix",
-    "problem.3n":"lay the foundation first, then deploy the workforce on it"
+    "problem.3n":"lay the foundation first, then deploy the workforce on it",
+    "answer.covers":"Covers phases",
+    "answer.standalone":"Standalone, at any time",
+    "phases.eyebrow":"How we deliver"
   };
 
   var ru = {
@@ -2494,7 +2536,10 @@
     "problem.2nl":"the cost",
     "problem.2n":"every AI initiative stalls at the data layer",
     "problem.3nl":"the fix",
-    "problem.3n":"lay the foundation first, then deploy the workforce on it"
+    "problem.3n":"lay the foundation first, then deploy the workforce on it",
+    "answer.covers":"Covers phases",
+    "answer.standalone":"Standalone, at any time",
+    "phases.eyebrow":"How we deliver"
   };
 
   var ur = {
@@ -2659,7 +2704,10 @@
     "problem.2nl":"the cost",
     "problem.2n":"every AI initiative stalls at the data layer",
     "problem.3nl":"the fix",
-    "problem.3n":"lay the foundation first, then deploy the workforce on it"
+    "problem.3n":"lay the foundation first, then deploy the workforce on it",
+    "answer.covers":"Covers phases",
+    "answer.standalone":"Standalone, at any time",
+    "phases.eyebrow":"How we deliver"
   };
 
   var de = {
@@ -2824,7 +2872,10 @@
     "problem.2nl":"the cost",
     "problem.2n":"every AI initiative stalls at the data layer",
     "problem.3nl":"the fix",
-    "problem.3n":"lay the foundation first, then deploy the workforce on it"
+    "problem.3n":"lay the foundation first, then deploy the workforce on it",
+    "answer.covers":"Covers phases",
+    "answer.standalone":"Standalone, at any time",
+    "phases.eyebrow":"How we deliver"
   };
 
   var ja = {
@@ -2989,7 +3040,10 @@
     "problem.2nl":"the cost",
     "problem.2n":"every AI initiative stalls at the data layer",
     "problem.3nl":"the fix",
-    "problem.3n":"lay the foundation first, then deploy the workforce on it"
+    "problem.3n":"lay the foundation first, then deploy the workforce on it",
+    "answer.covers":"Covers phases",
+    "answer.standalone":"Standalone, at any time",
+    "phases.eyebrow":"How we deliver"
   };
 
   var tr = {
@@ -3154,7 +3208,10 @@
     "problem.2nl":"the cost",
     "problem.2n":"every AI initiative stalls at the data layer",
     "problem.3nl":"the fix",
-    "problem.3n":"lay the foundation first, then deploy the workforce on it"
+    "problem.3n":"lay the foundation first, then deploy the workforce on it",
+    "answer.covers":"Covers phases",
+    "answer.standalone":"Standalone, at any time",
+    "phases.eyebrow":"How we deliver"
   };
 
   var ko = {
@@ -3319,7 +3376,10 @@
     "problem.2nl":"the cost",
     "problem.2n":"every AI initiative stalls at the data layer",
     "problem.3nl":"the fix",
-    "problem.3n":"lay the foundation first, then deploy the workforce on it"
+    "problem.3n":"lay the foundation first, then deploy the workforce on it",
+    "answer.covers":"Covers phases",
+    "answer.standalone":"Standalone, at any time",
+    "phases.eyebrow":"How we deliver"
   };
 
   w.VALO_I18N = {
