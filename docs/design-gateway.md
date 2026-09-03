@@ -102,16 +102,27 @@ layer; there is no second timeline.
 | Atmosphere | `0.46 – 0.92` |
 | Clouds | `0.54 – 0.88` |
 
-The planet also moves. Through the chapters it recedes on a `4p(1 − p)` curve —
-full size at the top, small and to the right through the argument, full again at
-the close. It returns to centre at *How your people fit in*, where the reader is
-being shown two columns that belong on either side of it, and settles into the
-gap between the footer's two columns at the end.
+The planet also moves, between stations written in viewport units and honoured
+as written — full size at the top, small and to the right through the argument,
+back to centre at *How your people fit in*, where the reader is being shown two
+columns that belong on either side of it, and away again for the close.
 
 Self-rotation is 3.2° per second — just under two minutes a revolution. The
 reference turns at 1.5°, which measures as motion and reads as a photograph;
 at 3.2 the planet is unmistakably alive on a first look and still far too slow
-to pull the eye off the argument.
+to pull the eye off the argument. It turns about its own axis and the axis
+leans by Earth's 23.44°, which is two groups rather than one: the outer holds
+the obliquity and never spins, the inner spins and never leans. Collapsing them
+wobbles the pole around the sky once a revolution.
+
+The spin runs on its own clock, so the world turns whether or not anyone
+scrolls, and it turns faster while someone does — scroll speed, measured as
+page-fractions per second, becomes a bounded multiplier that the satellites
+share. Both easings on this path are time constants rather than per-frame
+fractions. A frame-counted easing follows at one speed on a machine drawing
+sixty frames and another on a machine drawing six, so the same page reads as a
+different animation on slower hardware; measured at four frames a second, the
+scroll boost could not build at all.
 
 ### The sun
 
@@ -120,13 +131,24 @@ in CSS — the scene's canvas is 48vw wide and a light source has to be able to
 sit outside it, and a body this far away is a soft disc, which is what a radial
 gradient is. A few pixels of core; everything else is corona.
 
-It keeps station with the planet rather than travelling its own path: given as
-an offset in viewport units that widens and lifts as the story runs, so the
-light angle turns across the page and the terminator visibly swings. The
-starting pair reproduces the reference's key direction exactly while the planet
-is centred. A sun on an independent course was tried first and measured — it
-ends up behind the header at one end of the page and grazing the limb at the
-other.
+**The planet is the origin.** The camera rides with it, so the planet goes where
+the layout asks and the orbit is carried by everything else: the star is placed
+from the planet on a bearing that sweeps once down the page — 280° to 340°,
+screen axes, 270° being straight overhead — at a fixed stand-off, and the star
+field slides against that same bearing, each depth tier by its own share, which
+is the parallax a year of orbiting produces.
+
+Two other framings were built and measured first. A sun on an independent
+course ends up behind the header at one end of the page and grazing the limb at
+the other. Curving the planet's own path around a fixed star reads as the
+reader standing outside the system, and it costs the layout every station it
+asked for, because a station on an arc is not the station that was written.
+
+The arc is chosen against the page rather than against the sky: the bearing is
+checked at every station for a collision with anything being read. A phone gets
+its own shorter arc, and then does not draw the disc at all — the copy runs the
+full width there, so wherever the star went it went behind something — keeping
+only its light, which is what the reader is actually looking at.
 
 The direction is then **derived from where the sun landed**, never set beside
 it, so the two cannot disagree. One `uSun` vector reaches the lunar terminator,
@@ -139,12 +161,48 @@ effect, and a light that only moves the lamp is one nobody believes.
 One crosses roughly every twenty seconds, at a random time, from a random edge,
 on a shallow angle — rare enough to stay an event rather than a shower. They
 are drawn on their own 2D canvas, behind the planet, so a streak vanishes
-behind it and the sky gains a depth the star field alone cannot give.
+behind it and the sky gains a depth the star field alone cannot give. They
+belong to the dead sky and stop once the surface is a living world, restarting
+if the reader scrolls back up into the lunar half of the story.
 
 Their loop exists only while one is in flight. Between meteors nothing is
 scheduled, which is what lets the star field keep its own promise of no idle
 animation. Reduced motion suppresses them entirely, and a hidden tab stops
 scheduling them.
+
+### The satellites
+
+Three bodies on flat elliptical paths about the planet, drawn as two SVG
+layers of one box clipped to its top and bottom halves and stacked either side
+of the planet. A satellite on the far half of its path is drawn under the
+planet, on the near half over it, which is what makes a flat ellipse read as an
+orbit seen from above rather than as a ring drawn on the glass.
+
+They keep their own clock, so they circle whether or not anyone scrolls, and
+faster while someone does — the same multiplier the planet's spin uses. Nothing
+orbits a dead rock: the ring's opacity is published from the growth scrub, so
+the cover carries a bare moon and the ring arrives with the atmosphere.
+
+Two of the three are named — *your people* and *AI*, the page's argument in
+orbit — and only on the near half. A label that survived the occlusion reads as
+a clipped word rather than as something passing behind. The names appear only
+while the mapping chapter is on screen.
+
+### The mapping stage
+
+*How your people fit in* is a three-column composition: your people on one
+side, the AI workforce on the other, one world between them. Above 1120px the
+chapter becomes a scroll stage — 440vh tall, its panel sticky — and the two
+columns hold a centre channel of `min(33vw, 440px)` that belongs to the planet.
+The chapter's scrim opens in the middle to match, so the argument sits on solid
+ground either side and the channel stays open sky.
+
+The pairs arrive one at a time. Stage is `floor(progress × 5)` over the
+chapter's own travel; a pair at or below the stage is revealed, the pair at the
+stage is lit. Each side enters from its own edge, un-blurring as it lands, so
+the reader takes in one correspondence before the next appears instead of
+meeting five at once. Below the breakpoint there is no channel and no stage:
+the arrow does the joining, and every pair is simply present.
 
 ### When it does not run
 
@@ -161,8 +219,10 @@ scroll and resize rather than every frame.
 
 Reduced motion does not remove the planet. Scrolling is direct manipulation, so
 the surface still changes as the reader moves; what stops is everything that
-moves on its own — the idle rotation, the intro approach, the pointer drift.
-Nothing in the argument depends on any of it.
+moves on its own — the idle rotation, the scroll boost, the intro approach, the
+pointer drift, and the satellites, which hold a pose instead of circling. The
+mapping stage stops stepping and shows every pair at once. Nothing in the
+argument depends on any of it.
 
 ### Markers
 
@@ -208,8 +268,15 @@ parity.
   that meets contrast against the panel it sits on, not against the void.
 - Text contrast is measured against the painted pixel — panel fill over planet,
   not token over token.
-- `prefers-reduced-motion` disables the planet's idle rotation, the intro
-  approach, the pointer parallax and every scroll-driven reveal. Scroll still
+- `prefers-reduced-motion` disables the planet's idle rotation and scroll
+  boost, the satellites' circling, the intro approach, the pointer parallax,
+  the mapping stage's stepping and every scroll-driven reveal. Scroll still
   moves the page; nothing else moves on its own.
+- A block the scroll flew past is revealed anyway. An observer is notified only
+  when a ratio crosses a threshold, so a flick of the wheel that carries a
+  block from below the fold to above it in one frame crosses nothing, and the
+  block would stay invisible for the rest of the session. The same blindness
+  left the nav's current-chapter mark pointing at wherever the reader used to
+  be; both now read position directly.
 - The scene is `aria-hidden`; it carries no information the text does not.
 - A print stylesheet puts the page on paper in black on white.
