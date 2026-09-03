@@ -15,7 +15,10 @@ import * as THREE from './three.module.min.js';
 /* ----------------------------------------------------------- Constants */
 
 const PLANET_RADIUS = 1.32;
-const SELF_ROTATION = THREE.MathUtils.degToRad(1.5); /* a four-minute turn */
+/* The reference turns at 1.5 deg/s — a four-minute revolution, which measures
+   as motion and reads as a photograph. At 3.2 the planet is unmistakably alive
+   and still too slow to pull the eye off the argument. */
+const SELF_ROTATION = THREE.MathUtils.degToRad(3.2);
 
 /* Earth at true proportion against a 6371 km mean radius: the 15 km cloud
    base and the 100 km Karman line. The 0.335% polar flattening is below a
@@ -62,13 +65,14 @@ const ATMOSPHERE_FRAGMENT = /* glsl */ `
   precision highp float;
 
   uniform float uOpacity;
+  uniform vec3 uSun;
   varying vec3 vAirNormal;
   varying vec3 vAirView;
 
   void main() {
     vec3 normal = normalize(vAirNormal);
     vec3 viewDirection = normalize(vAirView);
-    vec3 sunDirection = normalize(vec3(-0.52, 0.64, 0.57));
+    vec3 sunDirection = normalize(uSun);
 
     float viewFacing = abs(dot(normal, viewDirection));
     float horizon = pow(1.0 - clamp(viewFacing, 0.0, 1.0), 3.4);
@@ -208,6 +212,12 @@ export function mount(container, motion, onReady) {
   const group = new THREE.Group();
   scene.add(group);
 
+  /* Where the sun is. Every surface reads the same vector: the lunar
+     terminator, the Earth's day and night, the cloud shading and the lit limb
+     of the atmosphere. Move it and the whole scene agrees, which is the point
+     — a light that only moves the lamp is a light nobody believes. */
+  const uSun = { value: new THREE.Vector3(-0.499, 0.643, 0.581) };
+
   /* One scrub drives every layer; these are the windows it is read through. */
   const uLife = { value: 0 };
   const uSurface = { value: 0 };
@@ -268,7 +278,7 @@ export function mount(container, motion, onReady) {
       );`
     );
   };
-  material.customProgramCacheKey = () => 'valo-lunar-v2';
+  material.customProgramCacheKey = () => 'valo-lunar-v3';
 
   const lunar = new THREE.Mesh(geometry, material);
   group.add(lunar);
@@ -309,6 +319,7 @@ export function mount(container, motion, onReady) {
   });
   earthMaterial.onBeforeCompile = (shader) => {
     shader.uniforms.uSurface = uSurface;
+    shader.uniforms.uSun = uSun;
     shader.vertexShader = shader.vertexShader
       .replace(
         '#include <common>',
@@ -327,6 +338,7 @@ export function mount(container, motion, onReady) {
         '#include <common>',
         `#include <common>
         uniform float uSurface;
+        uniform vec3 uSun;
         varying vec3 vEarthViewNormal;
         varying vec3 vEarthDirection;
 
@@ -370,13 +382,13 @@ export function mount(container, motion, onReady) {
         float daylight = smoothstep(
           -0.18,
           0.42,
-          dot(normalize(vEarthViewNormal), normalize(vec3(-0.52, 0.64, 0.57)))
+          dot(normalize(vEarthViewNormal), normalize(uSun))
         );
         outgoingLight *= mix(0.055, 1.0, daylight);
         outgoingLight += diffuseColor.rgb * (1.0 - daylight) * 0.012;`
       );
   };
-  earthMaterial.customProgramCacheKey = () => 'valo-earth-v1';
+  earthMaterial.customProgramCacheKey = () => 'valo-earth-v2';
 
   const earth = new THREE.Mesh(earthGeometry, earthMaterial);
   earth.renderOrder = 2;
@@ -395,6 +407,7 @@ export function mount(container, motion, onReady) {
   });
   cloudMaterial.onBeforeCompile = (shader) => {
     shader.uniforms.uCloud = uCloud;
+    shader.uniforms.uSun = uSun;
     shader.vertexShader = shader.vertexShader
       .replace(
         '#include <common>',
@@ -411,6 +424,7 @@ export function mount(container, motion, onReady) {
         '#include <common>',
         `#include <common>
         uniform float uCloud;
+        uniform vec3 uSun;
         varying vec3 vCloudViewNormal;`
       )
       .replace(
@@ -419,12 +433,12 @@ export function mount(container, motion, onReady) {
         float cloudDaylight = smoothstep(
           -0.18,
           0.42,
-          dot(normalize(vCloudViewNormal), normalize(vec3(-0.52, 0.64, 0.57)))
+          dot(normalize(vCloudViewNormal), normalize(uSun))
         );
         diffuseColor.a *= mix(0.08, 1.0, cloudDaylight) * uCloud;`
       );
   };
-  cloudMaterial.customProgramCacheKey = () => 'valo-cloud-v1';
+  cloudMaterial.customProgramCacheKey = () => 'valo-cloud-v2';
 
   const clouds = new THREE.Mesh(earthGeometry, cloudMaterial);
   clouds.scale.setScalar(CLOUD_SCALE);
@@ -432,7 +446,7 @@ export function mount(container, motion, onReady) {
   earthGroup.add(clouds);
 
   const airMaterial = new THREE.ShaderMaterial({
-    uniforms: { uOpacity: uAir },
+    uniforms: { uOpacity: uAir, uSun: uSun },
     vertexShader: ATMOSPHERE_VERTEX,
     fragmentShader: ATMOSPHERE_FRAGMENT,
     transparent: true,
@@ -474,6 +488,9 @@ export function mount(container, motion, onReady) {
     camera.updateProjectionMatrix();
   }
 
+  /* Hoisted: the frame loop must not allocate. */
+  const rimNudge = new THREE.Vector3(0, 0, 1.1);
+
   let selfRotation = 0;
   let elapsed = 0;
   let last = performance.now();
@@ -488,6 +505,17 @@ export function mount(container, motion, onReady) {
 
     const still = state.reducedMotion;
     if (!still) selfRotation = (selfRotation + delta * SELF_ROTATION) % (Math.PI * 2);
+
+    /* The sun. Its direction arrives from the page, which knows where the
+       glow is drawn on screen; the lights follow it so the terminator on the
+       surface always points at the disc the reader can see. */
+    if (state.lightDir) {
+      uSun.value.set(state.lightDir.x, state.lightDir.y, state.lightDir.z).normalize();
+      key.position.copy(uSun.value).multiplyScalar(9);
+      /* The rim sits nearer and a little inside the key, so it grazes the
+         limb rather than doubling the terminator. */
+      rim.position.copy(uSun.value).multiplyScalar(5.4).add(rimNudge);
+    }
 
     /* One scrub, read through three windows. The frontier is complementary:
        whatever the Earth claims, the lunar surface discards. */

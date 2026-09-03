@@ -680,9 +680,39 @@ p:last-child {
   pointer-events: none;
 }
 
-.stars {
+.sky {
   position: absolute;
   inset: 0;
+}
+
+/* A distant sun. It is drawn in CSS rather than in the scene because the
+   scene's canvas is only 48vw wide and a star that lights a planet has to be
+   able to sit well outside it — and because a light source this far away is
+   a soft disc, which is exactly what a radial gradient is.
+   The core is a few pixels across; everything beyond it is corona. */
+.sun {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  width: min(46vw, 560px);
+  aspect-ratio: 1;
+  margin: calc(min(46vw, 560px) / -2) 0 0 calc(min(46vw, 560px) / -2);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.98) 0%,
+    rgba(246, 250, 255, 0.92) 1.4%,
+    rgba(222, 234, 255, 0.5) 3.4%,
+    rgba(186, 205, 255, 0.24) 8%,
+    rgba(150, 170, 255, 0.12) 18%,
+    rgba(126, 146, 240, 0.05) 34%,
+    rgba(120, 140, 235, 0) 62%
+  );
+  /* The position the scene would give it at the top of the page. Without
+     JavaScript nothing moves it, and a sun parked at the origin bleeds a
+     corona into the corner. */
+  transform: translate(36vw, 21vh);
+  will-change: transform;
 }
 
 .planet {
@@ -1539,6 +1569,12 @@ html:not(.can-scene) .planet {
     width: 92vw;
     height: 92vw;
     opacity: 0.55;
+  }
+
+  .sun {
+    width: min(74vw, 380px);
+    margin: calc(min(74vw, 380px) / -2) 0 0 calc(min(74vw, 380px) / -2);
+    transform: translate(40vw, 13vh);
   }
 }
 

@@ -108,14 +108,56 @@ the close. It returns to centre at *How your people fit in*, where the reader is
 being shown two columns that belong on either side of it, and settles into the
 gap between the footer's two columns at the end.
 
-Self-rotation is 1.5° per second: a four-minute revolution, slow enough to read
-as presence rather than motion.
+Self-rotation is 3.2° per second — just under two minutes a revolution. The
+reference turns at 1.5°, which measures as motion and reads as a photograph;
+at 3.2 the planet is unmistakably alive on a first look and still far too slow
+to pull the eye off the argument.
+
+### The sun
+
+There is a star, and it is the same star the surfaces are lit by. It is drawn
+in CSS — the scene's canvas is 48vw wide and a light source has to be able to
+sit outside it, and a body this far away is a soft disc, which is what a radial
+gradient is. A few pixels of core; everything else is corona.
+
+It keeps station with the planet rather than travelling its own path: given as
+an offset in viewport units that widens and lifts as the story runs, so the
+light angle turns across the page and the terminator visibly swings. The
+starting pair reproduces the reference's key direction exactly while the planet
+is centred. A sun on an independent course was tried first and measured — it
+ends up behind the header at one end of the page and grazing the limb at the
+other.
+
+The direction is then **derived from where the sun landed**, never set beside
+it, so the two cannot disagree. One `uSun` vector reaches the lunar terminator,
+the Earth's day and night, the cloud shading and the lit limb of the
+atmosphere. Move the disc and the whole sky agrees; that agreement is the
+effect, and a light that only moves the lamp is one nobody believes.
+
+### Meteors
+
+One crosses roughly every twenty seconds, at a random time, from a random edge,
+on a shallow angle — rare enough to stay an event rather than a shower. They
+are drawn on their own 2D canvas, behind the planet, so a streak vanishes
+behind it and the sky gains a depth the star field alone cannot give.
+
+Their loop exists only while one is in flight. Between meteors nothing is
+scheduled, which is what lets the star field keep its own promise of no idle
+animation. Reduced motion suppresses them entirely, and a hidden tab stops
+scheduling them.
 
 ### When it does not run
 
 The scene is loaded asynchronously and only where WebGL is available; a
 browser without it, or without module support, never requests the graphics
-library at all and keeps the star field, which is a sky on its own.
+library at all. What it keeps is a sky rather than a gap: stars, meteors, the
+sun, and a still frame of the planet in the scene's place. The still carries an
+alpha channel for that reason — baked opaque it is a rectangle that hides the
+sun behind it, which is exactly what happened before it was measured.
+
+The placement runs whether or not the scene does, because the sun and the still
+belong to the page's choreography too. Where nothing is rendering it runs on
+scroll and resize rather than every frame.
 
 Reduced motion does not remove the planet. Scrolling is direct manipulation, so
 the surface still changes as the reader moves; what stops is everything that

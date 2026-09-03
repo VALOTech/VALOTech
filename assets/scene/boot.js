@@ -9,6 +9,7 @@
  * graphics library at all. */
 
 const container = document.getElementById('planet');
+const sun = document.getElementById('sun');
 const root = document.documentElement;
 
 function hasWebGL() {
@@ -29,8 +30,42 @@ const motion = {
   growth: 0,
   pointerX: 0,
   reducedMotion: false,
-  visualScale: 1
+  visualScale: 1,
+  /* Where the scene should believe the sun is. Written here because the page
+     is what knows where the glow is painted; read by the scene so the
+     terminator points at the disc the reader can actually see. */
+  lightDir: { x: -0.499, y: 0.643, z: 0.581 }
 };
+
+/* The sun keeps station with the planet rather than travelling its own path.
+   Given as an offset in viewport units, so the two never drift apart: a sun on
+   an independent course ends up behind the header at one end of the page and
+   grazing the limb at the other, and both were measured before this was.
+
+   The offset still changes — wider and a little higher as the story runs — so
+   the light angle turns across the page and the terminator visibly swings. The
+   starting pair reproduces the reference's key direction exactly while the
+   planet is centred. */
+const SUN_OFFSET_FROM = { x: -14, y: -29 };
+const SUN_OFFSET_TO = { x: -19, y: -26 };
+
+/* Narrow screens put the headline across the whole width, and the wide-screen
+   offset lands the core on it. Lifting the sun above the text costs nothing
+   and stops it reading as an accident. */
+const SUN_OFFSET_NARROW = { x: -10, y: -37 };
+const NARROW = 900;
+
+/* However low it sits, it stays clear of the header. */
+const SUN_MIN_VH = 13;
+
+/* Below this the light is grazing the limb and the surface goes to silhouette.
+   The sun may sit low; it may not sit on the horizon. */
+const MIN_ELEVATION = 0.42;
+
+/* The reference's key sits this far toward the viewer relative to its spread
+   across the frame. Holding the ratio keeps the surface's modelling while its
+   direction changes. */
+const FRONT_RATIO = 0.71;
 
 const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
 
@@ -124,24 +159,61 @@ function place(now) {
     ` calc(-50% + ${floatY.toFixed(1)}px + ${offsetVH.toFixed(2)}vh))`;
   container.style.opacity = introOpacity.toFixed(3);
 
-  raf = requestAnimationFrame(place);
+  /* Place the sun, then derive the light from where it landed rather than the
+     other way round — so the two can never disagree. */
+  const planetX = vw / 2 + floatX + (driftVW / 100) * vw;
+  const planetY = vh / 2 + floatY + (offsetVH / 100) * vh;
+
+  const wide = vw > NARROW;
+  const offX = wide
+    ? SUN_OFFSET_FROM.x + (SUN_OFFSET_TO.x - SUN_OFFSET_FROM.x) * motion.growth
+    : SUN_OFFSET_NARROW.x;
+  const offY = wide
+    ? SUN_OFFSET_FROM.y + (SUN_OFFSET_TO.y - SUN_OFFSET_FROM.y) * motion.growth
+    : SUN_OFFSET_NARROW.y;
+  const sunX = planetX + (offX / 100) * vw;
+  const sunY = Math.max((SUN_MIN_VH / 100) * vh, planetY + (offY / 100) * vh);
+  if (sun) {
+    sun.style.transform = `translate(${sunX.toFixed(1)}px, ${sunY.toFixed(1)}px)`;
+    sun.style.opacity = introOpacity.toFixed(3);
+  }
+
+  let dx = planetX - sunX;
+  let dy = planetY - sunY;
+  const span = Math.hypot(dx, dy) || 1;
+  let lx = -dx / span;
+  let ly = dy / span;
+  if (ly < MIN_ELEVATION) {
+    ly = MIN_ELEVATION;
+    const flat = Math.hypot(lx, ly) || 1;
+    lx /= flat;
+    ly /= flat;
+  }
+  motion.lightDir.x = lx;
+  motion.lightDir.y = ly;
+  motion.lightDir.z = FRONT_RATIO;
+
+  if (running) raf = requestAnimationFrame(place);
 }
 
-if (container && hasWebGL()) {
+/* The placement runs whether or not the scene does. Without WebGL the planet
+   is a still image and the sun is a gradient, and both still belong to the
+   page's choreography — a sun parked at the origin bleeds a corona into the
+   top-left corner, which is what happened when this was gated. */
+
+const live = !!(container && hasWebGL());
+
+if (live) {
   import('./planet.js')
     .then((module) => {
       module.mount(container, motion, () => {
         introStartedAt = performance.now();
       });
       root.classList.add('has-scene');
-      if (!running) {
-        running = true;
-        raf = requestAnimationFrame(place);
-      }
     })
     .catch(() => {
-      /* A failed context or a blocked request leaves the star field, which is
-         a sky on its own. Nothing in the argument depended on the planet. */
+      /* A failed context or a blocked request leaves the sky, which is a sky
+         on its own. Nothing in the argument depended on the planet. */
     });
 
   window.addEventListener(
@@ -152,5 +224,21 @@ if (container && hasWebGL()) {
     { passive: true }
   );
 
+  /* The scene renders every frame regardless, so the placement rides along. */
+  running = true;
+  raf = requestAnimationFrame(place);
   window.addEventListener('pagehide', () => cancelAnimationFrame(raf));
+} else {
+  /* Nothing is rendering, so a permanent frame loop would move a background
+     image and nothing else. Place on the events that actually change it. */
+  const once = () => {
+    if (raf) return;
+    raf = requestAnimationFrame((now) => {
+      raf = 0;
+      place(now);
+    });
+  };
+  window.addEventListener('scroll', once, { passive: true });
+  window.addEventListener('resize', once, { passive: true });
+  once();
 }

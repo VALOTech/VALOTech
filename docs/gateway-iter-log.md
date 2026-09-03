@@ -309,3 +309,45 @@ code never carried out. Both survive review because both read plausibly. Only
 checking the sentence against the tree catches either.
 PARTIAL / BROKEN: — none —
 NEXT: nothing outstanding.
+
+## 17 — The sky: rotation, meteors, and a sun the surfaces agree with
+WHAT CHANGED: self-rotation 1.5 -> 3.2 deg/s. Meteors on their own 2D canvas
+behind the planet, random edge, random angle, with a frame loop that exists
+only while one is in flight. A CSS sun that keeps station with the planet, and
+one `uSun` vector **derived from where its disc is drawn** feeding the lunar
+terminator, the Earth's day and night, the cloud shading and the atmosphere's
+lit limb — the three shaders each carried their own hardcoded copy of that
+direction before this, so moving the light would have moved the lamp and
+nothing else.
+VERIFIED: idle motion measured with no scroll — 42% of the planet's pixels
+change every 3s, steady. Meteors counted by watching the canvas go from empty
+to inked: 4 in 90s, one every ~23s, canvas inked 13.9% of frames; reduced
+motion 0 in 90s and never inked. Contrast 64/64 desktop and 55/55 mobile with
+the sun present; tab order 26/26. Chrome at 1440x900 and 390x844.
+⭐ The first sun travelled its own path across the page. Measured: it ended up
+behind the header at the footer, and the widening separation flattened the
+light until the Earth went dark mid-page. Tethering it to the planet fixed
+both — and is what the brief actually asked for.
+PARTIAL / BROKEN: — none —
+NEXT: the two things adding a sun exposed.
+
+## 18 — Two defects that only appeared once something was behind the planet
+WHAT CHANGED: the placement loop no longer sits inside the WebGL gate, and the
+sun carries a correct CSS default; the fallback still is re-baked with alpha.
+VERIFIED: all four degradation contexts re-rendered. Without WebGL the sun now
+sits beside the still with its core visible and stars showing through it.
+⭐ Both defects had been shipped and invisible:
+  1. `place()` was gated on WebGL, so without it the sun was never positioned
+     and sat at the origin, bleeding a corona into the top-left corner. The
+     sun and the still belong to the page's choreography whether or not the
+     scene runs; where nothing renders, placement runs on scroll rather than
+     every frame.
+  2. The fallback still was baked opaque — a 760px rectangle of near-black.
+     Correct for as long as there was nothing behind it, and the moment a sun
+     went underneath it covered it. `omitBackground` alone is not enough: the
+     page paints its own ground, and that ground is what lands in the file.
+⭐ A third, mine and not the page's: I read a rectangle into the no-JS
+screenshot and was about to chase it. Sampling the pixels showed a smooth
+10 -> 16 falloff with no edge anywhere. Seeing is not measuring.
+PARTIAL / BROKEN: — none —
+NEXT: nothing outstanding.

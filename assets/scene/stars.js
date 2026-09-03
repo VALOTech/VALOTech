@@ -1,20 +1,26 @@
-/* VALO Tech — the star field.
+/* VALO Tech — the sky: a fixed star field, and the meteors that cross it.
  *
- * Drawn on a 2D canvas rather than in the WebGL scene, so the page has a sky
- * even where the planet cannot run: a machine with WebGL disabled, or a visitor
- * who has asked for reduced motion, still gets depth rather than flat black.
+ * Both are drawn on 2D canvases rather than in the WebGL scene, so the page
+ * has a sky even where the planet cannot run: a machine with WebGL disabled
+ * still gets depth rather than flat black.
  *
- * Three depth tiers scroll at different rates. That parallax is the whole
- * illusion — the stars themselves never move relative to each other. */
+ * The star field never animates — three depth tiers scrolling at different
+ * rates are the whole illusion, and parallax needs no frame loop. A meteor
+ * does, so it gets its own canvas and its own loop, and that loop exists only
+ * while a meteor is in flight. */
 (function (w, doc) {
   "use strict";
 
-  var canvas = doc.getElementById("stars");
-  if (!canvas || !canvas.getContext) return;
-  var ctx = canvas.getContext("2d", { alpha: true });
+  var sky = doc.getElementById("stars");
+  var trail = doc.getElementById("meteors");
+  if (!sky || !sky.getContext) return;
+  var ctx = sky.getContext("2d", { alpha: true });
+  var mctx = trail && trail.getContext ? trail.getContext("2d", { alpha: true }) : null;
   if (!ctx) return;
 
   var reduce = w.matchMedia("(prefers-reduced-motion: reduce)");
+
+  /* ------------------------------------------------------------ Stars */
 
   /* One star per this many CSS pixels of viewport. Tuned against the
      reference: dense enough to read as a sky, sparse enough that the
@@ -47,16 +53,21 @@
     return a + Math.random() * (b - a);
   }
 
+  function sizeCanvas(el, c) {
+    el.width = Math.round(vw * dpr);
+    el.height = Math.round(vh * dpr);
+    el.style.width = vw + "px";
+    el.style.height = vh + "px";
+    c.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
   function build() {
     vw = w.innerWidth || doc.documentElement.clientWidth;
     vh = w.innerHeight || doc.documentElement.clientHeight;
     dpr = Math.min(w.devicePixelRatio || 1, 2);
 
-    canvas.width = Math.round(vw * dpr);
-    canvas.height = Math.round(vh * dpr);
-    canvas.style.width = vw + "px";
-    canvas.style.height = vh + "px";
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    sizeCanvas(sky, ctx);
+    if (mctx) sizeCanvas(trail, mctx);
 
     /* Stars wrap over a band taller than the viewport so a tier can travel
        without the top edge running dry. */
@@ -122,6 +133,137 @@
     if (!raf) raf = w.requestAnimationFrame(frame);
   }
 
+  /* ---------------------------------------------------------- Meteors */
+
+  /* Rare enough to stay an event. Two in flight at once reads as a shower,
+     which is a different and much busier thing. */
+  var GAP_MIN = 7000;
+  var GAP_MAX = 24000;
+  var MAX_ALIVE = 2;
+  var BRIGHT_SHARE = 0.18;
+
+  var meteors = [];
+  var mraf = 0;
+  var timer = 0;
+  var last = 0;
+
+  function spawn() {
+    /* Enter from the top edge or the upper part of a side, and travel down
+       across the frame. The angle is shallow, so a streak reads as distance
+       rather than as something falling. */
+    var fromLeft = Math.random() < 0.62;
+    var angle = fromLeft ? rand(0.22, 0.62) : Math.PI - rand(0.22, 0.62);
+    var speed = rand(820, 1900);
+    var bright = Math.random() < BRIGHT_SHARE;
+
+    var x;
+    var y;
+    if (Math.random() < 0.55) {
+      x = rand(-0.1, 1.1) * vw;
+      y = rand(-0.12, 0.05) * vh;
+    } else {
+      x = fromLeft ? rand(-0.12, -0.02) * vw : rand(1.02, 1.12) * vw;
+      y = rand(-0.05, 0.45) * vh;
+    }
+
+    meteors.push({
+      x: x,
+      y: y,
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed,
+      len: bright ? rand(240, 420) : rand(110, 230),
+      width: bright ? rand(2.4, 3.4) : rand(1.4, 2.2),
+      life: bright ? rand(1.7, 2.5) : rand(1.1, 1.9),
+      age: 0,
+      bright: bright
+    });
+  }
+
+  function planNext() {
+    if (reduce.matches) return;
+    w.clearTimeout(timer);
+    timer = w.setTimeout(function () {
+      if (!doc.hidden && meteors.length < MAX_ALIVE) {
+        spawn();
+        startTrail();
+      }
+      planNext();
+    }, rand(GAP_MIN, GAP_MAX));
+  }
+
+  function drawMeteors() {
+    mctx.clearRect(0, 0, vw, vh);
+    for (var i = 0; i < meteors.length; i++) {
+      var m = meteors[i];
+      var t = m.age / m.life;
+      /* In fast, out slow: the head should already be moving when it
+         appears, and the tail should thin out rather than blink off. */
+      var alpha = Math.min(1, t / 0.12) * Math.min(1, (1 - t) / 0.42);
+      if (alpha <= 0) continue;
+
+      var speed = Math.sqrt(m.vx * m.vx + m.vy * m.vy) || 1;
+      var tailX = m.x - (m.vx / speed) * m.len;
+      var tailY = m.y - (m.vy / speed) * m.len;
+
+      var g = mctx.createLinearGradient(m.x, m.y, tailX, tailY);
+      g.addColorStop(0, "rgba(244,248,255," + alpha * 0.95 + ")");
+      g.addColorStop(0.28, "rgba(196,212,255," + alpha * 0.45 + ")");
+      g.addColorStop(1, "rgba(140,158,255,0)");
+      mctx.strokeStyle = g;
+      mctx.lineWidth = m.width;
+      mctx.lineCap = "round";
+      mctx.beginPath();
+      mctx.moveTo(m.x, m.y);
+      mctx.lineTo(tailX, tailY);
+      mctx.stroke();
+
+      var halo = m.bright ? 13 : 7;
+      var h = mctx.createRadialGradient(m.x, m.y, 0, m.x, m.y, halo);
+      h.addColorStop(0, "rgba(255,255,255," + alpha * 0.9 + ")");
+      h.addColorStop(0.35, "rgba(200,216,255," + alpha * 0.3 + ")");
+      h.addColorStop(1, "rgba(140,158,255,0)");
+      mctx.fillStyle = h;
+      mctx.beginPath();
+      mctx.arc(m.x, m.y, halo, 0, 6.2832);
+      mctx.fill();
+    }
+  }
+
+  function tick(now) {
+    mraf = 0;
+    var delta = last ? Math.min((now - last) / 1000, 0.05) : 0.016;
+    last = now;
+
+    for (var i = meteors.length - 1; i >= 0; i--) {
+      var m = meteors[i];
+      m.age += delta;
+      m.x += m.vx * delta;
+      m.y += m.vy * delta;
+      var gone =
+        m.age >= m.life ||
+        m.y > vh + m.len ||
+        m.x < -vw * 0.3 ||
+        m.x > vw * 1.3;
+      if (gone) meteors.splice(i, 1);
+    }
+
+    drawMeteors();
+
+    if (meteors.length) mraf = w.requestAnimationFrame(tick);
+    else {
+      last = 0;
+      mctx.clearRect(0, 0, vw, vh);
+    }
+  }
+
+  function startTrail() {
+    if (!mctx || mraf) return;
+    last = 0;
+    mraf = w.requestAnimationFrame(tick);
+  }
+
+  /* ------------------------------------------------------------- Wire */
+
   var resizeTimer = 0;
   function onResize() {
     w.clearTimeout(resizeTimer);
@@ -139,6 +281,18 @@
     reduce.addEventListener("change", function () {
       lastScroll = -1;
       schedule();
+      if (reduce.matches) {
+        w.clearTimeout(timer);
+        meteors.length = 0;
+      } else planNext();
     });
   }
+  /* A meteor that fell while the tab was hidden is a frame budget spent on
+     nobody. */
+  doc.addEventListener("visibilitychange", function () {
+    if (doc.hidden) w.clearTimeout(timer);
+    else planNext();
+  });
+
+  if (mctx) planNext();
 })(window, document);
