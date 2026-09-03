@@ -224,6 +224,12 @@ h3 {
   margin: 0;
   letter-spacing: -0.02em;
   color: var(--text);
+  /* Headings are written once in English and then in nineteen other
+     languages, each of which breaks in its own places. Balanced lines beat
+     the alternative everywhere and matter most in CJK, where a heading can
+     otherwise strand a single character — a full stop, or a character and a
+     full stop — alone on the last line. */
+  text-wrap: balance;
 }
 
 h1 {
@@ -264,6 +270,9 @@ p:last-child {
   font-size: var(--type-intro);
   color: var(--text-muted);
   max-width: 62ch;
+  /* A paragraph is too long to balance; this only forbids the last line
+     being a single word, which is the failure that reads as a mistake. */
+  text-wrap: pretty;
 }
 
 .eyebrow {
