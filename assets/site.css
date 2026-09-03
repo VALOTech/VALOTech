@@ -740,6 +740,108 @@ html:not(.can-scene) .planet {
   object-fit: contain;
 }
 
+/* ========================================================= 8b. The orbits */
+
+/* Two layers of the same box, clipped to its top and bottom halves and sitting
+   either side of the planet in the stacking order. A satellite on the far half
+   of its path is drawn under the planet, on the near half over it — which is
+   what makes a flat ellipse read as an orbit seen from above. */
+.orbit {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  width: min(68vw, 1100px);
+  height: min(34vw, 540px);
+  margin: calc(min(34vw, 540px) / -2) 0 0 calc(min(68vw, 1100px) / -2);
+  overflow: visible;
+  pointer-events: none;
+  transform: translate(var(--stone-x, 50vw), var(--stone-y, 50vh))
+    scale(var(--stone-scale, 1));
+  transform-origin: center;
+  opacity: 0;
+  transition: opacity 1.2s var(--ease);
+}
+
+.has-scene .orbit {
+  opacity: 1;
+}
+
+/* The dash pattern is irregular on purpose: an even one reads as a dotted
+   line, an uneven one as particles strung along a path. */
+.orbit-ring {
+  fill: none;
+  stroke: rgba(186, 200, 255, 0.78);
+  stroke-width: 0.5;
+  stroke-linecap: round;
+  stroke-dasharray: 0.18 1.7 0.52 3.1 0.12 2.35 0.34 4.2;
+  filter: drop-shadow(0 0 4px rgba(132, 154, 255, 0.55));
+  animation: orbit-flow 13s linear infinite, orbit-sparkle 2.9s ease-in-out infinite alternate;
+}
+
+.orbit-ring--1 {
+  stroke: rgba(162, 178, 250, 0.6);
+  animation-duration: 17s, 3.7s;
+  animation-direction: reverse, alternate;
+}
+
+@keyframes orbit-flow {
+  to {
+    stroke-dashoffset: -42;
+  }
+}
+
+@keyframes orbit-sparkle {
+  0%, 18% { stroke-opacity: 0.48; }
+  37% { stroke-opacity: 0.92; }
+  53% { stroke-opacity: 0.62; }
+  71% { stroke-opacity: 1; }
+  100% { stroke-opacity: 0.7; }
+}
+
+.orbit-planet {
+  stroke: rgba(231, 220, 255, 0.4);
+  stroke-width: 0.06;
+}
+
+.orbit-label {
+  font-family: var(--mono);
+  font-size: 3.1px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  fill: rgba(238, 242, 255, 0.94);
+  paint-order: stroke;
+  stroke: rgba(8, 10, 20, 0.85);
+  stroke-width: 0.9px;
+  stroke-linejoin: round;
+  opacity: 0;
+  transition: opacity 420ms var(--ease);
+}
+
+.orbits-named .orbit-label {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orbit-ring {
+    animation: none;
+  }
+}
+
+@media (max-width: 900px) {
+  /* The planet is already behind the copy at this width; a wide orbit on top
+     of it would be two things competing for the same space. */
+  .orbit {
+    width: min(96vw, 640px);
+    height: min(48vw, 320px);
+    margin: calc(min(48vw, 320px) / -2) 0 0 calc(min(96vw, 640px) / -2);
+    opacity: 0.6;
+  }
+
+  .has-scene .orbit {
+    opacity: 0.6;
+  }
+}
+
 /* ============================================================ 9. Markers */
 
 /* Above the breakpoint, markers hold a lane beside the planet and the text

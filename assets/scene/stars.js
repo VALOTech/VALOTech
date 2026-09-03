@@ -142,10 +142,17 @@
   var MAX_ALIVE = 2;
   var BRIGHT_SHARE = 0.18;
 
+  /* Meteors belong to the dead sky. Once the surface has become a living
+     world there is nothing left to fall, so they stop — and start again if the
+     reader scrolls back up into the lunar half of the story. */
+  var SETTLE_AT = 0.62;
+
   var meteors = [];
   var mraf = 0;
   var timer = 0;
   var last = 0;
+  var growth = 0;
+  var scheduled = false;
 
   function spawn() {
     /* Enter from the top edge or the upper part of a side, and travel down
@@ -180,16 +187,30 @@
   }
 
   function planNext() {
-    if (reduce.matches) return;
+    scheduled = false;
+    if (reduce.matches || doc.hidden || growth >= SETTLE_AT) return;
     w.clearTimeout(timer);
+    scheduled = true;
     timer = w.setTimeout(function () {
-      if (!doc.hidden && meteors.length < MAX_ALIVE) {
+      scheduled = false;
+      if (!doc.hidden && growth < SETTLE_AT && meteors.length < MAX_ALIVE) {
         spawn();
         startTrail();
       }
       planNext();
     }, rand(GAP_MIN, GAP_MAX));
   }
+
+  /* The page tells the sky how far the transformation has come. Where no
+     module runs to tell it, it reads the same scrub off the scroll itself. */
+  function setGrowth(value) {
+    var was = growth;
+    growth = value;
+    if (was >= SETTLE_AT && growth < SETTLE_AT) planNext();
+    else if (growth >= SETTLE_AT) w.clearTimeout(timer);
+  }
+
+  w.VALO_SKY = { setGrowth: setGrowth };
 
   function drawMeteors() {
     mctx.clearRect(0, 0, vw, vh);
@@ -291,7 +312,7 @@
      nobody. */
   doc.addEventListener("visibilitychange", function () {
     if (doc.hidden) w.clearTimeout(timer);
-    else planNext();
+    else if (!scheduled) planNext();
   });
 
   if (mctx) planNext();
