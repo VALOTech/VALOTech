@@ -49,7 +49,7 @@
         if (!seen && !calm) {
           r.className += ' intro';
           sessionStorage.setItem('valotech-arrived', '1');
-          setTimeout(function () { r.className = r.className.replace(/intro/, ''); }, 3800);
+          setTimeout(function () { r.classList.remove('intro'); }, 3800);
         }
       } catch (e) {}
     })(document.documentElement);
@@ -112,7 +112,7 @@
   <section class="hero">
     <div class="wrap">
       <div class="hero-grid">
-        <div>
+        <div class="hero-copy">
           <span class="eyebrow reveal" data-i18n="hero.eyebrow">AI workforce · regulated industries</span>
           <h1 class="reveal" style="--d:.06s" data-i18n-html="hero.h1">An AI workforce, deployed on your own <span class="grad-text">clean data.</span></h1>
           <p class="hero-sub lede reveal" style="--d:.12s" data-i18n="hero.sub">A multi-agent workforce that runs on a data foundation we build inside your environment. Audit-defensible from day one.</p>
@@ -157,7 +157,7 @@
         <p class="lede reveal" style="--d:.12s" data-i18n="problem.lede">You do not need another AI tool. You need an AI workforce, and the clean data foundation underneath it.</p>
       </div>
       <div class="orbit-nodes">
-        <article class="orbit-node reveal" style="--d:.18s">
+        <article class="orbit-node reveal reveal--fan" style="--d:.18s">
           <span class="orbit-box" aria-hidden="true"></span>
           <div class="orbit-card panel panel-dark">
             <span class="panel-num">01</span>
@@ -166,7 +166,7 @@
             <p class="note"><b>// <span data-i18n="problem.1nl">the gap</span></b> &mdash; <span data-i18n="problem.1n">technology arrives, but the data, the people and the regulatory ground are not ready</span></p>
           </div>
         </article>
-        <article class="orbit-node reveal" style="--d:.24s">
+        <article class="orbit-node reveal reveal--fan" style="--d:.24s">
           <span class="orbit-box" aria-hidden="true"></span>
           <div class="orbit-card panel panel-dark">
             <span class="panel-num">02</span>
@@ -175,7 +175,7 @@
             <p class="note"><b>// <span data-i18n="problem.2nl">the cost</span></b> &mdash; <span data-i18n="problem.2n">every AI initiative stalls at the data layer</span></p>
           </div>
         </article>
-        <article class="orbit-node reveal" style="--d:.30s">
+        <article class="orbit-node reveal reveal--fan" style="--d:.30s">
           <span class="orbit-box" aria-hidden="true"></span>
           <div class="orbit-card panel panel-dark">
             <span class="panel-num">03</span>
@@ -433,7 +433,7 @@
   </section>
 
 
-  <section class="chapter chapter--rails" id="people">
+  <section class="chapter chapter--channel" id="people">
     <div class="wrap">
       <div class="chapter-head">
         <span class="eyebrow reveal" data-i18n="people.eyebrow">Your team</span>
@@ -446,27 +446,27 @@
           <span></span>
           <span data-i18n="people.h.r">The AI workforce</span>
         </div>
-        <div class="fit-row reveal" style="--d:.16s">
+        <div class="fit-row reveal reveal--fan" style="--d:.08s">
           <div class="fit-cell"><span class="fit-role" data-i18n="people.h.l">Your people</span><span data-i18n="people.1l">Set strategy and priorities</span></div>
           <div class="fit-arrow" aria-hidden="true"><svg class="i"><use href="#i-arrow-right"/></svg></div>
           <div class="fit-cell"><span class="fit-role" data-i18n="people.h.r">The AI workforce</span><span data-i18n="people.1r">Execute against those priorities</span></div>
         </div>
-        <div class="fit-row reveal" style="--d:.20s">
+        <div class="fit-row reveal reveal--fan" style="--d:.24s">
           <div class="fit-cell"><span class="fit-role" data-i18n="people.h.l">Your people</span><span data-i18n="people.2l">Make high-stakes decisions</span></div>
           <div class="fit-arrow" aria-hidden="true"><svg class="i"><use href="#i-arrow-right"/></svg></div>
           <div class="fit-cell"><span class="fit-role" data-i18n="people.h.r">The AI workforce</span><span data-i18n="people.2r">Prepare options with analysis</span></div>
         </div>
-        <div class="fit-row reveal" style="--d:.24s">
+        <div class="fit-row reveal reveal--fan" style="--d:.40s">
           <div class="fit-cell"><span class="fit-role" data-i18n="people.h.l">Your people</span><span data-i18n="people.3l">Approve what ships</span></div>
           <div class="fit-arrow" aria-hidden="true"><svg class="i"><use href="#i-arrow-right"/></svg></div>
           <div class="fit-cell"><span class="fit-role" data-i18n="people.h.r">The AI workforce</span><span data-i18n="people.3r">Run the review and QA process</span></div>
         </div>
-        <div class="fit-row reveal" style="--d:.28s">
+        <div class="fit-row reveal reveal--fan" style="--d:.56s">
           <div class="fit-cell"><span class="fit-role" data-i18n="people.h.l">Your people</span><span data-i18n="people.4l">Own customer relationships</span></div>
           <div class="fit-arrow" aria-hidden="true"><svg class="i"><use href="#i-arrow-right"/></svg></div>
           <div class="fit-cell"><span class="fit-role" data-i18n="people.h.r">The AI workforce</span><span data-i18n="people.4r">Handle support volume and feedback</span></div>
         </div>
-        <div class="fit-row reveal" style="--d:.32s">
+        <div class="fit-row reveal reveal--fan" style="--d:.72s">
           <div class="fit-cell"><span class="fit-role" data-i18n="people.h.l">Your people</span><span data-i18n="people.5l">Define the brand</span></div>
           <div class="fit-arrow" aria-hidden="true"><svg class="i"><use href="#i-arrow-right"/></svg></div>
           <div class="fit-cell"><span class="fit-role" data-i18n="people.h.r">The AI workforce</span><span data-i18n="people.5r">Apply brand rules consistently</span></div>

@@ -194,23 +194,103 @@
       },
       { threshold: 0.14, rootMargin: "0px 0px -8% 0px" }
     );
+    var pending = [];
     els.forEach(function (el) {
+      pending.push(el);
       io.observe(el);
     });
+
+    /* A flick of the wheel, a dragged scrollbar or the End key can carry a
+       block from below the fold to above it with no frame in between. The
+       observer hears nothing: its ratio was zero before and is zero after,
+       and a notification is only queued when a threshold is crossed. So the
+       block would stay invisible for the rest of the session — content lost
+       to the speed of the scroll. Anything the page has already carried past
+       the top is revealed outright, and the sweep retires once nothing is
+       left to reveal. */
+    var sweepQueued = 0;
+    function sweepPassed() {
+      sweepQueued = 0;
+      var left = [];
+      for (var i = 0; i < pending.length; i++) {
+        var el = pending[i];
+        if (el.classList.contains("in")) continue;
+        if (el.getBoundingClientRect().bottom <= 0) {
+          el.classList.add("in", "revealed-now");
+          io.unobserve(el);
+        } else {
+          left.push(el);
+        }
+      }
+      pending = left;
+      if (!pending.length) window.removeEventListener("scroll", queueSweep);
+    }
+    function queueSweep() {
+      if (!sweepQueued) sweepQueued = requestAnimationFrame(sweepPassed);
+    }
+    window.addEventListener("scroll", queueSweep, { passive: true });
     /* Tabbing lands on a control before the block around it has met the
        observer's threshold, so focus reveals its own block rather than
        leaving the reader on something invisible. */
     doc.addEventListener("focusin", function (e) {
       var block = e.target.closest && e.target.closest(".reveal:not(.in)");
       if (block) {
-        /* The staggered delay is for reading down a page. A keyboard user has
-           already arrived, so it would leave them on something invisible for
-           the better part of a second. */
-        block.style.transitionDelay = "0s";
-        block.classList.add("in");
+        /* Revealed outright rather than transitioned. The stagger is for
+           reading down a page; a keyboard user has already arrived, and a
+           focused element that is still fading is a focused element the
+           reader cannot see. Nothing here depends on a transition landing. */
+        block.classList.add("in", "revealed-now");
         io.unobserve(block);
       }
     });
+  })();
+
+  /* ---------------- the mapping stage ---------------- */
+  (function initFitStage() {
+    var section = doc.getElementById("people");
+    var fit = section && section.querySelector(".fit");
+    if (!fit) return;
+    var rows = [].slice.call(fit.querySelectorAll(".fit-row"));
+    if (!rows.length) return;
+    /* Matches the breakpoint the stage's styles are written under. Below it
+       the chapter is an ordinary stack and every pair is simply present. */
+    var wide = window.matchMedia("(min-width: 1120px)");
+
+    function showAll() {
+      rows.forEach(function (row) {
+        row.classList.add("is-revealed");
+        row.classList.remove("is-active");
+      });
+    }
+
+    var queued = 0;
+    function update() {
+      queued = 0;
+      if (reduce || !wide.matches) {
+        showAll();
+        return;
+      }
+      var rect = section.getBoundingClientRect();
+      /* How far the section has travelled past the top of the viewport, as a
+         fraction of the distance it can travel. The panel is sticky, so this
+         is exactly the reader's progress through the chapter. */
+      var distance = Math.max(1, rect.height - window.innerHeight);
+      var progress = Math.min(0.9999, Math.max(0, -rect.top / distance));
+      var stage = Math.min(rows.length - 1, Math.floor(progress * rows.length));
+      rows.forEach(function (row, i) {
+        row.classList.toggle("is-revealed", stage >= i);
+        row.classList.toggle("is-active", stage === i);
+      });
+    }
+
+    function queue() {
+      if (!queued) queued = requestAnimationFrame(update);
+    }
+
+    window.addEventListener("scroll", queue, { passive: true });
+    window.addEventListener("resize", queue, { passive: true });
+    if (wide.addEventListener) wide.addEventListener("change", queue);
+    update();
   })();
 
   /* ---------------- mobile menu ---------------- */
@@ -271,7 +351,6 @@
 
   /* ---------------- scroll-spy ---------------- */
   (function initSpy() {
-    if (!("IntersectionObserver" in window)) return;
     var links = {},
       secs = [];
     doc.querySelectorAll('.nav-links a[href^="#"]').forEach(function (a) {
@@ -283,21 +362,46 @@
       }
     });
     if (!secs.length) return;
-    var spy = new IntersectionObserver(
-      function (entries) {
-        entries.forEach(function (en) {
-          if (!en.isIntersecting) return;
-          var id = en.target.id;
-          Object.keys(links).forEach(function (k) {
-            if (k === id) links[k].setAttribute("aria-current", "true");
-            else links[k].removeAttribute("aria-current");
-          });
+    /* Read off the sections rather than off an observer's entries. An observer
+       is notified only when a ratio crosses a threshold, and a jump — an
+       anchor, the End key, a dragged scrollbar — can take a chapter from below
+       the band to above it with no frame in between, crossing nothing and
+       leaving the nav pointing at wherever the reader used to be. */
+    function settle() {
+      var best = null;
+      var bestGap = Infinity;
+      var middle = window.innerHeight / 2;
+      for (var i = 0; i < secs.length; i++) {
+        var box = secs[i].getBoundingClientRect();
+        if (box.bottom < 0 || box.top > window.innerHeight) continue;
+        var gap = box.top > middle ? box.top - middle : 0;
+        if (box.bottom < middle) gap = middle - box.bottom;
+        if (gap < bestGap) {
+          bestGap = gap;
+          best = secs[i].id;
+        }
+      }
+      /* Chapters without a nav entry sit between the ones that have them. In
+         those the mark stays where it was rather than blinking off, because a
+         highlight that disappears mid-page reads as a bug, not as an answer. */
+      if (!best) return;
+      Object.keys(links).forEach(function (k) {
+        if (k === best) links[k].setAttribute("aria-current", "true");
+        else links[k].removeAttribute("aria-current");
+      });
+    }
+
+    var queued = 0;
+    function queueSettle() {
+      if (!queued) {
+        queued = requestAnimationFrame(function () {
+          queued = 0;
+          settle();
         });
-      },
-      { rootMargin: "-45% 0px -50% 0px", threshold: 0 }
-    );
-    secs.forEach(function (s) {
-      spy.observe(s);
-    });
+      }
+    }
+    window.addEventListener("scroll", queueSettle, { passive: true });
+    window.addEventListener("resize", queueSettle, { passive: true });
+    settle();
   })();
 })();

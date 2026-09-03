@@ -44,20 +44,57 @@ function smoothstep(t) {
   return x * x * (3 - 2 * x);
 }
 
+/* An exponential approach expressed as a time constant rather than a
+   per-frame fraction, so it converges at the same speed whatever the frame
+   rate is. `tau` is roughly the time to close two-thirds of the gap. */
+function ease(seconds, tau) {
+  return 1 - Math.exp(-seconds / tau);
+}
+
 /* ---------------------------------------------------------------- The sun */
 
-/* The sun does not move. Everything else in the sky is placed relative to it,
-   which is what lets the planet's journey read as an orbit rather than as a
-   sprite sliding around the frame. */
-/* Up and to the right, in open sky. The left of every chapter is under a
-   scrim that keeps the argument legible, and a sun placed there is a sun
-   nobody sees — which would leave the planet orbiting an invisible centre. */
-const SUN = { x: 66, y: 16 };
-const SUN_NARROW = { x: 74, y: 12 };
+/* The planet is the origin. The camera rides with it, so the planet goes
+   where the layout wants it and the orbit is carried by everything else: the
+   sun swings around the sky and the star field slides against it, which is
+   what an orbit looks like from the surface of the world making it. Curving
+   the planet's own path around a fixed star does the opposite — it puts the
+   reader outside the system, and it costs the layout every station it asked
+   for, because a station on an arc is not the station that was written.
+
+   The sun's apparent bearing from the planet, in degrees, screen axes: 270 is
+   straight overhead, 0 is due right, and y grows downward. It sweeps once
+   across the page — far enough to read as travel, and held inside the band of
+   open sky above the argument, because a sun behind a scrim is a light source
+   the reader cannot find. */
+const SUN_BEARING_FROM = 280;
+const SUN_BEARING_TO = 340;
+
+/* A phone is a different sky: the planet sits near the middle and there are
+   only a couple of hundred pixels either side of it, so the star crosses a
+   shorter arc, high up, where nothing is being read. */
+const SUN_BEARING_FROM_NARROW = 248;
+const SUN_BEARING_TO_NARROW = 290;
+
+/* How far the star stands off the planet on screen. Wide screens measure it
+   against the shorter axis; a phone measures it against its height, because
+   the only clear sky on a phone is the strip above the copy. */
+const SUN_DISTANCE = 0.395;
+const SUN_DISTANCE_NARROW = 0.36;
 
 /* Below this the light grazes the limb and the surface goes to silhouette.
    The sun may sit low against the planet; it may not sit on its horizon. */
 const MIN_ELEVATION = 0.42;
+
+/* Scrolling turns the world faster. The gain converts pages-per-second into a
+   multiplier; the cap keeps a flick from spinning the surface into a blur. */
+const SPIN_BOOST_GAIN = 26;
+const SPIN_BOOST_MAX = 7;
+const SPIN_EASE = 0.18;
+
+/* Chosen so that at sixty frames a second the planet closes about six percent
+   of its remaining distance per frame — the follow the stations were tuned
+   against — and closes the same amount per second everywhere else. */
+const DRIFT_EASE = 0.26;
 
 /* How far the reference's key light sits toward the viewer relative to its
    spread across the frame. Holding the ratio keeps the surface's modelling
@@ -75,37 +112,53 @@ const FRONT_RATIO = 0.71;
    needs the frame. Coming home takes a third of the page, because that is the
    part worth watching. */
 const JOURNEY = [
-  { at: 0.0, x: 48, y: 52, scale: 1.0 },
-  { at: 0.06, x: 48, y: 52, scale: 1.0 },
+  { at: 0.0, x: 50, y: 50, scale: 1.0 },
+  { at: 0.06, x: 50, y: 50, scale: 1.0 },
   /* Out: the planet swings under the sun and up its right side, shrinking as
      it goes. Each leg is a constant-radius arc, so it reads as travel rather
      than as falling away. */
-  { at: 0.34, x: 70, y: 62, scale: 0.62 },
-  { at: 0.5, x: 82, y: 50, scale: 0.55 },
-  { at: 0.68, x: 78, y: 33, scale: 0.72 },
-  /* Home: one long sweep of about ninety degrees, back down and across. This
-     is the leg worth watching, so it takes a fifth of the page on its own. */
-  { at: 0.86, x: 48, y: 52, scale: 0.95 },
-  { at: 0.92, x: 48, y: 52, scale: 0.95 },
-  { at: 1.0, x: 72, y: 46, scale: 0.86 }
+  { at: 0.22, x: 70, y: 62, scale: 0.62 },
+  { at: 0.32, x: 82, y: 52, scale: 0.55 },
+  { at: 0.40, x: 78, y: 46, scale: 0.64 },
+  /* Home: one long sweep of about ninety degrees, back down and across, taking
+     nearly a fifth of the page on its own. It lands where the mapping chapter
+     opens, because that chapter is a three-column composition and the planet
+     is its middle column — your people on one side, the AI workforce on the
+     other, one world between them. */
+  { at: 0.56, x: 50, y: 56, scale: 0.78 },
+  { at: 0.86, x: 50, y: 56, scale: 0.78 },
+  /* Away, once the mapping is read. The close belongs to the copy. */
+  { at: 1.0, x: 74, y: 44, scale: 0.66 }
 ];
 
 /* Narrower on a phone: the planet sits behind the copy there, so a wide swing
    would drag the eye across the text rather than around the sun. */
 const JOURNEY_NARROW = [
   { at: 0.0, x: 48, y: 56, scale: 1.0 },
-  { at: 0.5, x: 62, y: 62, scale: 0.74 },
-  { at: 0.68, x: 64, y: 44, scale: 0.82 },
-  { at: 0.9, x: 48, y: 56, scale: 0.96 },
-  { at: 1.0, x: 60, y: 48, scale: 0.82 }
+  { at: 0.46, x: 62, y: 62, scale: 0.74 },
+  { at: 0.6, x: 64, y: 44, scale: 0.8 },
+  { at: 0.78, x: 48, y: 56, scale: 0.92 },
+  { at: 0.86, x: 48, y: 56, scale: 0.92 },
+  { at: 1.0, x: 62, y: 48, scale: 0.8 }
 ];
 
 const NARROW = 900;
+
+/* The hero markers are laid out from where the planet stands at the top of the
+   page. Publishing it from the journey's own first station keeps the two from
+   drifting apart — the alternative is the same pair of numbers written once in
+   CSS and once here, which stays true exactly until one of them is tuned. */
+document.documentElement.style.setProperty('--hero-x', JOURNEY[0].x + 'vw');
+document.documentElement.style.setProperty('--hero-y', JOURNEY[0].y + 'vh');
 
 let driftVW = 0;
 let offsetVH = 0;
 let scale = 1;
 let introStartedAt = 0;
+let lastTick = 0;
+let lastProgress = 0;
+let spinBoost = 0;
+let orbitClock = 0;
 let running = false;
 let raf = 0;
 let primed = false;
@@ -189,7 +242,10 @@ function buildOrbits() {
           fill: 'url(#orbit-' + sat.fill + '-' + depth + ')'
         })
       );
-      if (sat.label) {
+      /* Only the near half is named. A satellite on the far side is behind the
+         world, and a label that survived the occlusion would read as a clipped
+         word rather than as something passing behind. */
+      if (sat.label && depth === 'front') {
         const text = svg('text', { class: 'orbit-label', 'text-anchor': 'middle', dy: -sat.r - 2.6 });
         text.textContent = sat.label;
         g.appendChild(text);
@@ -217,12 +273,6 @@ function moveOrbits(seconds) {
   }
 }
 
-function toPolar(px, py, sx, sy) {
-  const dx = px - sx;
-  const dy = py - sy;
-  return { r: Math.hypot(dx, dy), a: Math.atan2(dy, dx) };
-}
-
 function place(now) {
   const vh = window.innerHeight;
   const vw = window.innerWidth;
@@ -232,19 +282,18 @@ function place(now) {
   const wide = vw > NARROW;
 
   motion.scroll = progress;
-  /* The cover stays lunar; life scrubs continuously across the story. */
-  motion.growth = smoothstep((progress - 0.06) / 0.84);
+  /* The cover stays lunar; life scrubs across the argument and is complete by
+     the time the mapping chapter opens, because that chapter is about a
+     finished world standing between the people and the workforce. */
+  motion.growth = smoothstep((progress - 0.05) / 0.5);
   motion.reducedMotion = still;
 
   /* The sky is told how far the transformation has come, so the meteors can
      stop once there is a living world to look at. */
   if (window.VALO_SKY) window.VALO_SKY.setGrowth(motion.growth);
 
-  const star = wide ? SUN : SUN_NARROW;
-  const sunX = (star.x / 100) * vw;
-  const sunY = (star.y / 100) * vh;
-
-  /* Which leg of the journey this scroll position sits on. */
+  /* Which leg of the journey this scroll position sits on. The stations are
+     layout, so they are honoured as written. */
   const path = wide ? JOURNEY : JOURNEY_NARROW;
   let i = 0;
   while (i < path.length - 2 && progress > path[i + 1].at) i++;
@@ -253,23 +302,36 @@ function place(now) {
   const span = to.at - from.at || 1;
   const t = smoothstep((progress - from.at) / span);
 
-  const a = toPolar((from.x / 100) * vw, (from.y / 100) * vh, sunX, sunY);
-  const b = toPolar((to.x / 100) * vw, (to.y / 100) * vh, sunX, sunY);
-  let sweep = b.a - a.a;
-  /* Take the short way between two stations; the arc comes from where the
-     stations are, not from a wrap nobody asked for. */
-  while (sweep > Math.PI) sweep -= Math.PI * 2;
-  while (sweep < -Math.PI) sweep += Math.PI * 2;
-
-  const r = a.r + (b.r - a.r) * t;
-  const angle = a.a + sweep * t;
-  const targetVW = ((sunX + Math.cos(angle) * r - vw / 2) / vw) * 100;
-  const targetVH = ((sunY + Math.sin(angle) * r - vh / 2) / vh) * 100;
+  const targetVW = from.x + (to.x - from.x) * t - 50;
+  const targetVH = from.y + (to.y - from.y) * t - 50;
   const targetScale = from.scale + (to.scale - from.scale) * t;
 
+  /* How much of the orbit has been travelled, as a bearing to the star. */
+  const arcFrom = wide ? SUN_BEARING_FROM : SUN_BEARING_FROM_NARROW;
+  const arcTo = wide ? SUN_BEARING_TO : SUN_BEARING_TO_NARROW;
+  const bearing = ((arcFrom + (arcTo - arcFrom) * progress) * Math.PI) / 180;
+  motion.bearing = bearing;
+
+  /* How fast the reader is moving through the page, as a bounded multiplier
+     on everything that turns. Eased in both directions, so a flick reads as a
+     surge and a stop as a coast rather than as a jump. */
+  const tick = now / 1000;
+  const gap = Math.min(0.25, Math.max(1 / 120, tick - lastTick));
+  const rate = Math.abs(progress - lastProgress) / gap;
+  lastTick = tick;
+  lastProgress = progress;
+  const wanted = still ? 0 : Math.min(SPIN_BOOST_MAX, rate * SPIN_BOOST_GAIN);
+  spinBoost += (wanted - spinBoost) * ease(gap, SPIN_EASE);
+  motion.spin = 1 + spinBoost;
+
   /* Eased toward the target rather than set, so a fast scroll reads as the
-     planet following. On the first frame there is nothing to ease from. */
-  const k = primed ? 0.06 : 1;
+     planet following. On the first frame there is nothing to ease from.
+
+     The rate is per second, not per frame: a frame-counted easing follows at
+     one speed on a machine drawing sixty and at another on a machine drawing
+     six, so the same page reads as a different animation on slower hardware —
+     exactly the hardware least able to afford the difference. */
+  const k = primed ? ease(gap, DRIFT_EASE) : 1;
   driftVW += (targetVW - driftVW) * k;
   offsetVH += (targetVH - offsetVH) * k;
   scale += (targetScale - scale) * k;
@@ -296,10 +358,22 @@ function place(now) {
     ` calc(-50% + ${floatY.toFixed(1)}px + ${offsetVH.toFixed(2)}vh))`;
   container.style.opacity = introOpacity.toFixed(3);
 
+  /* The star, placed from the planet rather than from the frame. Its bearing
+     is the orbit; its distance holds it in the band of open sky. */
+  const planetX = vw / 2 + floatX + (driftVW / 100) * vw;
+  const planetY = vh / 2 + floatY + (offsetVH / 100) * vh;
+  const reach = wide ? Math.min(vw, vh) * SUN_DISTANCE : vh * SUN_DISTANCE_NARROW;
+  const sunX = planetX + Math.cos(bearing) * reach;
+  const sunY = planetY + Math.sin(bearing) * reach;
+
   if (sun) {
     sun.style.transform = `translate(${sunX.toFixed(1)}px, ${sunY.toFixed(1)}px)`;
     sun.style.opacity = introOpacity.toFixed(3);
   }
+
+  /* The sky slides against the orbit too: the nearer a star is drawn, the
+     further it travels, which is the parallax a year of orbiting produces. */
+  if (window.VALO_SKY && window.VALO_SKY.setBearing) window.VALO_SKY.setBearing(bearing);
 
   /* The orbit layers are positioned from these, so they travel and shrink with
      the planet rather than being pinned to the viewport. */
@@ -307,19 +381,26 @@ function place(now) {
     root.style.setProperty('--stone-x', `${(vw / 2 + floatX + (driftVW / 100) * vw).toFixed(1)}px`);
     root.style.setProperty('--stone-y', `${(vh / 2 + floatY + (offsetVH / 100) * vh).toFixed(1)}px`);
     root.style.setProperty('--stone-scale', motion.visualScale.toFixed(3));
-    /* Under reduced motion the satellites hold a pose rather than circling. */
-    moveOrbits(still ? 4 : now / 1000);
+    /* Nothing orbits a dead rock. The ring arrives with the atmosphere and is
+       whole by the time the mapping chapter asks the reader to look at it. */
+    root.style.setProperty(
+      '--orbit-reveal',
+      (smoothstep((motion.growth - 0.5) / 0.34) * introOpacity).toFixed(3)
+    );
+    /* The satellites keep their own time — they circle whether or not anyone
+       scrolls, and quicker while someone does. Under reduced motion they hold
+       a pose instead. */
+    if (!still) orbitClock += gap * motion.spin;
+    moveOrbits(still ? 4 : orbitClock);
   }
 
   /* The light is derived from where the disc was drawn, never set beside it,
      so the two cannot disagree. */
-  const planetX = vw / 2 + floatX + (driftVW / 100) * vw;
-  const planetY = vh / 2 + floatY + (offsetVH / 100) * vh;
   let lx = -(planetX - sunX);
   let ly = planetY - sunY;
-  const reach = Math.hypot(lx, ly) || 1;
-  lx /= reach;
-  ly /= reach;
+  const len = Math.hypot(lx, ly) || 1;
+  lx /= len;
+  ly /= len;
   if (ly < MIN_ELEVATION) {
     ly = MIN_ELEVATION;
     const flat = Math.hypot(lx, ly) || 1;

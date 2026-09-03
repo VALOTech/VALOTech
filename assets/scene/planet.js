@@ -20,6 +20,11 @@ const PLANET_RADIUS = 1.32;
    and still too slow to pull the eye off the argument. */
 const SELF_ROTATION = THREE.MathUtils.degToRad(3.2);
 
+/* Earth's obliquity. The spin happens about the planet's own axis and the
+   axis leans, which is why the poles sit off-vertical and the terminator
+   crosses them at an angle instead of running straight down the disc. */
+const AXIAL_TILT = THREE.MathUtils.degToRad(23.44);
+
 /* Earth at true proportion against a 6371 km mean radius: the 15 km cloud
    base and the 100 km Karman line. The 0.335% polar flattening is below a
    visible silhouette change at this size, so the mesh stays spherical and
@@ -209,8 +214,15 @@ export function mount(container, motion, onReady) {
   rim.position.set(-3.4, 2.7, 4.6);
   scene.add(rim);
 
+  /* Two groups, because a tilted axis is not a tilted planet: the outer one
+     leans and never spins, the inner one spins and never leans. Collapsing
+     them into one would wobble the pole around the sky once a rotation. */
+  const axis = new THREE.Group();
+  axis.rotation.z = AXIAL_TILT;
+  scene.add(axis);
+
   const group = new THREE.Group();
-  scene.add(group);
+  axis.add(group);
 
   /* Where the sun is. Every surface reads the same vector: the lunar
      terminator, the Earth's day and night, the cloud shading and the lit limb
@@ -504,7 +516,13 @@ export function mount(container, motion, onReady) {
     elapsed += delta;
 
     const still = state.reducedMotion;
-    if (!still) selfRotation = (selfRotation + delta * SELF_ROTATION) % (Math.PI * 2);
+    /* The world turns on its own clock, and turns faster while the reader is
+       moving through the page. Neither depends on the other: parked, it still
+       rotates; scrolling, it hurries. */
+    if (!still) {
+      selfRotation =
+        (selfRotation + delta * SELF_ROTATION * (state.spin || 1)) % (Math.PI * 2);
+    }
 
     /* The sun. Its direction arrives from the page, which knows where the
        glow is drawn on screen; the lights follow it so the terminator on the
@@ -529,13 +547,12 @@ export function mount(container, motion, onReady) {
     if (still) clouds.rotation.y = 0.035;
     else clouds.rotation.y += delta * 0.006;
 
-    /* Scroll turns the planet as well as advancing the story, so the face the
-       reader sees at the close is not the one they arrived on. */
-    const targetY = state.scroll * 0.46 + (still ? 0 : state.pointerX * 0.18) + selfRotation;
+    /* The pointer nudges the face a little; the spin above does the turning. */
+    const targetY = (still ? 0 : state.pointerX * 0.18) + selfRotation;
     group.rotation.y += (targetY - group.rotation.y) * 0.035;
-    group.rotation.x = still ? -0.06 : -0.06 + Math.sin(elapsed * 0.28) * 0.018;
-    group.rotation.z = still ? 0 : Math.sin(elapsed * 0.19) * 0.012;
-    group.scale.setScalar(state.visualScale);
+    axis.rotation.x = still ? -0.06 : -0.06 + Math.sin(elapsed * 0.28) * 0.018;
+    axis.rotation.z = still ? AXIAL_TILT : AXIAL_TILT + Math.sin(elapsed * 0.19) * 0.012;
+    axis.scale.setScalar(state.visualScale);
 
     renderer.render(scene, camera);
     raf = requestAnimationFrame(frame);

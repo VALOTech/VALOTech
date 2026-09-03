@@ -719,10 +719,10 @@ p:last-child {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 48vw;
-  height: 48vw;
-  max-width: 760px;
-  max-height: 760px;
+  width: 42vw;
+  height: 42vw;
+  max-width: 620px;
+  max-height: 620px;
   transform: translate(-50%, -50%);
 }
 
@@ -759,11 +759,10 @@ html:not(.can-scene) .planet {
     scale(var(--stone-scale, 1));
   transform-origin: center;
   opacity: 0;
-  transition: opacity 1.2s var(--ease);
 }
 
 .has-scene .orbits {
-  opacity: 1;
+  opacity: var(--orbit-reveal, 0);
 }
 
 /* The dash pattern is irregular on purpose: an even one reads as a dotted
@@ -828,17 +827,24 @@ html:not(.can-scene) .planet {
 }
 
 @media (max-width: 900px) {
+  /* A phone has no open sky: the copy runs the full width, so wherever the
+     disc goes it goes behind something being read. The star stays off frame
+     and only its light stays — the terminator still swings with the orbit,
+     which is what the reader is actually looking at. */
+  .sun {
+    display: none;
+  }
+
   /* The planet is already behind the copy at this width; a wide orbit on top
      of it would be two things competing for the same space. */
   .orbits {
     width: min(96vw, 640px);
     height: min(48vw, 320px);
     margin: calc(min(48vw, 320px) / -2) 0 0 calc(min(96vw, 640px) / -2);
-    opacity: 0.6;
   }
 
   .has-scene .orbits {
-    opacity: 0.6;
+    opacity: calc(var(--orbit-reveal, 0) * 0.6);
   }
 }
 
@@ -887,6 +893,105 @@ html:not(.can-scene) .planet {
   font-size: 12px;
   color: var(--text-dim);
   line-height: 1.4;
+}
+
+/* ==================================================== 9b. Hero markers */
+
+/* Scattered around the planet rather than stacked beside it — the reference's
+   arrangement, which is what makes the hero read as a constellation and not a
+   sidebar. The coordinates come from where the planet actually stands, and
+   every one of them clears the text column, so the collision the reference has
+   at this width cannot happen here. Below 900px they go back to being a list:
+   there is no room to scatter anything, and a marker over the headline has
+   stopped being a marker. */
+@media (min-width: 901px) {
+  /* No positioning here: the markers are placed in viewport units measured
+     from the hero's own top edge, and making the grid the containing block
+     moves that origin down by the hero's padding — which is what pushed the
+     third marker off the bottom of the frame. */
+  .hero-grid {
+    display: block;
+  }
+
+  .hero-copy {
+    max-width: min(46vw, 620px);
+  }
+
+  .hero-aside {
+    position: absolute;
+    inset: 0;
+    padding: 0;
+    display: block;
+    pointer-events: none;
+  }
+
+  .hero-aside .marker {
+    position: absolute;
+    width: min(26vw, 380px);
+    padding: 14px 18px;
+    pointer-events: auto;
+  }
+
+  .hero-aside .marker:nth-child(1) {
+    inset-inline-start: calc(var(--hero-x, 48vw) + 12vw);
+    inset-block-start: calc(var(--hero-y, 52vh) - 34vh);
+  }
+
+  .hero-aside .marker:nth-child(2) {
+    inset-inline-start: calc(var(--hero-x, 48vw) + 19vw);
+    inset-block-start: calc(var(--hero-y, 52vh) - 9vh);
+  }
+
+  .hero-aside .marker:nth-child(3) {
+    inset-inline-start: calc(var(--hero-x, 48vw) + 10vw);
+    inset-block-start: calc(var(--hero-y, 52vh) + 14vh);
+  }
+
+  /* The connector: an outlined square with a lit core, sitting off the card's
+     leading edge so the card reads as pinned to something rather than floating.
+     The three blink on coprime periods so the constellation never pulses in
+     unison. */
+  .hero-aside .marker-glyph {
+    position: absolute;
+    inset-inline-start: -32px;
+    inset-block-start: 17px;
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    border-color: rgba(200, 220, 255, 0.5);
+    background: none;
+  }
+
+  .hero-aside .marker-glyph::after {
+    content: '';
+    position: absolute;
+    inset: 4px;
+    background: rgba(200, 220, 255, 0.62);
+  }
+
+  .js .hero-aside .marker:nth-child(1) .marker-glyph::after {
+    animation: glyph-blink 3.2s ease-in-out infinite;
+  }
+
+  .js .hero-aside .marker:nth-child(2) .marker-glyph::after {
+    animation: glyph-blink 3.9s ease-in-out infinite -1.1s;
+  }
+
+  .js .hero-aside .marker:nth-child(3) .marker-glyph::after {
+    animation: glyph-blink 4.6s ease-in-out infinite -2.3s;
+  }
+
+  @keyframes glyph-blink {
+    0%, 72%, 78%, 100% { opacity: 1; }
+    74% { opacity: 0.3; }
+    76% { opacity: 0.7; }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-aside .marker-glyph::after {
+    animation: none;
+  }
 }
 
 /* ============================================================ 10. Hero */
@@ -944,6 +1049,37 @@ html:not(.can-scene) .planet {
     rgba(8, 10, 18, 0.18) 82%,
     transparent 92%
   );
+}
+
+/* The mapping chapter reads inward from both edges, so its scrim does too:
+   the argument sits on solid ground either side and the middle stays open sky
+   for the planet the two columns are about. */
+.chapter--channel {
+  background: linear-gradient(
+    90deg,
+    rgba(8, 10, 18, 0.95) 0%,
+    rgba(8, 10, 18, 0.82) 24%,
+    rgba(8, 10, 18, 0.22) 38%,
+    transparent 48%,
+    transparent 52%,
+    rgba(8, 10, 18, 0.22) 62%,
+    rgba(8, 10, 18, 0.82) 76%,
+    rgba(8, 10, 18, 0.95) 100%
+  );
+}
+
+@media (max-width: 1119px) {
+  /* No channel below the breakpoint, so the scrim goes back to one side. */
+  .chapter--channel {
+    background: linear-gradient(
+      90deg,
+      rgba(8, 10, 18, 0.95) 0%,
+      rgba(8, 10, 18, 0.86) 46%,
+      rgba(8, 10, 18, 0.55) 66%,
+      rgba(8, 10, 18, 0.18) 82%,
+      transparent 92%
+    );
+  }
 }
 
 [dir='rtl'] .chapter--rails {
@@ -1311,7 +1447,7 @@ html:not(.can-scene) .planet {
 
 .fit-head {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 28px minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) var(--fit-channel, 28px) minmax(0, 1fr);
   gap: 12px;
   font-family: var(--mono);
   font-size: var(--type-meta);
@@ -1323,7 +1459,7 @@ html:not(.can-scene) .planet {
 
 .fit-row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 28px minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) var(--fit-channel, 28px) minmax(0, 1fr);
   gap: 12px;
   align-items: stretch;
 }
@@ -1360,6 +1496,85 @@ html:not(.can-scene) .planet {
   text-transform: uppercase;
   color: var(--accent);
   margin-bottom: 5px;
+}
+
+/* Wide enough for the planet to stand between the columns. Below this the
+   arrow does the joining instead, because there is no room for a channel.
+
+   The chapter also becomes a scroll stage here. Its panel sticks while the
+   section passes, and the pairs arrive one at a time from their own sides
+   with the current one lit — so the reader takes in one correspondence
+   before the next appears, instead of meeting five at once. */
+@media (min-width: 1120px) {
+  .fit {
+    --fit-channel: min(33vw, 440px);
+  }
+
+  .fit-arrow {
+    visibility: hidden;
+  }
+
+  #people {
+    min-height: 440vh;
+    padding: 0;
+  }
+
+  #people > .wrap {
+    position: sticky;
+    top: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  /* The stage owns the entrance here, so the page-wide reveal stands down
+     rather than fading the same rows a second time. */
+  .js .fit .reveal {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+
+  .fit-row .fit-cell {
+    opacity: 0;
+    filter: blur(4px);
+    transition:
+      opacity 0.42s ease,
+      transform 0.62s cubic-bezier(0.16, 1, 0.3, 1),
+      filter 0.42s ease,
+      border-color 0.18s ease,
+      background 0.18s ease;
+  }
+
+  .fit-row .fit-cell:first-child {
+    transform: translateX(-24px);
+  }
+
+  .fit-row .fit-cell:last-child {
+    transform: translateX(24px);
+  }
+
+  .fit-row.is-revealed .fit-cell {
+    opacity: 1;
+    filter: none;
+    transform: none;
+  }
+
+  .fit-row.is-active .fit-cell {
+    border-color: rgba(140, 158, 255, 0.55);
+    background: rgba(140, 158, 255, 0.1);
+  }
+}
+
+@media (min-width: 1120px) and (prefers-reduced-motion: reduce) {
+  /* No stepping without motion: every pair is simply present. */
+  .fit-row .fit-cell {
+    opacity: 1;
+    filter: none;
+    transform: none;
+    transition: none;
+  }
 }
 
 .fit-tag {
@@ -1563,7 +1778,11 @@ html:not(.can-scene) .planet {
 
 /* ======================================================= 11b. To top */
 
+/* Hidden by visibility as well as opacity, so it leaves the tab order while
+   it is off screen — a keyboard user should not be able to focus a control
+   nobody can see. */
 .to-top {
+  visibility: hidden;
   position: fixed;
   inset-block-end: 24px;
   inset-inline-end: 24px;
@@ -1587,6 +1806,7 @@ html:not(.can-scene) .planet {
 }
 
 .to-top.show {
+  visibility: visible;
   opacity: 1;
   transform: none;
   pointer-events: auto;
@@ -1693,10 +1913,6 @@ html:not(.can-scene) .planet {
   opacity: 0;
 }
 
-.intro .to-top {
-  opacity: 0;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .intro .hdr,
   .intro .hero h1,
@@ -1722,6 +1938,44 @@ html:not(.can-scene) .planet {
 .js .reveal.in {
   opacity: 1;
   transform: none;
+}
+
+/* The fan: the designer's reveal for anything that should arrive out of the
+   scene rather than simply appear — it comes in from the planet's side,
+   scaled down and out of focus, and resolves. The blur is transient by
+   construction: once a row has arrived it is sharp and stays sharp, so
+   nothing a reader needs is ever left unreadable. */
+.js .reveal--fan {
+  transform: translate(-26px, 16px) scale(0.78);
+  filter: blur(6px);
+  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease),
+    filter 0.7s var(--ease);
+  transition-delay: var(--d, 0s);
+}
+
+.js .reveal--fan.in {
+  transform: none;
+  filter: blur(0);
+}
+
+/* The guarantee, not the animation: whatever else is in flight, an element
+   that has just taken focus is opaque and in place on the next frame. */
+.js .reveal.revealed-now {
+  opacity: 1 !important;
+  transform: none !important;
+  filter: none !important;
+  transition: none !important;
+}
+
+[dir='rtl'] .js .reveal--fan {
+  transform: translate(26px, 16px) scale(0.78);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js .reveal--fan {
+    transform: none;
+    filter: none;
+  }
 }
 
 /* Nothing moves on its own. Scroll still moves the page; the planet holds

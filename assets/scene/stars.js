@@ -41,7 +41,15 @@
      photograph of a sky rather than as noise. */
   var HALO_SHARE = 0.014;
 
+  /* How far the sky slides across one full turn of the orbit, in pixels at a
+     tier parallax of 1. Each star takes its own share, so the near field
+     travels and the far field barely moves — which is the whole of what
+     parallax is, and the reason the sky reads as depth rather than wallpaper. */
+  var ORBIT_PARALLAX = 260;
+
   var stars = [];
+  var bearingX = 0;
+  var bearingY = 0;
   var vw = 0;
   var vh = 0;
   var dpr = 1;
@@ -96,31 +104,36 @@
     ctx.clearRect(0, 0, vw, vh);
     for (var i = 0; i < stars.length; i++) {
       var s = stars[i];
-      var y = (s.y - scrollY * s.p) % band;
+      /* Against the orbit, not with it: the world moves one way and the sky
+         appears to move the other. Both axes wrap, so the field stays whole
+         however far it has slid. */
+      var x = (s.x - bearingX * s.p) % vw;
+      if (x < 0) x += vw;
+      var y = (s.y - scrollY * s.p - bearingY * s.p) % band;
       if (y < 0) y += band;
       /* The band is twice the viewport; only the visible half is painted. */
       if (y > vh + 2) continue;
 
       if (s.halo) {
-        var g = ctx.createRadialGradient(s.x, y, 0, s.x, y, s.r * 7);
+        var g = ctx.createRadialGradient(x, y, 0, x, y, s.r * 7);
         g.addColorStop(0, "rgba(226,232,255," + s.a + ")");
         g.addColorStop(0.4, "rgba(178,196,255," + s.a * 0.22 + ")");
         g.addColorStop(1, "rgba(140,158,255,0)");
         ctx.fillStyle = g;
         ctx.beginPath();
-        ctx.arc(s.x, y, s.r * 7, 0, 6.2832);
+        ctx.arc(x, y, s.r * 7, 0, 6.2832);
         ctx.fill();
       }
 
       ctx.fillStyle = "rgba(233,238,255," + s.a + ")";
       ctx.beginPath();
-      ctx.arc(s.x, y, s.r, 0, 6.2832);
+      ctx.arc(x, y, s.r, 0, 6.2832);
       ctx.fill();
     }
   }
 
-  /* The sky is fixed; parallax alone gives it depth. There is no idle
-     animation to run, so nothing is scheduled between scrolls. */
+  /* Nothing here animates on its own: the field is redrawn when the page has
+     moved under it, or when the orbit has carried the sky far enough to see. */
   function frame() {
     raf = 0;
     var scrollY = w.scrollY || doc.documentElement.scrollTop || 0;
@@ -142,10 +155,12 @@
   var MAX_ALIVE = 2;
   var BRIGHT_SHARE = 0.18;
 
-  /* Meteors belong to the dead sky. Once the surface has become a living
-     world there is nothing left to fall, so they stop — and start again if the
-     reader scrolls back up into the lunar half of the story. */
-  var SETTLE_AT = 0.62;
+  /* Meteors belong to the dead sky. They cross it at random for as long as
+     the body is still becoming, and stop the moment it is a living world —
+     starting again if the reader scrolls back up into the lunar half of the
+     story. The threshold sits just short of one so the last of them is spent
+     before the surface finishes, rather than being cut off mid-flight. */
+  var SETTLE_AT = 0.94;
 
   var meteors = [];
   var mraf = 0;
@@ -210,7 +225,18 @@
     else if (growth >= SETTLE_AT) w.clearTimeout(timer);
   }
 
-  w.VALO_SKY = { setGrowth: setGrowth, rush: startRush };
+  /* The page owns the orbit; the sky is told where it has reached. */
+  function setBearing(radians) {
+    var nx = Math.cos(radians) * ORBIT_PARALLAX;
+    var ny = Math.sin(radians) * ORBIT_PARALLAX;
+    if (Math.abs(nx - bearingX) < 0.2 && Math.abs(ny - bearingY) < 0.2) return;
+    bearingX = nx;
+    bearingY = ny;
+    lastScroll = -1;
+    schedule();
+  }
+
+  w.VALO_SKY = { setGrowth: setGrowth, rush: startRush, setBearing: setBearing };
 
   function drawMeteors() {
     mctx.clearRect(0, 0, vw, vh);
