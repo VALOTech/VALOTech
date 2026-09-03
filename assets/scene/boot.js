@@ -147,7 +147,7 @@ function buildOrbits() {
 
   ['rear', 'front'].forEach((depth) => {
     const root = svg('svg', {
-      class: 'orbit orbit--' + depth,
+      class: 'orbits orbits--' + depth,
       viewBox: '0 0 200 100',
       'aria-hidden': 'true'
     });
@@ -281,7 +281,7 @@ function place(now) {
   let introOpacity = 1;
   if (introStartedAt && !still) {
     const eased =
-      1 - Math.pow(1 - Math.min(1, Math.max(0, (now - introStartedAt - 900) / 2600)), 3);
+      1 - Math.pow(1 - Math.min(1, Math.max(0, (now - introStartedAt - 700) / 1650)), 3);
     introScale = 0.06 + eased * 0.94;
     introOpacity = eased;
   }

@@ -37,6 +37,21 @@
           (c.getContext('webgl2') || c.getContext('webgl'))
         ) r.className += ' can-scene';
       } catch (e) {}
+
+      /* The arrival. Decided here so the class is on the element before first
+         paint — added a frame later and the page flashes assembled, then
+         disassembles itself. It runs once per session, never when reduced
+         motion is asked for, and it removes itself on a timer of its own so a
+         failure further down the page can never leave the hero hidden. */
+      try {
+        var seen = sessionStorage.getItem('valotech-arrived');
+        var calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (!seen && !calm) {
+          r.className += ' intro';
+          sessionStorage.setItem('valotech-arrived', '1');
+          setTimeout(function () { r.className = r.className.replace(/intro/, ''); }, 3800);
+        }
+      } catch (e) {}
     })(document.documentElement);
   </script>
   <script type="application/ld+json">

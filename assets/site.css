@@ -746,7 +746,7 @@ html:not(.can-scene) .planet {
    either side of the planet in the stacking order. A satellite on the far half
    of its path is drawn under the planet, on the near half over it — which is
    what makes a flat ellipse read as an orbit seen from above. */
-.orbit {
+.orbits {
   position: absolute;
   inset-block-start: 0;
   inset-inline-start: 0;
@@ -762,7 +762,7 @@ html:not(.can-scene) .planet {
   transition: opacity 1.2s var(--ease);
 }
 
-.has-scene .orbit {
+.has-scene .orbits {
   opacity: 1;
 }
 
@@ -830,14 +830,14 @@ html:not(.can-scene) .planet {
 @media (max-width: 900px) {
   /* The planet is already behind the copy at this width; a wide orbit on top
      of it would be two things competing for the same space. */
-  .orbit {
+  .orbits {
     width: min(96vw, 640px);
     height: min(48vw, 320px);
     margin: calc(min(48vw, 320px) / -2) 0 0 calc(min(96vw, 640px) / -2);
     opacity: 0.6;
   }
 
-  .has-scene .orbit {
+  .has-scene .orbits {
     opacity: 0.6;
   }
 }
@@ -1595,6 +1595,117 @@ html:not(.can-scene) .planet {
 .hdr.scrolled {
   background: rgba(8, 10, 16, 0.9);
   border-bottom-color: rgba(140, 170, 255, 0.2);
+}
+
+/* ======================================================= 11c. The arrival */
+
+/* Runs once per session and never under reduced motion; the class is put on
+   the root before first paint and taken off by a timer that belongs to the
+   same inline script, so nothing further down the page can strand it.
+
+   The order is the point: the reader arrives in empty space, the world comes
+   toward them, the claim writes itself, and only then does the evidence
+   arrange itself around it. */
+
+@keyframes arrive-type {
+  /* Opacity is carried explicitly. The headline is also a `.reveal`, which
+     holds it at zero until the observer in site.js reaches it — and site.js
+     runs after a 380 KB dictionary. Animating only the clip left the headline
+     invisible for the whole arrival, which is the one thing it must not be. */
+  from {
+    opacity: 1;
+    clip-path: inset(0 100% 0 0);
+  }
+  99% {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+  }
+  to {
+    opacity: 1;
+    /* Released, so no terminal glyph can stay clipped. */
+    clip-path: none;
+  }
+}
+
+@keyframes arrive-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes arrive-marker {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.72);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+.intro .hdr {
+  animation: arrive-up 0.7s var(--ease) 1.15s both;
+}
+
+.intro .hero h1 {
+  animation: arrive-type 1.1s linear 1.6s both;
+}
+
+.intro .hero .eyebrow {
+  animation: arrive-up 0.6s var(--ease) 2.15s both;
+}
+
+.intro .hero-sub {
+  animation: arrive-up 0.6s var(--ease) 2.45s both;
+}
+
+.intro .hero-actions {
+  animation: arrive-up 0.6s var(--ease) 2.75s both;
+}
+
+.intro .hero-aside .marker {
+  animation: arrive-marker 0.72s var(--ease) both;
+}
+
+.intro .hero-aside .marker:nth-child(1) {
+  animation-delay: 2.4s;
+}
+
+.intro .hero-aside .marker:nth-child(2) {
+  animation-delay: 2.72s;
+}
+
+.intro .hero-aside .marker:nth-child(3) {
+  animation-delay: 3.04s;
+}
+
+/* The satellites wait for the world they orbit. */
+.intro .orbits,
+.intro.has-scene .orbits {
+  opacity: 0;
+}
+
+.intro .to-top {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .intro .hdr,
+  .intro .hero h1,
+  .intro .hero .eyebrow,
+  .intro .hero-sub,
+  .intro .hero-actions,
+  .intro .hero-aside .marker {
+    animation: none;
+  }
 }
 
 /* ============================================================ 12. Motion */

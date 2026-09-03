@@ -210,7 +210,7 @@
     else if (growth >= SETTLE_AT) w.clearTimeout(timer);
   }
 
-  w.VALO_SKY = { setGrowth: setGrowth };
+  w.VALO_SKY = { setGrowth: setGrowth, rush: startRush };
 
   function drawMeteors() {
     mctx.clearRect(0, 0, vw, vh);
@@ -283,6 +283,80 @@
     mraf = w.requestAnimationFrame(tick);
   }
 
+  /* ------------------------------------------------------- The arrival */
+
+  /* A rush of stars past the viewer, once, at the top of the page: the reader
+     arrives somewhere rather than finding a page already assembled. Radial
+     streaks from the centre outward, each one longer and faster the further
+     out it already is — which is what travelling through a star field looks
+     like from inside it. */
+  var RUSH_COUNT = 190;
+  var RUSH_MS = 1500;
+
+  var rush = null;
+  var rushStart = 0;
+  var rraf = 0;
+
+  function startRush() {
+    if (!mctx || reduce.matches) return;
+    rush = [];
+    for (var i = 0; i < RUSH_COUNT; i++) {
+      var angle = Math.random() * Math.PI * 2;
+      rush.push({
+        a: angle,
+        /* Start spread through the depth of the field, not all at the centre. */
+        d: Math.pow(Math.random(), 0.55) * 0.9 + 0.04,
+        speed: rand(0.55, 1.75),
+        width: rand(0.9, 2.4),
+        tint: Math.random() < 0.2
+      });
+    }
+    rushStart = 0;
+    if (!rraf) rraf = w.requestAnimationFrame(rushFrame);
+  }
+
+  function rushFrame(now) {
+    rraf = 0;
+    if (!rushStart) rushStart = now;
+    var t = Math.min(1, (now - rushStart) / RUSH_MS);
+    /* In hard, out soft: the field is already moving when it appears. */
+    var fade = Math.min(1, t / 0.1) * (1 - Math.pow(t, 2.2));
+    var cx = vw / 2;
+    var cy = vh / 2;
+    var reach = Math.hypot(cx, cy);
+
+    mctx.clearRect(0, 0, vw, vh);
+    for (var i = 0; i < rush.length; i++) {
+      var r = rush[i];
+      /* Depth accelerates: the same star covers more ground each frame. */
+      var d = r.d + t * t * r.speed * 1.35;
+      if (d > 1.55) continue;
+      var far = d * reach;
+      var near = Math.max(0, far - (18 + d * d * 190));
+      var ca = Math.cos(r.a);
+      var sa = Math.sin(r.a);
+      var g = mctx.createLinearGradient(cx + ca * far, cy + sa * far, cx + ca * near, cy + sa * near);
+      var head = r.tint ? "rgba(206,220,255," : "rgba(240,246,255,";
+      g.addColorStop(0, head + fade * 0.95 + ")");
+      g.addColorStop(1, "rgba(140,158,255,0)");
+      mctx.strokeStyle = g;
+      mctx.lineWidth = r.width * (0.5 + d);
+      mctx.lineCap = "round";
+      mctx.beginPath();
+      mctx.moveTo(cx + ca * far, cy + sa * far);
+      mctx.lineTo(cx + ca * near, cy + sa * near);
+      mctx.stroke();
+    }
+
+    if (t < 1) rraf = w.requestAnimationFrame(rushFrame);
+    else {
+      rush = null;
+      mctx.clearRect(0, 0, vw, vh);
+      /* Meteors were held back while the arrival ran. */
+      if (!scheduled) planNext();
+    }
+  }
+
   /* ------------------------------------------------------------- Wire */
 
   var resizeTimer = 0;
@@ -315,5 +389,10 @@
     else if (!scheduled) planNext();
   });
 
-  if (mctx) planNext();
+  if (mctx) {
+    /* The arrival owns the first second and a half of the meteor canvas; the
+       ordinary sky starts once it has passed. */
+    if (doc.documentElement.classList.contains("intro")) startRush();
+    else planNext();
+  }
 })(window, document);
