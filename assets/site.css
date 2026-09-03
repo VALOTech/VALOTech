@@ -66,11 +66,6 @@
   --font: 'Roboto Condensed', system-ui, 'Segoe UI', 'Helvetica Neue', sans-serif;
   --mono: 'DM Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
 
-  /* Published every frame by the scene so markers can hold their position
-     relative to the planet rather than to the viewport. */
-  --stone-x: 50vw;
-  --stone-y: 50vh;
-  --stone-r: 190px;
 
   color-scheme: dark;
 }

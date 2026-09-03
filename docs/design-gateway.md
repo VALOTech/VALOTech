@@ -124,13 +124,16 @@ Nothing in the argument depends on any of it.
 
 ### Markers
 
-The scene publishes its own centre as `--stone-x` and `--stone-y` on the root
-element every frame. Markers are positioned from those variables and the
-planet's radius, never from viewport percentages, so they hold their relationship
-to the planet at any window size. Above 900px they sit in lanes with a reserved
-exclusion zone around the text column; below 900px they stop being overlays and
-become a mono list under the heading, because a marker that covers the headline
-has stopped being a marker.
+Markers are laid out, not positioned. Each one holds a grid track beside the
+text column, staggered by a margin inside that track; below 900px the whole
+section collapses to one column and they become a plain list under the heading.
+
+That is deliberate, and it is where this departs from the reference. There the
+markers are absolutely positioned against a 1440-wide viewport, which puts two
+of them on the headline at that width and covers it almost entirely on a phone.
+Anchoring them to the planet instead of the viewport would move the collision
+rather than remove it. A grid track cannot produce one at any width, and a
+marker that covers the headline has stopped being a marker.
 
 ## 4. Chapters
 

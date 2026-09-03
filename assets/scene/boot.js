@@ -39,10 +39,6 @@ function smoothstep(t) {
   return x * x * (3 - 2 * x);
 }
 
-/* The sphere fills roughly this fraction of its square container's width.
-   Markers are placed from it, so it is measured rather than guessed. */
-const SPHERE_FRACTION = 0.767;
-
 let driftVW = 0;
 let scale = 1;
 let offsetVH = 0;
@@ -127,22 +123,6 @@ function place(now) {
     `translate(calc(-50% + ${floatX.toFixed(1)}px + ${driftVW.toFixed(2)}vw),` +
     ` calc(-50% + ${floatY.toFixed(1)}px + ${offsetVH.toFixed(2)}vh))`;
   container.style.opacity = introOpacity.toFixed(3);
-
-  /* Published so markers can hold their place against the planet rather than
-     against the viewport. */
-  const size = container.clientWidth;
-  root.style.setProperty(
-    '--stone-x',
-    `calc(50vw + ${floatX.toFixed(1)}px + ${driftVW.toFixed(2)}vw)`
-  );
-  root.style.setProperty(
-    '--stone-y',
-    `calc(50vh + ${floatY.toFixed(1)}px + ${offsetVH.toFixed(2)}vh)`
-  );
-  root.style.setProperty(
-    '--stone-r',
-    `${((size * SPHERE_FRACTION) / 2) * motion.visualScale}px`
-  );
 
   raf = requestAnimationFrame(place);
 }

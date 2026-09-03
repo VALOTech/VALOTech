@@ -293,3 +293,19 @@ in a document is worth checking against the tree even when you wrote both.
 PARTIAL / BROKEN: — none —
 NEXT: nothing outstanding. The site is not pushed — publishing to `main` is
 the owner's call.
+
+## 16 — A claim in the design document that the code did not honour
+WHAT CHANGED: `--stone-x`, `--stone-y` and `--stone-r` are gone. The scene
+published them every frame and nothing read them, and the design document
+described markers as positioned from them — which is not what the code does,
+and not what should be done: anchoring markers to the planet moves the
+reference's collision rather than removing it. The document now describes the
+grid track that actually holds them.
+VERIFIED: no consumer anywhere in the tree (`grep` across css, js and markup);
+scene still mounts with two canvases and no console errors after the removal.
+⭐ This is the same failure as the JSON-LD, in the opposite direction: there a
+true sentence outlived its subject, here a sentence described an intention the
+code never carried out. Both survive review because both read plausibly. Only
+checking the sentence against the tree catches either.
+PARTIAL / BROKEN: — none —
+NEXT: nothing outstanding.
