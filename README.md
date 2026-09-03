@@ -54,7 +54,6 @@ scripts/
                         --check fails on drift, on a broken locale, and on a lost node
 docs/
   design-gateway.md     The design system — palette, type, the scene, the chapters
-  gateway-iter-log.md   Working log of the rebuild (newest 20 entries)
 glossary-vi.json        Authoritative Vietnamese glossary — concept → approved / forbidden term
 glossary-vi.md          Provenance + voice notes behind each glossary-vi.json rendering
 .claude/skills/         Reviewed localization tooling — EN → locale translation + native writing
