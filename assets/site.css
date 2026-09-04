@@ -1077,7 +1077,7 @@ html:not(.can-scene) .planet {
   );
 }
 
-@media (max-width: 1119px) {
+@media (max-width: 949px) {
   /* No channel below the breakpoint, so the scrim goes back to one side. */
   .chapter--channel {
     background: linear-gradient(
@@ -1514,7 +1514,7 @@ html:not(.can-scene) .planet {
    section passes, and the pairs arrive one at a time from their own sides
    with the current one lit — so the reader takes in one correspondence
    before the next appears, instead of meeting five at once. */
-@media (min-width: 1120px) {
+@media (min-width: 950px) {
   .fit {
     --fit-channel: min(33vw, 440px);
   }
@@ -1545,7 +1545,7 @@ html:not(.can-scene) .planet {
     filter: none;
   }
 
-  .fit-row .fit-cell {
+  .fit-stage .fit-row .fit-cell {
     opacity: 0;
     filter: blur(4px);
     transition:
@@ -1556,11 +1556,11 @@ html:not(.can-scene) .planet {
       background 0.18s ease;
   }
 
-  .fit-row .fit-cell:first-child {
+  .fit-stage .fit-row .fit-cell:first-child {
     transform: translateX(-24px);
   }
 
-  .fit-row .fit-cell:last-child {
+  .fit-stage .fit-row .fit-cell:last-child {
     transform: translateX(24px);
   }
 
@@ -1576,7 +1576,7 @@ html:not(.can-scene) .planet {
   }
 }
 
-@media (min-width: 1120px) and (prefers-reduced-motion: reduce) {
+@media (min-width: 950px) and (prefers-reduced-motion: reduce) {
   /* No stepping without motion: every pair is simply present. */
   .fit-row .fit-cell {
     opacity: 1;

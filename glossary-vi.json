@@ -326,11 +326,13 @@
   {
     "concept": "Privacy / Terms / Cookies — footer legal links (foot.privacy, foot.terms, foot.cookies)",
     "preferred": [
-      "Chính sách bảo mật",
+      "Chính sách quyền riêng tư",
       "Điều khoản sử dụng",
       "Cookie"
     ],
-    "forbidden": []
+    "forbidden": [
+      "Chính sách bảo mật"
+    ]
   },
   {
     "concept": "All rights reserved. — copyright line, with year + entity (foot.rights)",
@@ -354,6 +356,19 @@
     "forbidden": [
       "gia đình sản phẩm",
       "một gia đình sản phẩm"
+    ]
+  },
+  {
+    "concept": "production, the software sense — a deployed, live environment (phases.2o, phases.3o, workforce.3d, cap.4h, cap.gatesh, deliver.p1m4d)",
+    "preferred": [
+      "vận hành thực tế",
+      "đưa vào vận hành thực tế",
+      "sẵn sàng vận hành thực tế"
+    ],
+    "forbidden": [
+      "đưa vào sản xuất",
+      "sẵn sàng cho sản xuất",
+      "triển khai lên sản xuất"
     ]
   }
 ]

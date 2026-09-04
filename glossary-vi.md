@@ -8,7 +8,7 @@ python3 .claude/skills/translate-english-to-native-locales/scripts/check_glossar
 
 **Voice.** VALO Tech speaks to corporate leaders, partners, and candidates evaluating a regulated-industry AI vendor: on-brand, clear, confident but honest — never hyped, every claim structurally defensible. Product and brand names stay in English in every locale.
 
-This file records where each Vietnamese rendering in `glossary-vi.json` comes from, so a reviewer can audit a decision instead of re-deriving it. Every concept is grounded in copy actually read from the site (cited by i18n key). All 45 concepts carry a decided term. Four of them were genuine forks rather than lookups — the pricing nav label, "audit-defensible", the Stage/Phase distinction, and Verdiq's slogan — and the owner settled each; the reasoning behind all four is recorded under "Owner decisions" below.
+This file records where each Vietnamese rendering in `glossary-vi.json` comes from, so a reviewer can audit a decision instead of re-deriving it. Every concept is grounded in copy actually read from the site (cited by i18n key). All 47 concepts carry a decided term. Six of them were genuine forks rather than lookups — the pricing nav label, "audit-defensible", the Stage/Phase distinction, Verdiq's slogan, the privacy link, and "production" in its software sense — and the owner settled each; the reasoning behind all six is recorded under "Owner decisions" below.
 
 ## Vietnamese terminology
 
@@ -80,13 +80,13 @@ All ten names are hardcoded directly in `index.html` markup (not routed through 
 |---|---|---|
 | Product / Company / Legal (column headers) | Sản phẩm / Công ty / Pháp lý | `foot.product` / `foot.company` / `foot.legal`. Standard. |
 | About / Careers / Press / Contact | Về VALO Tech / Tuyển dụng / Báo chí / Liên hệ | `foot.about` / `foot.careers` / `foot.press` / `foot.contact`. Careers and Contact are solidly corroborated as-is: FPT's main site, its recruitment subsite, and Viettel's site all converge on "Tuyển dụng"; "Liên hệ" for Contact is identical across FPT, VNG, and Viettel. About is the brand-specific "Về VALO Tech" rather than the generic "Giới thiệu": FPT's main corporate site uses "Về FPT" for About, and VNG's main site uses "Về VNG" for the same slot — both confirmed directly against the live sites. (FPT's separate recruitment subsite uses "Giới Thiệu" as its own distinct label, but that subsite is a narrower recruiting funnel, not the structural analog to VALO Tech's single corporate hub — the two main corporate sites are the closer comparison.) Press has no direct competitor precedent: VNG nests press content under "Tin tức mới nhất" (news) and "Thông cáo báo chí" (press releases) rather than a standalone footer link. "Báo chí" is standard Vietnamese for the concept and shares its root with "thông cáo báo chí" — kept. |
-| Privacy / Terms / Cookies | Chính sách bảo mật / Điều khoản sử dụng / Cookie | `foot.privacy` / `foot.terms` / `foot.cookies`. The fuller legal-register forms are used rather than the bare "Quyền riêng tư" / "Điều khoản", verified against two independent VN B2B platforms: Haravan uses "Chính sách bảo mật và bảo vệ dữ liệu cá nhân" and "Điều khoản dịch vụ"; MISA AMIS uses "Chính sách bảo vệ dữ liệu cá nhân". "Chính sách bảo mật" is the shared, most-recognized root across both and across the wider Vietnamese web. "Điều khoản sử dụng" (Terms of Use) is kept over the more transactional "Điều khoản dịch vụ" (Terms of Service) since this footer link covers use of the marketing site itself, not an active service login. "Cookie" stays an English loanword — universal Vietnamese convention, no naturalized alternative in use anywhere observed. |
+| Privacy / Terms / Cookies | Chính sách quyền riêng tư / Điều khoản sử dụng / Cookie | `foot.privacy` / `foot.terms` / `foot.cookies`. The fuller legal-register forms are used rather than the bare "Quyền riêng tư" / "Điều khoản", verified against two independent VN B2B platforms: Haravan uses "Chính sách bảo mật và bảo vệ dữ liệu cá nhân" and "Điều khoản dịch vụ"; MISA AMIS uses "Chính sách bảo vệ dữ liệu cá nhân". The most-recognized root across the Vietnamese web is "Chính sách bảo mật", and it is nonetheless the wrong word here — see "Owner decisions" §5. "Điều khoản sử dụng" (Terms of Use) is kept over the more transactional "Điều khoản dịch vụ" (Terms of Service) since this footer link covers use of the marketing site itself, not an active service login. "Cookie" stays an English loanword — universal Vietnamese convention, no naturalized alternative in use anywhere observed. |
 | All rights reserved. (copyright line) | Bảo lưu mọi quyền. | `foot.rights`, combined with year + entity. Only the translatable tail is the glossary term; "VALO Tech Pte. Ltd." and the year are data, not vocabulary. |
 | Explore the VALO ecosystem (footer link) | Khám phá hệ sinh thái VALO | `foot.eco`. |
 
 ## Owner decisions
 
-Four renderings resisted a lookup — each a real fork or an open structural question rather than a translation with a settled answer. The owner ruled on all four; the reasoning is preserved here so a later reader can audit the call instead of reopening it.
+Six renderings resisted a lookup — each a real fork or an open structural question rather than a translation with a settled answer. The owner ruled on all six; the reasoning is preserved here so a later reader can audit the call instead of reopening it.
 
 ### 1. Pricing nav — "Chi phí", not "Bảng giá"
 
@@ -139,3 +139,17 @@ Run the checker against any Vietnamese output before it ships:
 ```
 python3 .claude/skills/translate-english-to-native-locales/scripts/check_glossary.py <output-file> glossary-vi.json
 ```
+
+### 5. Privacy link — "Chính sách quyền riêng tư", not "Chính sách bảo mật"
+
+"Chính sách bảo mật" is what most of the Vietnamese web puts in its footer, and it is the wrong word: *bảo mật* is security, *quyền riêng tư* is privacy. The two are different obligations under the PDPL and Decree 13/2023, and the gap is invisible until a reader who knows the difference arrives — which, on a site whose whole argument is compliance in regulated industries, is the reader who matters. The owner chose accuracy over the market default. The common form is recorded as forbidden so the convention cannot quietly reassert itself.
+
+### 6. "production", the software sense — "vận hành thực tế"
+
+The English "production" means a live, deployed environment. Vietnamese *sản xuất* means manufacturing, and the page is read by executives rather than engineers, so the six software occurrences said something the audience would parse as a factory floor. They now read "đưa vào vận hành thực tế" / "sẵn sàng vận hành thực tế" — unambiguous, and still exact.
+
+One occurrence stays. `workforce.5d` describes the Operations and Delivery department, which plans production in the manufacturing sense the word actually carries; the forbidden phrases are written narrowly enough that the checker leaves it alone.
+
+### Terms considered and left with their owner
+
+VALO Pocket's slogan (`eco.pocket`, "Tất cả VALO, trong một chiếc ví") renders "pocket" as *ví* — a wallet, which is what the product is, at the cost of the link to the product's own name. The owner kept it. It is recorded here because the slogan belongs to VALO Pocket rather than to this site: if that repository ever settles a different Vietnamese line, this one follows it rather than the reverse.

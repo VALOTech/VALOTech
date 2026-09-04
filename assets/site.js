@@ -254,7 +254,12 @@
     if (!rows.length) return;
     /* Matches the breakpoint the stage's styles are written under. Below it
        the chapter is an ordinary stack and every pair is simply present. */
-    var wide = window.matchMedia("(min-width: 1120px)");
+    var wide = window.matchMedia("(min-width: 950px)");
+
+    /* The styles hide a pair until the stage reveals it, so they may only do
+       that once this is running. Without the flag a stale or blocked script
+       would leave the chapter blank rather than merely unanimated. */
+    root.classList.add("fit-stage");
 
     function showAll() {
       rows.forEach(function (row) {

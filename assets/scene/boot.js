@@ -87,6 +87,10 @@ const MIN_ELEVATION = 0.42;
 
 /* Scrolling turns the world faster. The gain converts pages-per-second into a
    multiplier; the cap keeps a flick from spinning the surface into a blur. */
+/* How present the orbit is before the world is one. Enough to see the bodies
+   move without being asked to; not enough to compete with the cover. */
+const ORBIT_FLOOR = 0.45;
+
 const SPIN_BOOST_GAIN = 26;
 const SPIN_BOOST_MAX = 7;
 const SPIN_EASE = 0.18;
@@ -381,11 +385,15 @@ function place(now) {
     root.style.setProperty('--stone-x', `${(vw / 2 + floatX + (driftVW / 100) * vw).toFixed(1)}px`);
     root.style.setProperty('--stone-y', `${(vh / 2 + floatY + (offsetVH / 100) * vh).toFixed(1)}px`);
     root.style.setProperty('--stone-scale', motion.visualScale.toFixed(3));
-    /* Nothing orbits a dead rock. The ring arrives with the atmosphere and is
-       whole by the time the mapping chapter asks the reader to look at it. */
+    /* The orbit is present from the cover, faintly — three bodies going round
+       a world that has not become one yet — and comes fully forward as the
+       atmosphere does, so it is whole by the time the mapping chapter asks
+       the reader to look at it. Held back entirely until then, the page opens
+       on a sky with nothing moving in it. */
     root.style.setProperty(
       '--orbit-reveal',
-      (smoothstep((motion.growth - 0.5) / 0.34) * introOpacity).toFixed(3)
+      ((ORBIT_FLOOR + (1 - ORBIT_FLOOR) * smoothstep((motion.growth - 0.4) / 0.4)) *
+        introOpacity).toFixed(3)
     );
     /* The satellites keep their own time — they circle whether or not anyone
        scrolls, and quicker while someone does. Under reduced motion they hold

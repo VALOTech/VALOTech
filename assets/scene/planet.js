@@ -16,9 +16,12 @@ import * as THREE from './three.module.min.js';
 
 const PLANET_RADIUS = 1.32;
 /* The reference turns at 1.5 deg/s — a four-minute revolution, which measures
-   as motion and reads as a photograph. At 3.2 the planet is unmistakably alive
-   and still too slow to pull the eye off the argument. */
-const SELF_ROTATION = THREE.MathUtils.degToRad(3.2);
+   as motion and reads as a photograph. Even 3.2 asks the reader to watch for
+   several seconds before they are sure it is turning at all, which is the same
+   as not turning. At 5 the world is plainly alive on a glance, and a
+   seventy-second revolution is still far too slow to pull the eye off the
+   argument. */
+const SELF_ROTATION = THREE.MathUtils.degToRad(5);
 
 /* Earth's obliquity. The spin happens about the planet's own axis and the
    axis leans, which is why the poles sit off-vertical and the terminator
