@@ -95,6 +95,9 @@ const SPIN_BOOST_GAIN = 26;
 const SPIN_BOOST_MAX = 7;
 const SPIN_EASE = 0.18;
 
+/* The share of normal pace the satellites keep when motion is reduced. */
+const CALM_ORBIT = 0.16;
+
 /* Chosen so that at sixty frames a second the planet closes about six percent
    of its remaining distance per frame — the follow the stations were tuned
    against — and closes the same amount per second everywhere else. */
@@ -117,25 +120,26 @@ const FRONT_RATIO = 0.71;
    part worth watching. */
 const JOURNEY = [
   { at: 0.0, x: 50, y: 50, scale: 1.0 },
-  { at: 0.05, x: 50, y: 50, scale: 1.0 },
-  /* Right of centre and parked, for as long as the problem chapter runs: the
-     three problems ride an ellipse about the planet there, and the argument
-     is pinned to the left of it. */
-  { at: 0.10, x: 61, y: 52, scale: 0.92 },
-  { at: 0.25, x: 61, y: 52, scale: 0.92 },
+  { at: 0.04, x: 50, y: 50, scale: 1.0 },
+  /* Right of centre and parked for as long as the two orbiting chapters run:
+     their cards ride an ellipse about the planet there, and each chapter's
+     argument is pinned to the left of it. The planet holds still; everything
+     around it does not. */
+  { at: 0.09, x: 61, y: 52, scale: 0.92 },
+  { at: 0.40, x: 61, y: 52, scale: 0.92 },
   /* Out: the planet swings under the sun and up its right side, shrinking as
      it goes. Each leg is a constant-radius arc, so it reads as travel rather
      than as falling away. */
-  { at: 0.38, x: 74, y: 60, scale: 0.62 },
-  { at: 0.47, x: 82, y: 52, scale: 0.55 },
-  { at: 0.54, x: 78, y: 46, scale: 0.64 },
+  { at: 0.48, x: 76, y: 60, scale: 0.62 },
+  { at: 0.55, x: 84, y: 50, scale: 0.55 },
+  { at: 0.61, x: 78, y: 44, scale: 0.64 },
   /* Home: one long sweep of about ninety degrees, back down and across, taking
      nearly a fifth of the page on its own. It lands where the mapping chapter
      opens, because that chapter is a three-column composition and the planet
      is its middle column — your people on one side, the AI workforce on the
      other, one world between them. */
-  { at: 0.66, x: 50, y: 56, scale: 0.78 },
-  { at: 0.90, x: 50, y: 56, scale: 0.78 },
+  { at: 0.70, x: 50, y: 56, scale: 0.78 },
+  { at: 0.91, x: 50, y: 56, scale: 0.78 },
   /* Away, once the mapping is read. The close belongs to the copy. */
   { at: 1.0, x: 74, y: 44, scale: 0.66 }
 ];
@@ -332,7 +336,12 @@ function place(now) {
   const span = to.at - from.at || 1;
   const t = smoothstep((progress - from.at) / span);
 
-  const targetVW = from.x + (to.x - from.x) * t - 50;
+  /* The stations are written for a page that reads left to right. Under
+     Arabic and Urdu the argument is pinned to the other side, so the whole
+     journey mirrors with it — otherwise the planet parks on top of the column
+     it is supposed to be standing beside. */
+  const mirror = root.getAttribute('dir') === 'rtl' ? -1 : 1;
+  const targetVW = (from.x + (to.x - from.x) * t - 50) * mirror;
   const targetVH = from.y + (to.y - from.y) * t - 50;
   const targetScale = from.scale + (to.scale - from.scale) * t;
 
@@ -393,7 +402,7 @@ function place(now) {
   const planetX = vw / 2 + floatX + (driftVW / 100) * vw;
   const planetY = vh / 2 + floatY + (offsetVH / 100) * vh;
   const reach = wide ? Math.min(vw, vh) * SUN_DISTANCE : vh * SUN_DISTANCE_NARROW;
-  const sunX = planetX + Math.cos(bearing) * reach;
+  const sunX = planetX + Math.cos(bearing) * reach * mirror;
   const sunY = planetY + Math.sin(bearing) * reach;
 
   if (sun) {
@@ -422,10 +431,11 @@ function place(now) {
         introOpacity).toFixed(3)
     );
     /* The satellites keep their own time — they circle whether or not anyone
-       scrolls, and quicker while someone does. Under reduced motion they hold
-       a pose instead. */
-    if (!still) orbitClock += gap * motion.spin;
-    moveOrbits(still ? 4 : orbitClock);
+       scrolls, and quicker while someone does. Under reduced motion they keep
+       circling too, at a sixth of the pace and with no scroll boost: slow
+       enough that nothing appears to move without being watched for. */
+    orbitClock += gap * (still ? CALM_ORBIT : motion.spin);
+    moveOrbits(orbitClock);
     nameOrbits();
   }
 

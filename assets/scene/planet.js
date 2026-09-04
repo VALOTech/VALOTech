@@ -23,6 +23,13 @@ const PLANET_RADIUS = 1.32;
    argument. */
 const SELF_ROTATION = THREE.MathUtils.degToRad(5);
 
+/* Under reduced motion the world keeps turning, at a sixth of the speed: a
+   six-minute revolution, slow enough that no frame-to-frame change is visible
+   without watching for it, which is the threshold the setting is about. What
+   stops is everything with velocity in it — the scroll boost, the intro
+   approach, the pointer drift, the stages' stepping. */
+const CALM_ROTATION = THREE.MathUtils.degToRad(0.9);
+
 /* Earth's obliquity. The spin happens about the planet's own axis and the
    axis leans, which is why the poles sit off-vertical and the terminator
    crosses them at an angle instead of running straight down the disc. */
@@ -522,10 +529,10 @@ export function mount(container, motion, onReady) {
     /* The world turns on its own clock, and turns faster while the reader is
        moving through the page. Neither depends on the other: parked, it still
        rotates; scrolling, it hurries. */
-    if (!still) {
-      selfRotation =
-        (selfRotation + delta * SELF_ROTATION * (state.spin || 1)) % (Math.PI * 2);
-    }
+    selfRotation =
+      (selfRotation +
+        delta * (still ? CALM_ROTATION : SELF_ROTATION * (state.spin || 1))) %
+      (Math.PI * 2);
 
     /* The sun. Its direction arrives from the page, which knows where the
        glow is drawn on screen; the lights follow it so the terminator on the

@@ -1625,12 +1625,12 @@ html:not(.can-scene) .planet {
    far side is masked instead: an ellipse the size of the drawn disc, at the
    disc's position in the card's own coordinates, is cut out of it. */
 @media (min-width: 950px) {
-  #problem {
+  [data-orbit] {
     min-height: 340vh;
     padding: 0;
   }
 
-  #problem > .wrap {
+  [data-orbit] > .wrap {
     position: sticky;
     top: 0;
     min-height: 100vh;
@@ -1639,19 +1639,20 @@ html:not(.can-scene) .planet {
     justify-content: center;
   }
 
-  #problem .chapter-head {
+  [data-orbit] .chapter-head {
     max-width: min(26vw, 320px);
     margin-bottom: 0;
   }
 
   /* The list box stops laying anything out; the script places each node
      against the planet instead. */
-  #problem .orbit-nodes {
+  [data-orbit] .orbit-nodes,
+  [data-orbit] .services {
     display: block;
     gap: 0;
   }
 
-  #problem .orbit-node {
+  [data-orbit] [data-orbit-card] {
     position: fixed;
     left: 0;
     top: 0;
@@ -1668,22 +1669,22 @@ html:not(.can-scene) .planet {
      silently added two hundred pixels to every placement the script made.
      Kept as its own rule: folding these selectors into the block above raises
      its specificity and the reduced-motion override then loses to it. */
-  #problem .orbit-node:nth-child(2),
-  #problem .orbit-node:nth-child(3) {
+  [data-orbit] [data-orbit-card]:nth-child(2),
+  [data-orbit] [data-orbit-card]:nth-child(3) {
     margin-inline-start: 0;
   }
 
   /* The marker square belongs to the stacked list, where it sits in a column
      beside the text. On the orbit the card is the whole object. */
-  #problem .orbit-node .orbit-box {
+  [data-orbit] [data-orbit-card] .orbit-box {
     display: none;
   }
 
-  #problem .orbit-card {
+  [data-orbit] .orbit-card {
     max-width: none;
   }
 
-  #problem .orbit-node[data-depth='rear'] {
+  [data-orbit] [data-orbit-card][data-depth='rear'] {
     -webkit-mask-image: radial-gradient(
       ellipse var(--rock-rx) var(--rock-ry) at var(--rock-x) var(--rock-y),
       transparent 0,
@@ -1703,51 +1704,66 @@ html:not(.can-scene) .planet {
   }
 
   /* The page-wide reveal stands down: the orbit owns the entrance. */
-  .js #problem .orbit-nodes .reveal {
+  .js [data-orbit] [data-orbit-card].reveal {
     transform: none;
     filter: none;
+    /* The orbit writes opacity, transform and blur every frame: they are a
+       position on the ellipse, not a state being entered. A transition on top
+       of a per-frame value makes the card chase its own placement, and the
+       page-wide reveal's 0.7s fade then held these cards near zero. */
+    transition: none;
   }
 }
 
 @media (min-width: 950px) and (prefers-reduced-motion: reduce) {
   /* Without motion the chapter is the list it is underneath. */
-  #problem {
+  [data-orbit] {
     min-height: auto;
     padding: clamp(96px, 13vh, 168px) 0;
   }
 
-  #problem > .wrap {
+  [data-orbit] > .wrap {
     position: static;
     min-height: 0;
     display: block;
   }
 
-  #problem .chapter-head {
+  [data-orbit] .chapter-head {
     max-width: min(100%, 780px);
     margin-bottom: 48px;
   }
 
-  #problem .orbit-nodes {
+  [data-orbit] .orbit-nodes {
     display: grid;
     gap: clamp(28px, 4vh, 52px);
   }
 
-  #problem .orbit-node {
+  [data-orbit] .services {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+  }
+
+  [data-orbit] [data-orbit-card] {
     position: static;
-    display: flex;
+    display: block;
     width: auto;
     opacity: 1;
   }
 
-  #problem .orbit-node:nth-child(2) {
+  [data-orbit] .orbit-node {
+    display: flex;
+  }
+
+  [data-orbit] .orbit-node:nth-child(2) {
     margin-inline-start: 14%;
   }
 
-  #problem .orbit-node:nth-child(3) {
+  [data-orbit] .orbit-node:nth-child(3) {
     margin-inline-start: 5%;
   }
 
-  #problem .orbit-node .orbit-box {
+  [data-orbit] .orbit-node .orbit-box {
     display: block;
   }
 }

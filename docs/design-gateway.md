@@ -191,14 +191,19 @@ a ground of its own. The names appear only while the mapping chapter is on
 screen, decided from that chapter's position on every frame rather than from an
 observer, which a jumped scroll can bypass entirely.
 
-### The problem orbit
+### The orbiting chapters
 
-*The problem corporate leaders face today* is the designer's own composition
-and the one her note was about: the three problems travel **around** the
-world rather than sitting in a list beside it. Above 950px the chapter is a
-340vh stage with its argument pinned to one side, and each card rides an
-ellipse about the planet — `90° + i·120° − progress·240°`, two thirds of a
-revolution across the chapter, so every card passes behind the world once.
+*The problem corporate leaders face today* and *The answer* are the designer's
+own composition, and the one her note was about: the cards travel **around**
+the world rather than sitting in a list beside it. Above 950px each chapter is
+a 340vh stage with its argument pinned to the reading-start side, and each
+card rides an ellipse about the planet — `90° + i·(360/n)° − progress·240°`,
+two thirds of a revolution across the chapter, so every card passes behind the
+world once.
+
+A chapter opts in by declaring `data-orbit`, and its cards by
+`data-orbit-card`. The mechanism knows nothing about either chapter; adding a
+third is two attributes.
 
 Depth drives everything else: `depth = (sin θ + 1) / 2` gives scale
 `0.74 + 0.26·depth`, opacity `0.48 + 0.52·depth` and blur `(1 − depth)·1.2px`.
@@ -219,6 +224,13 @@ viewport, without a breakpoint being tuned for it.
 Below 950px, and under reduced motion at any width, the chapter is the plain
 stacked list it is underneath — same cards, same order, staggered indents,
 marker squares back.
+
+**The whole composition mirrors with the reading direction.** Under Arabic and
+Urdu the argument is pinned to the right, so the journey's stations and the
+star's bearing are reflected about the vertical axis and the orbit measures
+its room against whichever side of the column the planet is on. The scene
+still paints in physical coordinates — it has no reading order of its own —
+but where it *stands* follows the page.
 
 ### The mapping stage
 
@@ -249,12 +261,14 @@ The placement runs whether or not the scene does, because the sun and the still
 belong to the page's choreography too. Where nothing is rendering it runs on
 scroll and resize rather than every frame.
 
-Reduced motion does not remove the planet. Scrolling is direct manipulation, so
-the surface still changes as the reader moves; what stops is everything that
-moves on its own — the idle rotation, the scroll boost, the intro approach, the
-pointer drift, and the satellites, which hold a pose instead of circling. The
-mapping stage stops stepping and shows every pair at once. Nothing in the
-argument depends on any of it.
+Reduced motion does not remove the planet, and does not freeze it either. The
+world keeps turning at 0.9°/s — a six-minute revolution — and the satellites
+keep circling at a sixth of their pace, both slow enough that nothing appears
+to move without being watched for, which is the threshold the setting is
+about. What stops is everything with velocity in it: the scroll boost, the
+intro approach, the pointer drift, the orbiting chapters' travel and the
+mapping stage's stepping, each of which shows its content at once instead.
+Nothing in the argument depends on any of it.
 
 ### Markers
 
@@ -300,10 +314,11 @@ parity.
   that meets contrast against the panel it sits on, not against the void.
 - Text contrast is measured against the painted pixel — panel fill over planet,
   not token over token.
-- `prefers-reduced-motion` disables the planet's idle rotation and scroll
-  boost, the satellites' circling, the intro approach, the pointer parallax,
-  the mapping stage's stepping and every scroll-driven reveal. Scroll still
-  moves the page; nothing else moves on its own.
+- `prefers-reduced-motion` slows the planet's rotation to 0.9°/s and the
+  satellites to a sixth of their pace, and disables the scroll boost, the
+  intro approach, the pointer parallax, the orbiting chapters, the mapping
+  stage's stepping and every scroll-driven reveal. Every chapter shows its
+  full content as a stacked list.
 - A block the scroll flew past is revealed anyway. An observer is notified only
   when a ratio crosses a threshold, so a flick of the wheel that carries a
   block from below the fold to above it in one frame crosses nothing, and the
