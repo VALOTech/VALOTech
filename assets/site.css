@@ -687,6 +687,12 @@ p:last-child {
   inset: 0;
   z-index: 0;
   pointer-events: none;
+  /* The sky is painted in screen coordinates: the script measures the viewport
+     and writes pixels. A logical direction would mirror that frame under
+     Arabic and Urdu while the numbers stayed the same, which put the sun two
+     hundred pixels past the right edge and left those two locales with no
+     visible light source at all. The scene has no reading order to mirror. */
+  direction: ltr;
 }
 
 .sky {
@@ -701,8 +707,8 @@ p:last-child {
    The core is a few pixels across; everything beyond it is corona. */
 .sun {
   position: absolute;
-  inset-block-start: 0;
-  inset-inline-start: 0;
+  top: 0;
+  left: 0;
   width: min(46vw, 560px);
   aspect-ratio: 1;
   margin: calc(min(46vw, 560px) / -2) 0 0 calc(min(46vw, 560px) / -2);
@@ -757,8 +763,8 @@ html:not(.can-scene) .planet {
    what makes a flat ellipse read as an orbit seen from above. */
 .orbits {
   position: absolute;
-  inset-block-start: 0;
-  inset-inline-start: 0;
+  top: 0;
+  left: 0;
   width: min(68vw, 1100px);
   height: min(34vw, 540px);
   margin: calc(min(34vw, 540px) / -2) 0 0 calc(min(68vw, 1100px) / -2);
