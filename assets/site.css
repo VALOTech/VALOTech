@@ -20,13 +20,13 @@
 
   --text: rgba(248, 248, 255, 0.98);
   --text-muted: rgba(228, 232, 248, 0.86);
-  --text-dim: rgba(210, 215, 240, 0.68);
+  --text-dim: rgba(210, 215, 240, 0.8);
   --text-shadow: 0 1px 2px rgba(7, 7, 26, 0.55);
 
   /* Glass is a material, not a transparency effect: the fill alone must
      separate text from the planet's bright limb where backdrop-filter is
      unavailable. */
-  --glass-bg: rgba(24, 32, 62, 0.58);
+  --glass-bg: rgba(24, 32, 62, 0.78);
   --glass-bg-hover: rgba(34, 46, 82, 0.68);
   --glass-border: rgba(170, 195, 255, 0.42);
   --glass-border-strong: rgba(200, 220, 255, 0.62);
@@ -34,7 +34,7 @@
 
   /* Panels that must stay legible over the planet itself run darker and
      more opaque than the chapter glass. */
-  --card-bg: rgba(9, 11, 16, 0.88);
+  --card-bg: rgba(9, 11, 16, 0.93);
   --card-border: rgba(255, 255, 255, 0.12);
   --card-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
 
@@ -609,6 +609,20 @@ p:last-child {
   color: var(--text);
 }
 
+/* The investor entry is a button, because it opens a dialog rather than going
+   anywhere. It has to sit in the column as though it were one of the links. */
+.mmenu button.ml {
+  display: block;
+  width: 100%;
+  text-align: start;
+  font: inherit;
+  font-size: 17px;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid rgba(140, 170, 255, 0.1);
+  cursor: pointer;
+}
+
 .mmenu .btn {
   margin-top: 16px;
   justify-content: center;
@@ -734,10 +748,10 @@ p:last-child {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 42vw;
-  height: 42vw;
-  max-width: 620px;
-  max-height: 620px;
+  width: 30vw;
+  height: 30vw;
+  max-width: 440px;
+  max-height: 440px;
   transform: translate(-50%, -50%);
 }
 
@@ -771,9 +785,9 @@ html:not(.can-scene) .planet {
      satellites need a vertical semi-axis larger than that or they spend half
      of every revolution behind the disc — which is what "the satellites do
      not orbit" looks like to someone watching the cover. */
-  --orbit-r: calc(min(42vw, 620px) * 0.37);
-  --orbit-w: calc(var(--orbit-r) * 5.6);
-  --orbit-h: calc(var(--orbit-r) * 3.4);
+  --orbit-r: calc(min(30vw, 440px) * 0.37);
+  --orbit-w: calc(var(--orbit-r) * 4.0);
+  --orbit-h: calc(var(--orbit-r) * 4.0);
   width: var(--orbit-w);
   height: var(--orbit-h);
   margin: calc(var(--orbit-h) / -2) 0 0 calc(var(--orbit-w) / -2);
@@ -874,8 +888,8 @@ html:not(.can-scene) .planet {
   /* The planet is already behind the copy at this width; a wide orbit on top
      of it would be two things competing for the same space. */
   .orbits {
-    --orbit-w: calc(var(--orbit-r) * 4.6);
-    --orbit-h: calc(var(--orbit-r) * 3.0);
+    --orbit-w: calc(var(--orbit-r) * 3.4);
+    --orbit-h: calc(var(--orbit-r) * 3.4);
   }
 
   .has-scene .orbits {
@@ -1087,10 +1101,10 @@ html:not(.can-scene) .planet {
   background: linear-gradient(
     90deg,
     rgba(8, 10, 18, 0.95) 0%,
-    rgba(8, 10, 18, 0.86) 46%,
-    rgba(8, 10, 18, 0.55) 66%,
-    rgba(8, 10, 18, 0.18) 82%,
-    transparent 92%
+    rgba(8, 10, 18, 0.9) 40%,
+    rgba(8, 10, 18, 0.58) 52%,
+    rgba(8, 10, 18, 0.16) 60%,
+    transparent 66%
   );
 }
 
@@ -1100,10 +1114,10 @@ html:not(.can-scene) .planet {
   background: linear-gradient(
     270deg,
     rgba(8, 10, 18, 0.95) 0%,
-    rgba(8, 10, 18, 0.86) 46%,
-    rgba(8, 10, 18, 0.55) 66%,
-    rgba(8, 10, 18, 0.18) 82%,
-    transparent 92%
+    rgba(8, 10, 18, 0.9) 40%,
+    rgba(8, 10, 18, 0.58) 52%,
+    rgba(8, 10, 18, 0.16) 60%,
+    transparent 66%
   );
 }
 
@@ -1111,10 +1125,10 @@ html:not(.can-scene) .planet {
   background: linear-gradient(
     90deg,
     rgba(8, 10, 18, 0.95) 0%,
-    rgba(8, 10, 18, 0.86) 46%,
-    rgba(8, 10, 18, 0.55) 66%,
-    rgba(8, 10, 18, 0.18) 82%,
-    transparent 92%
+    rgba(8, 10, 18, 0.9) 40%,
+    rgba(8, 10, 18, 0.58) 52%,
+    rgba(8, 10, 18, 0.16) 60%,
+    transparent 66%
   );
 }
 
@@ -1125,12 +1139,12 @@ html:not(.can-scene) .planet {
   background: linear-gradient(
     90deg,
     rgba(8, 10, 18, 0.95) 0%,
-    rgba(8, 10, 18, 0.82) 24%,
-    rgba(8, 10, 18, 0.22) 38%,
-    transparent 48%,
-    transparent 52%,
-    rgba(8, 10, 18, 0.22) 62%,
-    rgba(8, 10, 18, 0.82) 76%,
+    rgba(8, 10, 18, 0.8) 22%,
+    rgba(8, 10, 18, 0.14) 33%,
+    transparent 40%,
+    transparent 60%,
+    rgba(8, 10, 18, 0.14) 67%,
+    rgba(8, 10, 18, 0.8) 78%,
     rgba(8, 10, 18, 0.95) 100%
   );
 }
@@ -1153,10 +1167,10 @@ html:not(.can-scene) .planet {
   background: linear-gradient(
     270deg,
     rgba(8, 10, 18, 0.95) 0%,
-    rgba(8, 10, 18, 0.86) 46%,
-    rgba(8, 10, 18, 0.55) 66%,
-    rgba(8, 10, 18, 0.18) 82%,
-    transparent 92%
+    rgba(8, 10, 18, 0.9) 40%,
+    rgba(8, 10, 18, 0.58) 52%,
+    rgba(8, 10, 18, 0.16) 60%,
+    transparent 66%
   );
 }
 
@@ -1332,6 +1346,60 @@ html:not(.can-scene) .planet {
   font-family: var(--mono);
   font-size: 15px;
   color: var(--accent-bright);
+}
+
+/* The rail reads as a journey: the phase the reader is level with is lit, the
+   ones behind are marked done, the ones ahead wait. Scrolling the chapter
+   walks the light down it. */
+.phase-mark {
+  transition:
+    color 0.3s var(--ease),
+    border-color 0.3s var(--ease),
+    background 0.3s var(--ease),
+    box-shadow 0.3s var(--ease);
+}
+
+.phase.is-past .phase-mark {
+  color: rgba(190, 205, 255, 0.7);
+  border-color: rgba(140, 158, 255, 0.5);
+  background: rgba(30, 34, 82, 0.9);
+}
+
+.phase.is-active .phase-mark {
+  color: var(--void);
+  border-color: transparent;
+  background: var(--accent-bright);
+  box-shadow: 0 0 0 6px rgba(140, 158, 255, 0.16), 0 10px 28px rgba(110, 130, 240, 0.42);
+}
+
+.phase.is-active .panel {
+  border-color: rgba(140, 158, 255, 0.5);
+}
+
+/* The connector fills behind the light rather than being drawn all at once. */
+.phase:not(:last-child) .phase-mark::before {
+  content: '';
+  position: absolute;
+  top: 100%;
+  inset-inline-start: 50%;
+  width: 1px;
+  height: calc(100% + 18px);
+  background: var(--accent-bright);
+  transform-origin: top;
+  transform: scaleY(0);
+  transition: transform 0.45s var(--ease);
+  z-index: 1;
+}
+
+.phase.is-past .phase-mark::before {
+  transform: scaleY(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .phase-mark,
+  .phase-mark::before {
+    transition: none;
+  }
 }
 
 .phase:not(:last-child) .phase-mark::after {
@@ -1815,8 +1883,8 @@ html:not(.can-scene) .planet {
 .chip::before {
   content: '';
   position: absolute;
-  inset-inline-start: -26px;
-  inset-block-start: 13px;
+  left: -26px;
+  top: 13px;
   width: 12px;
   height: 12px;
   border: 1px solid rgba(200, 220, 255, 0.5);
@@ -1828,21 +1896,12 @@ html:not(.can-scene) .planet {
     opacity: 1;
     visibility: visible;
   }
+}
 
-  .chip:nth-child(1) {
-    inset-inline-start: calc(var(--stone-x, 50vw) - 258px);
-    inset-block-start: calc(var(--stone-y, 50vh) - 232px);
-  }
-
-  .chip:nth-child(2) {
-    inset-inline-start: calc(var(--stone-x, 50vw) - 306px);
-    inset-block-start: calc(var(--stone-y, 50vh) + 26px);
-  }
-
-  .chip:nth-child(3) {
-    inset-inline-start: calc(var(--stone-x, 50vw) - 222px);
-    inset-block-start: calc(var(--stone-y, 50vh) + 236px);
-  }
+/* The connector points back at the body, so it changes sides with the chip. */
+.chip[data-side='left']::before {
+  left: auto;
+  right: -26px;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -2191,25 +2250,25 @@ html:not(.can-scene) .planet {
      whole footer sank the planet into the ground instead of letting the page
      close on it. */
   background:
-    linear-gradient(180deg, rgba(7, 7, 26, 0) 0%, rgba(7, 7, 26, 0.72) 55%),
+    linear-gradient(180deg, rgba(7, 7, 26, 0) 0%, rgba(7, 7, 26, 0.5) 55%),
     linear-gradient(
       90deg,
       rgba(7, 7, 26, 0.82) 0%,
-      rgba(7, 7, 26, 0.62) 38%,
-      rgba(7, 7, 26, 0.12) 62%,
-      transparent 78%
+      rgba(7, 7, 26, 0.56) 34%,
+      rgba(7, 7, 26, 0.08) 50%,
+      transparent 58%
     );
 }
 
 [dir='rtl'] .footer {
   background:
-    linear-gradient(180deg, rgba(7, 7, 26, 0) 0%, rgba(7, 7, 26, 0.72) 55%),
+    linear-gradient(180deg, rgba(7, 7, 26, 0) 0%, rgba(7, 7, 26, 0.5) 55%),
     linear-gradient(
       270deg,
       rgba(7, 7, 26, 0.82) 0%,
-      rgba(7, 7, 26, 0.62) 38%,
-      rgba(7, 7, 26, 0.12) 62%,
-      transparent 78%
+      rgba(7, 7, 26, 0.56) 34%,
+      rgba(7, 7, 26, 0.08) 50%,
+      transparent 58%
     );
 }
 
@@ -2512,7 +2571,8 @@ html:not(.can-scene) .planet {
     display: inline-flex;
   }
 
-  .nav-tools .btn-cta {
+  .nav-tools .btn-cta,
+  .nav-tools .nav-investor {
     display: none;
   }
 

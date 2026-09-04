@@ -158,14 +158,28 @@
   var MAX_ALIVE = 2;
   var BRIGHT_SHARE = 0.45;
 
-  /* Meteors belong to the dead sky. They cross it at random for as long as
-     the body is still becoming, and stop the moment it is a living world —
-     starting again if the reader scrolls back up into the lunar half of the
-     story. The threshold sits just short of one so the last of them is spent
-     before the surface finishes, rather than being cut off mid-flight. */
-  var SETTLE_AT = 0.94;
+  /* How many are on a course that ends at the world. Not all of them: a sky
+     where every streak hits the same target stops reading as a sky. */
+  var AIMED_SHARE = 0.5;
+
+  /* The sky quiets as the world comes alive; it does not empty. A hard stop
+     at the moment of transformation was the earlier rule, and it made the
+     second ending impossible — a meteor cannot be absorbed by a world it is
+     no longer allowed to reach. Once the surface is living they arrive about
+     three times less often, which reads as a settling sky and still lets the
+     absorption be seen. */
+  var QUIET_FACTOR = 2.4;
+
+  /* Past this the world has an atmosphere, and an arriving body is swallowed
+     and burns rather than cratering. Below it there is bare rock to hit. */
+  var ABSORB_AT = 0.55;
 
   var meteors = [];
+  /* An impact is what a meteor becomes when it reaches the world: a burst of
+     debris and an expanding shock on the dead rock, a swallowed bloom on the
+     living one. Two endings for the same object, because a body with an
+     atmosphere does not let anything hit its surface. */
+  var impacts = [];
   var mraf = 0;
   var timer = 0;
   var last = 0;
@@ -191,6 +205,18 @@
       y = rand(-0.05, 0.45) * vh;
     }
 
+    /* Some of them are on a course that ends at the world. Left to a random
+       heading almost none ever would, and an impact nobody sees is an impact
+       that does not exist. */
+    var globe = world();
+    if (globe && Math.random() < AIMED_SHARE) {
+      var aimX = globe.x + rand(-0.62, 0.62) * globe.r;
+      var aimY = globe.y + rand(-0.62, 0.62) * globe.r;
+      var toward = Math.atan2(aimY - y, aimX - x);
+      /* Only if it still reads as a shallow fall rather than a dive. */
+      if (Math.sin(toward) > 0.06) angle = toward;
+    }
+
     meteors.push({
       x: x,
       y: y,
@@ -204,28 +230,78 @@
     });
   }
 
+  /* The world's position and size, published by the page every frame. Read
+     rather than assumed: the planet moves chapter by chapter, and an impact
+     drawn at the middle of the screen would be an impact on nothing. */
+  function world() {
+    var cs = w.getComputedStyle(doc.documentElement);
+    var x = parseFloat(cs.getPropertyValue("--stone-x"));
+    var y = parseFloat(cs.getPropertyValue("--stone-y"));
+    var scale = parseFloat(cs.getPropertyValue("--stone-scale"));
+    if (isNaN(x) || isNaN(y)) return null;
+    /* The drawn sphere is 0.37 of its box across the radius, and the box is
+       whatever the stylesheet gives it — measured rather than restated, so a
+       change to the planet's size cannot leave meteors striking a circle that
+       is no longer where the world is. */
+    var el = doc.querySelector(".planet");
+    if (!el) return null;
+    var box = el.getBoundingClientRect();
+    var side = Math.min(box.width, box.height);
+    if (!side) return null;
+    return { x: x, y: y, r: side * 0.37 * (isNaN(scale) ? 1 : scale) };
+  }
+
+  function strike(m, hit) {
+    impacts.push({
+      x: hit.x,
+      y: hit.y,
+      age: 0,
+      life: growth >= ABSORB_AT ? 1.5 : 1.15,
+      absorbed: growth >= ABSORB_AT,
+      power: m.bright ? 1 : 0.66,
+      /* Debris flies off along the shallow angle it arrived on, never back
+         through the body it just struck. */
+      dir: Math.atan2(m.vy, m.vx),
+      sparks: []
+    });
+    var last = impacts[impacts.length - 1];
+    if (!last.absorbed) {
+      var n = m.bright ? 12 : 7;
+      for (var k = 0; k < n; k++) {
+        var spread = rand(-1.15, 1.15);
+        var sp = rand(90, 320) * last.power;
+        last.sparks.push({
+          a: last.dir + Math.PI + spread,
+          v: sp,
+          len: rand(6, 20)
+        });
+      }
+    }
+  }
+
   function planNext() {
     scheduled = false;
-    if (reduce.matches || doc.hidden || growth >= SETTLE_AT) return;
+    if (reduce.matches || doc.hidden) return;
     w.clearTimeout(timer);
     scheduled = true;
     timer = w.setTimeout(function () {
       scheduled = false;
-      if (!doc.hidden && growth < SETTLE_AT && meteors.length < MAX_ALIVE) {
+      if (!doc.hidden && meteors.length < MAX_ALIVE) {
         spawn();
         startTrail();
       }
       planNext();
-    }, rand(GAP_MIN, GAP_MAX));
+    }, rand(GAP_MIN, GAP_MAX) * (1 + growth * QUIET_FACTOR));
   }
 
   /* The page tells the sky how far the transformation has come. Where no
      module runs to tell it, it reads the same scrub off the scroll itself. */
   function setGrowth(value) {
-    var was = growth;
     growth = value;
-    if (was >= SETTLE_AT && growth < SETTLE_AT) planNext();
-    else if (growth >= SETTLE_AT) w.clearTimeout(timer);
+    /* Nothing to start or stop: the schedule reads growth when it sets the
+       next gap, so a sky that has quieted picks up again on its own if the
+       reader goes back up into the lunar half of the story. */
+    if (!scheduled) planNext();
   }
 
   /* The page owns the orbit; the sky is told where it has reached. */
@@ -277,6 +353,75 @@
       mctx.arc(m.x, m.y, halo, 0, 6.2832);
       mctx.fill();
     }
+
+    drawImpacts();
+  }
+
+  function drawImpacts() {
+    for (var i = 0; i < impacts.length; i++) {
+      var s = impacts[i];
+      var t = s.age / s.life;
+      var fade = Math.min(1, (1 - t) / 0.55);
+      if (fade <= 0) continue;
+
+      if (s.absorbed) {
+        /* Swallowed. A living world takes the light in: a bloom that swells
+           once, brightly, and settles into the surface rather than throwing
+           anything back out. */
+        var swell = 1 - Math.pow(1 - Math.min(1, t / 0.42), 3);
+        var rad = (16 + 96 * swell) * s.power;
+        var g1 = mctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, rad);
+        g1.addColorStop(0, "rgba(255,252,236," + fade * 0.95 + ")");
+        g1.addColorStop(0.22, "rgba(196,238,255," + fade * 0.55 + ")");
+        g1.addColorStop(0.6, "rgba(120,178,255," + fade * 0.2 + ")");
+        g1.addColorStop(1, "rgba(90,140,255,0)");
+        mctx.fillStyle = g1;
+        mctx.beginPath();
+        mctx.arc(s.x, s.y, rad, 0, 6.2832);
+        mctx.fill();
+        continue;
+      }
+
+      /* A dead rock has nothing to absorb it. The shock ring runs outward and
+         thins, and the debris carries on the way the meteor was going. */
+      var ring = (10 + 120 * Math.pow(t, 0.55)) * s.power;
+      mctx.strokeStyle = "rgba(255,226,190," + fade * 0.5 * (1 - t) + ")";
+      mctx.lineWidth = Math.max(0.6, 3.2 * (1 - t)) * s.power;
+      mctx.beginPath();
+      mctx.arc(s.x, s.y, ring, 0, 6.2832);
+      mctx.stroke();
+
+      var flash = 1 - Math.min(1, t / 0.2);
+      if (flash > 0) {
+        var g2 = mctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, 46 * s.power);
+        g2.addColorStop(0, "rgba(255,246,224," + flash * 0.95 + ")");
+        g2.addColorStop(0.4, "rgba(255,190,128," + flash * 0.4 + ")");
+        g2.addColorStop(1, "rgba(255,150,90,0)");
+        mctx.fillStyle = g2;
+        mctx.beginPath();
+        mctx.arc(s.x, s.y, 46 * s.power, 0, 6.2832);
+        mctx.fill();
+      }
+
+      for (var k = 0; k < s.sparks.length; k++) {
+        var sp = s.sparks[k];
+        var dist = sp.v * s.age * (1 - t * 0.5);
+        var px = s.x + Math.cos(sp.a) * dist;
+        var py = s.y + Math.sin(sp.a) * dist;
+        var g3 = mctx.createLinearGradient(
+          px, py,
+          px - Math.cos(sp.a) * sp.len, py - Math.sin(sp.a) * sp.len
+        );
+        g3.addColorStop(0, "rgba(255,236,205," + fade * 0.85 + ")");
+        g3.addColorStop(1, "rgba(255,170,110,0)");
+        mctx.strokeStyle = g3;
+        mctx.lineWidth = 1.6 * s.power;
+        mctx.beginPath();
+        mctx.moveTo(px, py);
+        mctx.lineTo(px - Math.cos(sp.a) * sp.len, py - Math.sin(sp.a) * sp.len);
+        mctx.stroke();
+      }
+    }
   }
 
   function tick(now) {
@@ -284,11 +429,20 @@
     var delta = last ? Math.min((now - last) / 1000, 0.05) : 0.016;
     last = now;
 
+    var globe = world();
     for (var i = meteors.length - 1; i >= 0; i--) {
       var m = meteors[i];
       m.age += delta;
       m.x += m.vx * delta;
       m.y += m.vy * delta;
+      /* Reaching the world ends the meteor and starts an impact. The test is
+         against the drawn limb, so a streak that merely passes in front of the
+         disc without crossing it keeps going. */
+      if (globe && Math.hypot(m.x - globe.x, m.y - globe.y) <= globe.r) {
+        strike(m, { x: m.x, y: m.y });
+        meteors.splice(i, 1);
+        continue;
+      }
       var gone =
         m.age >= m.life ||
         m.y > vh + m.len ||
@@ -297,9 +451,14 @@
       if (gone) meteors.splice(i, 1);
     }
 
+    for (var j = impacts.length - 1; j >= 0; j--) {
+      impacts[j].age += delta;
+      if (impacts[j].age >= impacts[j].life) impacts.splice(j, 1);
+    }
+
     drawMeteors();
 
-    if (meteors.length) mraf = w.requestAnimationFrame(tick);
+    if (meteors.length || impacts.length) mraf = w.requestAnimationFrame(tick);
     else {
       last = 0;
       mctx.clearRect(0, 0, vw, vh);

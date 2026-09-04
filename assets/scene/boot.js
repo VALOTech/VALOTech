@@ -119,33 +119,51 @@ const FRONT_RATIO = 0.71;
    needs the frame. Coming home takes a third of the page, because that is the
    part worth watching. */
 const JOURNEY = [
-  /* One rule, applied chapter by chapter: the planet takes the space the
-     argument does not. Every chapter's content is held to one side, so there
-     is always such a space; where the argument sits on both sides, the planet
-     takes the channel between them. */
-  /* The cover: cropped by the right edge rather than sitting inside it. */
+  /* Stations are pinned to arrive *before* their chapter, never during it: the
+     leg into a chapter finishes above its top edge, so by the time the reader
+     is reading, the planet is already standing where the chapter left room for
+     it and the labels pinned to it are not still travelling.
+
+     Measured spans, this build: problem .048-.213 · approach .213-.377 ·
+     deliver .377-.470 · workforce .470-.539 · valostack .539-.588 ·
+     trust .588-.686 · people .686-.899 · outcome .899-.952 ·
+     ecosystem .952-1.005. Re-measure before moving any of these.
+
+     A leg is sized and placed by the easing, not by taste. The planet follows
+     a moving target, so while the reader scrolls it trails by roughly the
+     target's speed times the easing's time constant. Two things follow. A leg
+     needs a real span of page — a short one arrives late however early the
+     station is written. And it has to *end* before the chapter does not begin
+     but arrive: each leg finishes about two hundredths of the page above its
+     chapter's top, which is the half-second the planet needs to stop. Lag in
+     the middle of a leg is invisible, because nothing is pinned to the planet
+     while it travels; lag at the top of a chapter is the whole complaint. */
   { at: 0.0, x: 86, y: 48, scale: 1.15 },
-  { at: 0.04, x: 86, y: 48, scale: 1.15 },
-  /* The problem: argument pinned right, planet and its orbiting cards left. */
-  { at: 0.09, x: 30, y: 54, scale: 0.95 },
-  { at: 0.21, x: 30, y: 54, scale: 0.95 },
-  /* The answer: the mirror of it, so the two orbiting chapters read as a pair. */
-  { at: 0.27, x: 70, y: 54, scale: 0.95 },
-  { at: 0.39, x: 70, y: 54, scale: 0.95 },
-  /* From here every chapter holds its content to the left, so the planet keeps
-     the right and simply changes height and size as the story does. */
-  { at: 0.45, x: 76, y: 52, scale: 0.86 },
-  { at: 0.52, x: 78, y: 44, scale: 0.80 },
-  { at: 0.575, x: 76, y: 50, scale: 0.84 },
-  { at: 0.64, x: 78, y: 44, scale: 0.78 },
-  /* Home, and centred: the mapping chapter is a three-column composition and
-     the planet is its middle column. */
-  { at: 0.72, x: 50, y: 56, scale: 0.86 },
-  { at: 0.885, x: 50, y: 56, scale: 0.86 },
-  /* The close, on the right and forward of the ground rather than sunk in it.
-     Settled before the chapter arrives, not while the reader is reading it. */
-  { at: 0.915, x: 78, y: 46, scale: 0.80 },
-  { at: 1.0, x: 76, y: 46, scale: 0.86 }
+  { at: 0.012, x: 86, y: 48, scale: 1.15 },
+  /* The problem: argument right, planet and its bodies left. */
+  { at: 0.046, x: 30, y: 54, scale: 1.0 },
+  { at: 0.150, x: 30, y: 54, scale: 1.0 },
+  /* The answer: the mirror of it. */
+  { at: 0.193, x: 70, y: 54, scale: 1.0 },
+  { at: 0.325, x: 70, y: 54, scale: 1.0 },
+  /* From here every chapter holds its content left, so the planet keeps the
+     right and only changes height and size as the story does. */
+  { at: 0.357, x: 80, y: 52, scale: 0.9 },
+  { at: 0.425, x: 80, y: 52, scale: 0.9 },
+  { at: 0.450, x: 81, y: 46, scale: 0.84 },
+  { at: 0.500, x: 81, y: 46, scale: 0.84 },
+  { at: 0.519, x: 80, y: 52, scale: 0.88 },
+  { at: 0.552, x: 80, y: 52, scale: 0.88 },
+  { at: 0.568, x: 81, y: 44, scale: 0.82 },
+  /* Held right until the trust chapter is nearly done. The leg home used to
+     run its whole length, which walked the planet — and the bodies orbiting
+     it — across the sentences the chapter left room beside. */
+  { at: 0.638, x: 81, y: 46, scale: 0.86 },
+  /* Home and centred through the mapping chapter. */
+  { at: 0.666, x: 50, y: 56, scale: 0.9 },
+  { at: 0.845, x: 50, y: 56, scale: 0.9 },
+  { at: 0.879, x: 80, y: 46, scale: 0.84 },
+  { at: 1.0, x: 79, y: 46, scale: 0.9 }
 ];
 
 /* Narrower on a phone: the planet sits behind the copy there, so a wide swing
@@ -199,10 +217,15 @@ let primed = false;
    seconds, and these take forty to fifty-six. A satellite whipping round in
    nine seconds beside a world that takes forty-eight reads as two unrelated
    animations rather than as one system. */
+/* Three bodies, evenly spaced round the circle and on three distinct paths, so
+   at any moment they stand apart rather than clustering — each one has to have
+   room beside it for the label anchored to it. Periods are on the order of the
+   world's own turn, and no two are equal, so the arrangement keeps changing
+   without any two ever travelling together. */
 const SATELLITES = [
-  { rx: 94, ry: 41, r: 7.0, period: 52, phase: 0.12, fill: 'mars', label: 'YOUR PEOPLE' },
-  { rx: 66, ry: 27, r: 4.0, period: 40, phase: 0.62, fill: 'neptune', label: '' },
-  { rx: 88, ry: 39, r: 5.0, period: 46, phase: 0.38, fill: 'venus', label: 'AI' }
+  { rx: 92, ry: 40, r: 6.4, period: 52, phase: 0.0, fill: 'mars', label: 'YOUR PEOPLE' },
+  { rx: 78, ry: 35, r: 4.6, period: 44, phase: 0.3333, fill: 'neptune', label: '' },
+  { rx: 64, ry: 32, r: 5.4, period: 38, phase: 0.6667, fill: 'venus', label: 'AI' }
 ];
 
 const SPHERES = {
@@ -253,11 +276,9 @@ function buildOrbits() {
 
     const body = svg('g', { 'clip-path': 'url(#orbit-clip-' + depth + ')' });
 
-    [[94, 41], [66, 27]].forEach(([rx, ry], n) =>
-      body.appendChild(
-        svg('ellipse', { class: 'orbit-ring orbit-ring--' + n, cx: 100, cy: 50, rx: rx, ry: ry })
-      )
-    );
+    /* No drawn rings. Three bodies moving on their own paths read as an orbit
+       on their own; the dashed ellipses only crowded the space the labels
+       anchored to them need. */
 
     const marks = SATELLITES.map((sat) => {
       const g = svg('g', { class: 'orbit-body' });
@@ -317,6 +338,36 @@ function moveOrbits(seconds) {
       const y = 50 + Math.sin(turn) * sat.ry;
       marks[i].setAttribute('transform', 'translate(' + x.toFixed(2) + ' ' + y.toFixed(2) + ')');
     }
+  }
+}
+
+/* Where each body actually is on the screen this frame, published so a label
+   can be pinned to it. The orbit is drawn inside a 200x100 box that is itself
+   sized and scaled against the planet, so a body's viewport position is not
+   something a stylesheet can work out — it has to be handed over. */
+function publishSatellites(seconds, cx, cy) {
+  const layer = orbitNodes[0] && orbitNodes[0].root;
+  if (!layer) return;
+  const face = layer.getBoundingClientRect();
+  /* How far the outermost body ever gets from the planet. Published from the
+     same table that draws them, because anything reading it is deciding
+     whether the orbit clears something — and a second copy of the number is
+     true exactly until one of the two is tuned. */
+  let reach = 0;
+  for (let i = 0; i < SATELLITES.length; i++) {
+    reach = Math.max(reach, (SATELLITES[i].rx / 200) * face.width);
+  }
+  root.style.setProperty('--orbit-reach', reach.toFixed(1) + 'px');
+  for (let i = 0; i < SATELLITES.length; i++) {
+    const sat = SATELLITES[i];
+    const turn = (seconds / sat.period + sat.phase) * Math.PI * 2;
+    const dx = ((Math.cos(turn) * sat.rx) / 200) * face.width;
+    const dy = ((Math.sin(turn) * sat.ry) / 100) * face.height;
+    root.style.setProperty('--sat' + i + '-x', (cx + dx).toFixed(1) + 'px');
+    root.style.setProperty('--sat' + i + '-y', (cy + dy).toFixed(1) + 'px');
+    /* Which way its label should open, so it never runs off the frame. */
+    root.style.setProperty('--sat' + i + '-side', Math.cos(turn) >= 0 ? '1' : '-1');
+    root.style.setProperty('--sat' + i + '-r', ((sat.r / 200) * face.width).toFixed(1) + 'px');
   }
 }
 
@@ -384,6 +435,12 @@ function place(now) {
      six, so the same page reads as a different animation on slower hardware —
      exactly the hardware least able to afford the difference. */
   const k = primed ? ease(gap, DRIFT_EASE) : 1;
+  /* How far the planet still has to go, in viewport units, published so the
+     page can wait for it to arrive before pinning anything to it. */
+  root.style.setProperty(
+    '--stone-travel',
+    (Math.hypot(targetVW - driftVW, targetVH - offsetVH) * 10).toFixed(1)
+  );
   driftVW += (targetVW - driftVW) * k;
   offsetVH += (targetVH - offsetVH) * k;
   scale += (targetScale - scale) * k;
@@ -449,6 +506,11 @@ function place(now) {
        enough that nothing appears to move without being watched for. */
     orbitClock += gap * (still ? CALM_ORBIT : motion.spin);
     moveOrbits(orbitClock);
+    publishSatellites(
+      orbitClock,
+      vw / 2 + floatX + (driftVW / 100) * vw,
+      vh / 2 + floatY + (offsetVH / 100) * vh
+    );
     nameOrbits();
   }
 

@@ -335,28 +335,36 @@
     });
   })();
 
-  /* ---------------- the annotation chips ---------------- */
+  /* ---------------- the phase rail ---------------- */
 
-  /* A chip belongs to the chapter that owns it and is placed from the planet's
-     position, so it must be shown only while that chapter holds the frame.
-     Read from geometry rather than from an observer: an observer is notified
-     only on threshold crossings, and a jumped scroll crosses none. */
-  (function initChips() {
-    var chapters = [].slice.call(doc.querySelectorAll('.chips')).map(function (el) {
-      return el.closest('section');
-    }).filter(Boolean);
-    if (!chapters.length) return;
-
+  /* Five phases, walked one at a time as the chapter passes: the one the
+     reader is level with is lit, the ones behind are marked done. Read from
+     each phase's own position rather than from a fraction of the chapter, so
+     the light is level with the card it belongs to however the cards reflow. */
+  (function initPhaseRail() {
+    var phases = [].slice.call(doc.querySelectorAll('#deliver .phase'));
+    if (!phases.length) return;
     var queued = 0;
+
     function update() {
       queued = 0;
-      for (var i = 0; i < chapters.length; i++) {
-        var box = chapters[i].getBoundingClientRect();
-        var band = window.innerHeight * 0.3;
-        chapters[i].classList.toggle(
-          'chips-showing',
-          box.top < window.innerHeight - band && box.bottom > band
-        );
+      /* The reading line: a third of the way down the viewport, which is where
+         the eye sits when a card has just arrived. */
+      var line = window.innerHeight * 0.38;
+      var active = -1;
+      for (var i = 0; i < phases.length; i++) {
+        if (phases[i].getBoundingClientRect().top <= line) active = i;
+      }
+      /* The first phase is lit the moment it is in the frame, not when it
+         reaches the line. Waiting for the line leaves the rail dark through
+         the whole opening of the chapter, and the reader is already looking
+         at phase one while nothing says so. */
+      if (active < 0 && phases[0].getBoundingClientRect().top < window.innerHeight) {
+        active = 0;
+      }
+      for (var j = 0; j < phases.length; j++) {
+        phases[j].classList.toggle('is-active', j === active);
+        phases[j].classList.toggle('is-past', j < active);
       }
     }
 
@@ -367,6 +375,115 @@
     window.addEventListener('scroll', queue, { passive: true });
     window.addEventListener('resize', queue, { passive: true });
     update();
+  })();
+
+  /* ---------------- the annotation chips ---------------- */
+
+  /* Each chip is pinned to one of the three bodies and follows it round, so
+     the label and the thing it names are never apart. It opens away from the
+     planet — the side the body is on — which is what keeps it inside the
+     frame at every point of the orbit.
+
+     The chapter it belongs to has to hold the frame before it appears, and the
+     planet has to have arrived: a label that is still travelling to its
+     position reads as a page that has not finished loading. */
+  (function initChips() {
+    var groups = [].slice.call(doc.querySelectorAll('.chips')).map(function (el) {
+      var sec = el.closest('section');
+      return { section: sec, wrap: sec && sec.querySelector('.wrap'),
+        chips: [].slice.call(el.querySelectorAll('.chip')) };
+    }).filter(function (g) { return g.section && g.chips.length; });
+    if (!groups.length) return;
+    var wide = window.matchMedia('(min-width: 950px)');
+    var raf = 0;
+
+    function read(name) {
+      return parseFloat(getComputedStyle(root).getPropertyValue(name));
+    }
+
+    function frame() {
+      raf = 0;
+      var showing = false;
+      for (var g = 0; g < groups.length; g++) {
+        var box = groups[g].section.getBoundingClientRect();
+        var margin = window.innerHeight * 0.3;
+        /* Which side of the argument the planet stands on, and where that
+           column ends. Read per frame: the column is the same every frame, but
+           the planet is not. */
+        var band = null;
+        var stoneX = read('--stone-x');
+        var reach = read('--orbit-reach') || 0;
+        if (groups[g].wrap && !isNaN(stoneX)) {
+          var wb = groups[g].wrap.getBoundingClientRect();
+          /* The whole orbit has to clear the column, not just the planet's
+             centre: what prints itself over a sentence is the body swinging
+             out to the far side of its path, and the label chasing it. */
+          if (stoneX - reach > wb.right + 8) band = { side: 'right', edge: wb.right };
+          else if (stoneX + reach < wb.left - 8) band = { side: 'left', edge: wb.left };
+        }
+        /* In frame, the planet standing still, and standing in the space this
+           chapter left for it. Still is not the same as arrived: the planet
+           parks at one chapter's station and is perfectly motionless there
+           while the next chapter comes into frame, and labels lit at that
+           moment point at bodies orbiting somewhere else entirely. Requiring
+           the planet to be clear of this chapter's column makes the two the
+           same question. */
+        var settled = (read('--stone-travel') || 0) < 2;
+        var on = wide.matches && box.top < window.innerHeight - margin &&
+          box.bottom > margin && settled && !!band;
+        groups[g].section.classList.toggle('chips-showing', on);
+        if (!on) continue;
+        showing = true;
+        for (var i = 0; i < groups[g].chips.length; i++) {
+          var chip = groups[g].chips[i];
+          var x = read('--sat' + i + '-x');
+          var y = read('--sat' + i + '-y');
+          if (isNaN(x) || isNaN(y)) continue;
+          var side = read('--sat' + i + '-side') < 0 ? -1 : 1;
+          var r = read('--sat' + i + '-r') || 10;
+          var w = chip.offsetWidth;
+          var h = chip.offsetHeight;
+          var gapPx = r + 18;
+          /* Where the label is allowed to be: inside the frame, and never into
+             the argument. A body swings across the reading column several
+             times a revolution, and a label that followed it there would print
+             itself over the sentence underneath. */
+          var EDGE = 18;
+          var lo = EDGE;
+          var hi = window.innerWidth - EDGE - w;
+          if (band) {
+            if (band.side === 'right') lo = Math.max(lo, band.edge + 16);
+            else hi = Math.min(hi, band.edge - 16 - w);
+          }
+          /* Open away from the planet; take the near side when the far one has
+             no room. Either way the label keeps its own body — clamping it to
+             the edge of the allowed space is what leaves it pointing at
+             nothing, which is worse than opening on the unexpected side. */
+          var far = side > 0 ? x + gapPx : x - gapPx - w;
+          var near = side > 0 ? x - gapPx - w : x + gapPx;
+          var left = far >= lo && far <= hi ? far
+            : near >= lo && near <= hi ? near
+            : Math.max(lo, Math.min(hi, far));
+          var wantRight = left >= x;
+          var top = Math.max(80, Math.min(window.innerHeight - EDGE - h, y - h / 2));
+          chip.style.left = left.toFixed(1) + 'px';
+          chip.style.top = top.toFixed(1) + 'px';
+          chip.setAttribute('data-side', wantRight ? 'right' : 'left');
+        }
+      }
+      if (showing && !reduce) raf = requestAnimationFrame(frame);
+    }
+
+    function kick() {
+      if (!raf) raf = requestAnimationFrame(frame);
+    }
+
+    window.addEventListener('scroll', kick, { passive: true });
+    window.addEventListener('resize', kick, { passive: true });
+    /* The bodies move on their own clock, so the loop has to keep itself
+       alive while a chapter is showing rather than waiting for a scroll. */
+    setInterval(kick, 400);
+    kick();
   })();
 
   /* ---------------- the orbiting chapters ---------------- */
@@ -567,6 +684,19 @@
       menu.classList.toggle("open", open);
       burger.setAttribute("aria-expanded", String(open));
       if (icon) icon.setAttribute("href", open ? "#i-x" : "#i-list");
+    }
+
+    /* The bar has no room for the investor entry on a phone, so the menu
+       carries it there. It closes the menu through the same path the burger
+       uses — the panel, the button's expanded state and its icon all move
+       together — and then opens the one gate the header button opens. */
+    var investorInMenu = doc.getElementById("investorOpenMenu");
+    var investorInBar = doc.getElementById("investorOpen");
+    if (investorInMenu && investorInBar) {
+      investorInMenu.addEventListener("click", function () {
+        setOpen(false);
+        investorInBar.click();
+      });
     }
 
     burger.addEventListener("click", function (e) {

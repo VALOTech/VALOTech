@@ -67,6 +67,25 @@ const TRANSITION_GLSL = /* glsl */ `
       sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453
     );
   }
+
+  /* How close this pixel is to the edge that is currently crossing the world.
+     The change had been silent — one surface simply replaced the other, pixel
+     by pixel, with nothing to watch. This gives the frontier itself a body:
+     a band of heat that runs ahead of the new surface, brightest exactly at
+     the line and gone a little either side of it. It is at its strongest in
+     the middle of the crossing and fades out at both ends, so the world does
+     not arrive already glowing or leave still lit. */
+  float valoFrontierHeat(float progress, vec3 direction) {
+    if (progress <= 0.001 || progress >= 0.999) return 0.0;
+    vec3 sweepDirection = normalize(vec3(-0.44, 0.28, 0.85));
+    float field = dot(normalize(direction), sweepDirection);
+    field += sin(direction.y * 9.0 + direction.x * 5.0) * 0.10;
+    field += sin(direction.z * 13.0 - direction.y * 4.0) * 0.06;
+    float frontier = mix(1.34, -1.34, progress);
+    float band = 1.0 - smoothstep(0.0, 0.15, abs(field - frontier));
+    float run = smoothstep(0.0, 0.16, progress) * (1.0 - smoothstep(0.84, 1.0, progress));
+    return band * band * run;
+  }
 `;
 
 const ATMOSPHERE_VERTEX = /* glsl */ `
@@ -298,6 +317,12 @@ export function mount(container, motion, onReady) {
       float lunarLuma = dot(diffuseColor.rgb, vec3(0.299, 0.587, 0.114));
       float lunarCavity = 1.0 - smoothstep(0.10, 0.19, lunarLuma);
       diffuseColor.rgb *= 1.0 - lunarCavity * 0.12;
+      /* The rock is hottest right where it is about to stop being rock. */
+      float lunarHeat = valoFrontierHeat(
+        smoothstep(0.08, 0.68, uLife),
+        vLunarDirection
+      );
+      diffuseColor.rgb += vec3(1.0, 0.55, 0.22) * lunarHeat * 0.7;
       float lunarPeak = smoothstep(0.49, 0.60, lunarLuma);
       diffuseColor.rgb = min(
         diffuseColor.rgb * (1.0 + lunarPeak * 0.16),
@@ -386,7 +411,13 @@ export function mount(container, motion, onReady) {
         float oceanMask =
           smoothstep(0.015, 0.12, blueDominance + (1.0 - earthLuma) * 0.055);
         diffuseColor.rgb = mix(vec3(earthLuma), diffuseColor.rgb, 0.84);
-        diffuseColor.rgb *= mix(0.89, 0.78, oceanMask);`
+        diffuseColor.rgb *= mix(0.89, 0.78, oceanMask);
+
+        // And the new surface carries the same heat for a moment behind the
+        // line, cooling from it, so the two halves share one edge rather than
+        // meeting at a seam.
+        float earthHeat = valoFrontierHeat(uSurface, vEarthDirection);
+        diffuseColor.rgb += vec3(1.0, 0.66, 0.34) * earthHeat * 0.5;`
       )
       .replace(
         '#include <roughnessmap_fragment>',

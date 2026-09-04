@@ -99,13 +99,32 @@ layer; there is no second timeline.
 | Layer | Revealed over |
 |---|---|
 | Lunar → Earth surface | `0.08 – 0.68` |
+| Frontier heat | with the surface, peaking mid-crossing |
 | Atmosphere | `0.46 – 0.92` |
 | Clouds | `0.54 – 0.88` |
 
-The planet also moves, between stations written in viewport units and honoured
-as written — full size at the top, small and to the right through the argument,
+The two surfaces meet along a dithered frontier, and the frontier itself is
+lit: a band of heat runs with the advancing edge, strongest exactly on the line
+and gone a little either side, on both surfaces so they share one edge rather
+than meeting at a seam. It fades in over the first sixth of the crossing and
+out over the last, so the world neither arrives already glowing nor leaves
+still lit. Without it the change was silent — one surface simply replaced the
+other, pixel by pixel, with nothing to watch.
+
+The planet also moves, between stations written in viewport units — full size at the top, small and to the right through the argument,
 back to centre at *How your people fit in*, where the reader is being shown two
 columns that belong on either side of it, and away again for the close.
+
+A leg is sized and placed by the easing rather than by taste. The planet
+follows a moving target, so while the reader scrolls it trails by roughly the
+target's speed times the easing's time constant. Two things follow. A leg needs
+a real span of page — measured at a reading pace of a viewport a second, a leg
+shorter than about a second of scrolling arrives late however early the station
+is written. And it has to finish above its chapter's top, by about two
+hundredths of the page, which is the half-second the planet needs to stop. Lag
+in the middle of a leg is invisible, because nothing is pinned to the planet
+while it travels; lag at the top of a chapter is the whole of what "the planet
+moves after I am already reading" means.
 
 Self-rotation is 7.5° per second — a forty-eight second revolution. The
 reference turns at 1.5°, which measures as motion and reads as a photograph;
@@ -173,38 +192,71 @@ effect, and a light that only moves the lamp is one nobody believes.
 
 ### Meteors
 
-One crosses roughly every twenty seconds, at a random time, from a random edge,
-on a shallow angle — rare enough to stay an event rather than a shower. They
-are drawn on their own 2D canvas, behind the planet, so a streak vanishes
-behind it and the sky gains a depth the star field alone cannot give. They
-belong to the dead sky and stop once the surface is a living world, restarting
-if the reader scrolls back up into the lunar half of the story.
+One crosses every few seconds, at a random time, from a random edge, on a
+shallow angle — rare enough to stay an event rather than a shower. They are
+drawn on their own 2D canvas, behind the planet, so a streak vanishes behind it
+and the sky gains a depth the star field alone cannot give. Half of them are
+aimed at the world.
 
-Their loop exists only while one is in flight. Between meteors nothing is
-scheduled, which is what lets the star field keep its own promise of no idle
-animation. Reduced motion suppresses them entirely, and a hidden tab stops
-scheduling them.
+An aimed one that reaches the drawn limb ends there, and what happens next is
+the whole point of aiming it. On the bare rock it **detonates**: an expanding
+shock ring, a warm flash, and debris thrown along the shallow angle it arrived
+on, never back through the body it just struck. On the living world it is
+**drunk in** — a cool bloom that swells and fades, no debris, because a world
+with an atmosphere takes the strike rather than shattering under it. The two
+read apart at a glance and measure apart too: warm pixels outnumber cool by an
+order of magnitude on the first, and cool outnumber warm by more on the second.
+
+The sky **quiets** rather than emptying as the world comes alive — the gap
+between meteors stretches with the growth scrub. Stopping them outright, which
+an earlier reading of "they belong to the dead sky" asked for, would have made
+the second ending unreachable: nothing would ever arrive to be absorbed.
+
+The strike radius is measured from the planet element rather than restated from
+its stylesheet numbers, so resizing the world cannot leave meteors striking a
+circle that is no longer where it is.
+
+Their loop exists only while one is in flight or an impact is still fading.
+Between meteors nothing is scheduled, which is what lets the star field keep
+its own promise of no idle animation. Reduced motion suppresses them entirely,
+and a hidden tab stops scheduling them.
 
 ### The satellites
 
-Three bodies on flat elliptical paths about the planet, drawn as two SVG
-layers of one box clipped to its top and bottom halves and stacked either side
-of the planet. A satellite on the far half of its path is drawn under the
-planet, on the near half over it, which is what makes a flat ellipse read as an
-orbit seen from above rather than as a ring drawn on the glass.
+Three bodies on three distinct paths about the planet, evenly spaced a third of
+a turn apart so that at any moment they stand apart rather than clustering —
+each one has to have room beside it for the label anchored to it. **No rings
+are drawn.** Two rings for three bodies was the visible half of a deeper
+problem: a drawn path is a promise about where a body will be, and the moment
+one body strays from it the whole system reads as decoration. Without them the
+motion alone says orbit, and each body is free to take its own path.
+
+Every path clears the drawn disc at every point, in both axes, by at least
+twenty pixels at each of the five chapters that anchor labels. That is a sizing
+constraint, not an aesthetic one: sized from the viewport, the vertical
+semi-axis came out smaller than the planet's radius and a body spent half of
+every revolution behind the disc, which is what "the satellites do not orbit"
+looks like to someone watching. Sized from the planet, the innermost path is
+nearly face-on and the outermost is flattened; the trio still reads as a system
+seen at an angle.
+
+The orbit's outermost reach is **published** as one custom property, computed
+from the same table that draws the bodies, because everything else that needs
+it is deciding whether the orbit clears something — and a second copy of the
+number stays true exactly until one of the two is tuned.
 
 They keep their own clock, so they circle whether or not anyone scrolls, and
 faster while someone does — the same multiplier the planet's spin uses. Nothing
-orbits a dead rock: the ring's opacity is published from the growth scrub, so
-the cover carries a bare moon and the ring arrives with the atmosphere.
+orbits a dead rock: their opacity is published from the growth scrub, so the
+cover carries a bare moon and they arrive with the atmosphere.
 
 Two of the three are named — *your people* and *AI*, the page's argument in
-orbit — and only on the near half. A label that survived the occlusion reads as
-a clipped word rather than as something passing behind. Each name sits on a
-chip rather than bare on the sky, because a label crossing a lit surface needs
-a ground of its own. The names appear only while the mapping chapter is on
-screen, decided from that chapter's position on every frame rather than from an
-observer, which a jumped scroll can bypass entirely.
+orbit — and only on the near half of the path. The box is split into halves and
+stacked either side of the planet, so a body on the far half is drawn under it
+and on the near half over it; a name that survived that would read as a clipped
+word rather than as something passing behind. Each name sits on a chip rather
+than bare on the sky, because a label crossing a lit surface needs a ground of
+its own.
 
 ### The reading side
 
@@ -231,9 +283,24 @@ what the mapping chapter is.
 
 Short labels pinned around the world, connected by a small lit square, rather
 than a column of prose beside it — the designer's own device, and the reason
-her planet is never covered. Fifteen of them across five chapters, placed from
-the planet's published position so they follow it, and shown only while their
-chapter holds the frame.
+her planet is never covered. Fifteen of them across five chapters. Each is
+pinned to **one body** and follows it round, measured at thirty to fifty pixels
+from it at every point of every orbit, because a label that drifts from the
+thing it names stops naming it.
+
+A chapter shows its labels only when three things hold: it holds the frame, the
+planet has stopped, and the planet stands in the space this chapter left for
+it. The third is not implied by the second. The planet parks at one chapter's
+station and is perfectly motionless there while the next chapter comes into
+frame, and labels lit at that moment point at bodies orbiting somewhere else
+entirely. The test is written against the **whole orbit** rather than the
+planet's centre: what prints itself over a sentence is the body swinging out to
+the far side of its path, and the label chasing it.
+
+Within that space a label opens away from the planet, and takes the near side
+when the far one has no room — never a clamp. Clamping is what leaves a label
+at the edge of the allowed space pointing at nothing, which is worse than
+opening on the unexpected side.
 
 Their text is drawn from strings the dictionary already carried and no chapter
 rendered: the three architecture layers, the phase outcomes, the ownership
@@ -244,7 +311,11 @@ team had already written stopped being orphaned.
 
 Two views of the trust chapter, as the design has them. The **general view** is
 the seven answers and what each one is. The **detail view** — the three
-mechanisms under each — opens behind a sign-in reached from the nav.
+mechanisms under each — opens behind a sign-in reached from the nav, which
+sits between the language control and the call to action. Below the width where
+the call to action folds into the menu, the sign-in folds with it: keeping it in
+the bar pushed the menu button off the frame on a phone, which cost the reader
+the only way into the navigation.
 
 **It is a demonstration, not a security control.** This is a static site with
 no server: the detail ships inside the page and anyone reading the source can
