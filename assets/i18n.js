@@ -25,7 +25,7 @@
   var en = {
     "a11y.skip":"Skip to content","a11y.home":"VALO Tech home","a11y.navPrimary":"Primary","a11y.theme":"Theme","a11y.menu":"Menu","a11y.top":"Back to top","a11y.trustRegion":"Why teams trust the platform","a11y.ecoHub":"VALO ecosystem hub","a11y.valostackNet":"ValoStack network",
     "phases.outcome":"Outcome.",
-    "nav.approach":"Approach","nav.workforce":"Workforce","nav.trust":"Trust","nav.ecosystem":"Ecosystem","nav.pricing":"Pricing",
+    "nav.approach":"Approach","nav.workforce":"Workforce","nav.trust":"Trust","nav.ecosystem":"Ecosystem","nav.pricing":"Pricing","nav.investor":"Investor login","inv.title":"Investor login","inv.id":"Investor ID","inv.pw":"Password","inv.submit":"Open the detail","inv.error":"That ID and password do not match.","inv.locked":"Detail available to investors","a11y.close":"Close",
     "cta.start":"Start the conversation","cta.approach":"See the approach",
     "lang.label":"Language","theme.light":"Light theme","theme.dark":"Dark theme","theme.auto":"Match system",
     "brand.slogan":"Trustworthy AI for the real world.",
@@ -198,7 +198,7 @@
   var vi = {
     "a11y.skip":"Đến nội dung chính","a11y.home":"Trang chủ VALO Tech","a11y.navPrimary":"Điều hướng chính","a11y.theme":"Giao diện","a11y.menu":"Menu","a11y.top":"Lên đầu trang","a11y.trustRegion":"Vì sao các đội ngũ tin tưởng nền tảng này","a11y.ecoHub":"Sơ đồ hệ sinh thái VALO","a11y.valostackNet":"Mạng lưới ValoStack",
     "phases.outcome":"Kết quả.",
-    "nav.approach":"Phương pháp","nav.workforce":"Đội ngũ AI","nav.trust":"Niềm tin","nav.ecosystem":"Hệ sinh thái","nav.pricing":"Chi phí",
+    "nav.approach":"Phương pháp","nav.workforce":"Đội ngũ AI","nav.trust":"Niềm tin","nav.ecosystem":"Hệ sinh thái","nav.pricing":"Chi phí","nav.investor":"Đăng nhập nhà đầu tư","inv.title":"Đăng nhập nhà đầu tư","inv.id":"Mã nhà đầu tư","inv.pw":"Mật khẩu","inv.submit":"Mở phần chi tiết","inv.error":"Mã hoặc mật khẩu không khớp.","inv.locked":"Phần chi tiết dành cho nhà đầu tư","a11y.close":"Đóng",
     "cta.start":"Bắt đầu trao đổi","cta.approach":"Xem phương pháp",
     "lang.label":"Ngôn ngữ","theme.light":"Giao diện sáng","theme.dark":"Giao diện tối","theme.auto":"Theo hệ thống",
     "brand.slogan":"AI đáng tin cậy cho thế giới thực.",
@@ -371,7 +371,7 @@
   var zh = {
     "a11y.skip":"跳到主要内容","a11y.home":"VALO Tech 首页","a11y.navPrimary":"主导航","a11y.theme":"主题","a11y.menu":"菜单","a11y.top":"回到顶部","a11y.trustRegion":"企业为何信任这个平台","a11y.ecoHub":"VALO 生态中心","a11y.valostackNet":"ValoStack 网络",
     "phases.outcome":"成果。",
-    "nav.approach":"方法","nav.workforce":"AI 团队","nav.trust":"信任","nav.ecosystem":"生态","nav.pricing":"费用",
+    "nav.approach":"方法","nav.workforce":"AI 团队","nav.trust":"信任","nav.ecosystem":"生态","nav.pricing":"费用","nav.investor":"投资人登录","inv.title":"投资人登录","inv.id":"投资人账号","inv.pw":"密码","inv.submit":"展开详细内容","inv.error":"账号或密码不匹配。","inv.locked":"详细内容面向投资人开放","a11y.close":"关闭",
     "cta.start":"开始交流","cta.approach":"了解方法",
     "lang.label":"语言","theme.light":"浅色主题","theme.dark":"深色主题","theme.auto":"跟随系统",
     "brand.slogan":"面向真实世界的可信 AI。",
@@ -544,7 +544,7 @@
   var zt = {
     "a11y.skip":"跳到主要內容","a11y.home":"VALO Tech 首頁","a11y.navPrimary":"主導覽","a11y.theme":"主題","a11y.menu":"選單","a11y.top":"回到頂部","a11y.trustRegion":"企業為何信任這個平台","a11y.ecoHub":"VALO 生態中心","a11y.valostackNet":"ValoStack 網路",
     "phases.outcome":"成果。",
-    "nav.approach":"方法","nav.workforce":"AI 團隊","nav.trust":"信任","nav.ecosystem":"生態","nav.pricing":"費用",
+    "nav.approach":"方法","nav.workforce":"AI 團隊","nav.trust":"信任","nav.ecosystem":"生態","nav.pricing":"費用","nav.investor":"投資人登入","inv.title":"投資人登入","inv.id":"投資人帳號","inv.pw":"密碼","inv.submit":"展開詳細內容","inv.error":"帳號或密碼不相符。","inv.locked":"詳細內容向投資人開放","a11y.close":"關閉",
     "cta.start":"開始交流","cta.approach":"了解方法",
     "lang.label":"語言","theme.light":"淺色主題","theme.dark":"深色主題","theme.auto":"跟隨系統",
     "brand.slogan":"面向真實世界的可信 AI。",
@@ -717,7 +717,7 @@
   var th = {
     "a11y.skip":"ข้ามไปยังเนื้อหา","a11y.home":"หน้าแรก VALO Tech","a11y.navPrimary":"เมนูหลัก","a11y.theme":"ธีม","a11y.menu":"เมนู","a11y.top":"กลับขึ้นด้านบน","a11y.trustRegion":"เหตุใดทีมต่าง ๆ จึงไว้วางใจแพลตฟอร์มนี้","a11y.ecoHub":"แผนผังอีโคซิสเต็ม VALO","a11y.valostackNet":"เครือข่าย ValoStack",
     "phases.outcome":"ผลลัพธ์",
-    "nav.approach":"แนวทาง","nav.workforce":"ทีม AI","nav.trust":"ความน่าเชื่อถือ","nav.ecosystem":"อีโคซิสเต็ม","nav.pricing":"ค่าบริการ",
+    "nav.approach":"แนวทาง","nav.workforce":"ทีม AI","nav.trust":"ความน่าเชื่อถือ","nav.ecosystem":"อีโคซิสเต็ม","nav.pricing":"ค่าบริการ","nav.investor":"เข้าสู่ระบบนักลงทุน","inv.title":"เข้าสู่ระบบนักลงทุน","inv.id":"รหัสนักลงทุน","inv.pw":"รหัสผ่าน","inv.submit":"เปิดดูรายละเอียด","inv.error":"รหัสหรือรหัสผ่านไม่ถูกต้อง","inv.locked":"รายละเอียดสำหรับนักลงทุน","a11y.close":"ปิด",
     "cta.start":"เริ่มพูดคุยกับเรา","cta.approach":"ดูแนวทางของเรา",
     "lang.label":"ภาษา","theme.light":"ธีมสว่าง","theme.dark":"ธีมมืด","theme.auto":"ตามระบบ",
     "brand.slogan":"AI ที่ไว้วางใจได้ สำหรับโลกแห่งความจริง",
@@ -890,7 +890,7 @@
   var id = {
     "a11y.skip":"Lewati ke konten","a11y.home":"Beranda VALO Tech","a11y.navPrimary":"Navigasi utama","a11y.theme":"Tema","a11y.menu":"Menu","a11y.top":"Kembali ke atas","a11y.trustRegion":"Alasan tim memercayai platform ini","a11y.ecoHub":"Hub ekosistem VALO","a11y.valostackNet":"Jaringan ValoStack",
     "phases.outcome":"Hasil.",
-    "nav.approach":"Pendekatan","nav.workforce":"Tim AI","nav.trust":"Kepercayaan","nav.ecosystem":"Ekosistem","nav.pricing":"Biaya",
+    "nav.approach":"Pendekatan","nav.workforce":"Tim AI","nav.trust":"Kepercayaan","nav.ecosystem":"Ekosistem","nav.pricing":"Biaya","nav.investor":"Masuk investor","inv.title":"Masuk investor","inv.id":"ID investor","inv.pw":"Kata sandi","inv.submit":"Buka detailnya","inv.error":"ID atau kata sandi tidak cocok.","inv.locked":"Detail tersedia untuk investor","a11y.close":"Tutup",
     "cta.start":"Mulai percakapan","cta.approach":"Lihat pendekatannya",
     "lang.label":"Bahasa","theme.light":"Tema terang","theme.dark":"Tema gelap","theme.auto":"Ikuti sistem",
     "brand.slogan":"AI yang tepercaya untuk dunia nyata.",
@@ -1063,7 +1063,7 @@
   var ms = {
     "a11y.skip":"Langkau ke kandungan","a11y.home":"Laman utama VALO Tech","a11y.navPrimary":"Navigasi utama","a11y.theme":"Tema","a11y.menu":"Menu","a11y.top":"Kembali ke atas","a11y.trustRegion":"Sebab pasukan mempercayai platform ini","a11y.ecoHub":"Hab ekosistem VALO","a11y.valostackNet":"Rangkaian ValoStack",
     "phases.outcome":"Hasil.",
-    "nav.approach":"Pendekatan","nav.workforce":"Pasukan AI","nav.trust":"Kepercayaan","nav.ecosystem":"Ekosistem","nav.pricing":"Kos",
+    "nav.approach":"Pendekatan","nav.workforce":"Pasukan AI","nav.trust":"Kepercayaan","nav.ecosystem":"Ekosistem","nav.pricing":"Kos","nav.investor":"Log masuk pelabur","inv.title":"Log masuk pelabur","inv.id":"ID pelabur","inv.pw":"Kata laluan","inv.submit":"Buka butirannya","inv.error":"ID atau kata laluan tidak sepadan.","inv.locked":"Butiran tersedia untuk pelabur","a11y.close":"Tutup",
     "cta.start":"Mulakan perbualan","cta.approach":"Lihat pendekatannya",
     "lang.label":"Bahasa","theme.light":"Tema cerah","theme.dark":"Tema gelap","theme.auto":"Ikut sistem",
     "brand.slogan":"AI yang boleh dipercayai untuk dunia sebenar.",
@@ -1236,7 +1236,7 @@
   var tl = {
     "a11y.skip":"Lumaktaw sa nilalaman","a11y.home":"Home ng VALO Tech","a11y.navPrimary":"Pangunahing nabigasyon","a11y.theme":"Tema","a11y.menu":"Menu","a11y.top":"Bumalik sa itaas","a11y.trustRegion":"Bakit pinagkakatiwalaan ng mga team ang platform","a11y.ecoHub":"Hub ng ekosistema ng VALO","a11y.valostackNet":"Network ng ValoStack",
     "phases.outcome":"Resulta.",
-    "nav.approach":"Pamamaraan","nav.workforce":"AI Workforce","nav.trust":"Tiwala","nav.ecosystem":"Ekosistema","nav.pricing":"Presyo",
+    "nav.approach":"Pamamaraan","nav.workforce":"AI Workforce","nav.trust":"Tiwala","nav.ecosystem":"Ekosistema","nav.pricing":"Presyo","nav.investor":"Investor login","inv.title":"Investor login","inv.id":"Investor ID","inv.pw":"Password","inv.submit":"Buksan ang detalye","inv.error":"Hindi tugma ang ID at password.","inv.locked":"Para sa mga investor ang detalye","a11y.close":"Isara",
     "cta.start":"Simulan ang usapan","cta.approach":"Tingnan ang pamamaraan",
     "lang.label":"Wika","theme.light":"Maliwanag na tema","theme.dark":"Madilim na tema","theme.auto":"Sumunod sa system",
     "brand.slogan":"Mapagkakatiwalaang AI para sa totoong mundo.",
@@ -1409,7 +1409,7 @@
   var hi = {
     "a11y.skip":"सामग्री पर जाएँ","a11y.home":"VALO Tech होम","a11y.navPrimary":"मुख्य नेविगेशन","a11y.theme":"थीम","a11y.menu":"मेन्यू","a11y.top":"ऊपर वापस जाएँ","a11y.trustRegion":"टीमें इस प्लैटफ़ॉर्म पर भरोसा क्यों करती हैं","a11y.ecoHub":"VALO इकोसिस्टम हब","a11y.valostackNet":"ValoStack नेटवर्क",
     "phases.outcome":"परिणाम।",
-    "nav.approach":"पद्धति","nav.workforce":"AI टीम","nav.trust":"भरोसा","nav.ecosystem":"इकोसिस्टम","nav.pricing":"मूल्य",
+    "nav.approach":"पद्धति","nav.workforce":"AI टीम","nav.trust":"भरोसा","nav.ecosystem":"इकोसिस्टम","nav.pricing":"मूल्य","nav.investor":"निवेशक लॉगिन","inv.title":"निवेशक लॉगिन","inv.id":"निवेशक आईडी","inv.pw":"पासवर्ड","inv.submit":"विवरण खोलें","inv.error":"आईडी या पासवर्ड मेल नहीं खाता।","inv.locked":"विवरण निवेशकों के लिए उपलब्ध है","a11y.close":"बंद करें",
     "cta.start":"बातचीत शुरू करें","cta.approach":"पद्धति देखें",
     "lang.label":"भाषा","theme.light":"लाइट थीम","theme.dark":"डार्क थीम","theme.auto":"सिस्टम के अनुसार",
     "brand.slogan":"वास्तविक दुनिया के लिए भरोसेमंद AI।",
@@ -1582,7 +1582,7 @@
   var es = {
     "a11y.skip":"Saltar al contenido","a11y.home":"Inicio de VALO Tech","a11y.navPrimary":"Navegación principal","a11y.theme":"Tema","a11y.menu":"Menú","a11y.top":"Volver arriba","a11y.trustRegion":"Por qué los equipos confían en la plataforma","a11y.ecoHub":"Centro del ecosistema VALO","a11y.valostackNet":"Red de ValoStack",
     "phases.outcome":"Resultado.",
-    "nav.approach":"Enfoque","nav.workforce":"Equipo de IA","nav.trust":"Confianza","nav.ecosystem":"Ecosistema","nav.pricing":"Coste",
+    "nav.approach":"Enfoque","nav.workforce":"Equipo de IA","nav.trust":"Confianza","nav.ecosystem":"Ecosistema","nav.pricing":"Coste","nav.investor":"Acceso para inversores","inv.title":"Acceso para inversores","inv.id":"ID de inversor","inv.pw":"Contraseña","inv.submit":"Abrir el detalle","inv.error":"El ID y la contraseña no coinciden.","inv.locked":"Detalle disponible para inversores","a11y.close":"Cerrar",
     "cta.start":"Inicie la conversación","cta.approach":"Conozca el enfoque",
     "lang.label":"Idioma","theme.light":"Tema claro","theme.dark":"Tema oscuro","theme.auto":"Según el sistema",
     "brand.slogan":"IA confiable para el mundo real.",
@@ -1755,7 +1755,7 @@
   var ar = {
     "a11y.skip":"تخطَّ إلى المحتوى","a11y.home":"الصفحة الرئيسية لـ VALO Tech","a11y.navPrimary":"التنقل الرئيسي","a11y.theme":"السمة","a11y.menu":"القائمة","a11y.top":"العودة إلى الأعلى","a11y.trustRegion":"لماذا تثق الفرق بالمنصة","a11y.ecoHub":"مركز منظومة VALO","a11y.valostackNet":"شبكة ValoStack",
     "phases.outcome":"النتيجة.",
-    "nav.approach":"المنهجية","nav.workforce":"فريق الذكاء الاصطناعي","nav.trust":"الثقة","nav.ecosystem":"المنظومة","nav.pricing":"الأسعار",
+    "nav.approach":"المنهجية","nav.workforce":"فريق الذكاء الاصطناعي","nav.trust":"الثقة","nav.ecosystem":"المنظومة","nav.pricing":"الأسعار","nav.investor":"دخول المستثمرين","inv.title":"دخول المستثمرين","inv.id":"معرّف المستثمر","inv.pw":"كلمة المرور","inv.submit":"افتح التفاصيل","inv.error":"المعرّف أو كلمة المرور غير مطابقين.","inv.locked":"التفاصيل متاحة للمستثمرين","a11y.close":"إغلاق",
     "cta.start":"لنبدأ الحوار","cta.approach":"تعرّف على المنهجية",
     "lang.label":"اللغة","theme.light":"المظهر الفاتح","theme.dark":"المظهر الداكن","theme.auto":"مطابقة النظام",
     "brand.slogan":"ذكاء اصطناعي جدير بالثقة، لعالمٍ حقيقي.",
@@ -1928,7 +1928,7 @@
   var fr = {
     "a11y.skip":"Aller au contenu","a11y.home":"Accueil VALO Tech","a11y.navPrimary":"Navigation principale","a11y.theme":"Thème","a11y.menu":"Menu","a11y.top":"Retour en haut","a11y.trustRegion":"Pourquoi les équipes font confiance à la plateforme","a11y.ecoHub":"Pôle de l'écosystème VALO","a11y.valostackNet":"Réseau ValoStack",
     "phases.outcome":"Résultat.",
-    "nav.approach":"Approche","nav.workforce":"Équipe d'IA","nav.trust":"Confiance","nav.ecosystem":"Écosystème","nav.pricing":"Tarifs",
+    "nav.approach":"Approche","nav.workforce":"Équipe d'IA","nav.trust":"Confiance","nav.ecosystem":"Écosystème","nav.pricing":"Tarifs","nav.investor":"Espace investisseurs","inv.title":"Espace investisseurs","inv.id":"Identifiant investisseur","inv.pw":"Mot de passe","inv.submit":"Ouvrir le détail","inv.error":"L'identifiant et le mot de passe ne correspondent pas.","inv.locked":"Détail réservé aux investisseurs","a11y.close":"Fermer",
     "cta.start":"Engager la conversation","cta.approach":"Découvrir l'approche",
     "lang.label":"Langue","theme.light":"Thème clair","theme.dark":"Thème sombre","theme.auto":"Selon le système",
     "brand.slogan":"Une IA digne de confiance, pour le monde réel.",
@@ -2101,7 +2101,7 @@
   var bn = {
     "a11y.skip":"মূল কন্টেন্টে যান","a11y.home":"VALO Tech হোম","a11y.navPrimary":"প্রধান নেভিগেশন","a11y.theme":"থিম","a11y.menu":"মেনু","a11y.top":"উপরে ফিরে যান","a11y.trustRegion":"কেন দলগুলো এই প্ল্যাটফর্মে আস্থা রাখে","a11y.ecoHub":"VALO ইকোসিস্টেম হাব","a11y.valostackNet":"ValoStack নেটওয়ার্ক",
     "phases.outcome":"ফলাফল।",
-    "nav.approach":"পদ্ধতি","nav.workforce":"AI টিম","nav.trust":"আস্থা","nav.ecosystem":"ইকোসিস্টেম","nav.pricing":"খরচ",
+    "nav.approach":"পদ্ধতি","nav.workforce":"AI টিম","nav.trust":"আস্থা","nav.ecosystem":"ইকোসিস্টেম","nav.pricing":"খরচ","nav.investor":"বিনিয়োগকারী লগইন","inv.title":"বিনিয়োগকারী লগইন","inv.id":"বিনিয়োগকারী আইডি","inv.pw":"পাসওয়ার্ড","inv.submit":"বিস্তারিত খুলুন","inv.error":"আইডি বা পাসওয়ার্ড মিলছে না।","inv.locked":"বিস্তারিত বিনিয়োগকারীদের জন্য","a11y.close":"বন্ধ করুন",
     "cta.start":"কথা বলা শুরু করুন","cta.approach":"পদ্ধতিটি দেখুন",
     "lang.label":"ভাষা","theme.light":"হালকা থিম","theme.dark":"গাঢ় থিম","theme.auto":"সিস্টেম অনুযায়ী",
     "brand.slogan":"বাস্তব জগতের জন্য নির্ভরযোগ্য AI।",
@@ -2274,7 +2274,7 @@
   var pt = {
     "a11y.skip":"Saltar para o conteúdo","a11y.home":"Início VALO Tech","a11y.navPrimary":"Navegação principal","a11y.theme":"Tema","a11y.menu":"Menu","a11y.top":"Voltar ao topo","a11y.trustRegion":"Porque as equipas confiam na plataforma","a11y.ecoHub":"Centro do ecossistema VALO","a11y.valostackNet":"Rede ValoStack",
     "phases.outcome":"Resultado.",
-    "nav.approach":"Abordagem","nav.workforce":"Equipa de IA","nav.trust":"Confiança","nav.ecosystem":"Ecossistema","nav.pricing":"Custos",
+    "nav.approach":"Abordagem","nav.workforce":"Equipa de IA","nav.trust":"Confiança","nav.ecosystem":"Ecossistema","nav.pricing":"Custos","nav.investor":"Acesso a investidores","inv.title":"Acesso a investidores","inv.id":"ID de investidor","inv.pw":"Palavra-passe","inv.submit":"Abrir o detalhe","inv.error":"O ID e a palavra-passe não coincidem.","inv.locked":"Detalhe disponível a investidores","a11y.close":"Fechar",
     "cta.start":"Começar a conversa","cta.approach":"Ver a abordagem",
     "lang.label":"Idioma","theme.light":"Tema claro","theme.dark":"Tema escuro","theme.auto":"Acompanhar o sistema",
     "brand.slogan":"IA de confiança para o mundo real.",
@@ -2447,7 +2447,7 @@
   var ru = {
     "a11y.skip":"Перейти к содержимому","a11y.home":"Главная VALO Tech","a11y.navPrimary":"Основная навигация","a11y.theme":"Тема","a11y.menu":"Меню","a11y.top":"Наверх","a11y.trustRegion":"Почему компании доверяют платформе","a11y.ecoHub":"Центр экосистемы VALO","a11y.valostackNet":"Сеть ValoStack",
     "phases.outcome":"Итог.",
-    "nav.approach":"Подход","nav.workforce":"Команда ИИ","nav.trust":"Доверие","nav.ecosystem":"Экосистема","nav.pricing":"Стоимость",
+    "nav.approach":"Подход","nav.workforce":"Команда ИИ","nav.trust":"Доверие","nav.ecosystem":"Экосистема","nav.pricing":"Стоимость","nav.investor":"Вход для инвесторов","inv.title":"Вход для инвесторов","inv.id":"Идентификатор инвестора","inv.pw":"Пароль","inv.submit":"Открыть детали","inv.error":"Идентификатор или пароль не совпадают.","inv.locked":"Детали доступны инвесторам","a11y.close":"Закрыть",
     "cta.start":"Начать разговор","cta.approach":"Узнать о подходе",
     "lang.label":"Язык","theme.light":"Светлая тема","theme.dark":"Тёмная тема","theme.auto":"Как в системе",
     "brand.slogan":"Надёжный ИИ для реального мира.",
@@ -2620,7 +2620,7 @@
   var ur = {
     "a11y.skip":"مواد پر جائیں","a11y.home":"VALO Tech ہوم","a11y.navPrimary":"بنیادی نیویگیشن","a11y.theme":"تھیم","a11y.menu":"مینو","a11y.top":"اوپر واپس جائیں","a11y.trustRegion":"ٹیمیں اس پلیٹ فارم پر کیوں بھروسا کرتی ہیں","a11y.ecoHub":"VALO ایکو سسٹم ہب","a11y.valostackNet":"ValoStack نیٹ ورک",
     "phases.outcome":"نتیجہ۔",
-    "nav.approach":"طریقہ کار","nav.workforce":"AI ٹیم","nav.trust":"اعتماد","nav.ecosystem":"ایکو سسٹم","nav.pricing":"قیمت",
+    "nav.approach":"طریقہ کار","nav.workforce":"AI ٹیم","nav.trust":"اعتماد","nav.ecosystem":"ایکو سسٹم","nav.pricing":"قیمت","nav.investor":"سرمایہ کار لاگ اِن","inv.title":"سرمایہ کار لاگ اِن","inv.id":"سرمایہ کار آئی ڈی","inv.pw":"پاس ورڈ","inv.submit":"تفصیل کھولیں","inv.error":"آئی ڈی یا پاس ورڈ مطابقت نہیں رکھتے۔","inv.locked":"تفصیل سرمایہ کاروں کے لیے ہے","a11y.close":"بند کریں",
     "cta.start":"گفتگو کا آغاز کیجیے","cta.approach":"ہمارا طریقہ کار دیکھیے",
     "lang.label":"زبان","theme.light":"روشن تھیم","theme.dark":"گہری تھیم","theme.auto":"سسٹم کے مطابق",
     "brand.slogan":"حقیقی دنیا کے لیے ایسا AI، جس پر بھروسا کیا جا سکے۔",
@@ -2793,7 +2793,7 @@
   var de = {
     "a11y.skip":"Zum Inhalt springen","a11y.home":"VALO Tech Startseite","a11y.navPrimary":"Hauptnavigation","a11y.theme":"Erscheinungsbild","a11y.menu":"Menü","a11y.top":"Nach oben","a11y.trustRegion":"Warum Teams der Plattform vertrauen","a11y.ecoHub":"VALO Ökosystem-Hub","a11y.valostackNet":"ValoStack-Netzwerk",
     "phases.outcome":"Ergebnis.",
-    "nav.approach":"Ansatz","nav.workforce":"KI-Team","nav.trust":"Vertrauen","nav.ecosystem":"Ökosystem","nav.pricing":"Preise",
+    "nav.approach":"Ansatz","nav.workforce":"KI-Team","nav.trust":"Vertrauen","nav.ecosystem":"Ökosystem","nav.pricing":"Preise","nav.investor":"Investoren-Login","inv.title":"Investoren-Login","inv.id":"Investoren-ID","inv.pw":"Passwort","inv.submit":"Details öffnen","inv.error":"ID und Passwort stimmen nicht überein.","inv.locked":"Details für Investoren","a11y.close":"Schließen",
     "cta.start":"Das Gespräch beginnen","cta.approach":"Den Ansatz kennenlernen",
     "lang.label":"Sprache","theme.light":"Helles Design","theme.dark":"Dunkles Design","theme.auto":"An System anpassen",
     "brand.slogan":"Vertrauenswürdige KI für die reale Welt.",
@@ -2966,7 +2966,7 @@
   var ja = {
     "a11y.skip":"コンテンツへスキップ","a11y.home":"VALO Tech ホーム","a11y.navPrimary":"メインナビゲーション","a11y.theme":"テーマ","a11y.menu":"メニュー","a11y.top":"トップへ戻る","a11y.trustRegion":"チームがこのプラットフォームを信頼する理由","a11y.ecoHub":"VALO エコシステムハブ","a11y.valostackNet":"ValoStack ネットワーク",
     "phases.outcome":"成果。",
-    "nav.approach":"アプローチ","nav.workforce":"AI チーム","nav.trust":"信頼","nav.ecosystem":"エコシステム","nav.pricing":"料金",
+    "nav.approach":"アプローチ","nav.workforce":"AI チーム","nav.trust":"信頼","nav.ecosystem":"エコシステム","nav.pricing":"料金","nav.investor":"投資家ログイン","inv.title":"投資家ログイン","inv.id":"投資家ID","inv.pw":"パスワード","inv.submit":"詳細を開く","inv.error":"IDまたはパスワードが一致しません。","inv.locked":"詳細は投資家向けです","a11y.close":"閉じる",
     "cta.start":"まずはお話ししましょう","cta.approach":"アプローチを見る",
     "lang.label":"言語","theme.light":"ライトテーマ","theme.dark":"ダークテーマ","theme.auto":"システムに合わせる",
     "brand.slogan":"現実のビジネスに、信頼できる AI を。",
@@ -3139,7 +3139,7 @@
   var tr = {
     "a11y.skip":"İçeriğe geç","a11y.home":"VALO Tech ana sayfa","a11y.navPrimary":"Ana gezinme","a11y.theme":"Tema","a11y.menu":"Menü","a11y.top":"Yukarı dön","a11y.trustRegion":"Ekipler platforma neden güveniyor","a11y.ecoHub":"VALO ekosistem merkezi","a11y.valostackNet":"ValoStack ağı",
     "phases.outcome":"Sonuç.",
-    "nav.approach":"Yaklaşım","nav.workforce":"AI ekibi","nav.trust":"Güven","nav.ecosystem":"Ekosistem","nav.pricing":"Fiyatlandırma",
+    "nav.approach":"Yaklaşım","nav.workforce":"AI ekibi","nav.trust":"Güven","nav.ecosystem":"Ekosistem","nav.pricing":"Fiyatlandırma","nav.investor":"Yatırımcı girişi","inv.title":"Yatırımcı girişi","inv.id":"Yatırımcı kimliği","inv.pw":"Parola","inv.submit":"Ayrıntıyı aç","inv.error":"Kimlik veya parola eşleşmiyor.","inv.locked":"Ayrıntı yatırımcılara açık","a11y.close":"Kapat",
     "cta.start":"Görüşmeyi başlatın","cta.approach":"Yaklaşımı inceleyin",
     "lang.label":"Dil","theme.light":"Açık tema","theme.dark":"Koyu tema","theme.auto":"Sistemle eşleştir",
     "brand.slogan":"Gerçek dünya için güvenilir AI.",
@@ -3312,7 +3312,7 @@
   var ko = {
     "a11y.skip":"본문으로 건너뛰기","a11y.home":"VALO Tech 홈","a11y.navPrimary":"기본 내비게이션","a11y.theme":"테마","a11y.menu":"메뉴","a11y.top":"맨 위로","a11y.trustRegion":"기업이 이 플랫폼을 신뢰하는 이유","a11y.ecoHub":"VALO 에코시스템 허브","a11y.valostackNet":"ValoStack 네트워크",
     "phases.outcome":"성과.",
-    "nav.approach":"접근 방식","nav.workforce":"AI 인력","nav.trust":"신뢰","nav.ecosystem":"에코시스템","nav.pricing":"가격",
+    "nav.approach":"접근 방식","nav.workforce":"AI 인력","nav.trust":"신뢰","nav.ecosystem":"에코시스템","nav.pricing":"가격","nav.investor":"투자자 로그인","inv.title":"투자자 로그인","inv.id":"투자자 ID","inv.pw":"비밀번호","inv.submit":"상세 내용 열기","inv.error":"ID 또는 비밀번호가 일치하지 않습니다.","inv.locked":"상세 내용은 투자자에게 제공됩니다","a11y.close":"닫기",
     "cta.start":"먼저 이야기를 나눠보세요","cta.approach":"접근 방식 살펴보기",
     "lang.label":"언어","theme.light":"라이트 테마","theme.dark":"다크 테마","theme.auto":"시스템 설정 따르기",
     "brand.slogan":"현실 세계를 위한, 믿을 수 있는 AI.",

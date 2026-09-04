@@ -1657,6 +1657,200 @@ html:not(.can-scene) .planet {
   color: var(--accent-bright);
 }
 
+/* =============================================== 10e. The investor gate */
+
+/* Two views of one chapter, as the design has them. The general view is the
+   seven answers and what each one is; the detail beneath each — the three
+   mechanisms that make it true — is the investor view, and it opens behind a
+   sign-in. The two were previously printed together, which is the thing the
+   detail exists to be separate from.
+
+   The gate is a demonstration, not a security control: this is a static site
+   with no server, so the detail ships in the page and anyone reading the
+   source can find it. Nothing may be put here that would matter if read. */
+.cap-detail {
+  display: none;
+}
+
+.investor .cap-detail {
+  display: grid;
+}
+
+.cap-locked {
+  margin: 14px 0 0;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--text-dim);
+}
+
+.investor .cap-locked {
+  display: none;
+}
+
+.nav-investor {
+  font: inherit;
+  color: var(--text-muted);
+  background: none;
+  border: 1px solid rgba(140, 170, 255, 0.28);
+  border-radius: 999px;
+  padding: 6px 14px;
+  cursor: pointer;
+  transition: color 0.2s var(--ease), border-color 0.2s var(--ease);
+}
+
+.nav-investor:hover,
+.nav-investor:focus-visible {
+  color: var(--text);
+  border-color: rgba(168, 186, 255, 0.6);
+}
+
+/* A display declaration overrides the browser's own rule for [hidden], so the
+   dialog painted itself over the page while the DOM reported it hidden. */
+.inv-veil[hidden] {
+  display: none;
+}
+
+.inv-veil {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(4, 5, 12, 0.72);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.inv-dialog {
+  width: min(100%, 420px);
+  padding: 28px;
+  border-radius: 16px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  box-shadow: 0 40px 90px rgba(0, 0, 0, 0.6);
+}
+
+.inv-dialog h2 {
+  font-size: 22px;
+  margin: 0 0 18px;
+}
+
+.inv-dialog label {
+  display: block;
+  margin: 14px 0 6px;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+.inv-dialog input {
+  width: 100%;
+  padding: 11px 13px;
+  border-radius: 9px;
+  background: rgba(8, 10, 20, 0.8);
+  border: 1px solid var(--card-border);
+  color: var(--text);
+  font: inherit;
+}
+
+.inv-dialog input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.inv-error {
+  margin: 0 0 4px;
+  padding: 10px 12px;
+  border-radius: 9px;
+  background: rgba(255, 120, 140, 0.12);
+  border: 1px solid rgba(255, 140, 160, 0.4);
+  color: #ffd9df;
+  font-size: 14px;
+}
+
+.inv-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+/* ================================================ 10f. Annotation chips */
+
+/* The designer's own device: short labels pinned around the world rather than
+   a column of prose beside it. They are placed from the planet's published
+   position, so they follow it wherever its chapter puts it, and they appear
+   only while that chapter holds the frame — a fixed element belonging to a
+   chapter the reader has left is a fixed element over something else. */
+.chips {
+  display: contents;
+}
+
+.chip {
+  position: fixed;
+  z-index: 3;
+  max-width: min(20vw, 250px);
+  padding: 9px 13px;
+  border-radius: 9px;
+  background: rgba(9, 11, 18, 0.86);
+  border: 1px solid rgba(168, 186, 255, 0.28);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.45);
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.45;
+  letter-spacing: 0.04em;
+  color: var(--text);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.5s var(--ease);
+}
+
+/* The connector: the same lit square the hero markers use, so a chip reads as
+   pinned to the world rather than floating over it. */
+.chip::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: -26px;
+  inset-block-start: 13px;
+  width: 12px;
+  height: 12px;
+  border: 1px solid rgba(200, 220, 255, 0.5);
+  background: radial-gradient(circle, rgba(190, 205, 255, 0.9) 0 34%, transparent 36%);
+}
+
+@media (min-width: 950px) {
+  .chips-showing .chip {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .chip:nth-child(1) {
+    inset-inline-start: calc(var(--stone-x, 50vw) - 258px);
+    inset-block-start: calc(var(--stone-y, 50vh) - 232px);
+  }
+
+  .chip:nth-child(2) {
+    inset-inline-start: calc(var(--stone-x, 50vw) - 306px);
+    inset-block-start: calc(var(--stone-y, 50vh) + 26px);
+  }
+
+  .chip:nth-child(3) {
+    inset-inline-start: calc(var(--stone-x, 50vw) - 222px);
+    inset-block-start: calc(var(--stone-y, 50vh) + 236px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chip {
+    transition: none;
+  }
+}
+
 /* ============================================= 10g. The reading side */
 
 /* One rule, and the chapters that follow it. The argument is held to the

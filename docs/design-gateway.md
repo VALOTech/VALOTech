@@ -206,6 +206,52 @@ a ground of its own. The names appear only while the mapping chapter is on
 screen, decided from that chapter's position on every frame rather than from an
 observer, which a jumped scroll can bypass entirely.
 
+### The reading side
+
+One rule, applied to every chapter: **the argument holds one side and the
+planet takes what is left.** Measured against the designer's own build, that
+is what she does everywhere — copy and cards to about fifty-five percent, the
+world clear beside them, never printed under a block of text. Six chapters
+declare `chapter--aside` and are held to `min(58% of the max width, 58vw)` on
+the reading-start side; three-across grids become two inside it, and
+ValoStack's second text column folds into the first, since that column was the
+paragraph sitting on the planet.
+
+The planet's journey follows from the rule rather than being tuned against it:
+one station per chapter, always in the space the argument does not take. The
+two orbiting chapters mirror each other — argument right and planet left, then
+the reverse — and from there every chapter holds its content left, so the
+planet keeps the right and only changes height and size.
+
+Where a chapter puts content on **both** sides, the planet takes the channel
+between them. That is the same rule with a different empty space, and it is
+what the mapping chapter is.
+
+### Annotation chips
+
+Short labels pinned around the world, connected by a small lit square, rather
+than a column of prose beside it — the designer's own device, and the reason
+her planet is never covered. Fifteen of them across five chapters, placed from
+the planet's published position so they follow it, and shown only while their
+chapter holds the frame.
+
+Their text is drawn from strings the dictionary already carried and no chapter
+rendered: the three architecture layers, the phase outcomes, the ownership
+promises. Nothing new had to be written or translated, and content the business
+team had already written stopped being orphaned.
+
+### The investor gate
+
+Two views of the trust chapter, as the design has them. The **general view** is
+the seven answers and what each one is. The **detail view** — the three
+mechanisms under each — opens behind a sign-in reached from the nav.
+
+**It is a demonstration, not a security control.** This is a static site with
+no server: the detail ships inside the page and anyone reading the source can
+find it. Nothing may be put behind it that would matter if read. It exists so
+the two views are separate, as the design intends, and so a real gate has
+somewhere to go when there is a server to hold it.
+
 ### The orbiting chapters
 
 *The problem corporate leaders face today* and *The answer* are the designer's

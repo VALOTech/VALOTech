@@ -249,6 +249,126 @@
     });
   })();
 
+  /* ---------------- the investor gate ---------------- */
+
+  /* A demonstration of the gate the design has, not a security control: this
+     is a static site, the detail ships inside the page, and anyone reading the
+     source can find it. It exists so the two views are separate and so the
+     real gate has somewhere to go when there is a server to hold it. */
+  (function initInvestor() {
+    var DEMO_ID = "investor1";
+    var DEMO_PW = "123456789";
+    var KEY = "valotech-investor";
+
+    var open = doc.getElementById("investorOpen");
+    var veil = doc.getElementById("investorVeil");
+    var form = doc.getElementById("investorForm");
+    if (!open || !veil || !form) return;
+    var idField = doc.getElementById("investorId");
+    var pwField = doc.getElementById("investorPw");
+    var error = doc.getElementById("investorError");
+    var cancel = doc.getElementById("investorCancel");
+    var returnTo = null;
+
+    function unlock() {
+      root.classList.add("investor");
+    }
+
+    try {
+      if (window.sessionStorage.getItem(KEY) === "open") unlock();
+    } catch (e) {}
+
+    function show() {
+      returnTo = doc.activeElement;
+      error.hidden = true;
+      veil.hidden = false;
+      idField.value = "";
+      pwField.value = "";
+      idField.focus();
+    }
+
+    function hide() {
+      veil.hidden = true;
+      if (returnTo && returnTo.focus) returnTo.focus();
+    }
+
+    open.addEventListener("click", show);
+    cancel.addEventListener("click", hide);
+    veil.addEventListener("mousedown", function (e) {
+      if (e.target === veil) hide();
+    });
+    doc.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && !veil.hidden) hide();
+    });
+
+    /* The dialog is modal, so focus stays inside it while it is open. */
+    veil.addEventListener("keydown", function (e) {
+      if (e.key !== "Tab") return;
+      var stops = veil.querySelectorAll("input, button");
+      if (!stops.length) return;
+      var first = stops[0];
+      var last = stops[stops.length - 1];
+      if (e.shiftKey && doc.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && doc.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    });
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (idField.value.trim() !== DEMO_ID || pwField.value !== DEMO_PW) {
+        error.hidden = false;
+        error.focus();
+        return;
+      }
+      error.hidden = true;
+      try {
+        window.sessionStorage.setItem(KEY, "open");
+      } catch (err) {}
+      unlock();
+      hide();
+      var trust = doc.getElementById("trust");
+      if (trust) trust.scrollIntoView({ block: "start" });
+    });
+  })();
+
+  /* ---------------- the annotation chips ---------------- */
+
+  /* A chip belongs to the chapter that owns it and is placed from the planet's
+     position, so it must be shown only while that chapter holds the frame.
+     Read from geometry rather than from an observer: an observer is notified
+     only on threshold crossings, and a jumped scroll crosses none. */
+  (function initChips() {
+    var chapters = [].slice.call(doc.querySelectorAll('.chips')).map(function (el) {
+      return el.closest('section');
+    }).filter(Boolean);
+    if (!chapters.length) return;
+
+    var queued = 0;
+    function update() {
+      queued = 0;
+      for (var i = 0; i < chapters.length; i++) {
+        var box = chapters[i].getBoundingClientRect();
+        var band = window.innerHeight * 0.3;
+        chapters[i].classList.toggle(
+          'chips-showing',
+          box.top < window.innerHeight - band && box.bottom > band
+        );
+      }
+    }
+
+    function queue() {
+      if (!queued) queued = requestAnimationFrame(update);
+    }
+
+    window.addEventListener('scroll', queue, { passive: true });
+    window.addEventListener('resize', queue, { passive: true });
+    update();
+  })();
+
   /* ---------------- the orbiting chapters ---------------- */
 
   /* A chapter that declares `data-orbit` becomes a stage: its argument is

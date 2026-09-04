@@ -526,7 +526,10 @@ export function mount(container, motion, onReady) {
 
   function frame(now) {
     if (stopped) return;
-    const delta = Math.min((now - last) / 1000, 0.1);
+    /* The same ceiling the page's own clock uses. A tighter one here made the
+       world turn slower than the bodies going round it on any machine drawing
+       fewer than ten frames a second — two clocks for one system. */
+    const delta = Math.min((now - last) / 1000, 0.25);
     last = now;
     elapsed += delta;
 
