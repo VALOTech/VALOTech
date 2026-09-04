@@ -534,10 +534,12 @@ export function mount(container, motion, onReady) {
     /* The world turns on its own clock, and turns faster while the reader is
        moving through the page. Neither depends on the other: parked, it still
        rotates; scrolling, it hurries. */
-    selfRotation =
-      (selfRotation +
-        delta * (still ? CALM_ROTATION : SELF_ROTATION * (state.spin || 1))) %
-      (Math.PI * 2);
+    /* Not wrapped at a full turn. The face follows this value, so resetting it
+       to zero drops the target by 2*pi and the world unwinds backwards for a
+       second or two — once every revolution, forever. A float accumulating a
+       tenth of a radian a second stays exact for longer than any session. */
+    selfRotation +=
+      delta * (still ? CALM_ROTATION : SELF_ROTATION * (state.spin || 1));
 
     /* The sun. Its direction arrives from the page, which knows where the
        glow is drawn on screen; the lights follow it so the terminator on the
