@@ -186,10 +186,15 @@ let primed = false;
 
    Two of them carry a name. They are the page's argument in orbit: your people
    and the AI workforce going round the same world. */
+/* The two named bodies keep a vertical semi-axis wider than the planet, so
+   they are never behind it: a satellite that spends half of each revolution
+   occluded is a satellite the reader watching the cover never sees move. The
+   third is deliberately close in and does cross the disc — one body passing
+   behind is what makes the ring read as an orbit rather than a drawn ellipse. */
 const SATELLITES = [
-  { rx: 94, ry: 38, r: 9.0, period: 18, phase: 0.12, fill: 'mars', label: 'YOUR PEOPLE' },
-  { rx: 66, ry: 27, r: 5.0, period: 9.5, phase: 0.62, fill: 'neptune', label: '' },
-  { rx: 88, ry: 35.5, r: 6.5, period: 12.5, phase: 0.38, fill: 'venus', label: 'AI' }
+  { rx: 94, ry: 41, r: 7.0, period: 18, phase: 0.12, fill: 'mars', label: 'YOUR PEOPLE' },
+  { rx: 66, ry: 27, r: 4.0, period: 9.5, phase: 0.62, fill: 'neptune', label: '' },
+  { rx: 88, ry: 39, r: 5.0, period: 12.5, phase: 0.38, fill: 'venus', label: 'AI' }
 ];
 
 const SPHERES = {
@@ -240,7 +245,7 @@ function buildOrbits() {
 
     const body = svg('g', { 'clip-path': 'url(#orbit-clip-' + depth + ')' });
 
-    [[94, 38], [66, 27]].forEach(([rx, ry], n) =>
+    [[94, 41], [66, 27]].forEach(([rx, ry], n) =>
       body.appendChild(
         svg('ellipse', { class: 'orbit-ring orbit-ring--' + n, cx: 100, cy: 50, rx: rx, ry: ry })
       )
@@ -486,6 +491,13 @@ function nameOrbits() {
 
 const live = !!(container && hasWebGL());
 
+/* The satellites are SVG and arithmetic. They were built inside the branch
+   that loads the graphics library only because that is where the code
+   happened to sit, which left a machine without WebGL looking at a still
+   photograph with nothing moving anywhere on it. They belong to every
+   machine. */
+if (container) buildOrbits();
+
 if (live) {
   import('./planet.js')
     .then((module) => {
@@ -493,7 +505,6 @@ if (live) {
         introStartedAt = performance.now();
       });
       root.classList.add('has-scene');
-      buildOrbits();
     })
     .catch(() => {
       /* A failed context or a blocked request leaves the sky, which is a sky
@@ -507,22 +518,11 @@ if (live) {
     },
     { passive: true }
   );
-
-  /* The scene renders every frame regardless, so the placement rides along. */
-  running = true;
-  raf = requestAnimationFrame(place);
-  window.addEventListener('pagehide', () => cancelAnimationFrame(raf));
-} else {
-  /* Nothing is rendering, so a permanent frame loop would move a background
-     image and nothing else. Place on the events that actually change it. */
-  const once = () => {
-    if (raf) return;
-    raf = requestAnimationFrame((now) => {
-      raf = 0;
-      place(now);
-    });
-  };
-  window.addEventListener('scroll', once, { passive: true });
-  window.addEventListener('resize', once, { passive: true });
-  once();
 }
+
+/* One loop, whether or not the graphics library ever arrives: without it the
+   planet is a still image, but the bodies going round it are not. */
+running = true;
+raf = requestAnimationFrame(place);
+window.addEventListener('pagehide', () => cancelAnimationFrame(raf));
+

@@ -16,12 +16,12 @@ import * as THREE from './three.module.min.js';
 
 const PLANET_RADIUS = 1.32;
 /* The reference turns at 1.5 deg/s — a four-minute revolution, which measures
-   as motion and reads as a photograph. Even 3.2 asks the reader to watch for
-   several seconds before they are sure it is turning at all, which is the same
-   as not turning. At 5 the world is plainly alive on a glance, and a
-   seventy-second revolution is still far too slow to pull the eye off the
-   argument. */
-const SELF_ROTATION = THREE.MathUtils.degToRad(5);
+   as motion and reads as a photograph. 3.2 and then 5 were both still slow
+   enough that a reader glancing at the cover reported a world that does not
+   turn, twice. At 7.5 a feature crosses a tenth of the disc in a second: alive
+   on a glance, and a forty-eight second revolution is still far too slow to
+   pull the eye off the argument. */
+const SELF_ROTATION = THREE.MathUtils.degToRad(7.5);
 
 /* Under reduced motion the world keeps turning, at a sixth of the speed: a
    six-minute revolution, slow enough that no frame-to-frame change is visible
@@ -34,6 +34,11 @@ const CALM_ROTATION = THREE.MathUtils.degToRad(0.9);
    axis leans, which is why the poles sit off-vertical and the terminator
    crosses them at an angle instead of running straight down the disc. */
 const AXIAL_TILT = THREE.MathUtils.degToRad(23.44);
+
+/* Chosen so that at sixty frames a second the face closes about 3.5% of its
+   remaining travel per frame — the follow the scene was tuned against — and
+   closes the same amount per second at any other frame rate. */
+const FACE_EASE = 0.468;
 
 /* Earth at true proportion against a 6371 km mean radius: the 15 km cloud
    base and the 100 km Karman line. The 0.335% polar flattening is below a
@@ -557,9 +562,16 @@ export function mount(container, motion, onReady) {
     if (still) clouds.rotation.y = 0.035;
     else clouds.rotation.y += delta * 0.006;
 
-    /* The pointer nudges the face a little; the spin above does the turning. */
+    /* The pointer nudges the face a little; the spin above does the turning.
+
+       The follow is a time constant, not a per-frame fraction. A per-frame
+       0.035 closes the gap thirty-five times a second on a machine drawing
+       sixty and four times a second on one drawing six, so the surface
+       actually turned at a fraction of its stated rate on slower hardware —
+       and a reader on such a machine sees a world that does not move. */
     const targetY = (still ? 0 : state.pointerX * 0.18) + selfRotation;
-    group.rotation.y += (targetY - group.rotation.y) * 0.035;
+    const follow = 1 - Math.exp(-delta / FACE_EASE);
+    group.rotation.y += (targetY - group.rotation.y) * follow;
     axis.rotation.x = still ? -0.06 : -0.06 + Math.sin(elapsed * 0.28) * 0.018;
     axis.rotation.z = still ? AXIAL_TILT : AXIAL_TILT + Math.sin(elapsed * 0.19) * 0.012;
     axis.scale.setScalar(state.visualScale);

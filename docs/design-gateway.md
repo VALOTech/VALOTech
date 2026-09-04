@@ -107,13 +107,28 @@ as written — full size at the top, small and to the right through the argument
 back to centre at *How your people fit in*, where the reader is being shown two
 columns that belong on either side of it, and away again for the close.
 
-Self-rotation is 3.2° per second — just under two minutes a revolution. The
+Self-rotation is 7.5° per second — a forty-eight second revolution. The
 reference turns at 1.5°, which measures as motion and reads as a photograph;
-at 3.2 the planet is unmistakably alive on a first look and still far too slow
-to pull the eye off the argument. It turns about its own axis and the axis
-leans by Earth's 23.44°, which is two groups rather than one: the outer holds
-the obliquity and never spins, the inner spins and never leans. Collapsing them
-wobbles the pole around the sky once a revolution.
+3.2 and then 5 were both still slow enough to be reported as a world that does
+not turn. It turns about its own axis and the axis leans by Earth's 23.44°,
+which is two groups rather than one: the outer holds the obliquity and never
+spins, the inner spins and never leans. Collapsing them wobbles the pole around
+the sky once a revolution.
+
+The face follows its target on a **time constant, not a per-frame fraction**.
+A per-frame follow closes the same share of the remaining travel thirty-five
+times a second on a machine drawing sixty and four times a second on one
+drawing six — so the surface turned at a fraction of its stated rate on slower
+hardware, and a reader on such a machine saw a world that did not move. The
+same correction applies to the placement easing and the scroll boost.
+
+The satellites' orbit is **sized from the planet rather than from the
+viewport**: the two named bodies keep a vertical semi-axis wider than the drawn
+disc, so they are never behind it. Sized from the viewport, their semi-axis
+came out smaller than the planet's radius and both spent half of every
+revolution occluded — which is what "the satellites do not orbit" looks like to
+someone watching the cover. The third is deliberately close in and does cross;
+one body passing behind is what makes the ring read as an orbit.
 
 The spin runs on its own clock, so the world turns whether or not anyone
 scrolls, and it turns faster while someone does — scroll speed, measured as

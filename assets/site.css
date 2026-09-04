@@ -765,9 +765,18 @@ html:not(.can-scene) .planet {
   position: absolute;
   top: 0;
   left: 0;
-  width: min(68vw, 1100px);
-  height: min(34vw, 540px);
-  margin: calc(min(34vw, 540px) / -2) 0 0 calc(min(68vw, 1100px) / -2);
+  /* Sized from the planet, not from the viewport, so the clearance is a
+     property of the geometry rather than a coincidence of one screen. The
+     drawn sphere is 0.37 of its box across the radius; the two named
+     satellites need a vertical semi-axis larger than that or they spend half
+     of every revolution behind the disc — which is what "the satellites do
+     not orbit" looks like to someone watching the cover. */
+  --orbit-r: calc(min(42vw, 620px) * 0.37);
+  --orbit-w: calc(var(--orbit-r) * 5.6);
+  --orbit-h: calc(var(--orbit-r) * 3.4);
+  width: var(--orbit-w);
+  height: var(--orbit-h);
+  margin: calc(var(--orbit-h) / -2) 0 0 calc(var(--orbit-w) / -2);
   overflow: visible;
   pointer-events: none;
   transform: translate(var(--stone-x, 50vw), var(--stone-y, 50vh))
@@ -865,9 +874,8 @@ html:not(.can-scene) .planet {
   /* The planet is already behind the copy at this width; a wide orbit on top
      of it would be two things competing for the same space. */
   .orbits {
-    width: min(96vw, 640px);
-    height: min(48vw, 320px);
-    margin: calc(min(48vw, 320px) / -2) 0 0 calc(min(96vw, 640px) / -2);
+    --orbit-w: calc(var(--orbit-r) * 4.6);
+    --orbit-h: calc(var(--orbit-r) * 3.0);
   }
 
   .has-scene .orbits {
