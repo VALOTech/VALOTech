@@ -185,8 +185,40 @@ the cover carries a bare moon and the ring arrives with the atmosphere.
 
 Two of the three are named — *your people* and *AI*, the page's argument in
 orbit — and only on the near half. A label that survived the occlusion reads as
-a clipped word rather than as something passing behind. The names appear only
-while the mapping chapter is on screen.
+a clipped word rather than as something passing behind. Each name sits on a
+chip rather than bare on the sky, because a label crossing a lit surface needs
+a ground of its own. The names appear only while the mapping chapter is on
+screen, decided from that chapter's position on every frame rather than from an
+observer, which a jumped scroll can bypass entirely.
+
+### The problem orbit
+
+*The problem corporate leaders face today* is the designer's own composition
+and the one her note was about: the three problems travel **around** the
+world rather than sitting in a list beside it. Above 950px the chapter is a
+340vh stage with its argument pinned to one side, and each card rides an
+ellipse about the planet — `90° + i·120° − progress·240°`, two thirds of a
+revolution across the chapter, so every card passes behind the world once.
+
+Depth drives everything else: `depth = (sin θ + 1) / 2` gives scale
+`0.74 + 0.26·depth`, opacity `0.48 + 0.52·depth` and blur `(1 − depth)·1.2px`.
+
+**A far card cannot be put behind the planet with z-index.** The planet lives
+in a fixed layer at the bottom of the page's stacking order and every chapter
+sits above it, so stacking can only ever put a card in front. A rear card is
+masked instead: a radial-gradient cut-out the size of the drawn disc, at the
+disc's position expressed in the card's own coordinates — offset and radius
+both divided by the card's scale, because the mask is applied before it.
+
+The ellipse is **bounded by the frame, not by a constant**: its horizontal
+radius is the smaller of the design value, the room between the planet and
+the pinned column, and the room between the planet and the window edge. A
+card can therefore never land on the argument or leave the page, at any
+viewport, without a breakpoint being tuned for it.
+
+Below 950px, and under reduced motion at any width, the chapter is the plain
+stacked list it is underneath — same cards, same order, staggered indents,
+marker squares back.
 
 ### The mapping stage
 

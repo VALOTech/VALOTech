@@ -245,6 +245,122 @@
     });
   })();
 
+  /* ---------------- the problem orbit ---------------- */
+  (function initProblemOrbit() {
+    var section = doc.getElementById("problem");
+    var nodes = section
+      ? [].slice.call(section.querySelectorAll(".orbit-node"))
+      : [];
+    if (!nodes.length) return;
+    var wide = window.matchMedia("(min-width: 950px)");
+
+    /* The ellipse the satellites already travel — but never wider than the
+       frame allows. The orbit is bounded on the left by the pinned argument
+       and on the right by the edge of the window, both measured rather than
+       assumed, so a card cannot land on the reading column or leave the page
+       at any viewport. */
+    var EDGE = 24;
+    var CLEAR = 28;
+    function radii(sx, headRight, cardHalf) {
+      var wide = Math.min(window.innerWidth * 0.54, 780) * 0.4;
+      var room = Math.min(
+        sx - (headRight + CLEAR) - cardHalf,
+        window.innerWidth - EDGE - cardHalf - sx
+      );
+      var x = Math.max(140, Math.min(wide, room));
+      return { x: x, y: Math.min(window.innerWidth * 0.34, 540) * 0.35 };
+    }
+
+    /* Half the drawn disc, which is inset within its own box and scaled by
+       the scene. The cutout has to match what the reader sees, not the box. */
+    function rockRadius() {
+      var box = Math.min(window.innerWidth * 0.42, 620);
+      var scale =
+        parseFloat(
+          getComputedStyle(root).getPropertyValue("--stone-scale")
+        ) || 1;
+      return box * 0.37 * scale;
+    }
+
+    function readStone(axis, fallback) {
+      var v = parseFloat(getComputedStyle(root).getPropertyValue("--stone-" + axis));
+      return isNaN(v) ? fallback : v;
+    }
+
+    function clear() {
+      nodes.forEach(function (n) {
+        n.style.cssText = "";
+        n.removeAttribute("data-depth");
+      });
+    }
+
+    var queued = 0;
+    function update() {
+      queued = 0;
+      if (reduce || !wide.matches) {
+        clear();
+        return;
+      }
+      var rect = section.getBoundingClientRect();
+      /* Only while the chapter holds the frame. Outside it the cards are
+         fixed-position elements with nothing to belong to. */
+      var pinned = rect.top <= 0 && rect.bottom >= window.innerHeight;
+      var travel = Math.max(1, rect.height - window.innerHeight);
+      var progress = Math.min(1, Math.max(0, -rect.top / travel));
+      var rock = rockRadius();
+      var sx = readStone("x", window.innerWidth / 2);
+      var sy = readStone("y", window.innerHeight / 2);
+      var head = section.querySelector(".chapter-head");
+      var headRight = head ? head.getBoundingClientRect().right : 0;
+      var r = radii(sx, headRight, nodes[0].offsetWidth / 2);
+
+      for (var i = 0; i < nodes.length; i++) {
+        var node = nodes[i];
+        /* Evenly spaced, turning two thirds of a revolution across the
+           chapter: enough for every card to pass behind the world once. */
+        var radians = ((90 + i * 120 - progress * 240) * Math.PI) / 180;
+        var depth = (Math.sin(radians) + 1) / 2;
+        var scale = 0.74 + depth * 0.26;
+        var dx = Math.cos(radians) * r.x;
+        var dy = Math.sin(radians) * r.y;
+
+        /* Placed by its own top-left, not by a percentage translate. A
+           percentage translate composed with a scale resolves about the
+           transform origin, which moves the drawn centre by half the box —
+           measured, after the card landed two hundred pixels off its mark. */
+        var w = node.offsetWidth;
+        var h = node.offsetHeight;
+        node.style.left = (sx + dx - w / 2).toFixed(1) + "px";
+        node.style.top = (sy + dy - h / 2).toFixed(1) + "px";
+        node.style.transform = "scale(" + scale.toFixed(3) + ")";
+        node.style.opacity = pinned ? (0.48 + depth * 0.52).toFixed(3) : "0";
+        /* Outside its own chapter the card is a fixed element sitting over
+           whatever the reader is looking at. Transparent is not enough: it
+           still occupies the frame and still costs a paint. */
+        node.style.visibility = pinned ? "visible" : "hidden";
+        node.style.filter = "blur(" + ((1 - depth) * 1.2).toFixed(2) + "px)";
+        node.style.zIndex = String(2 + Math.round(depth * 4));
+        node.setAttribute("data-depth", depth < 0.5 ? "rear" : "front");
+        /* Where the planet sits inside this card, in the card's own
+           coordinates: the card is scaled, so the offset and the radius are
+           divided by that scale to keep the cutout the size of the disc. */
+        node.style.setProperty("--rock-x", "calc(50% - " + (dx / scale).toFixed(2) + "px)");
+        node.style.setProperty("--rock-y", "calc(50% - " + (dy / scale).toFixed(2) + "px)");
+        node.style.setProperty("--rock-rx", (rock / scale).toFixed(2) + "px");
+        node.style.setProperty("--rock-ry", (rock / scale).toFixed(2) + "px");
+      }
+    }
+
+    function queue() {
+      if (!queued) queued = requestAnimationFrame(update);
+    }
+
+    window.addEventListener("scroll", queue, { passive: true });
+    window.addEventListener("resize", queue, { passive: true });
+    if (wide.addEventListener) wide.addEventListener("change", queue);
+    update();
+  })();
+
   /* ---------------- the mapping stage ---------------- */
   (function initFitStage() {
     var section = doc.getElementById("people");

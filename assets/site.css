@@ -817,9 +817,21 @@ html:not(.can-scene) .planet {
   stroke-width: 0.06;
 }
 
+.orbit-chip {
+  fill: rgba(9, 11, 18, 0.86);
+  stroke: rgba(168, 186, 255, 0.34);
+  stroke-width: 0.16px;
+  opacity: 0;
+  transition: opacity 420ms var(--ease);
+}
+
+.orbits-named .orbit-chip {
+  opacity: 1;
+}
+
 .orbit-label {
   font-family: var(--mono);
-  font-size: 3.1px;
+  font-size: 3.4px;
   font-weight: 500;
   letter-spacing: 0.14em;
   fill: rgba(238, 242, 255, 0.94);
@@ -1597,6 +1609,147 @@ html:not(.can-scene) .planet {
   font-family: var(--mono);
   font-size: 13px;
   color: var(--accent-bright);
+}
+
+/* ================================================== 10h. The problem orbit */
+
+/* The three problems travel around the world rather than sitting in a list
+   beside it. This is the designer's own composition: the chapter is a tall
+   stage with its argument pinned to one side, and each card rides an ellipse
+   about the planet, dimming and shrinking as it goes behind and coming
+   forward as it returns.
+
+   Depth cannot be done with z-index here. The planet lives in a fixed layer
+   at the bottom of the page's stacking order and the chapters sit above it,
+   so a card can never be *under* the planet by stacking alone. A card on the
+   far side is masked instead: an ellipse the size of the drawn disc, at the
+   disc's position in the card's own coordinates, is cut out of it. */
+@media (min-width: 950px) {
+  #problem {
+    min-height: 340vh;
+    padding: 0;
+  }
+
+  #problem > .wrap {
+    position: sticky;
+    top: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  #problem .chapter-head {
+    max-width: min(26vw, 320px);
+    margin-bottom: 0;
+  }
+
+  /* The list box stops laying anything out; the script places each node
+     against the planet instead. */
+  #problem .orbit-nodes {
+    display: block;
+    gap: 0;
+  }
+
+  #problem .orbit-node {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 3;
+    display: block;
+    width: min(16vw, 220px);
+    opacity: 0;
+    transform-origin: center;
+    will-change: left, top, transform, opacity, filter;
+  }
+
+  /* The stacked list staggers its rows by a percentage of the column. Once a
+     card is fixed that percentage resolves against the viewport instead, which
+     silently added two hundred pixels to every placement the script made.
+     Kept as its own rule: folding these selectors into the block above raises
+     its specificity and the reduced-motion override then loses to it. */
+  #problem .orbit-node:nth-child(2),
+  #problem .orbit-node:nth-child(3) {
+    margin-inline-start: 0;
+  }
+
+  /* The marker square belongs to the stacked list, where it sits in a column
+     beside the text. On the orbit the card is the whole object. */
+  #problem .orbit-node .orbit-box {
+    display: none;
+  }
+
+  #problem .orbit-card {
+    max-width: none;
+  }
+
+  #problem .orbit-node[data-depth='rear'] {
+    -webkit-mask-image: radial-gradient(
+      ellipse var(--rock-rx) var(--rock-ry) at var(--rock-x) var(--rock-y),
+      transparent 0,
+      transparent calc(100% - 3px),
+      rgba(0, 0, 0, 0.45) calc(100% - 1.5px),
+      #000 100%
+    );
+    mask-image: radial-gradient(
+      ellipse var(--rock-rx) var(--rock-ry) at var(--rock-x) var(--rock-y),
+      transparent 0,
+      transparent calc(100% - 3px),
+      rgba(0, 0, 0, 0.45) calc(100% - 1.5px),
+      #000 100%
+    );
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+  }
+
+  /* The page-wide reveal stands down: the orbit owns the entrance. */
+  .js #problem .orbit-nodes .reveal {
+    transform: none;
+    filter: none;
+  }
+}
+
+@media (min-width: 950px) and (prefers-reduced-motion: reduce) {
+  /* Without motion the chapter is the list it is underneath. */
+  #problem {
+    min-height: auto;
+    padding: clamp(96px, 13vh, 168px) 0;
+  }
+
+  #problem > .wrap {
+    position: static;
+    min-height: 0;
+    display: block;
+  }
+
+  #problem .chapter-head {
+    max-width: min(100%, 780px);
+    margin-bottom: 48px;
+  }
+
+  #problem .orbit-nodes {
+    display: grid;
+    gap: clamp(28px, 4vh, 52px);
+  }
+
+  #problem .orbit-node {
+    position: static;
+    display: flex;
+    width: auto;
+    opacity: 1;
+  }
+
+  #problem .orbit-node:nth-child(2) {
+    margin-inline-start: 14%;
+  }
+
+  #problem .orbit-node:nth-child(3) {
+    margin-inline-start: 5%;
+  }
+
+  #problem .orbit-node .orbit-box {
+    display: block;
+  }
 }
 
 /* ====================================================== 10i. Ecosystem */

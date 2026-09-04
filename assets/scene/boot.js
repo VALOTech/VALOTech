@@ -117,20 +117,25 @@ const FRONT_RATIO = 0.71;
    part worth watching. */
 const JOURNEY = [
   { at: 0.0, x: 50, y: 50, scale: 1.0 },
-  { at: 0.06, x: 50, y: 50, scale: 1.0 },
+  { at: 0.05, x: 50, y: 50, scale: 1.0 },
+  /* Right of centre and parked, for as long as the problem chapter runs: the
+     three problems ride an ellipse about the planet there, and the argument
+     is pinned to the left of it. */
+  { at: 0.10, x: 61, y: 52, scale: 0.92 },
+  { at: 0.25, x: 61, y: 52, scale: 0.92 },
   /* Out: the planet swings under the sun and up its right side, shrinking as
      it goes. Each leg is a constant-radius arc, so it reads as travel rather
      than as falling away. */
-  { at: 0.22, x: 70, y: 62, scale: 0.62 },
-  { at: 0.32, x: 82, y: 52, scale: 0.55 },
-  { at: 0.40, x: 78, y: 46, scale: 0.64 },
+  { at: 0.38, x: 74, y: 60, scale: 0.62 },
+  { at: 0.47, x: 82, y: 52, scale: 0.55 },
+  { at: 0.54, x: 78, y: 46, scale: 0.64 },
   /* Home: one long sweep of about ninety degrees, back down and across, taking
      nearly a fifth of the page on its own. It lands where the mapping chapter
      opens, because that chapter is a three-column composition and the planet
      is its middle column — your people on one side, the AI workforce on the
      other, one world between them. */
-  { at: 0.56, x: 50, y: 56, scale: 0.78 },
-  { at: 0.86, x: 50, y: 56, scale: 0.78 },
+  { at: 0.66, x: 50, y: 56, scale: 0.78 },
+  { at: 0.90, x: 50, y: 56, scale: 0.78 },
   /* Away, once the mapping is read. The close belongs to the copy. */
   { at: 1.0, x: 74, y: 44, scale: 0.66 }
 ];
@@ -178,9 +183,9 @@ let primed = false;
    Two of them carry a name. They are the page's argument in orbit: your people
    and the AI workforce going round the same world. */
 const SATELLITES = [
-  { rx: 94, ry: 38, r: 4.0, period: 18, phase: 0.12, fill: 'mars', label: 'YOUR PEOPLE' },
-  { rx: 66, ry: 27, r: 2.9, period: 9.5, phase: 0.62, fill: 'neptune', label: '' },
-  { rx: 88, ry: 35.5, r: 3.4, period: 12.5, phase: 0.38, fill: 'venus', label: 'AI' }
+  { rx: 94, ry: 38, r: 9.0, period: 18, phase: 0.12, fill: 'mars', label: 'YOUR PEOPLE' },
+  { rx: 66, ry: 27, r: 5.0, period: 9.5, phase: 0.62, fill: 'neptune', label: '' },
+  { rx: 88, ry: 35.5, r: 6.5, period: 12.5, phase: 0.38, fill: 'venus', label: 'AI' }
 ];
 
 const SPHERES = {
@@ -250,7 +255,28 @@ function buildOrbits() {
          world, and a label that survived the occlusion would read as a clipped
          word rather than as something passing behind. */
       if (sat.label && depth === 'front') {
-        const text = svg('text', { class: 'orbit-label', 'text-anchor': 'middle', dy: -sat.r - 2.6 });
+        /* A chip rather than bare type: the label sits over whatever the
+           orbit is passing, and a stroke alone leaves it fighting the
+           surface behind it. The mono face makes the width predictable
+           enough to size the plate from the character count. */
+        const size = 3.4;
+        const w = sat.label.length * size * 0.72 + size * 1.4;
+        const y = -sat.r - size * 2.5;
+        g.appendChild(
+          svg('rect', {
+            class: 'orbit-chip',
+            x: -w / 2,
+            y: y,
+            width: w,
+            height: size * 2,
+            rx: size * 0.6
+          })
+        );
+        const text = svg('text', {
+          class: 'orbit-label',
+          'text-anchor': 'middle',
+          y: y + size * 1.35
+        });
         text.textContent = sat.label;
         g.appendChild(text);
       }
@@ -400,6 +426,7 @@ function place(now) {
        a pose instead. */
     if (!still) orbitClock += gap * motion.spin;
     moveOrbits(still ? 4 : orbitClock);
+    nameOrbits();
   }
 
   /* The light is derived from where the disc was drawn, never set beside it,
@@ -423,14 +450,23 @@ function place(now) {
 }
 
 /* The two named satellites only introduce themselves where the page is
-   talking about the people they stand for. */
-function watchNamedOrbit() {
-  const people = document.getElementById('people');
-  if (!people || !('IntersectionObserver' in window)) return;
-  new IntersectionObserver(
-    (entries) => root.classList.toggle('orbits-named', entries[0].isIntersecting),
-    { rootMargin: '-25% 0px -25% 0px' }
-  ).observe(people);
+   talking about the people they stand for.
+
+   Read from the chapter's position on every frame rather than from an
+   observer. An observer is notified only when a ratio crosses a threshold, so
+   a jump — an anchor, the End key, a dragged scrollbar — can land inside the
+   chapter without one, and the names then never appear for that reader. */
+let namedSection = null;
+
+function nameOrbits() {
+  if (!namedSection) namedSection = document.getElementById('people');
+  if (!namedSection) return;
+  const box = namedSection.getBoundingClientRect();
+  const band = window.innerHeight * 0.25;
+  root.classList.toggle(
+    'orbits-named',
+    box.top < window.innerHeight - band && box.bottom > band
+  );
 }
 
 /* The placement runs whether or not the scene does. Without WebGL the planet
@@ -448,7 +484,6 @@ if (live) {
       });
       root.classList.add('has-scene');
       buildOrbits();
-      watchNamedOrbit();
     })
     .catch(() => {
       /* A failed context or a blocked request leaves the sky, which is a sky
