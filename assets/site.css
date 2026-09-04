@@ -967,19 +967,27 @@ html:not(.can-scene) .planet {
     pointer-events: auto;
   }
 
+  /* The markers hold the band between the copy and the planet's limb. They
+     used to be offset outward from the planet's centre, which put them off the
+     page entirely once the cover's world moved right to be cropped by the
+     edge. Offsetting inward keeps them in the one lane that is always clear. */
+  .hero-aside .marker {
+    width: min(22vw, 320px);
+  }
+
   .hero-aside .marker:nth-child(1) {
-    inset-inline-start: calc(var(--hero-x, 48vw) + 12vw);
-    inset-block-start: calc(var(--hero-y, 52vh) - 34vh);
+    inset-inline-start: calc(var(--hero-x, 48vw) - 43vw);
+    inset-block-start: calc(var(--hero-y, 52vh) - 33vh);
   }
 
   .hero-aside .marker:nth-child(2) {
-    inset-inline-start: calc(var(--hero-x, 48vw) + 19vw);
-    inset-block-start: calc(var(--hero-y, 52vh) - 9vh);
+    inset-inline-start: calc(var(--hero-x, 48vw) - 39vw);
+    inset-block-start: calc(var(--hero-y, 52vh) - 7vh);
   }
 
   .hero-aside .marker:nth-child(3) {
-    inset-inline-start: calc(var(--hero-x, 48vw) + 10vw);
-    inset-block-start: calc(var(--hero-y, 52vh) + 14vh);
+    inset-inline-start: calc(var(--hero-x, 48vw) - 45vw);
+    inset-block-start: calc(var(--hero-y, 52vh) + 17vh);
   }
 
   /* The connector: an outlined square with a lit core, sitting off the card's
@@ -1076,6 +1084,30 @@ html:not(.can-scene) .planet {
    the right of the frame. It is a gradient rather than a panel, so the sky
    is never cut by an edge. */
 .chapter--rails {
+  background: linear-gradient(
+    90deg,
+    rgba(8, 10, 18, 0.95) 0%,
+    rgba(8, 10, 18, 0.86) 46%,
+    rgba(8, 10, 18, 0.55) 66%,
+    rgba(8, 10, 18, 0.18) 82%,
+    transparent 92%
+  );
+}
+
+/* An orbiting chapter's ground is dark under its argument and clear where the
+   planet stands, so the two swap when the chapter does. */
+.chapter--rails[data-orbit='left'] {
+  background: linear-gradient(
+    270deg,
+    rgba(8, 10, 18, 0.95) 0%,
+    rgba(8, 10, 18, 0.86) 46%,
+    rgba(8, 10, 18, 0.55) 66%,
+    rgba(8, 10, 18, 0.18) 82%,
+    transparent 92%
+  );
+}
+
+[dir='rtl'] .chapter--rails[data-orbit='left'] {
   background: linear-gradient(
     90deg,
     rgba(8, 10, 18, 0.95) 0%,
@@ -1554,6 +1586,12 @@ html:not(.can-scene) .planet {
     padding: 0;
   }
 
+  /* The mapping chapter's own heading has to clear the channel too, or the
+     composition it introduces is the first thing it covers. */
+  #people .chapter-head {
+    max-width: min(38vw, 520px);
+  }
+
   #people > .wrap {
     position: sticky;
     top: 0;
@@ -1619,6 +1657,45 @@ html:not(.can-scene) .planet {
   color: var(--accent-bright);
 }
 
+/* ============================================= 10g. The reading side */
+
+/* One rule, and the chapters that follow it. The argument is held to the
+   reading side and never spans the frame, so the planet always has somewhere
+   to stand and is never behind a block of text. Where a chapter puts content
+   on both sides — the mapping chapter — the planet takes the channel between
+   them instead, which is the same rule with a different empty space.
+
+   Below the breakpoint there is no room for two things side by side, so the
+   content takes the width back and the planet goes behind it. */
+@media (min-width: 950px) {
+  .chapter--aside > .wrap {
+    max-width: min(calc(var(--maxw) * 0.58), 58vw);
+    margin-inline-start: max(0px, calc((100vw - var(--maxw)) / 2));
+    margin-inline-end: auto;
+  }
+
+  /* Three across inside 58% is a column of about two hundred pixels, which is
+     narrower than these cards read at. Two across, and one more row. */
+  .chapter--aside .depts,
+  .chapter--aside .customs,
+  .chapter--aside .eco-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .chapter--aside .caps {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* ValoStack's two text columns are what put a paragraph on top of the
+     planet. One column, and the second becomes annotation. */
+  .chapter--aside .orbit {
+    grid-template-columns: minmax(0, 1fr);
+    /* The column gap was sized for two columns side by side; stacked, it
+       leaves a hole between the lede and the body it introduces. */
+    gap: 28px;
+  }
+}
+
 /* ================================================== 10h. The problem orbit */
 
 /* The three problems travel around the world rather than sitting in a list
@@ -1650,6 +1727,13 @@ html:not(.can-scene) .planet {
   [data-orbit] .chapter-head {
     max-width: min(26vw, 320px);
     margin-bottom: 0;
+  }
+
+  /* The argument takes the side the planet is not on. The two orbiting
+     chapters mirror each other, so the pair reads as a composition rather
+     than as the same slide twice. */
+  [data-orbit='left'] .chapter-head {
+    margin-inline-start: auto;
   }
 
   /* The list box stops laying anything out; the script places each node
@@ -1909,7 +1993,30 @@ html:not(.can-scene) .planet {
   z-index: 2;
   padding: clamp(80px, 12vh, 140px) 0 48px;
   border-top: 1px solid rgba(140, 170, 255, 0.12);
-  background: linear-gradient(180deg, rgba(7, 7, 26, 0) 0%, rgba(7, 7, 26, 0.9) 60%);
+  /* Dark under the copy, clear where the world stands. A flat wash across the
+     whole footer sank the planet into the ground instead of letting the page
+     close on it. */
+  background:
+    linear-gradient(180deg, rgba(7, 7, 26, 0) 0%, rgba(7, 7, 26, 0.72) 55%),
+    linear-gradient(
+      90deg,
+      rgba(7, 7, 26, 0.82) 0%,
+      rgba(7, 7, 26, 0.62) 38%,
+      rgba(7, 7, 26, 0.12) 62%,
+      transparent 78%
+    );
+}
+
+[dir='rtl'] .footer {
+  background:
+    linear-gradient(180deg, rgba(7, 7, 26, 0) 0%, rgba(7, 7, 26, 0.72) 55%),
+    linear-gradient(
+      270deg,
+      rgba(7, 7, 26, 0.82) 0%,
+      rgba(7, 7, 26, 0.62) 38%,
+      rgba(7, 7, 26, 0.12) 62%,
+      transparent 78%
+    );
 }
 
 .footer-grid {

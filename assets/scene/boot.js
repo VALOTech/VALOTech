@@ -119,29 +119,33 @@ const FRONT_RATIO = 0.71;
    needs the frame. Coming home takes a third of the page, because that is the
    part worth watching. */
 const JOURNEY = [
-  { at: 0.0, x: 50, y: 50, scale: 1.0 },
-  { at: 0.04, x: 50, y: 50, scale: 1.0 },
-  /* Right of centre and parked for as long as the two orbiting chapters run:
-     their cards ride an ellipse about the planet there, and each chapter's
-     argument is pinned to the left of it. The planet holds still; everything
-     around it does not. */
-  { at: 0.09, x: 61, y: 52, scale: 0.92 },
-  { at: 0.40, x: 61, y: 52, scale: 0.92 },
-  /* Out: the planet swings under the sun and up its right side, shrinking as
-     it goes. Each leg is a constant-radius arc, so it reads as travel rather
-     than as falling away. */
-  { at: 0.48, x: 76, y: 60, scale: 0.62 },
-  { at: 0.55, x: 84, y: 50, scale: 0.55 },
-  { at: 0.61, x: 78, y: 44, scale: 0.64 },
-  /* Home: one long sweep of about ninety degrees, back down and across, taking
-     nearly a fifth of the page on its own. It lands where the mapping chapter
-     opens, because that chapter is a three-column composition and the planet
-     is its middle column — your people on one side, the AI workforce on the
-     other, one world between them. */
-  { at: 0.70, x: 50, y: 56, scale: 0.78 },
-  { at: 0.91, x: 50, y: 56, scale: 0.78 },
-  /* Away, once the mapping is read. The close belongs to the copy. */
-  { at: 1.0, x: 74, y: 44, scale: 0.66 }
+  /* One rule, applied chapter by chapter: the planet takes the space the
+     argument does not. Every chapter's content is held to one side, so there
+     is always such a space; where the argument sits on both sides, the planet
+     takes the channel between them. */
+  /* The cover: cropped by the right edge rather than sitting inside it. */
+  { at: 0.0, x: 86, y: 48, scale: 1.15 },
+  { at: 0.04, x: 86, y: 48, scale: 1.15 },
+  /* The problem: argument pinned right, planet and its orbiting cards left. */
+  { at: 0.09, x: 30, y: 54, scale: 0.95 },
+  { at: 0.21, x: 30, y: 54, scale: 0.95 },
+  /* The answer: the mirror of it, so the two orbiting chapters read as a pair. */
+  { at: 0.27, x: 70, y: 54, scale: 0.95 },
+  { at: 0.39, x: 70, y: 54, scale: 0.95 },
+  /* From here every chapter holds its content to the left, so the planet keeps
+     the right and simply changes height and size as the story does. */
+  { at: 0.45, x: 76, y: 52, scale: 0.86 },
+  { at: 0.52, x: 78, y: 44, scale: 0.80 },
+  { at: 0.575, x: 76, y: 50, scale: 0.84 },
+  { at: 0.64, x: 78, y: 44, scale: 0.78 },
+  /* Home, and centred: the mapping chapter is a three-column composition and
+     the planet is its middle column. */
+  { at: 0.72, x: 50, y: 56, scale: 0.86 },
+  { at: 0.885, x: 50, y: 56, scale: 0.86 },
+  /* The close, on the right and forward of the ground rather than sunk in it.
+     Settled before the chapter arrives, not while the reader is reading it. */
+  { at: 0.915, x: 78, y: 46, scale: 0.80 },
+  { at: 1.0, x: 76, y: 46, scale: 0.86 }
 ];
 
 /* Narrower on a phone: the planet sits behind the copy there, so a wide swing
@@ -191,10 +195,14 @@ let primed = false;
    occluded is a satellite the reader watching the cover never sees move. The
    third is deliberately close in and does cross the disc — one body passing
    behind is what makes the ring read as an orbit rather than a drawn ellipse. */
+/* Periods on the same order as the world's own turn — it takes forty-eight
+   seconds, and these take forty to fifty-six. A satellite whipping round in
+   nine seconds beside a world that takes forty-eight reads as two unrelated
+   animations rather than as one system. */
 const SATELLITES = [
-  { rx: 94, ry: 41, r: 7.0, period: 18, phase: 0.12, fill: 'mars', label: 'YOUR PEOPLE' },
-  { rx: 66, ry: 27, r: 4.0, period: 9.5, phase: 0.62, fill: 'neptune', label: '' },
-  { rx: 88, ry: 39, r: 5.0, period: 12.5, phase: 0.38, fill: 'venus', label: 'AI' }
+  { rx: 94, ry: 41, r: 7.0, period: 52, phase: 0.12, fill: 'mars', label: 'YOUR PEOPLE' },
+  { rx: 66, ry: 27, r: 4.0, period: 40, phase: 0.62, fill: 'neptune', label: '' },
+  { rx: 88, ry: 39, r: 5.0, period: 46, phase: 0.38, fill: 'venus', label: 'AI' }
 ];
 
 const SPHERES = {

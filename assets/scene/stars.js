@@ -148,12 +148,15 @@
 
   /* ---------------------------------------------------------- Meteors */
 
-  /* Rare enough to stay an event. Two in flight at once reads as a shower,
-     which is a different and much busier thing. */
-  var GAP_MIN = 7000;
-  var GAP_MAX = 24000;
+  /* Rare enough to stay an event, often enough to be seen. At a gap of seven
+     to twenty-four seconds a reader watching the cover for half a minute
+     could easily meet none, which is indistinguishable from none existing;
+     measured, only a third of sampled frames carried a streak at all. Closer
+     together, and more of them bright. */
+  var GAP_MIN = 2600;
+  var GAP_MAX = 7000;
   var MAX_ALIVE = 2;
-  var BRIGHT_SHARE = 0.18;
+  var BRIGHT_SHARE = 0.45;
 
   /* Meteors belong to the dead sky. They cross it at random for as long as
      the body is still becoming, and stop the moment it is a living world —
@@ -193,9 +196,9 @@
       y: y,
       vx: Math.cos(angle) * speed,
       vy: Math.sin(angle) * speed,
-      len: bright ? rand(240, 420) : rand(110, 230),
-      width: bright ? rand(2.4, 3.4) : rand(1.4, 2.2),
-      life: bright ? rand(1.7, 2.5) : rand(1.1, 1.9),
+      len: bright ? rand(320, 540) : rand(170, 300),
+      width: bright ? rand(3.0, 4.2) : rand(1.9, 2.8),
+      life: bright ? rand(1.9, 2.8) : rand(1.3, 2.1),
       age: 0,
       bright: bright
     });
