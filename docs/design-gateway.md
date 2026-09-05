@@ -578,6 +578,27 @@ so a reader without JavaScript gets the whole page rather than empty headings;
 markup and the dictionary drift apart or if the twenty dictionaries fall out of
 parity.
 
+**Every locale is authored, not machine output**, and each is held to the way
+its own language reads rather than to the shape of the English. Three rules
+carry most of that:
+
+- **The register is the market's.** Every locale addresses a company, formally
+  and consistently: usted, vous, Sie, です/ます, Anda, आप, คุณ. Korean addresses
+  the reader as 귀사 and drops the pronoun wherever the language naturally
+  would, because a literal second person reads there as a translation rather
+  than as address.
+- **A technical noun is written in the locale's own script.** The keep-list is
+  nineteen tokens and no more: the brands, the acronyms (PoC, CRM, ERP, BI, QA,
+  SaaS), the legal entity, `markdown`, and the three glossary terms every
+  locale leaves in English. Where a native word carries the sense it is used
+  — رازداری, تعمیل, ماخذ — and where the loan is the standard professional term
+  it is transliterated — ڈیٹا, डेटा, ডেটা. Latin words inside a right-to-left
+  page are the worst case: they turn one sentence into a dozen direction
+  switches.
+- **Typography follows the locale.** French takes a no-break space before
+  `: ; ! ?`, Japanese and Chinese take full-width punctuation, Arabic takes ،
+  and Urdu takes ۔.
+
 ## 6. Accessibility
 
 - Every interactive element is reachable by keyboard with a visible focus ring
