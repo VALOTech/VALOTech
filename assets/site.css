@@ -2155,6 +2155,34 @@ html:not(.can-scene) .planet {
   [data-orbit] .orbit-node .orbit-box {
     display: block;
   }
+
+  /* The list still holds the side its orbiting form left open. A chapter that
+     has stopped moving is still a chapter with a world standing beside it, and
+     a stacked list that spreads back across the frame takes the one place the
+     world has to be. */
+  [data-orbit] .chapter-head,
+  [data-orbit] .orbit-nodes,
+  [data-orbit] .services {
+    max-width: min(calc(var(--maxw) * 0.58), 58vw);
+  }
+
+  [data-orbit='left'] .chapter-head,
+  [data-orbit='left'] .orbit-nodes,
+  [data-orbit='left'] .services {
+    margin-inline-start: auto;
+    margin-inline-end: 0;
+  }
+
+  [data-orbit='right'] .chapter-head,
+  [data-orbit='right'] .orbit-nodes,
+  [data-orbit='right'] .services {
+    margin-inline-start: 0;
+    margin-inline-end: auto;
+  }
+
+  [data-orbit] .services {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 /* ====================================================== 10i. Ecosystem */

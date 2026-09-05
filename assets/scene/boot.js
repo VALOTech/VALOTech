@@ -128,6 +128,72 @@ const FRONT_RATIO = 0.71;
 
 /* ------------------------------------------------------------- The journey */
 
+/* The stations below are written as fractions of the page, and the page is not
+   one length. Reduced motion collapses the two scroll-driven chapters and the
+   mapping chapter to their plain stacked height — three and a half thousand
+   pixels shorter here — and a locale with longer sentences stretches it the
+   other way. A station written at .377 then lands in a different chapter than
+   the one it was tuned against, and that is not drift: the whole journey is
+   reading a different story from the one on screen. A reader with animation
+   turned off saw the bare rock parked on the left through a chapter that had
+   asked for a finished world on the right.
+
+   So the raw scroll fraction is remapped through the chapters themselves.
+   Each chapter's measured top is mapped onto the fraction the journey was
+   tuned against, piecewise-linearly between them, and the table always sees
+   the page it was written for however long the real one is. */
+const CHAPTER_SPINE = [
+  ['problem', 0.048],
+  ['approach', 0.213],
+  ['deliver', 0.377],
+  ['workforce', 0.47],
+  ['valostack', 0.539],
+  ['trust', 0.588],
+  ['people', 0.686],
+  ['outcome', 0.899],
+  ['ecosystem', 0.952]
+];
+
+let spine = null;
+let spineHeight = -1;
+
+function measureSpine() {
+  const total = root.scrollHeight - window.innerHeight;
+  spineHeight = root.scrollHeight;
+  if (total <= 0) {
+    spine = null;
+    return;
+  }
+  const points = [[0, 0]];
+  for (let i = 0; i < CHAPTER_SPINE.length; i++) {
+    const el = document.getElementById(CHAPTER_SPINE[i][0]);
+    if (!el) continue;
+    const at = (window.scrollY + el.getBoundingClientRect().top) / total;
+    /* Strictly increasing, or the interpolation divides by nothing. A chapter
+       that measures at or below its predecessor is one the layout has folded
+       away; the pair either side of it still spans it correctly. */
+    if (at > points[points.length - 1][0] + 1e-4 && at < 1) {
+      points.push([at, CHAPTER_SPINE[i][1]]);
+    }
+  }
+  points.push([1, 1]);
+  spine = points.length > 2 ? points : null;
+}
+
+function onSpine(raw) {
+  if (!spine) return raw;
+  for (let i = 1; i < spine.length; i++) {
+    if (raw <= spine[i][0]) {
+      const from = spine[i - 1];
+      const to = spine[i];
+      const span = to[0] - from[0];
+      const t = span > 1e-6 ? (raw - from[0]) / span : 0;
+      return from[1] + (to[1] - from[1]) * t;
+    }
+  }
+  return 1;
+}
+
 /* Stations, in viewport units. They are written as positions because that is
    how a page is laid out — but the planet is moved between them in polar
    coordinates about the sun, so every leg curves around it. A straight line
@@ -142,10 +208,12 @@ const JOURNEY = [
      is reading, the planet is already standing where the chapter left room for
      it and the labels pinned to it are not still travelling.
 
-     Measured spans, this build: problem .048-.213 · approach .213-.377 ·
-     deliver .377-.470 · workforce .470-.539 · valostack .539-.588 ·
-     trust .588-.686 · people .686-.899 · outcome .899-.952 ·
-     ecosystem .952-1.005. Re-measure before moving any of these.
+     The fractions are chapter positions, not page positions: CHAPTER_SPINE
+     above pins each chapter's top to the number written here, and the page's
+     real length is mapped onto it every time that length changes. So a station
+     at .377 is the top of the deliver chapter on any page — the tall one, the
+     short one a reader with motion turned off gets, the taller one a locale
+     with longer sentences builds.
 
      A leg is sized and placed by the easing, not by taste. The planet follows
      a moving target, so while the reader scrolls it trails by roughly the
@@ -477,7 +545,11 @@ function place(now) {
   const vh = window.innerHeight;
   const vw = window.innerWidth;
   const total = root.scrollHeight - vh;
-  const progress = total > 0 ? Math.min(1, Math.max(0, window.scrollY / total)) : 0;
+  const raw = total > 0 ? Math.min(1, Math.max(0, window.scrollY / total)) : 0;
+  /* Re-measured whenever the document's own height changes, which is what a
+     locale switch, a reveal that reflows, and turning motion off all do. */
+  if (root.scrollHeight !== spineHeight) measureSpine();
+  const progress = onSpine(raw);
   const still = reduce.matches;
   const wide = vw > NARROW;
 

@@ -129,6 +129,21 @@ The planet also moves, between stations written in viewport units — full size 
 back to centre at *How your people fit in*, where the reader is being shown two
 columns that belong on either side of it, and away again for the close.
 
+**The journey is measured in chapters, not in page fractions.** A station is
+written as a fraction, but the page is not one length: reduced motion collapses
+the two scroll-driven chapters and the mapping chapter to their plain stacked
+height — three and a half thousand pixels shorter — and a locale with longer
+sentences stretches it the other way. Each chapter's measured top is therefore
+mapped onto the fraction the journey was tuned against, piecewise-linearly
+between them, and re-measured whenever the document's own height changes. The
+table always sees the page it was written for.
+
+Without that mapping the failure is not drift, it is the wrong story: a reader
+with animation turned off met the bare rock parked on the left through a
+chapter that had asked for a finished world on the right, with no moon, no
+satellites and no labels, because the scrub and the reveal were reading a
+position two chapters behind the one on screen.
+
 The planet follows a moving target, so while the reader scrolls it trails by
 roughly the target's speed times the easing's time constant. That is why a
 chapter can be reached before the planet is in the space it left, and why no
