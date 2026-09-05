@@ -162,12 +162,10 @@
      where every streak hits the same target stops reading as a sky. */
   var AIMED_SHARE = 0.5;
 
-  /* The sky quiets as the world comes alive; it does not empty. A hard stop
-     at the moment of transformation was the earlier rule, and it made the
-     second ending impossible — a meteor cannot be absorbed by a world it is
-     no longer allowed to reach. Once the surface is living they arrive about
-     three times less often, which reads as a settling sky and still lets the
-     absorption be seen. */
+  /* The sky quiets as the world comes alive; it never empties. Once the surface
+     is living they arrive about three times less often, which reads as a
+     settling sky and still lets an absorption be seen — a world nothing is
+     allowed to reach can never show what its atmosphere does to an arrival. */
   var QUIET_FACTOR = 2.4;
 
   /* Past this the world has an atmosphere, and an arriving body is swallowed

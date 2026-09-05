@@ -202,15 +202,18 @@ An aimed one that reaches the drawn limb ends there, and what happens next is
 the whole point of aiming it. On the bare rock it **detonates**: an expanding
 shock ring, a warm flash, and debris thrown along the shallow angle it arrived
 on, never back through the body it just struck. On the living world it is
-**drunk in** — a cool bloom that swells and fades, no debris, because a world
-with an atmosphere takes the strike rather than shattering under it. The two
-read apart at a glance and measure apart too: warm pixels outnumber cool by an
-order of magnitude on the first, and cool outnumber warm by more on the second.
+**drunk in** — a cool bloom that swells and fades, no debris. It is the
+atmosphere doing it: a world with air takes the strike rather than shattering
+under it, so the ending is pinned to the atmosphere's own arrival, changing at
+a scrub of 0.55, just after the shell begins to appear at 0.46. The two read
+apart at a glance and measure apart too: warm pixels outnumber cool by an order
+of magnitude on the first, and cool outnumber warm by more on the second.
 
 The sky **quiets** rather than emptying as the world comes alive — the gap
-between meteors stretches with the growth scrub. Stopping them outright, which
-an earlier reading of "they belong to the dead sky" asked for, would have made
-the second ending unreachable: nothing would ever arrive to be absorbed.
+between meteors stretches with the growth scrub, so the dead sky is the busy
+one and the living world is met by the occasional arrival. It never reaches
+nothing. A sky with nothing crossing it cannot deliver the second ending, and
+what the atmosphere does to an arrival is the reason the meteor was aimed.
 
 The strike radius is measured from the planet element rather than restated from
 its stylesheet numbers, so resizing the world cannot leave meteors striking a
