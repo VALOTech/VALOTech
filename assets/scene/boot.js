@@ -264,7 +264,15 @@ const JOURNEY = [
      the next pair is entered, which is the whole of what makes the change of
      side read as one movement rather than as a scramble. Leaving the frame
      instead solves the collision and loses the world, which is worse. */
-  { at: 0.348, x: 75, y: 52, scale: 0.9 },
+  /* The crossing passes low. The chapter being left keeps its argument pinned
+     on the right for its whole length, and the world's destination is that
+     same side, so no timing avoids it: on a level path the disc slides behind
+     the outgoing heading and reads as sinking into the text. Dropping through
+     the lower part of the frame takes it under that heading instead, and it
+     stays in sight the whole way — which is the difference between a world
+     that travels and one that disappears. */
+  { at: 0.336, x: 52, y: 70, scale: 0.9 },
+  { at: 0.358, x: 75, y: 52, scale: 0.9 },
   { at: 0.430, x: 75, y: 52, scale: 0.9 },
   { at: 0.444, x: 76, y: 46, scale: 0.84 },
   { at: 0.486, x: 76, y: 46, scale: 0.84 },

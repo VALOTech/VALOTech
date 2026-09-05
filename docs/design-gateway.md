@@ -173,6 +173,15 @@ Taking the world below the frame instead solves the collision and loses the
 world, which is worse: a reader who looks up and cannot find it has been shown
 a page that broke, not a planet that moved.
 
+**The first crossing also passes low, and arrives late.** The chapter it leaves
+pins its argument on the right for its whole length, and the world's
+destination is that same side, so on a level path the disc slides behind the
+outgoing heading and reads as sinking into the text rather than travelling
+past it — measured, and photographed. Dropping through the lower part of the
+frame takes it under that heading, and holding the arrival until the heading
+has left clears the last of it. The world stays in sight the whole way, which
+is the difference between a world that travels and one that disappears.
+
 Legs still want a real span of page, because a lead cannot cancel a trail
 larger than the leg itself. Measured at a reading pace of a viewport a second,
 every chapter’s disc now stands clear of its own argument from the moment that
