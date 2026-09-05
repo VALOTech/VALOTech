@@ -1958,8 +1958,15 @@ html:not(.can-scene) .planet {
    Below the breakpoint there is no room for two things side by side, so the
    content takes the width back and the planet goes behind it. */
 @media (min-width: 950px) {
+  /* The column is capped against the frame as well as against the measure,
+     because the two have to share it. Held at 58% of the max width it keeps
+     719px whatever the frame does, so as the window narrows it takes a larger
+     and larger share until the world's orbit no longer clears it — measured,
+     the clearance the labels need reaches zero at about 1500px and goes
+     negative below, and two chapters stop showing their labels at all. At 47vw
+     the cap does nothing above 1530px and yields from there down. */
   .chapter--aside > .wrap {
-    max-width: min(calc(var(--maxw) * 0.58), 58vw);
+    max-width: min(calc(var(--maxw) * 0.58), 47vw);
     margin-inline-start: max(0px, calc((100vw - var(--maxw)) / 2));
     margin-inline-end: auto;
   }
