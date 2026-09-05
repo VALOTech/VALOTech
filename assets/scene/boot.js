@@ -159,27 +159,26 @@ const JOURNEY = [
   { at: 0.044, x: 30, y: 54, scale: 1.0 },
   { at: 0.190, x: 30, y: 54, scale: 1.0 },
   { at: 0.215, x: 32, y: 50, scale: 0.96 },
-  { at: 0.290, x: 32, y: 50, scale: 0.96 },
-  /* Across to the right, for the two that follow — under the page rather than
-     through it. Two arguments face each other across a crossing: the chapter
-     being left holds one side and the chapter being entered holds the other,
-     so a world travelling between them in the reading band is behind somebody's
-     sentences for the whole of the journey, and there is no horizontal path
-     that avoids both. Swinging below the frame avoids them by leaving. */
-  { at: 0.312, x: 42, y: 150, scale: 0.86 },
-  { at: 0.338, x: 64, y: 150, scale: 0.86 },
-  { at: 0.353, x: 75, y: 52, scale: 0.9 },
+  { at: 0.314, x: 32, y: 50, scale: 0.96 },
+  /* Across to the right, in plain sight, in the window the page opens for it.
+     The two arguments face each other: the chapter being left holds one side
+     and the chapter being entered holds the other, and between the moment the
+     first releases and the moment the second is level with the world there is
+     a gap of about half a second of reading. The crossing is timed to that
+     gap. It starts at the end of the pair it is leaving and is finished before
+     the next pair is entered, which is the whole of what makes the change of
+     side read as one movement rather than as a scramble. Leaving the frame
+     instead solves the collision and loses the world, which is worse. */
+  { at: 0.348, x: 75, y: 52, scale: 0.9 },
   { at: 0.430, x: 75, y: 52, scale: 0.9 },
   { at: 0.444, x: 76, y: 46, scale: 0.84 },
-  { at: 0.482, x: 76, y: 46, scale: 0.84 },
+  { at: 0.486, x: 76, y: 46, scale: 0.84 },
   /* Back to the left, across the shortest stretch of page on the site. The
      two stations are pulled as close together as the arguments allow — a
      right station has to clear the column by the orbit's whole reach, and so
      does a left one — because every viewport-width of crossing is a second of
      scrolling during which neither chapter can name its bodies. */
-  { at: 0.498, x: 64, y: 150, scale: 0.82 },
-  { at: 0.520, x: 38, y: 150, scale: 0.82 },
-  { at: 0.536, x: 25, y: 52, scale: 0.88 },
+  { at: 0.514, x: 25, y: 52, scale: 0.88 },
   { at: 0.586, x: 25, y: 52, scale: 0.88 },
   { at: 0.602, x: 24, y: 46, scale: 0.84 },
   { at: 0.644, x: 24, y: 46, scale: 0.84 },

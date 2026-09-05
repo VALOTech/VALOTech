@@ -144,14 +144,19 @@ otherwise read the journey most of a page ahead. Only the journey is read
 ahead: the growth scrub and the star's bearing stay honest to where the reader
 actually is.
 
-**A crossing goes under the page, not through it.** Two arguments face each
-other across one: the chapter being left holds one side, the chapter being
-entered holds the other, and a world travelling between them in the reading
-band is behind somebody’s sentences for the whole journey — there is no
-horizontal path that avoids both. So the long crossings dip below the frame,
-cross, and rise into their station before the incoming heading is readable. It
-is also the truest thing on the page: a world going round a star passes under
-the observer as often as over.
+**A crossing is timed to the hand-over, and stays in sight.** Two arguments
+face each other across one: the chapter being left holds one side and the
+chapter being entered holds the other. They are on opposite sides, though, and
+the incoming heading arrives at the bottom of the frame rather than in the
+world’s own band — so between the moment the first argument scrolls off and
+the moment the second rises level with the world there is a gap of about half a
+second of reading, and the crossing is timed to it. It begins at the end of the
+pair it is leaving and is finished before the next pair is entered, which is
+what makes a change of side read as one movement rather than as a scramble.
+
+Taking the world below the frame instead solves the collision and loses the
+world, which is worse: a reader who looks up and cannot find it has been shown
+a page that broke, not a planet that moved.
 
 Legs still want a real span of page, because a lead cannot cancel a trail
 larger than the leg itself. Measured at a reading pace of a viewport a second,
