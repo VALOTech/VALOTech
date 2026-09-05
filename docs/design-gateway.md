@@ -364,10 +364,19 @@ One rule, applied to every chapter: **the argument holds one side and the
 planet takes what is left.** Measured against the designer's own build, that
 is what she does everywhere — copy and cards to about fifty-five percent, the
 world clear beside them, never printed under a block of text. Six chapters
-declare `chapter--aside` and are held to `min(58% of the max width, 58vw)` on
+declare `chapter--aside` and are held to `min(58% of the max width, 47vw)` on
 the reading-start side; three-across grids become two inside it, and
 ValoStack's second text column folds into the first, since that column was the
 paragraph sitting on the planet.
+
+**The column is capped against the frame as well as against the measure.** Held
+only at a share of the max content width it keeps 719px however narrow the
+window gets, so as the frame shrinks the column takes more of it until the
+orbit no longer clears the argument — which is the condition the labels are
+gated on. Measured across widths, that clearance is +22px at 1600, +11 at 1500
+and negative from 1440 down, and two of the five label chapters showed no
+labels at all below 1440. The second cap does nothing above 1530px and yields
+from there, which keeps every label chapter working down to 1024.
 
 The planet's journey follows from the rule rather than being tuned against it,
 and it holds a side for **two chapters at a time**: left for the two that open
