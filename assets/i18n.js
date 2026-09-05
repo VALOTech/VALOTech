@@ -2793,7 +2793,7 @@
   var de = {
     "a11y.skip":"Zum Inhalt springen","a11y.home":"VALO Tech Startseite","a11y.navPrimary":"Hauptnavigation","a11y.theme":"Erscheinungsbild","a11y.menu":"Menü","a11y.top":"Nach oben","a11y.trustRegion":"Warum Teams der Plattform vertrauen","a11y.ecoHub":"VALO Ökosystem-Hub","a11y.valostackNet":"ValoStack-Netzwerk",
     "phases.outcome":"Ergebnis.",
-    "nav.approach":"Ansatz","nav.workforce":"KI-Team","nav.trust":"Vertrauen","nav.ecosystem":"Ökosystem","nav.pricing":"Preise","nav.investor":"Investoren-Login","inv.title":"Investoren-Login","inv.id":"Investoren-ID","inv.pw":"Passwort","inv.submit":"Details öffnen","inv.error":"ID und Passwort stimmen nicht überein.","inv.locked":"Details für Investoren","a11y.close":"Schließen",
+    "nav.approach":"Ansatz","nav.workforce":"Belegschaft","nav.trust":"Vertrauen","nav.ecosystem":"Ökosystem","nav.pricing":"Preise","nav.investor":"Investoren-Login","inv.title":"Investoren-Login","inv.id":"Investoren-ID","inv.pw":"Passwort","inv.submit":"Details öffnen","inv.error":"ID und Passwort stimmen nicht überein.","inv.locked":"Details für Investoren","a11y.close":"Schließen",
     "cta.start":"Das Gespräch beginnen","cta.approach":"Den Ansatz kennenlernen",
     "lang.label":"Sprache","theme.light":"Helles Design","theme.dark":"Dunkles Design","theme.auto":"An System anpassen",
     "brand.slogan":"Vertrauenswürdige KI für die reale Welt.",
