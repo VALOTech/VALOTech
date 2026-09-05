@@ -397,13 +397,16 @@
     var wide = window.matchMedia('(min-width: 950px)');
     var raf = 0;
 
-    function read(name) {
-      return parseFloat(getComputedStyle(root).getPropertyValue(name));
-    }
+    /* The scene hands its frame over as an object rather than as custom
+       properties on the root element: writing those every frame invalidates
+       the computed style of the whole document, and reading them back through
+       getComputedStyle would have forced the recalculation anyway. */
 
     function frame() {
       raf = 0;
       var showing = false;
+      var stageNow = window.VALO_STAGE;
+      if (!stageNow) return;
       /* Only one chapter may name the bodies at a time. Two chapters in frame
          together pin their labels to the same three bodies, so six labels land
          on three positions and print on top of each other — which reads as one
@@ -430,11 +433,12 @@
         showing = true;
         for (var i = 0; i < groups[g].chips.length; i++) {
           var chip = groups[g].chips[i];
-          var x = read('--sat' + i + '-x');
-          var y = read('--sat' + i + '-y');
-          if (isNaN(x) || isNaN(y)) continue;
-          var side = read('--sat' + i + '-side') < 0 ? -1 : 1;
-          var r = read('--sat' + i + '-r') || 10;
+          var body = stageNow && stageNow.sat[i];
+          if (!body) continue;
+          var x = body.x;
+          var y = body.y;
+          var side = body.side < 0 ? -1 : 1;
+          var r = body.r || 10;
           var w = chip.offsetWidth;
           var h = chip.offsetHeight;
           var gapPx = r + 18;
@@ -478,14 +482,15 @@
        a sentence is the body swinging out to the far side of its path.
        Returns the open band, which is also the answer, or null. */
     function eligible(group) {
-      if (!wide.matches) return null;
-      if ((read('--stone-travel') || 0) >= 2) return null;
+      var now = window.VALO_STAGE;
+      if (!now || !wide.matches) return null;
+      if (now.travel >= 2) return null;
       var box = group.section.getBoundingClientRect();
       var margin = window.innerHeight * 0.3;
       if (!(box.top < window.innerHeight - margin && box.bottom > margin)) return null;
-      var stoneX = read('--stone-x');
+      var stoneX = now.x;
       if (!group.wrap || isNaN(stoneX)) return null;
-      var reach = read('--orbit-reach') || 0;
+      var reach = now.reach || 0;
       var wb = group.wrap.getBoundingClientRect();
       if (stoneX - reach > wb.right + 8) return { side: 'right', edge: wb.right };
       if (stoneX + reach < wb.left - 8) return { side: 'left', edge: wb.left };
@@ -548,13 +553,14 @@
        the scene. The cutout has to match what the reader sees, not the box. */
     function rockRadius() {
       var box = Math.min(window.innerWidth * 0.42, 620);
-      var scale = parseFloat(getComputedStyle(root).getPropertyValue("--stone-scale")) || 1;
+      var scale = (window.VALO_STAGE && window.VALO_STAGE.scale) || 1;
       return box * 0.37 * scale;
     }
 
     function readStone(axis, fallback) {
-      var v = parseFloat(getComputedStyle(root).getPropertyValue("--stone-" + axis));
-      return isNaN(v) ? fallback : v;
+      var now = window.VALO_STAGE;
+      var v = now ? now[axis] : NaN;
+      return typeof v === "number" && !isNaN(v) ? v : fallback;
     }
 
     function place(stage, sx, sy, rock) {

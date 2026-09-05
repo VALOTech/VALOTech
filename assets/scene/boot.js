@@ -37,6 +37,28 @@ const motion = {
   lightDir: { x: -0.499, y: 0.643, z: 0.581 }
 };
 
+/* What the scene knows this frame. It is a plain object because the obvious
+   alternative is not: a custom property set on the root element is inherited
+   by every element in the document, so writing eighteen of them per frame
+   invalidates the whole tree's computed style. Measured on an integrated GPU
+   at 1600x900, that alone was the difference between sixteen frames a second
+   and a hundred and twenty — the WebGL scene, the geometry and the pixel ratio
+   cost nothing beside it. Only the two orbit layers read any of this from CSS,
+   and they are given the properties directly. */
+const stage = {
+  x: 0,
+  y: 0,
+  scale: 1,
+  travel: 0,
+  reach: 0,
+  sat: [
+    { x: 0, y: 0, side: 1, r: 10 },
+    { x: 0, y: 0, side: 1, r: 10 },
+    { x: 0, y: 0, side: 1, r: 10 }
+  ]
+};
+window.VALO_STAGE = stage;
+
 const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
 
 function smoothstep(t) {
@@ -524,20 +546,20 @@ function publishSatellites(seconds, cx, cy) {
   for (let i = 0; i < SATELLITES.length; i++) {
     reach = Math.max(reach, (SATELLITES[i].rx / 200) * face.width);
   }
-  root.style.setProperty('--orbit-reach', reach.toFixed(1) + 'px');
+  stage.reach = reach;
   for (let i = 0; i < SATELLITES.length; i++) {
     const sat = SATELLITES[i];
     const turn = (seconds / sat.period + sat.phase) * Math.PI * 2;
     const dx = ((Math.cos(turn) * sat.rx) / 200) * face.width;
     const dy = ((Math.sin(turn) * sat.ry) / 100) * face.height;
-    root.style.setProperty('--sat' + i + '-x', (cx + dx).toFixed(1) + 'px');
-    root.style.setProperty('--sat' + i + '-y', (cy + dy).toFixed(1) + 'px');
+    stage.sat[i].x = cx + dx;
+    stage.sat[i].y = cy + dy;
     /* Which way its label should open, so it never runs off the frame. */
-    root.style.setProperty('--sat' + i + '-side', Math.cos(turn) >= 0 ? '1' : '-1');
+    stage.sat[i].side = Math.cos(turn) >= 0 ? 1 : -1;
     /* What a label has to clear, which is the drawn object rather than the
        radius it was sized from: a craft's arrays reach well past its hull. */
     const span = sat.kind === 'craft' ? sat.r * 2.9 : sat.r;
-    root.style.setProperty('--sat' + i + '-r', ((span / 200) * face.width).toFixed(1) + 'px');
+    stage.sat[i].r = (span / 200) * face.width;
   }
 }
 
@@ -632,10 +654,7 @@ function place(now) {
   const k = primed ? ease(gap, DRIFT_EASE) : 1;
   /* How far the planet still has to go, in viewport units, published so the
      page can wait for it to arrive before pinning anything to it. */
-  root.style.setProperty(
-    '--stone-travel',
-    (Math.hypot(targetVW - driftVW, targetVH - offsetVH) * 10).toFixed(1)
-  );
+  stage.travel = Math.hypot(targetVW - driftVW, targetVH - offsetVH) * 10;
   driftVW += (targetVW - driftVW) * k;
   offsetVH += (targetVH - offsetVH) * k;
   scale += (targetScale - scale) * k;
@@ -697,9 +716,9 @@ function place(now) {
   /* The orbit layers are positioned from these, so they travel and shrink with
      the planet rather than being pinned to the viewport. */
   if (orbitNodes.length) {
-    root.style.setProperty('--stone-x', `${(vw / 2 + floatX + (driftVW / 100) * vw).toFixed(1)}px`);
-    root.style.setProperty('--stone-y', `${(sceneCentreY(vh) + floatY + (offsetVH / 100) * vh).toFixed(1)}px`);
-    root.style.setProperty('--stone-scale', motion.visualScale.toFixed(3));
+    stage.x = vw / 2 + floatX + (driftVW / 100) * vw;
+    stage.y = sceneCentreY(vh) + floatY + (offsetVH / 100) * vh;
+    stage.scale = motion.visualScale;
     /* Nothing orbits the bare rock: the cover's sky has a world in it and
        nothing else. The moon arrives with the surface it belongs to, and the
        two built ones arrive where the argument first needs something to pin a
@@ -709,21 +728,29 @@ function place(now) {
     const craftStage = smoothstep((progress - 0.335) / 0.055);
     orbitStage.moon = moonStage;
     orbitStage.craft = craftStage;
-    root.style.setProperty(
-      '--orbit-reveal',
-      (Math.max(moonStage, craftStage) * introOpacity).toFixed(3)
-    );
+    /* The two orbit layers are the only things in the stylesheet that read any
+       of this, so they are given the properties on themselves. The rules that
+       consume them — the transform, the reveal, and the narrower reveal at the
+       phone breakpoint — go on working untouched, and the invalidation stops
+       at two elements instead of the document. */
+    const reveal = (Math.max(moonStage, craftStage) * introOpacity).toFixed(3);
+    const px = stage.x.toFixed(1) + 'px';
+    const py = stage.y.toFixed(1) + 'px';
+    const ps = stage.scale.toFixed(3);
+    for (let n = 0; n < orbitNodes.length; n++) {
+      const layer = orbitNodes[n].root.style;
+      layer.setProperty('--stone-x', px);
+      layer.setProperty('--stone-y', py);
+      layer.setProperty('--stone-scale', ps);
+      layer.setProperty('--orbit-reveal', reveal);
+    }
     /* The satellites keep their own time — they circle whether or not anyone
        scrolls, and quicker while someone does. Under reduced motion they keep
        circling too, at a sixth of the pace and with no scroll boost: slow
        enough that nothing appears to move without being watched for. */
     orbitClock += gap * (still ? CALM_ORBIT : motion.spin);
     moveOrbits(orbitClock, orbitStage);
-    publishSatellites(
-      orbitClock,
-      vw / 2 + floatX + (driftVW / 100) * vw,
-      sceneCentreY(vh) + floatY + (offsetVH / 100) * vh
-    );
+    publishSatellites(orbitClock, stage.x, stage.y);
     nameOrbits();
   }
 

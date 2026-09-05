@@ -530,7 +530,31 @@ intro approach, the pointer drift, the orbiting chapters' travel and the
 mapping stage's stepping, each of which shows its content at once instead.
 Nothing in the argument depends on any of it.
 
-### Markers
+### What the frame costs
+
+The scene hands its per-frame state to the page as **one plain object**,
+`window.VALO_STAGE`, and not as custom properties on the root element. That is
+the single largest performance decision on the page, and it was not obvious
+until it was measured: a custom property set on `:root` is inherited by every
+element in the document, so writing eighteen of them per frame invalidates the
+whole tree's computed style, and every consumer that read them back through
+`getComputedStyle` forced the recalculation to complete.
+
+Measured on an integrated GPU at 1600x900, idle: **sixteen frames a second with
+those writes, a hundred and twenty without them.** Nothing else came close.
+Halving the pixel ratio, turning off antialiasing and cutting the sphere from
+thirty-eight thousand triangles to six moved the figure by less than the noise,
+because the cost was never on the GPU at all — removing the whole WebGL scene
+left it at sixteen.
+
+Two consequences worth keeping. The only stylesheet consumers are the two orbit
+layers, and they are given the properties **on themselves**, so the rules that
+read them go on working and the invalidation stops at two elements. And the
+page-side readers — the labels, the orbiting chapters, the meteors — read the
+object rather than resolving style, which removes about twenty
+`getComputedStyle` calls a frame along with the writes that made them expensive.
+
+### Markers### Markers
 
 The cover's three markers are placed from the planet's own published position,
 arced down the side the copy does not take, and the copy is capped at

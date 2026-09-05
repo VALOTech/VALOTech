@@ -282,10 +282,14 @@
      rather than assumed: the planet moves chapter by chapter, and an impact
      drawn at the middle of the screen would be an impact on nothing. */
   function world() {
-    var cs = w.getComputedStyle(doc.documentElement);
-    var x = parseFloat(cs.getPropertyValue("--stone-x"));
-    var y = parseFloat(cs.getPropertyValue("--stone-y"));
-    var scale = parseFloat(cs.getPropertyValue("--stone-scale"));
+    /* Handed over as an object: the scene used to publish this as custom
+       properties on the root element, and reading them back cost a style
+       resolution on every meteor frame. */
+    var now = w.VALO_STAGE;
+    if (!now) return null;
+    var x = now.x;
+    var y = now.y;
+    var scale = now.scale;
     if (isNaN(x) || isNaN(y)) return null;
     /* The drawn sphere is 0.37 of its box across the radius, and the box is
        whatever the stylesheet gives it — measured rather than restated, so a
