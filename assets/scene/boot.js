@@ -62,18 +62,21 @@ function ease(seconds, tau) {
    for, because a station on an arc is not the station that was written.
 
    The sun's apparent bearing from the planet, in degrees, screen axes: 270 is
-   straight overhead, 0 is due right, and y grows downward. It sweeps once
-   across the page — far enough to read as travel, and held inside the band of
-   open sky above the argument, because a sun behind a scrim is a light source
-   the reader cannot find. */
-const SUN_BEARING_FROM = 280;
-const SUN_BEARING_TO = 340;
+   straight overhead, 0 is due right, and y grows downward. It crosses the sky
+   once over the page, from one shoulder of the world to the other by way of
+   directly above it. A narrower arc reads as a lamp clipped to the planet
+   rather than as a star the planet is going round, and that is the whole point
+   of putting the reader on the surface. Both ends stay well above the
+   horizontal, because a sun level with the world grazes its limb and the
+   surface goes to silhouette. */
+const SUN_BEARING_FROM = 216;
+const SUN_BEARING_TO = 324;
 
 /* A phone is a different sky: the planet sits near the middle and there are
    only a couple of hundred pixels either side of it, so the star crosses a
    shorter arc, high up, where nothing is being read. */
-const SUN_BEARING_FROM_NARROW = 248;
-const SUN_BEARING_TO_NARROW = 290;
+const SUN_BEARING_FROM_NARROW = 232;
+const SUN_BEARING_TO_NARROW = 308;
 
 /* How far the star stands off the planet on screen. Wide screens measure it
    against the shorter axis; a phone measures it against its height, because
@@ -156,18 +159,27 @@ const JOURNEY = [
   { at: 0.044, x: 30, y: 54, scale: 1.0 },
   { at: 0.190, x: 30, y: 54, scale: 1.0 },
   { at: 0.215, x: 32, y: 50, scale: 0.96 },
-  { at: 0.298, x: 32, y: 50, scale: 0.96 },
-  /* Across to the right, for the two that follow. */
-  { at: 0.351, x: 75, y: 52, scale: 0.9 },
+  { at: 0.290, x: 32, y: 50, scale: 0.96 },
+  /* Across to the right, for the two that follow — under the page rather than
+     through it. Two arguments face each other across a crossing: the chapter
+     being left holds one side and the chapter being entered holds the other,
+     so a world travelling between them in the reading band is behind somebody's
+     sentences for the whole of the journey, and there is no horizontal path
+     that avoids both. Swinging below the frame avoids them by leaving. */
+  { at: 0.312, x: 42, y: 150, scale: 0.86 },
+  { at: 0.338, x: 64, y: 150, scale: 0.86 },
+  { at: 0.353, x: 75, y: 52, scale: 0.9 },
   { at: 0.430, x: 75, y: 52, scale: 0.9 },
   { at: 0.444, x: 76, y: 46, scale: 0.84 },
-  { at: 0.486, x: 76, y: 46, scale: 0.84 },
+  { at: 0.482, x: 76, y: 46, scale: 0.84 },
   /* Back to the left, across the shortest stretch of page on the site. The
      two stations are pulled as close together as the arguments allow — a
      right station has to clear the column by the orbit's whole reach, and so
      does a left one — because every viewport-width of crossing is a second of
      scrolling during which neither chapter can name its bodies. */
-  { at: 0.534, x: 25, y: 52, scale: 0.88 },
+  { at: 0.498, x: 64, y: 150, scale: 0.82 },
+  { at: 0.520, x: 38, y: 150, scale: 0.82 },
+  { at: 0.536, x: 25, y: 52, scale: 0.88 },
   { at: 0.586, x: 25, y: 52, scale: 0.88 },
   { at: 0.602, x: 24, y: 46, scale: 0.84 },
   { at: 0.644, x: 24, y: 46, scale: 0.84 },
@@ -220,17 +232,16 @@ let primed = false;
    on the far side of its orbit and in front on the near side — which is the
    whole reason the orbit reads as a three-dimensional thing at all.
 
-   Two of them carry a name. They are the page's argument in orbit: your people
-   and the AI workforce going round the same world. */
-/* The two named bodies keep a vertical semi-axis wider than the planet, so
-   they are never behind it: a satellite that spends half of each revolution
-   occluded is a satellite the reader watching the cover never sees move. The
-   third is deliberately close in and does cross the disc — one body passing
-   behind is what makes the ring read as an orbit rather than a drawn ellipse. */
-/* Periods on the same order as the world's own turn — it takes forty-eight
-   seconds, and these take forty to fifty-six. A satellite whipping round in
-   nine seconds beside a world that takes forty-eight reads as two unrelated
-   animations rather than as one system. */
+   Two of them carry a name, and which name goes where follows from what the
+   body is. The moon is the oldest thing in the sky, so it names the oldest
+   thing the organisation has: its people. What was built names what is being
+   built. */
+/* Every path keeps a vertical semi-axis wider than the planet, so no body is
+   ever behind it: one that spends half of each revolution occluded is one the
+   reader watching the cover never sees move. All three take the world's own
+   forty-eight seconds — a satellite whipping round in nine beside a world
+   taking forty-eight reads as two unrelated animations rather than as one
+   system. */
 /* Three bodies, evenly spaced round the circle and on three distinct paths, so
    at any moment they stand apart rather than clustering — each one has to have
    room beside it for the label anchored to it.
@@ -248,9 +259,9 @@ let primed = false;
    forever. The period is the planet's own, so the system reads as one thing.
    */
 const SATELLITES = [
-  { rx: 92, ry: 40, r: 6.4, period: 48, phase: 0.0, kind: 'moon', label: '' },
-  { rx: 78, ry: 35, r: 3.4, period: 48, phase: 0.3333, kind: 'craft', label: 'YOUR PEOPLE' },
-  { rx: 64, ry: 32, r: 3.4, period: 48, phase: 0.6667, kind: 'craft', label: 'AI' }
+  { rx: 92, ry: 40, r: 6.4, period: 48, phase: 0.0, kind: 'moon', label: 'YOUR PEOPLE' },
+  { rx: 78, ry: 35, r: 3.4, period: 48, phase: 0.3333, kind: 'craft', label: 'AI' },
+  { rx: 64, ry: 32, r: 3.4, period: 48, phase: 0.6667, kind: 'craft', label: '' }
 ];
 
 const SPHERES = {
@@ -400,6 +411,15 @@ function buildOrbits() {
     scene.insertBefore(root, depth === 'rear' ? container : null);
     orbitNodes.push({ root, marks });
   });
+}
+
+/* The header covers the top of the frame, so the middle of what a reader can
+   actually see sits half a header below the middle of the window. Everything
+   the scene places vertically is measured from there — the world, and with it
+   the star it is lit by, since the sun is placed from the world. */
+function sceneCentreY(vh) {
+  const hdr = parseFloat(getComputedStyle(root).getPropertyValue('--hdr'));
+  return vh / 2 + (isNaN(hdr) ? 0 : hdr / 2);
 }
 
 function moveOrbits(seconds, stage) {
@@ -552,16 +572,31 @@ function place(now) {
 
   container.style.transform =
     `translate(calc(-50% + ${floatX.toFixed(1)}px + ${driftVW.toFixed(2)}vw),` +
-    ` calc(-50% + ${floatY.toFixed(1)}px + ${offsetVH.toFixed(2)}vh))`;
+    ` calc(-50% + var(--hdr) / 2 + ${floatY.toFixed(1)}px + ${offsetVH.toFixed(2)}vh))`;
   container.style.opacity = introOpacity.toFixed(3);
 
   /* The star, placed from the planet rather than from the frame. Its bearing
      is the orbit; its distance holds it in the band of open sky. */
   const planetX = vw / 2 + floatX + (driftVW / 100) * vw;
-  const planetY = vh / 2 + floatY + (offsetVH / 100) * vh;
-  const reach = wide ? Math.min(vw, vh) * SUN_DISTANCE : vh * SUN_DISTANCE_NARROW;
-  const sunX = planetX + Math.cos(bearing) * reach * mirror;
-  const sunY = planetY + Math.sin(bearing) * reach;
+  const planetY = sceneCentreY(vh) + floatY + (offsetVH / 100) * vh;
+  /* The distance breathes as the bearing swings. An orbit is an ellipse, and a
+     star held at one radius for a whole page reads as a lamp on a bracket. */
+  const swing = 1 + Math.cos((progress - 0.5) * Math.PI) * 0.18;
+  const reach =
+    (wide ? Math.min(vw, vh) * SUN_DISTANCE : vh * SUN_DISTANCE_NARROW) * swing;
+  /* Held inside the frame. The star is a screen-space glow, and one pushed
+     past an edge is a light source the reader cannot find — which is worse
+     than a bearing a few degrees off the arc. The surface is lit from where
+     the glow is actually drawn, so the two never disagree. */
+  const edge = 26;
+  const sunX = Math.max(
+    edge,
+    Math.min(vw - edge, planetX + Math.cos(bearing) * reach * mirror)
+  );
+  const sunY = Math.max(
+    edge,
+    Math.min(vh - edge, planetY + Math.sin(bearing) * reach)
+  );
 
   if (sun) {
     sun.style.transform = `translate(${sunX.toFixed(1)}px, ${sunY.toFixed(1)}px)`;
@@ -576,7 +611,7 @@ function place(now) {
      the planet rather than being pinned to the viewport. */
   if (orbitNodes.length) {
     root.style.setProperty('--stone-x', `${(vw / 2 + floatX + (driftVW / 100) * vw).toFixed(1)}px`);
-    root.style.setProperty('--stone-y', `${(vh / 2 + floatY + (offsetVH / 100) * vh).toFixed(1)}px`);
+    root.style.setProperty('--stone-y', `${(sceneCentreY(vh) + floatY + (offsetVH / 100) * vh).toFixed(1)}px`);
     root.style.setProperty('--stone-scale', motion.visualScale.toFixed(3));
     /* Nothing orbits the bare rock: the cover's sky has a world in it and
        nothing else. The moon arrives with the surface it belongs to, and the
@@ -600,7 +635,7 @@ function place(now) {
     publishSatellites(
       orbitClock,
       vw / 2 + floatX + (driftVW / 100) * vw,
-      vh / 2 + floatY + (offsetVH / 100) * vh
+      sceneCentreY(vh) + floatY + (offsetVH / 100) * vh
     );
     nameOrbits();
   }

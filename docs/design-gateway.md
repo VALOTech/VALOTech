@@ -74,6 +74,11 @@ initiative stalls at the data layer`. Prose is never set in it.
 
 ## 3. The scene
 
+Everything the scene places vertically is measured from the middle of what a
+reader can actually see, which is half a header below the middle of the window.
+The world and the star it is lit by both sit there; measuring from the window
+instead left the world about thirty pixels high at every size.
+
 `assets/scene/planet.js` builds one WebGL scene, 48vw square and capped at
 760px, centred and moved by CSS transform rather than by re-rendering.
 
@@ -139,10 +144,19 @@ otherwise read the journey most of a page ahead. Only the journey is read
 ahead: the growth scrub and the star's bearing stay honest to where the reader
 actually is.
 
+**A crossing goes under the page, not through it.** Two arguments face each
+other across one: the chapter being left holds one side, the chapter being
+entered holds the other, and a world travelling between them in the reading
+band is behind somebody’s sentences for the whole journey — there is no
+horizontal path that avoids both. So the long crossings dip below the frame,
+cross, and rise into their station before the incoming heading is readable. It
+is also the truest thing on the page: a world going round a star passes under
+the observer as often as over.
+
 Legs still want a real span of page, because a lead cannot cancel a trail
 larger than the leg itself. Measured at a reading pace of a viewport a second,
-every chapter's disc now stands clear of its own argument at the instant that
-chapter's top reaches the frame.
+every chapter’s disc now stands clear of its own argument from the moment that
+chapter’s heading can be read, not merely from the moment its top line arrives.
 
 Self-rotation is 7.5° per second — a forty-eight second revolution. The
 reference turns at 1.5°, which measures as motion and reads as a photograph;
@@ -177,6 +191,19 @@ different animation on slower hardware; measured at four frames a second, the
 scroll boost could not build at all.
 
 ### The sun
+
+The star crosses the sky once over the page, from one shoulder of the world to
+the other by way of directly above it {0} a hundred and eight degrees, and its
+distance breathes by a fifth as it goes. A narrow arc at a fixed radius reads
+as a lamp clipped to the planet rather than as a star the planet is going
+round, which is the whole point of putting the reader on the surface. Both ends
+stay well above the horizontal, because a sun level with the world grazes its
+limb and the surface goes to silhouette, and the drawn position is clamped
+inside the frame: a star pushed past an edge is a light source the reader
+cannot find, which is worse than a bearing a few degrees off its arc. The
+surface is lit from where the glow is actually drawn, so the two never
+disagree, and the field slides against the same bearing so the sky moves as
+the star does.
 
 There is a star, and it is the same star the surfaces are lit by. It is drawn
 in CSS — the scene's canvas is 48vw wide and a light source has to be able to
@@ -237,6 +264,13 @@ The strike radius is measured from the planet element rather than restated from
 its stylesheet numbers, so resizing the world cannot leave meteors striking a
 circle that is no longer where it is.
 
+Some of the field twinkles: about a fifth of the stars, each on its own period
+of three to nine seconds and on two rates at once, because a single sine is a
+metronome and a sky is not. It runs on a tenth-of-a-second tick rather than a
+frame loop — a sky does not need sixty of them a second — and stops entirely
+for a hidden tab or a reader who asked for less motion, which is where the
+promise of no idle animation actually matters.
+
 Their loop exists only while one is in flight or an impact is still fading.
 Between meteors nothing is scheduled, which is what lets the star field keep
 its own promise of no idle animation. Reduced motion suppresses them entirely,
@@ -284,6 +318,10 @@ arrive last, where the page first needs something to pin a label to, and they
 are drawn as machinery: a lit hull between two striped arrays on a boom, with a
 dish looking back at the world. At four pixels across a shaded sphere reads as
 another planet, which is the one thing these two are not.
+
+What each carries follows from what it is: the moon is the oldest thing in the
+sky, so it names the oldest thing the organisation has, its people, and the two
+that were built name what is being built.
 
 What a label has to clear is therefore the drawn object rather than the radius
 it was sized from: a craft's arrays reach well past its hull, and the published

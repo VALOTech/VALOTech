@@ -41,11 +41,19 @@
      photograph of a sky rather than as noise. */
   var HALO_SHARE = 0.014;
 
+  /* Scintillation. Air is what makes a star twinkle, so only some of them do
+     it here and none of them do it hard: a field where every point pulses
+     reads as a string of fairy lights rather than as a sky. Each one runs on
+     its own period and phase, and on two rates at once, because a single sine
+     is a metronome and a sky is not. */
+  var TWINKLE_SHARE = 0.22;
+  var TWINKLE_MS = 90;
+
   /* How far the sky slides across one full turn of the orbit, in pixels at a
      tier parallax of 1. Each star takes its own share, so the near field
      travels and the far field barely moves — which is the whole of what
      parallax is, and the reason the sky reads as depth rather than wallpaper. */
-  var ORBIT_PARALLAX = 260;
+  var ORBIT_PARALLAX = 440;
 
   var stars = [];
   var bearingX = 0;
@@ -55,6 +63,9 @@
   var dpr = 1;
   var band = 0; /* the vertical span stars wrap within */
   var lastScroll = -1;
+  var clock = 0;
+  var twinkling = false;
+  var twinkleTimer = 0;
   var raf = 0;
 
   function rand(a, b) {
@@ -93,7 +104,9 @@
           r: rand(tier[0], tier[1]),
           a: rand(tier[2], tier[3]),
           p: tier[4],
-          halo: Math.random() < HALO_SHARE
+          halo: Math.random() < HALO_SHARE,
+          tw: Math.random() < TWINKLE_SHARE ? rand(3.2, 9.0) : 0,
+          tp: Math.random() * 6.2832
         });
       }
     }
@@ -114,10 +127,19 @@
       /* The band is twice the viewport; only the visible half is painted. */
       if (y > vh + 2) continue;
 
+      var alpha = s.a;
+      if (s.tw && twinkling) {
+        var w1 = 6.2832 / s.tw;
+        var wave =
+          Math.sin(clock * w1 + s.tp) * 0.62 +
+          Math.sin(clock * w1 * 1.73 + s.tp * 2.3) * 0.38;
+        alpha = s.a * (0.62 + 0.38 * (0.5 + 0.5 * wave));
+      }
+
       if (s.halo) {
         var g = ctx.createRadialGradient(x, y, 0, x, y, s.r * 7);
-        g.addColorStop(0, "rgba(226,232,255," + s.a + ")");
-        g.addColorStop(0.4, "rgba(178,196,255," + s.a * 0.22 + ")");
+        g.addColorStop(0, "rgba(226,232,255," + alpha + ")");
+        g.addColorStop(0.4, "rgba(178,196,255," + alpha * 0.22 + ")");
         g.addColorStop(1, "rgba(140,158,255,0)");
         ctx.fillStyle = g;
         ctx.beginPath();
@@ -125,7 +147,7 @@
         ctx.fill();
       }
 
-      ctx.fillStyle = "rgba(233,238,255," + s.a + ")";
+      ctx.fillStyle = "rgba(233,238,255," + alpha + ")";
       ctx.beginPath();
       ctx.arc(x, y, s.r, 0, 6.2832);
       ctx.fill();
@@ -140,6 +162,34 @@
     if (scrollY === lastScroll) return;
     lastScroll = scrollY;
     draw(scrollY);
+  }
+
+  /* The field is otherwise redrawn only when the page has moved under it. A
+     twinkle has to keep its own slow time, so it runs on a tenth-of-a-second
+     tick rather than a frame loop — a sky does not need sixty of them a
+     second — and it stops entirely for a hidden tab or a reader who asked for
+     less motion, which is when the promise of no idle animation matters. */
+  function twinkle() {
+    twinkleTimer = 0;
+    if (!twinkling) return;
+    clock = (w.performance ? w.performance.now() : Date.now()) / 1000;
+    draw(lastScroll < 0 ? w.scrollY || 0 : lastScroll);
+    scheduleTwinkle();
+  }
+
+  function scheduleTwinkle() {
+    if (twinkleTimer || !twinkling) return;
+    twinkleTimer = w.setTimeout(twinkle, TWINKLE_MS);
+  }
+
+  function setTwinkling(on) {
+    twinkling = !!on;
+    if (twinkling) scheduleTwinkle();
+    else if (twinkleTimer) {
+      w.clearTimeout(twinkleTimer);
+      twinkleTimer = 0;
+      draw(lastScroll < 0 ? w.scrollY || 0 : lastScroll);
+    }
   }
 
   function schedule() {
@@ -166,7 +216,7 @@
      is living they arrive about three times less often, which reads as a
      settling sky and still lets an absorption be seen — a world nothing is
      allowed to reach can never show what its atmosphere does to an arrival. */
-  var QUIET_FACTOR = 2.4;
+  var QUIET_FACTOR = 0.9;
 
   /* Past this the world has an atmosphere, and an arriving body is swallowed
      and burns rather than cratering. Below it there is bare rock to hit. */
@@ -551,17 +601,20 @@
     resizeTimer = w.setTimeout(function () {
       build();
       schedule();
+      scheduleTwinkle();
     }, 150);
   }
 
   build();
   schedule();
+  setTwinkling(!reduce.matches && !doc.hidden);
   w.addEventListener("resize", onResize, { passive: true });
   w.addEventListener("scroll", schedule, { passive: true });
   if (reduce.addEventListener) {
     reduce.addEventListener("change", function () {
       lastScroll = -1;
       schedule();
+      setTwinkling(!reduce.matches && !doc.hidden);
       if (reduce.matches) {
         w.clearTimeout(timer);
         meteors.length = 0;
@@ -569,8 +622,9 @@
     });
   }
   /* A meteor that fell while the tab was hidden is a frame budget spent on
-     nobody. */
+     nobody, and so is a star pulsing at one. */
   doc.addEventListener("visibilitychange", function () {
+    setTwinkling(!reduce.matches && !doc.hidden);
     if (doc.hidden) w.clearTimeout(timer);
     else if (!scheduled) planNext();
   });
