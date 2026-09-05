@@ -113,6 +113,11 @@ const DRIFT_EASE = 0.26;
    The measured rate is smoothed, because a wheel delivers scroll in steps and
    an unsmoothed lead would jump the planet on every notch, and it is capped,
    because a flick would otherwise read the journey most of a page ahead. */
+/* One frame of an ordinary scroll covers well under a hundredth of the page;
+   a flick at three thousand pixels a second covers about a four-hundredth. A
+   fiftieth in a single frame is not scrolling. */
+const JUMP_STEP = 0.02;
+
 const LEAD_EASE = 0.2;
 const LEAD_MAX = 0.06;
 
@@ -496,6 +501,17 @@ function place(now) {
   const rate = Math.abs(drift);
   lastTick = tick;
   lastProgress = progress;
+  /* A jump is not a scroll. Dragging the scrollbar, clicking a nav anchor or
+     restoring a position on reload moves the page further in one frame than
+     any reader ever does, and easing across that gap leaves the world drifting
+     over the argument for a second or two after the reader has arrived — which
+     is indistinguishable, from the chair, from a world that went to the wrong
+     place. Past this step the scene is placed rather than eased, exactly as it
+     is on the first frame. */
+  if (Math.abs(progress - lastProgress) > JUMP_STEP) {
+    primed = false;
+    leadRate = 0;
+  }
   leadRate += (drift - leadRate) * ease(gap, LEAD_EASE);
   const lead = Math.max(-LEAD_MAX, Math.min(LEAD_MAX, leadRate * DRIFT_EASE));
   const look = Math.max(0, Math.min(1, progress + lead));
