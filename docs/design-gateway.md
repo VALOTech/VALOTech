@@ -103,6 +103,15 @@ layer; there is no second timeline.
 | Atmosphere | `0.46 – 0.92` |
 | Clouds | `0.54 – 0.88` |
 
+The crust does not arrive where it is now either. While the world is young its
+longitudes are drawn in toward one meridian, so the visible face carries nearly
+all of the land at once and the far side is open ocean — one mass, which is
+what it was. As the drift runs the pull relaxes and the land parts into the
+continents we have, opening the seas between them as it goes; crust still on
+its way is tinted warmer and barer than the ground it will become. It runs
+behind the surface rather than with it, from a scrub of 0.52 to 0.96, so the
+world finishes becoming a world before it starts becoming *this* world.
+
 The two surfaces meet along a dithered frontier, and the frontier itself is
 lit: a band of heat runs with the advancing edge, strongest exactly on the line
 and gone a little either side, on both surfaces so they share one edge rather
@@ -115,16 +124,25 @@ The planet also moves, between stations written in viewport units — full size 
 back to centre at *How your people fit in*, where the reader is being shown two
 columns that belong on either side of it, and away again for the close.
 
-A leg is sized and placed by the easing rather than by taste. The planet
-follows a moving target, so while the reader scrolls it trails by roughly the
-target's speed times the easing's time constant. Two things follow. A leg needs
-a real span of page — measured at a reading pace of a viewport a second, a leg
-shorter than about a second of scrolling arrives late however early the station
-is written. And it has to finish above its chapter's top, by about two
-hundredths of the page, which is the half-second the planet needs to stop. Lag
-in the middle of a leg is invisible, because nothing is pinned to the planet
-while it travels; lag at the top of a chapter is the whole of what "the planet
-moves after I am already reading" means.
+The planet follows a moving target, so while the reader scrolls it trails by
+roughly the target's speed times the easing's time constant. That is why a
+chapter can be reached before the planet is in the space it left, and why no
+amount of moving the stations earlier fixes it: moving a station moves the
+target and the trail with it.
+
+**The journey is therefore read a little ahead of the reader.** The lead is the
+same product — the measured scroll rate times the easing's constant — so the two
+subtract. It falls to nothing the moment scrolling stops, so a settled planet
+sits exactly on its station rather than past it; the measured rate is smoothed,
+because a wheel delivers scroll in steps, and capped, because a flick would
+otherwise read the journey most of a page ahead. Only the journey is read
+ahead: the growth scrub and the star's bearing stay honest to where the reader
+actually is.
+
+Legs still want a real span of page, because a lead cannot cancel a trail
+larger than the leg itself. Measured at a reading pace of a viewport a second,
+every chapter's disc now stands clear of its own argument at the instant that
+chapter's top reaches the frame.
 
 Self-rotation is 7.5° per second — a forty-eight second revolution. The
 reference turns at 1.5°, which measures as motion and reads as a photograph;
@@ -256,10 +274,23 @@ a turn for as long as the page is open, and the period is the planet's own, so
 the system reads as one thing. What tells them apart is radius, size and
 colour, never speed.
 
+**They arrive in the order the story does, and they are drawn as what they
+are.** The cover's sky has a world in it and nothing else, because nothing
+orbits a bare rock. A moon arrives with the surface it belongs to, on the
+widest of the three paths, drawn grey with its seas — a plain ball is a bead,
+and the maria are what make a reader recognise *this* moon rather than a
+generic one. The two the argument is about are built rather than found, so they
+arrive last, where the page first needs something to pin a label to, and they
+are drawn as machinery: a lit hull between two striped arrays on a boom, with a
+dish looking back at the world. At four pixels across a shaded sphere reads as
+another planet, which is the one thing these two are not.
+
+What a label has to clear is therefore the drawn object rather than the radius
+it was sized from: a craft's arrays reach well past its hull, and the published
+span says so.
+
 They keep their own clock, so they circle whether or not anyone scrolls, and
-faster while someone does — the same multiplier the planet's spin uses. Nothing
-orbits a dead rock: their opacity is published from the growth scrub, so the
-cover carries a bare moon and they arrive with the atmosphere.
+faster while someone does — the same multiplier the planet's spin uses.
 
 Two of the three are named — *your people* and *AI*, the page's argument in
 orbit — and only on the near half of the path. The box is split into halves and
@@ -445,7 +476,16 @@ Nothing in the argument depends on any of it.
 
 The cover's three markers are placed from the planet's own published position,
 arced down the side the copy does not take, and the copy is capped at
-`min(42vw, 560px)` so the two lanes cannot meet. Anchoring them to the viewport
+`min(36vw, 560px)` so the two lanes cannot meet.
+
+The cover is also the one section whose composition is measured against the
+**frame** rather than against the reading column, so its own column is nearly
+the frame — `min(94vw, 1520px)`. Holding the copy inside the centred 1240px
+column while the world and the markers are placed in viewport units is what
+separates the two systems on a wide screen: the copy is pulled inward, the art
+is not, and the result is a dead strip down the left with everything else
+pressed into the right of it. Measured at 1915px, that strip was 366px against
+235 on the other side; it is 226 against 235 now. Anchoring them to the viewport
 instead is what the reference does, and at 1440 it puts two of them on the
 headline; anchoring them inward from the planet, which this build did while the
 cover's world was cropped by the right edge, does the same thing from the other

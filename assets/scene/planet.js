@@ -68,6 +68,14 @@ const TRANSITION_GLSL = /* glsl */ `
     );
   }
 
+  /* Land or sea, read from the map itself rather than from a second mask, so
+     the two always agree. */
+  float valoLand(vec3 c) {
+    float luma = dot(c, vec3(0.299, 0.587, 0.114));
+    float blue = c.b - max(c.r, c.g * 0.82);
+    return 1.0 - smoothstep(0.015, 0.12, blue + (1.0 - luma) * 0.055);
+  }
+
   /* How close this pixel is to the edge that is currently crossing the world.
      The change had been silent — one surface simply replaced the other, pixel
      by pixel, with nothing to watch. This gives the frontier itself a body:
@@ -267,6 +275,8 @@ export function mount(container, motion, onReady) {
   /* One scrub drives every layer; these are the windows it is read through. */
   const uLife = { value: 0 };
   const uSurface = { value: 0 };
+  /* How far the crust has travelled: 0 is one mass, 1 is the map we have. */
+  const uDrift = { value: 0 };
   const uCloud = { value: 0 };
   const uAir = { value: 0 };
 
@@ -371,6 +381,7 @@ export function mount(container, motion, onReady) {
   });
   earthMaterial.onBeforeCompile = (shader) => {
     shader.uniforms.uSurface = uSurface;
+    shader.uniforms.uDrift = uDrift;
     shader.uniforms.uSun = uSun;
     shader.vertexShader = shader.vertexShader
       .replace(
@@ -390,6 +401,7 @@ export function mount(container, motion, onReady) {
         '#include <common>',
         `#include <common>
         uniform float uSurface;
+        uniform float uDrift;
         uniform vec3 uSun;
         varying vec3 vEarthViewNormal;
         varying vec3 vEarthDirection;
@@ -402,6 +414,29 @@ export function mount(container, motion, onReady) {
         if (uSurface < 0.001) discard;
         if (valoFrontier(uSurface, vEarthDirection) <= valoFrontierDither())
           discard;
+
+        // The crust does not arrive where it is now. Longitudes are drawn in
+        // toward one meridian while the world is young, so the visible face
+        // carries nearly all of the land at once and the far side is open
+        // ocean — one mass, which is what it was. As the drift runs the pull
+        // relaxes and the land parts into the continents we have, opening the
+        // seas between them as it goes.
+        float valoPull = 1.0 - uDrift;
+        vec3 valoSettled = diffuseColor.rgb;
+        if (valoPull > 0.002) {
+          vec2 valoUv = vMapUv;
+          valoUv.x = fract(0.42 + (vMapUv.x - 0.42) * (1.0 + valoPull * 0.95));
+          diffuseColor.rgb = texture2D(map, valoUv).rgb;
+          // Crust still on its way is young: warmer and barer than the ground
+          // it will become.
+          float valoMoved =
+            clamp(valoLand(diffuseColor.rgb) - valoLand(valoSettled), 0.0, 1.0);
+          diffuseColor.rgb = mix(
+            diffuseColor.rgb,
+            diffuseColor.rgb * vec3(1.16, 0.88, 0.66),
+            valoMoved * valoPull * 0.62
+          );
+        }
 
         // Ocean and land are separated from the map itself rather than from a
         // second mask, so the two read with different roughness and specular.
@@ -590,6 +625,7 @@ export function mount(container, motion, onReady) {
        whatever the Earth claims, the lunar surface discards. */
     uLife.value = state.growth;
     uSurface.value = THREE.MathUtils.smoothstep(state.growth, 0.08, 0.68);
+    uDrift.value = THREE.MathUtils.smoothstep(state.growth, 0.52, 0.96);
     uCloud.value = THREE.MathUtils.smoothstep(state.growth, 0.54, 0.88);
     uAir.value = THREE.MathUtils.smoothstep(state.growth, 0.46, 0.92);
     earthGroup.visible =

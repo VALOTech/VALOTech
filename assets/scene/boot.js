@@ -87,10 +87,6 @@ const MIN_ELEVATION = 0.42;
 
 /* Scrolling turns the world faster. The gain converts pages-per-second into a
    multiplier; the cap keeps a flick from spinning the surface into a blur. */
-/* How present the orbit is before the world is one. Enough to see the bodies
-   move without being asked to; not enough to compete with the cover. */
-const ORBIT_FLOOR = 0.45;
-
 const SPIN_BOOST_GAIN = 26;
 const SPIN_BOOST_MAX = 7;
 const SPIN_EASE = 0.18;
@@ -102,6 +98,20 @@ const CALM_ORBIT = 0.16;
    of its remaining distance per frame — the follow the stations were tuned
    against — and closes the same amount per second everywhere else. */
 const DRIFT_EASE = 0.26;
+
+/* The planet trails its target by the target's speed times the easing's time
+   constant, which is why a chapter can be reached before the planet is in the
+   space it left — a fault no amount of moving the stations earlier can fix,
+   because moving a station moves the target and the trail with it. Reading the
+   journey a little ahead of the reader cancels it instead: the lead is the
+   same product, so the two subtract. It falls to nothing the moment scrolling
+   stops, so a settled planet sits exactly on its station rather than past it.
+
+   The measured rate is smoothed, because a wheel delivers scroll in steps and
+   an unsmoothed lead would jump the planet on every notch, and it is capped,
+   because a flick would otherwise read the journey most of a page ahead. */
+const LEAD_EASE = 0.2;
+const LEAD_MAX = 0.06;
 
 /* How far the reference's key light sits toward the viewer relative to its
    spread across the frame. Holding the ratio keeps the surface's modelling
@@ -138,8 +148,8 @@ const JOURNEY = [
      chapter's top, which is the half-second the planet needs to stop. Lag in
      the middle of a leg is invisible, because nothing is pinned to the planet
      while it travels; lag at the top of a chapter is the whole complaint. */
-  { at: 0.0, x: 58, y: 50, scale: 1.05 },
-  { at: 0.012, x: 58, y: 50, scale: 1.05 },
+  { at: 0.0, x: 54, y: 50, scale: 1.05 },
+  { at: 0.012, x: 54, y: 50, scale: 1.05 },
   /* Two chapters a side. The planet settles once and stays, so a crossing is
      an event rather than the page's usual state, and the two long chapters
      that open the argument share one station instead of trading it. */
@@ -160,9 +170,9 @@ const JOURNEY = [
   { at: 0.534, x: 25, y: 52, scale: 0.88 },
   { at: 0.586, x: 25, y: 52, scale: 0.88 },
   { at: 0.602, x: 24, y: 46, scale: 0.84 },
-  { at: 0.620, x: 24, y: 46, scale: 0.84 },
+  { at: 0.644, x: 24, y: 46, scale: 0.84 },
   /* Home and centred through the mapping chapter. */
-  { at: 0.660, x: 50, y: 56, scale: 0.9 },
+  { at: 0.674, x: 50, y: 56, scale: 0.9 },
   { at: 0.830, x: 50, y: 56, scale: 0.9 },
   /* Two on the right to close. */
   { at: 0.873, x: 80, y: 46, scale: 0.84 },
@@ -195,6 +205,7 @@ let scale = 1;
 let introStartedAt = 0;
 let lastTick = 0;
 let lastProgress = 0;
+let leadRate = 0;
 let spinBoost = 0;
 let orbitClock = 0;
 let running = false;
@@ -222,19 +233,28 @@ let primed = false;
    animations rather than as one system. */
 /* Three bodies, evenly spaced round the circle and on three distinct paths, so
    at any moment they stand apart rather than clustering — each one has to have
-   room beside it for the label anchored to it. They share one period, and
+   room beside it for the label anchored to it.
+
+   They arrive in the order the story does. A bare rock has nothing going round
+   it, so the cover's sky is empty. A world gets a moon, on the widest path,
+   because that is where ours is. The two the argument is about are built, not
+   found, so they arrive last and they are drawn as what they are: a body with
+   solar panels, on the closer paths a working satellite actually takes.
+
+   They share one period, and
    that is the whole of what keeps them apart: on separate periods the phase
    offsets drift, and three bodies written a third of a turn apart close to
    thirty-five degrees within a minute. One period holds the third of a turn
    forever. The period is the planet's own, so the system reads as one thing.
    */
 const SATELLITES = [
-  { rx: 92, ry: 40, r: 6.4, period: 48, phase: 0.0, fill: 'mars', label: 'YOUR PEOPLE' },
-  { rx: 78, ry: 35, r: 4.6, period: 48, phase: 0.3333, fill: 'neptune', label: '' },
-  { rx: 64, ry: 32, r: 5.4, period: 48, phase: 0.6667, fill: 'venus', label: 'AI' }
+  { rx: 92, ry: 40, r: 6.4, period: 48, phase: 0.0, kind: 'moon', label: '' },
+  { rx: 78, ry: 35, r: 3.4, period: 48, phase: 0.3333, kind: 'craft', label: 'YOUR PEOPLE' },
+  { rx: 64, ry: 32, r: 3.4, period: 48, phase: 0.6667, kind: 'craft', label: 'AI' }
 ];
 
 const SPHERES = {
+  moon: [['0%', '#e8e6e0'], ['24%', '#bdbab4'], ['54%', '#8b8884'], ['78%', '#514f4d'], ['100%', '#141416']],
   mars: [['0%', '#f1c2a1'], ['22%', '#d58b69'], ['55%', '#ad5946'], ['80%', '#673129'], ['100%', '#24151a']],
   neptune: [['0%', '#eeeaff'], ['20%', '#aaa6ee'], ['46%', '#625bc8'], ['70%', '#38318e'], ['100%', '#090921']],
   venus: [['0%', '#fffdf1'], ['18%', '#fff0b8'], ['46%', '#e8bd62'], ['72%', '#a76d2c'], ['100%', '#241711']]
@@ -242,6 +262,7 @@ const SPHERES = {
 
 const NS = 'http://www.w3.org/2000/svg';
 const orbitNodes = [];
+const orbitStage = { moon: 0, craft: 0 };
 
 function svg(name, attrs) {
   const el = document.createElementNS(NS, name);
@@ -278,6 +299,17 @@ function buildOrbits() {
       );
       defs.appendChild(grad);
     }
+    /* A solar array reads as one by its stripes, not by its colour. */
+    const panel = svg('linearGradient', {
+      id: 'orbit-panel-' + depth,
+      x1: '0%', y1: '0%', x2: '0%', y2: '100%'
+    });
+    [['0%', '#3b4a86'], ['34%', '#222c56'], ['36%', '#4a5c9e'],
+     ['66%', '#222c56'], ['68%', '#4a5c9e'], ['100%', '#1a2244']]
+      .forEach(([offset, color]) =>
+        panel.appendChild(svg('stop', { offset: offset, 'stop-color': color }))
+      );
+    defs.appendChild(panel);
     root.appendChild(defs);
 
     const body = svg('g', { 'clip-path': 'url(#orbit-clip-' + depth + ')' });
@@ -288,13 +320,49 @@ function buildOrbits() {
 
     const marks = SATELLITES.map((sat) => {
       const g = svg('g', { class: 'orbit-body' });
-      g.appendChild(
-        svg('circle', {
-          class: 'orbit-planet',
-          r: sat.r,
-          fill: 'url(#orbit-' + sat.fill + '-' + depth + ')'
-        })
-      );
+      if (sat.kind === 'craft') {
+        /* A body between two arrays, on a boom, with a dish looking back at
+           the world. Drawn rather than shaded: at this size a sphere reads as
+           another planet, and the point of these two is that they are ours. */
+        const w = sat.r * 1.05;
+        const arm = sat.r * 1.75;
+        g.appendChild(svg('line', {
+          class: 'orbit-boom', x1: -arm, y1: 0, x2: arm, y2: 0
+        }));
+        [-arm - w * 0.95, arm - w * 0.05].forEach((x) =>
+          g.appendChild(svg('rect', {
+            x: x, y: -w * 0.62, width: w * 1.9, height: w * 1.24, rx: w * 0.16,
+            fill: 'url(#orbit-panel-' + depth + ')'
+          }))
+        );
+        g.appendChild(svg('rect', {
+          class: 'orbit-hull',
+          x: -w * 0.5, y: -w * 0.62, width: w, height: w * 1.24, rx: w * 0.24
+        }));
+        g.appendChild(svg('line', {
+          class: 'orbit-boom', x1: 0, y1: -w * 0.62, x2: 0, y2: -w * 1.7
+        }));
+        g.appendChild(svg('circle', {
+          class: 'orbit-dish', cx: 0, cy: -w * 1.85, r: w * 0.34
+        }));
+      } else {
+        g.appendChild(
+          svg('circle', {
+            class: 'orbit-planet',
+            r: sat.r,
+            fill: 'url(#orbit-moon-' + depth + ')'
+          })
+        );
+        /* The maria. A grey ball is a bead; the dark seas are what makes a
+           reader recognise this particular moon rather than a generic one. */
+        [[-0.30, -0.28, 0.30], [0.16, -0.40, 0.19], [-0.10, 0.24, 0.26],
+         [0.34, 0.20, 0.15], [-0.44, 0.16, 0.13]].forEach(([cx, cy, rr]) =>
+          g.appendChild(svg('ellipse', {
+            class: 'orbit-mare',
+            cx: cx * sat.r, cy: cy * sat.r, rx: rr * sat.r, ry: rr * sat.r * 0.82
+          }))
+        );
+      }
       /* Only the near half is named. A satellite on the far side is behind the
          world, and a label that survived the occlusion would read as a clipped
          word rather than as something passing behind. */
@@ -334,7 +402,7 @@ function buildOrbits() {
   });
 }
 
-function moveOrbits(seconds) {
+function moveOrbits(seconds, stage) {
   for (let n = 0; n < orbitNodes.length; n++) {
     const marks = orbitNodes[n].marks;
     for (let i = 0; i < SATELLITES.length; i++) {
@@ -343,6 +411,7 @@ function moveOrbits(seconds) {
       const x = 100 + Math.cos(turn) * sat.rx;
       const y = 50 + Math.sin(turn) * sat.ry;
       marks[i].setAttribute('transform', 'translate(' + x.toFixed(2) + ' ' + y.toFixed(2) + ')');
+      marks[i].setAttribute('opacity', (sat.kind === 'craft' ? stage.craft : stage.moon).toFixed(3));
     }
   }
 }
@@ -373,7 +442,10 @@ function publishSatellites(seconds, cx, cy) {
     root.style.setProperty('--sat' + i + '-y', (cy + dy).toFixed(1) + 'px');
     /* Which way its label should open, so it never runs off the frame. */
     root.style.setProperty('--sat' + i + '-side', Math.cos(turn) >= 0 ? '1' : '-1');
-    root.style.setProperty('--sat' + i + '-r', ((sat.r / 200) * face.width).toFixed(1) + 'px');
+    /* What a label has to clear, which is the drawn object rather than the
+       radius it was sized from: a craft's arrays reach well past its hull. */
+    const span = sat.kind === 'craft' ? sat.r * 2.9 : sat.r;
+    root.style.setProperty('--sat' + i + '-r', ((span / 200) * face.width).toFixed(1) + 'px');
   }
 }
 
@@ -396,15 +468,30 @@ function place(now) {
      stop once there is a living world to look at. */
   if (window.VALO_SKY) window.VALO_SKY.setGrowth(motion.growth);
 
-  /* Which leg of the journey this scroll position sits on. The stations are
-     layout, so they are honoured as written. */
+  /* How fast the reader is moving through the page, signed, in page-fractions
+     per second. It feeds two things: the lead below, and the bounded spin
+     multiplier further down. */
+  const tick = now / 1000;
+  const gap = Math.min(0.25, Math.max(1 / 120, tick - lastTick));
+  const drift = (progress - lastProgress) / gap;
+  const rate = Math.abs(drift);
+  lastTick = tick;
+  lastProgress = progress;
+  leadRate += (drift - leadRate) * ease(gap, LEAD_EASE);
+  const lead = Math.max(-LEAD_MAX, Math.min(LEAD_MAX, leadRate * DRIFT_EASE));
+  const look = Math.max(0, Math.min(1, progress + lead));
+
+  /* Which leg of the journey this position sits on. The stations are layout,
+     so they are honoured as written — the lead moves when they are read, never
+     what they say. Only the journey is read ahead: the growth scrub and the
+     star's bearing stay honest to where the reader actually is. */
   const path = wide ? JOURNEY : JOURNEY_NARROW;
   let i = 0;
-  while (i < path.length - 2 && progress > path[i + 1].at) i++;
+  while (i < path.length - 2 && look > path[i + 1].at) i++;
   const from = path[i];
   const to = path[i + 1];
   const span = to.at - from.at || 1;
-  const t = smoothstep((progress - from.at) / span);
+  const t = smoothstep((look - from.at) / span);
 
   /* The stations are written for a page that reads left to right. Under
      Arabic and Urdu the argument is pinned to the other side, so the whole
@@ -421,14 +508,9 @@ function place(now) {
   const bearing = ((arcFrom + (arcTo - arcFrom) * progress) * Math.PI) / 180;
   motion.bearing = bearing;
 
-  /* How fast the reader is moving through the page, as a bounded multiplier
-     on everything that turns. Eased in both directions, so a flick reads as a
-     surge and a stop as a coast rather than as a jump. */
-  const tick = now / 1000;
-  const gap = Math.min(0.25, Math.max(1 / 120, tick - lastTick));
-  const rate = Math.abs(progress - lastProgress) / gap;
-  lastTick = tick;
-  lastProgress = progress;
+  /* The same rate, as a bounded multiplier on everything that turns. Eased in
+     both directions, so a flick reads as a surge and a stop as a coast rather
+     than as a jump. */
   const wanted = still ? 0 : Math.min(SPIN_BOOST_MAX, rate * SPIN_BOOST_GAIN);
   spinBoost += (wanted - spinBoost) * ease(gap, SPIN_EASE);
   motion.spin = 1 + spinBoost;
@@ -496,22 +578,25 @@ function place(now) {
     root.style.setProperty('--stone-x', `${(vw / 2 + floatX + (driftVW / 100) * vw).toFixed(1)}px`);
     root.style.setProperty('--stone-y', `${(vh / 2 + floatY + (offsetVH / 100) * vh).toFixed(1)}px`);
     root.style.setProperty('--stone-scale', motion.visualScale.toFixed(3));
-    /* The orbit is present from the cover, faintly — three bodies going round
-       a world that has not become one yet — and comes fully forward as the
-       atmosphere does, so it is whole by the time the mapping chapter asks
-       the reader to look at it. Held back entirely until then, the page opens
-       on a sky with nothing moving in it. */
+    /* Nothing orbits the bare rock: the cover's sky has a world in it and
+       nothing else. The moon arrives with the surface it belongs to, and the
+       two built ones arrive where the argument first needs something to pin a
+       label to. The container carries whichever is furthest along, so it is
+       out of the way while both are. */
+    const moonStage = smoothstep((motion.growth - 0.30) / 0.32);
+    const craftStage = smoothstep((progress - 0.335) / 0.055);
+    orbitStage.moon = moonStage;
+    orbitStage.craft = craftStage;
     root.style.setProperty(
       '--orbit-reveal',
-      ((ORBIT_FLOOR + (1 - ORBIT_FLOOR) * smoothstep((motion.growth - 0.4) / 0.4)) *
-        introOpacity).toFixed(3)
+      (Math.max(moonStage, craftStage) * introOpacity).toFixed(3)
     );
     /* The satellites keep their own time — they circle whether or not anyone
        scrolls, and quicker while someone does. Under reduced motion they keep
        circling too, at a sixth of the pace and with no scroll boost: slow
        enough that nothing appears to move without being watched for. */
     orbitClock += gap * (still ? CALM_ORBIT : motion.spin);
-    moveOrbits(orbitClock);
+    moveOrbits(orbitClock, orbitStage);
     publishSatellites(
       orbitClock,
       vw / 2 + floatX + (driftVW / 100) * vw,

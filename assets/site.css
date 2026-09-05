@@ -840,6 +840,32 @@ html:not(.can-scene) .planet {
   stroke-width: 0.06;
 }
 
+/* The moon's seas. Darker than the ground it sits on and soft-edged, because
+   a hard-edged spot on a small disc reads as a hole rather than as a plain. */
+.orbit-mare {
+  fill: rgba(28, 30, 36, 0.42);
+}
+
+/* The built two: hull, boom, dish. Lit rather than shaded, so at four pixels
+   across they still read as machinery against a planet. */
+.orbit-hull {
+  fill: #d5dbf2;
+  stroke: rgba(20, 24, 40, 0.55);
+  stroke-width: 0.08;
+}
+
+.orbit-boom {
+  stroke: rgba(190, 200, 232, 0.85);
+  stroke-width: 0.24;
+  stroke-linecap: round;
+}
+
+.orbit-dish {
+  fill: #eef1ff;
+  stroke: rgba(20, 24, 40, 0.5);
+  stroke-width: 0.06;
+}
+
 .orbit-chip {
   fill: rgba(9, 11, 18, 0.86);
   stroke: rgba(168, 186, 255, 0.34);
@@ -962,8 +988,18 @@ html:not(.can-scene) .planet {
     display: block;
   }
 
+  /* The cover is the one section whose composition is measured against the
+     frame rather than against the reading column: the world and the markers
+     are placed in viewport units, and holding the copy inside the centred
+     column while they are not leaves a dead strip down the left of a wide
+     screen and pushes everything else into the right of it. The cover's own
+     column is therefore nearly the frame, so the three lanes divide it. */
+  .hero > .wrap {
+    max-width: min(94vw, 1520px);
+  }
+
   .hero-copy {
-    max-width: min(42vw, 560px);
+    max-width: min(36vw, 560px);
   }
 
   .hero-aside {
@@ -989,17 +1025,17 @@ html:not(.can-scene) .planet {
   }
 
   .hero-aside .marker:nth-child(1) {
-    inset-inline-start: calc(var(--hero-x, 58vw) + 13vw);
+    inset-inline-start: calc(var(--hero-x, 54vw) + 13vw);
     inset-block-start: calc(var(--hero-y, 50vh) - 33vh);
   }
 
   .hero-aside .marker:nth-child(2) {
-    inset-inline-start: calc(var(--hero-x, 58vw) + 17vw);
+    inset-inline-start: calc(var(--hero-x, 54vw) + 17vw);
     inset-block-start: calc(var(--hero-y, 50vh) - 7vh);
   }
 
   .hero-aside .marker:nth-child(3) {
-    inset-inline-start: calc(var(--hero-x, 58vw) + 13vw);
+    inset-inline-start: calc(var(--hero-x, 54vw) + 13vw);
     inset-block-start: calc(var(--hero-y, 50vh) + 19vh);
   }
 
