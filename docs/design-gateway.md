@@ -248,6 +248,14 @@ from the same table that draws the bodies, because everything else that needs
 it is deciding whether the orbit clears something — and a second copy of the
 number stays true exactly until one of the two is tuned.
 
+All three share **one period**, and that is the whole of what keeps them apart.
+On separate periods the phase offsets drift: three bodies written a third of a
+turn apart closed to thirty-five degrees inside a minute, which is the clumping
+that makes an orbit read as three unrelated dots. One period holds the third of
+a turn for as long as the page is open, and the period is the planet's own, so
+the system reads as one thing. What tells them apart is radius, size and
+colour, never speed.
+
 They keep their own clock, so they circle whether or not anyone scrolls, and
 faster while someone does — the same multiplier the planet's spin uses. Nothing
 orbits a dead rock: their opacity is published from the growth scrub, so the
@@ -272,11 +280,23 @@ the reading-start side; three-across grids become two inside it, and
 ValoStack's second text column folds into the first, since that column was the
 paragraph sitting on the planet.
 
-The planet's journey follows from the rule rather than being tuned against it:
-one station per chapter, always in the space the argument does not take. The
-two orbiting chapters mirror each other — argument right and planet left, then
-the reverse — and from there every chapter holds its content left, so the
-planet keeps the right and only changes height and size.
+The planet's journey follows from the rule rather than being tuned against it,
+and it holds a side for **two chapters at a time**: left for the two that open
+the argument, right for the two that follow, left again for the two after
+those, centred for the mapping chapter, right for the two that close. A station
+is a place the planet settles into and stays, so a crossing is an event rather
+than the page's usual state. Half the chapters therefore hold their argument on
+the right, which is what `chapter--aside-end` is: the same column against the
+other edge, with the ground swapping to match.
+
+The cost of the rhythm is a straight measurement rather than a matter of taste.
+A right-hand station has to clear its column by the orbit's whole reach and so
+does a left-hand one, which puts the two about fifty viewport-widths apart; a
+crossing therefore takes about a second of scrolling, and neither chapter can
+name its bodies while it is under way. Where the page is long that costs
+nothing. Between the two shortest chapters on the site it costs half of one
+chapter's labels, and the stations there are pulled as close together as their
+arguments allow for exactly that reason.
 
 Where a chapter puts content on **both** sides, the planet takes the channel
 between them. That is the same rule with a different empty space, and it is
@@ -291,9 +311,15 @@ pinned to **one body** and follows it round, measured at thirty to fifty pixels
 from it at every point of every orbit, because a label that drifts from the
 thing it names stops naming it.
 
-A chapter shows its labels only when three things hold: it holds the frame, the
-planet has stopped, and the planet stands in the space this chapter left for
-it. The third is not implied by the second. The planet parks at one chapter's
+**Only one chapter names the bodies at a time.** Two chapters in frame together
+pin their labels to the same three bodies, so six labels land on three
+positions and print on top of each other — which reads as one line split in
+half rather than as two chapters overlapping. The chapter the reader is level
+with wins; the rest go dark.
+
+That chapter shows its labels only when three further things hold: it holds the
+frame, the planet has stopped, and the planet stands in the space this chapter
+left for it. The third is not implied by the second. The planet parks at one chapter's
 station and is perfectly motionless there while the next chapter comes into
 frame, and labels lit at that moment point at bodies orbiting somewhere else
 entirely. The test is written against the **whole orbit** rather than the
@@ -305,6 +331,11 @@ when the far one has no room — never a clamp. Clamping is what leaves a label
 at the edge of the allowed space pointing at nothing, which is worse than
 opening on the unexpected side.
 
+A label carries the same near-black ground as a chapter card rather than the
+lighter glass the panels use. Glass is right for a panel sitting on a chapter's
+own dark scrim; a label sits on the lit world itself, and the blue in the glass
+reads as a second colour against it.
+
 Their text is drawn from strings the dictionary already carried and no chapter
 rendered: the three architecture layers, the phase outcomes, the ownership
 promises. Nothing new had to be written or translated, and content the business
@@ -315,10 +346,15 @@ team had already written stopped being orphaned.
 Two views of the trust chapter, as the design has them. The **general view** is
 the seven answers and what each one is. The **detail view** — the three
 mechanisms under each — opens behind a sign-in reached from the nav, which
-sits between the language control and the call to action. Below the width where
-the call to action folds into the menu, the sign-in folds with it: keeping it in
-the bar pushed the menu button off the frame on a phone, which cost the reader
-the only way into the navigation.
+sits between the language control and the call to action.
+
+The bar carries six links, that control, the sign-in and the call to action,
+and below about a thousand pixels that is more than fits. The whole set folds
+into the menu at 1080px. It has to fold as a set: leaving the sign-in in a bar
+that had already dropped its call to action pushed the menu button outside the
+frame on a phone, which cost the reader the only way into the navigation, and
+the page reports no overflow when that happens because the row clips rather
+than scrolls.
 
 **It is a demonstration, not a security control.** This is a static site with
 no server: the detail ships inside the page and anyone reading the source can
@@ -407,16 +443,17 @@ Nothing in the argument depends on any of it.
 
 ### Markers
 
-Markers are laid out, not positioned. Each one holds a grid track beside the
-text column, staggered by a margin inside that track; below 900px the whole
-section collapses to one column and they become a plain list under the heading.
+The cover's three markers are placed from the planet's own published position,
+arced down the side the copy does not take, and the copy is capped at
+`min(42vw, 560px)` so the two lanes cannot meet. Anchoring them to the viewport
+instead is what the reference does, and at 1440 it puts two of them on the
+headline; anchoring them inward from the planet, which this build did while the
+cover's world was cropped by the right edge, does the same thing from the other
+direction. Anchoring them outward from a world that stands clear of the copy is
+the only arrangement with no collision to place.
 
-That is deliberate, and it is where this departs from the reference. There the
-markers are absolutely positioned against a 1440-wide viewport, which puts two
-of them on the headline at that width and covers it almost entirely on a phone.
-Anchoring them to the planet instead of the viewport would move the collision
-rather than remove it. A grid track cannot produce one at any width, and a
-marker that covers the headline has stopped being a marker.
+Below 900px the section collapses to one column and they become a plain list
+under the heading, where a marker cannot cover anything.
 
 ## 4. Chapters
 

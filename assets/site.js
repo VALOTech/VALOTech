@@ -404,35 +404,29 @@
     function frame() {
       raf = 0;
       var showing = false;
-      for (var g = 0; g < groups.length; g++) {
-        var box = groups[g].section.getBoundingClientRect();
-        var margin = window.innerHeight * 0.3;
-        /* Which side of the argument the planet stands on, and where that
-           column ends. Read per frame: the column is the same every frame, but
-           the planet is not. */
-        var band = null;
-        var stoneX = read('--stone-x');
-        var reach = read('--orbit-reach') || 0;
-        if (groups[g].wrap && !isNaN(stoneX)) {
-          var wb = groups[g].wrap.getBoundingClientRect();
-          /* The whole orbit has to clear the column, not just the planet's
-             centre: what prints itself over a sentence is the body swinging
-             out to the far side of its path, and the label chasing it. */
-          if (stoneX - reach > wb.right + 8) band = { side: 'right', edge: wb.right };
-          else if (stoneX + reach < wb.left - 8) band = { side: 'left', edge: wb.left };
+      /* Only one chapter may name the bodies at a time. Two chapters in frame
+         together pin their labels to the same three bodies, so six labels land
+         on three positions and print on top of each other — which reads as one
+         line split in half rather than as two chapters overlapping. The one
+         the reader is level with wins; the rest go dark. */
+      var reading = window.innerHeight * 0.42;
+      var lead = -1;
+      var leadDistance = Infinity;
+      var bands = [];
+      for (var q = 0; q < groups.length; q++) {
+        bands.push(eligible(groups[q]));
+        if (!bands[q]) continue;
+        var mid = groups[q].section.getBoundingClientRect();
+        var distance = Math.abs((mid.top + mid.bottom) / 2 - reading);
+        if (distance < leadDistance) {
+          leadDistance = distance;
+          lead = q;
         }
-        /* In frame, the planet standing still, and standing in the space this
-           chapter left for it. Still is not the same as arrived: the planet
-           parks at one chapter's station and is perfectly motionless there
-           while the next chapter comes into frame, and labels lit at that
-           moment point at bodies orbiting somewhere else entirely. Requiring
-           the planet to be clear of this chapter's column makes the two the
-           same question. */
-        var settled = (read('--stone-travel') || 0) < 2;
-        var on = wide.matches && box.top < window.innerHeight - margin &&
-          box.bottom > margin && settled && !!band;
-        groups[g].section.classList.toggle('chips-showing', on);
-        if (!on) continue;
+      }
+      for (var g = 0; g < groups.length; g++) {
+        var band = g === lead ? bands[g] : null;
+        groups[g].section.classList.toggle('chips-showing', !!band);
+        if (!band) continue;
         showing = true;
         for (var i = 0; i < groups[g].chips.length; i++) {
           var chip = groups[g].chips[i];
@@ -472,6 +466,30 @@
         }
       }
       if (showing && !reduce) raf = requestAnimationFrame(frame);
+    }
+
+    /* A chapter may show labels when it holds the frame, the planet has
+       stopped, and the planet stands in the space this chapter left for it.
+       The third is not implied by the second: the planet parks at one
+       chapter's station and is perfectly motionless there while the next
+       comes into frame, and labels lit at that moment point at bodies
+       orbiting somewhere else entirely. The test is written against the whole
+       orbit rather than the planet's centre, because what prints itself over
+       a sentence is the body swinging out to the far side of its path.
+       Returns the open band, which is also the answer, or null. */
+    function eligible(group) {
+      if (!wide.matches) return null;
+      if ((read('--stone-travel') || 0) >= 2) return null;
+      var box = group.section.getBoundingClientRect();
+      var margin = window.innerHeight * 0.3;
+      if (!(box.top < window.innerHeight - margin && box.bottom > margin)) return null;
+      var stoneX = read('--stone-x');
+      if (!group.wrap || isNaN(stoneX)) return null;
+      var reach = read('--orbit-reach') || 0;
+      var wb = group.wrap.getBoundingClientRect();
+      if (stoneX - reach > wb.right + 8) return { side: 'right', edge: wb.right };
+      if (stoneX + reach < wb.left - 8) return { side: 'left', edge: wb.left };
+      return null;
     }
 
     function kick() {

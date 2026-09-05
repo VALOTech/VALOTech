@@ -963,7 +963,7 @@ html:not(.can-scene) .planet {
   }
 
   .hero-copy {
-    max-width: min(46vw, 620px);
+    max-width: min(42vw, 560px);
   }
 
   .hero-aside {
@@ -981,27 +981,26 @@ html:not(.can-scene) .planet {
     pointer-events: auto;
   }
 
-  /* The markers hold the band between the copy and the planet's limb. They
-     used to be offset outward from the planet's centre, which put them off the
-     page entirely once the cover's world moved right to be cropped by the
-     edge. Offsetting inward keeps them in the one lane that is always clear. */
+  /* The markers arc around the world on the side the copy does not take.
+     They are offset from the planet's own published position, so the lane
+     they sit in moves with it rather than being written twice. */
   .hero-aside .marker {
     width: min(22vw, 320px);
   }
 
   .hero-aside .marker:nth-child(1) {
-    inset-inline-start: calc(var(--hero-x, 48vw) - 43vw);
-    inset-block-start: calc(var(--hero-y, 52vh) - 33vh);
+    inset-inline-start: calc(var(--hero-x, 58vw) + 13vw);
+    inset-block-start: calc(var(--hero-y, 50vh) - 33vh);
   }
 
   .hero-aside .marker:nth-child(2) {
-    inset-inline-start: calc(var(--hero-x, 48vw) - 39vw);
-    inset-block-start: calc(var(--hero-y, 52vh) - 7vh);
+    inset-inline-start: calc(var(--hero-x, 58vw) + 17vw);
+    inset-block-start: calc(var(--hero-y, 50vh) - 7vh);
   }
 
   .hero-aside .marker:nth-child(3) {
-    inset-inline-start: calc(var(--hero-x, 48vw) - 45vw);
-    inset-block-start: calc(var(--hero-y, 52vh) + 17vh);
+    inset-inline-start: calc(var(--hero-x, 58vw) + 13vw);
+    inset-block-start: calc(var(--hero-y, 50vh) + 19vh);
   }
 
   /* The connector: an outlined square with a lit core, sitting off the card's
@@ -1110,7 +1109,8 @@ html:not(.can-scene) .planet {
 
 /* An orbiting chapter's ground is dark under its argument and clear where the
    planet stands, so the two swap when the chapter does. */
-.chapter--rails[data-orbit='left'] {
+.chapter--rails[data-orbit='left'],
+.chapter--rails.chapter--aside-end {
   background: linear-gradient(
     270deg,
     rgba(8, 10, 18, 0.95) 0%,
@@ -1121,7 +1121,8 @@ html:not(.can-scene) .planet {
   );
 }
 
-[dir='rtl'] .chapter--rails[data-orbit='left'] {
+[dir='rtl'] .chapter--rails[data-orbit='left'],
+[dir='rtl'] .chapter--rails.chapter--aside-end {
   background: linear-gradient(
     90deg,
     rgba(8, 10, 18, 0.95) 0%,
@@ -1862,8 +1863,8 @@ html:not(.can-scene) .planet {
   max-width: min(20vw, 250px);
   padding: 9px 13px;
   border-radius: 9px;
-  background: rgba(9, 11, 18, 0.86);
-  border: 1px solid rgba(168, 186, 255, 0.28);
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   box-shadow: 0 14px 34px rgba(0, 0, 0, 0.45);
@@ -1925,6 +1926,13 @@ html:not(.can-scene) .planet {
     max-width: min(calc(var(--maxw) * 0.58), 58vw);
     margin-inline-start: max(0px, calc((100vw - var(--maxw)) / 2));
     margin-inline-end: auto;
+  }
+
+  /* The same column, held against the other edge. The planet spends two
+     chapters a side, so half of them need their argument on the right. */
+  .chapter--aside-end > .wrap {
+    margin-inline-start: auto;
+    margin-inline-end: max(0px, calc((100vw - var(--maxw)) / 2));
   }
 
   /* Three across inside 58% is a column of about two hundred pixels, which is
@@ -2553,16 +2561,13 @@ html:not(.can-scene) .planet {
 
 /* ============================================================ 13. Narrow */
 
-@media (max-width: 900px) {
-  /* The display scale is tuned to a wide canvas; on a phone the same clamp
-     pushes the call to action off the first screen. */
-  :root {
-    --gut: 20px;
-    --type-display: clamp(40px, 10.5vw, 58px);
-    --type-feature: clamp(30px, 8vw, 44px);
-    --type-chapter: clamp(27px, 7vw, 38px);
-  }
-
+/* The bar carries six links, a language control, a sign-in and a call to
+   action. Below about a thousand pixels that is more than fits, and the last
+   control in the row is pushed outside the frame silently — the page reports
+   no overflow, because the row clips rather than scrolls. The whole set folds
+   into the menu well before that point, which is also where a laptop stops
+   having room for a six-item bar. */
+@media (max-width: 1080px) {
   .nav-links {
     display: none;
   }
@@ -2574,6 +2579,17 @@ html:not(.can-scene) .planet {
   .nav-tools .btn-cta,
   .nav-tools .nav-investor {
     display: none;
+  }
+}
+
+@media (max-width: 900px) {
+  /* The display scale is tuned to a wide canvas; on a phone the same clamp
+     pushes the call to action off the first screen. */
+  :root {
+    --gut: 20px;
+    --type-display: clamp(40px, 10.5vw, 58px);
+    --type-feature: clamp(30px, 8vw, 44px);
+    --type-chapter: clamp(27px, 7vw, 38px);
   }
 
   .hero-grid,

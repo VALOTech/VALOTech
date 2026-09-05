@@ -138,31 +138,34 @@ const JOURNEY = [
      chapter's top, which is the half-second the planet needs to stop. Lag in
      the middle of a leg is invisible, because nothing is pinned to the planet
      while it travels; lag at the top of a chapter is the whole complaint. */
-  { at: 0.0, x: 86, y: 48, scale: 1.15 },
-  { at: 0.012, x: 86, y: 48, scale: 1.15 },
-  /* The problem: argument right, planet and its bodies left. */
-  { at: 0.046, x: 30, y: 54, scale: 1.0 },
-  { at: 0.150, x: 30, y: 54, scale: 1.0 },
-  /* The answer: the mirror of it. */
-  { at: 0.193, x: 70, y: 54, scale: 1.0 },
-  { at: 0.325, x: 70, y: 54, scale: 1.0 },
-  /* From here every chapter holds its content left, so the planet keeps the
-     right and only changes height and size as the story does. */
-  { at: 0.357, x: 80, y: 52, scale: 0.9 },
-  { at: 0.425, x: 80, y: 52, scale: 0.9 },
-  { at: 0.450, x: 81, y: 46, scale: 0.84 },
-  { at: 0.500, x: 81, y: 46, scale: 0.84 },
-  { at: 0.519, x: 80, y: 52, scale: 0.88 },
-  { at: 0.552, x: 80, y: 52, scale: 0.88 },
-  { at: 0.568, x: 81, y: 44, scale: 0.82 },
-  /* Held right until the trust chapter is nearly done. The leg home used to
-     run its whole length, which walked the planet — and the bodies orbiting
-     it — across the sentences the chapter left room beside. */
-  { at: 0.638, x: 81, y: 46, scale: 0.86 },
+  { at: 0.0, x: 58, y: 50, scale: 1.05 },
+  { at: 0.012, x: 58, y: 50, scale: 1.05 },
+  /* Two chapters a side. The planet settles once and stays, so a crossing is
+     an event rather than the page's usual state, and the two long chapters
+     that open the argument share one station instead of trading it. */
+  { at: 0.044, x: 30, y: 54, scale: 1.0 },
+  { at: 0.190, x: 30, y: 54, scale: 1.0 },
+  { at: 0.215, x: 32, y: 50, scale: 0.96 },
+  { at: 0.298, x: 32, y: 50, scale: 0.96 },
+  /* Across to the right, for the two that follow. */
+  { at: 0.351, x: 75, y: 52, scale: 0.9 },
+  { at: 0.430, x: 75, y: 52, scale: 0.9 },
+  { at: 0.444, x: 76, y: 46, scale: 0.84 },
+  { at: 0.486, x: 76, y: 46, scale: 0.84 },
+  /* Back to the left, across the shortest stretch of page on the site. The
+     two stations are pulled as close together as the arguments allow — a
+     right station has to clear the column by the orbit's whole reach, and so
+     does a left one — because every viewport-width of crossing is a second of
+     scrolling during which neither chapter can name its bodies. */
+  { at: 0.534, x: 25, y: 52, scale: 0.88 },
+  { at: 0.586, x: 25, y: 52, scale: 0.88 },
+  { at: 0.602, x: 24, y: 46, scale: 0.84 },
+  { at: 0.620, x: 24, y: 46, scale: 0.84 },
   /* Home and centred through the mapping chapter. */
-  { at: 0.666, x: 50, y: 56, scale: 0.9 },
-  { at: 0.845, x: 50, y: 56, scale: 0.9 },
-  { at: 0.879, x: 80, y: 46, scale: 0.84 },
+  { at: 0.660, x: 50, y: 56, scale: 0.9 },
+  { at: 0.830, x: 50, y: 56, scale: 0.9 },
+  /* Two on the right to close. */
+  { at: 0.873, x: 80, y: 46, scale: 0.84 },
   { at: 1.0, x: 79, y: 46, scale: 0.9 }
 ];
 
@@ -219,13 +222,16 @@ let primed = false;
    animations rather than as one system. */
 /* Three bodies, evenly spaced round the circle and on three distinct paths, so
    at any moment they stand apart rather than clustering — each one has to have
-   room beside it for the label anchored to it. Periods are on the order of the
-   world's own turn, and no two are equal, so the arrangement keeps changing
-   without any two ever travelling together. */
+   room beside it for the label anchored to it. They share one period, and
+   that is the whole of what keeps them apart: on separate periods the phase
+   offsets drift, and three bodies written a third of a turn apart close to
+   thirty-five degrees within a minute. One period holds the third of a turn
+   forever. The period is the planet's own, so the system reads as one thing.
+   */
 const SATELLITES = [
-  { rx: 92, ry: 40, r: 6.4, period: 52, phase: 0.0, fill: 'mars', label: 'YOUR PEOPLE' },
-  { rx: 78, ry: 35, r: 4.6, period: 44, phase: 0.3333, fill: 'neptune', label: '' },
-  { rx: 64, ry: 32, r: 5.4, period: 38, phase: 0.6667, fill: 'venus', label: 'AI' }
+  { rx: 92, ry: 40, r: 6.4, period: 48, phase: 0.0, fill: 'mars', label: 'YOUR PEOPLE' },
+  { rx: 78, ry: 35, r: 4.6, period: 48, phase: 0.3333, fill: 'neptune', label: '' },
+  { rx: 64, ry: 32, r: 5.4, period: 48, phase: 0.6667, fill: 'venus', label: 'AI' }
 ];
 
 const SPHERES = {
