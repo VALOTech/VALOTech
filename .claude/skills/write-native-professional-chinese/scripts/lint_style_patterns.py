@@ -1,6 +1,15 @@
 #!/usr/bin/env python3
 import argparse,re,json
 from pathlib import Path
+
+import sys
+
+# This script prints typographic punctuation, and a Windows console defaults to cp1252,
+# where that raises UnicodeEncodeError - on the run that HAS something to report, never
+# on a quiet one. No-op where the stream already encodes UTF-8.
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 PATTERNS=[
     ('generic_claim', '全面提升|全面增强|全方位|赋能|助力|无缝对接|无缝整合|无缝体验|一站式|打造'),
     ('bureaucratic', '贯彻落实|深入贯彻|切实保障|广大用户|指导思想|大力推进|以.{0,6}为核心'),
