@@ -2,7 +2,7 @@
 
 > **Not for `main`.** This document lives on `development` only (`.claude/CLAUDE.md` §1.1).
 > **Purpose:** track every implementation task that realizes [docs/PRD.md](PRD.md). A task closes only with concrete `Evidence:`.
-> **Companions:** [docs/PRD.md](PRD.md) · [docs/decisions-log.md](decisions-log.md) · [docs/design-gateway.md](design-gateway.md) · [.claude/CLAUDE.md](../.claude/CLAUDE.md) §3.6 and §4.
+> **Companions:** [docs/PRD.md](PRD.md) · [docs/decisions-log.md](decisions-log.md) · [docs/designs/](designs/) · [.claude/CLAUDE.md](../.claude/CLAUDE.md) §3.6 and §4.
 
 ---
 
@@ -39,7 +39,7 @@ Every finding — front-end, scene, security, accessibility, language, legal —
 ---
 
 ## SITE-001 · The gateway page
-PRD: `SITE-001`, `SITE-003`, `SITE-004` · Record: [docs/design-gateway.md](design-gateway.md)
+Design: [docs/designs/site/site-001-the-gateway-page.md](designs/site/site-001-the-gateway-page.md) · PRD: `SITE-001`, `SITE-003`, `SITE-004`
 
 - [x] SITE-001/T1 — One page, nine chapters, a fixed scene layer beneath them
   Evidence: index.html · assets/site.css §10b
@@ -67,7 +67,7 @@ PRD: `SITE-002` · Decision: [decisions-log.md#SITE-DEC-01](decisions-log.md#SIT
   Blocked by: AUTH-002/T1
 
 ## SCENE-001 · The world and its journey
-PRD: `SCENE-001` · Record: [docs/design-gateway.md](design-gateway.md)
+Design: [docs/designs/scene/scene-001-world-and-journey.md](designs/scene/scene-001-world-and-journey.md) · PRD: `SCENE-001`
 
 - [x] SCENE-001/T1 — A lunar sphere becomes Earth across one scroll scrub, with a lit frontier
   Evidence: assets/scene/planet.js:TRANSITION_GLSL
@@ -185,7 +185,7 @@ PRD: `ADMIN-002`
 ## INV-001 · Investor room shell
 PRD: `INV-001`
 
-- [ ] INV-001/T1 — What a signed-in investor lands on, and how they reach a deck, the posts and the gated chapters
+- [ ] INV-001/T1 — The landing surface is the update stream, newest first, with the progress board, the deck and the gated chapters reachable from it
 
 ## INV-002 · Gated gateway chapters, served
 PRD: `INV-002`, `SEC-R01`
@@ -193,6 +193,13 @@ PRD: `INV-002`, `SEC-R01`
 - [!] INV-002/T1 — The two gated chapters and the seven mechanisms are rendered only for an authorised reader
   Blocked by: AUTH-002/T3
 - [ ] INV-002/T2 — Regression test: an unauthenticated request for the gated markup receives none of it
+
+## INV-003 · Portfolio progress
+PRD: `INV-003`
+
+- [ ] INV-003/T1 — Where each of the six products stands, as a state an admin edits rather than a history
+- [ ] INV-003/T2 — The milestones ahead of each product, and which one is next
+- [ ] INV-003/T3 — Every change to a product's standing is audited, because an investor read the previous value
 
 ## DECK-001 · Deck authoring
 PRD: `DECK-001`
@@ -216,16 +223,18 @@ PRD: `DECK-004`
 
 - [ ] DECK-004/T1 — Grant and revoke, audited, enforced at the query
 
-## POST-001 · Post authoring
+## POST-001 · Update authoring
 PRD: `POST-001`
 
-- [ ] POST-001/T1 — Write, edit and delete an article
+- [ ] POST-001/T1 — Write, edit and delete an update
+- [ ] POST-001/T2 — An update carries a kind: announcement, achievement, or progress note
 
-## POST-002 · Post publishing and audience
+## POST-002 · Update publishing and audience
 PRD: `POST-002`
 
 - [ ] POST-002/T1 — Public, investor-only or draft, enforced at the query
-- [ ] POST-002/T2 — Isolation test: a visitor request never returns an investor-only post
+- [ ] POST-002/T2 — Isolation test: a visitor request never returns an investor-only update
+- [ ] POST-002/T3 — The investor stream reads newest first and can be filtered to one kind
 
 ## MAIL-001 · Investor mail
 PRD: `MAIL-001`

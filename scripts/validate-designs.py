@@ -186,6 +186,17 @@ def main():
                 problems.append("%s: pending-decision, but no register entry names it under Blocks"
                                 % rel)
 
+    # Every PRD feature that exists or is designed must have a design. A code
+    # still only `planned` or `blocked` legitimately has none -- designing ahead
+    # of the wave is what the roadmap deliberately does not do -- so the check is
+    # scoped to the two statuses that claim a design exists.
+    catalogue = re.findall(
+        r"^\|\s*`([A-Z][A-Z0-9-]*-\d{3})`\s*\|[^|]*\|\s*(live|design|planned|blocked)\s*\|",
+        prd, re.M)
+    for code, status in catalogue:
+        if status in ("live", "design") and code not in designs:
+            problems.append("docs/PRD.md: %s is %s and has no design" % (code, status))
+
     if problems:
         for problem in problems:
             print("FAIL %s" % problem)
@@ -194,7 +205,10 @@ def main():
         return 1
 
     if designs:
-        print("designs: %d read, every code, layer, rule and edge resolves." % len(designs))
+        shipped = sum(1 for c, st in catalogue if st in ("live", "design"))
+        print("designs: %d read, every code, layer, rule and edge resolves; "
+              "%d of %d shipped-or-designed PRD codes covered."
+              % (len(designs), shipped, shipped))
     else:
         print("designs: the directory exists and holds none yet.")
     return 0

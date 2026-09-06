@@ -19,7 +19,7 @@ The gateway is finished and live. The investor room does not exist. Everything b
 
 ## Order
 
-**Review rows drain first.** Three are open. Two are acceptances filed so nobody rediscovers them as defects; one is a real question for the owner about what the published branch carries.
+**Review rows drain first.** Two are open, and both are acceptances filed so nobody rediscovers them as defects: eleven locales no native speaker has read as prose, and a label that crosses the world's face in about a third of the frames it appears in. A third was closed by narrowing what the published branch carries.
 
 ### W1 — The ground
 
@@ -41,9 +41,13 @@ Sign-out precedes invitation deliberately: a session that cannot be ended server
 
 ### W3 — The room
 
-`INV-001` → `POST-001` → `POST-002` → `DECK-001` → `DECK-002` → `DECK-003` → `DECK-004` → `ADMIN-002` → `ADMIN-001`
+`POST-001` → `POST-002` → `INV-001` → `INV-003` → `DECK-001` → `DECK-002` → `DECK-003` → `DECK-004` → `ADMIN-002` → `ADMIN-001`
 
-Posts before decks, because a post is the simpler shape of the same problem — a body of content with an audience enforced at the query — and getting the audience rule wrong on a post costs less than getting it wrong on a fundraise. Deck versioning (`DECK-002`) is not optional and not deferrable: an investor who was shown one version must not be silently shown another, and a version added after the first deck is published cannot describe what was already read.
+Updates first, and not only because they are the simpler shape of the same problem — a body of content with an audience enforced at the query, where getting the audience rule wrong costs less than getting it wrong on a fundraise. They are first because they are **what the room is for**: an investor signs in to find out what has happened since they last looked, and a room that opens on a deck they read a month ago has answered a question nobody asked.
+
+`INV-001` follows rather than leads, because the shell is a layout over a stream that has to exist before it can be laid out. `INV-003`, the progress board, comes with it: it is the state the stream reports only in fragments, and it is what an investor checks when they have no time to read.
+
+Deck versioning (`DECK-002`) is not optional and not deferrable: an investor who was shown one version must not be silently shown another, and a version added after the first deck is published cannot describe what was already read.
 
 `ADMIN-001` closes the wave rather than opening it, because account management is only meaningful once there is something to grant access to, and because its erasure task (`ADMIN-001/T4`) has to delete from every table the wave created.
 

@@ -3,7 +3,7 @@
 > **Project:** VALO Tech — the company gateway at valotech.org, and the investor portal behind its sign-in
 > **Stack:** Next.js 16+ (App Router, TypeScript) · PostgreSQL · Auth.js · SMTP · three.js 0.166 (vendored) · Docker
 > **Team:** 1 dev + 1 BA, Singapore · Solo-maintained · part of the VALO product family
-> **Sources of truth:** `docs/PRD.md` (business + feature catalogue) · `docs/designs/` (per-feature designs) · `docs/tasks.md` (tasks with evidence) · `docs/design-gateway.md` (the scene and the page it lives in) · running code (behaviour)
+> **Sources of truth:** `docs/PRD.md` (business + feature catalogue) · `docs/designs/` (per-feature designs) · `docs/tasks.md` (tasks with evidence) · running code (behaviour)
 >
 > **Ecosystem.** VALO Tech is the corporate gateway of **VALO TECH PTE. LTD.** (Singapore), which builds six products: VALO Ads, VALO Pocket, Shimmra, Amavo, Farola, and the B2B GRC backbone Verdiq. This repository is not one of those products; it is the company's own front door and its investor room. It follows the ecosystem's conventions because a reader moving between repositories should not have to relearn them, not because the products' domain rules apply here.
 
@@ -17,11 +17,11 @@
 
 ### 1.1 The published branch is the public internet
 
-`main` is what GitHub Pages serves at valotech.org. **Everything committed to it is readable by anyone**, including paths nothing links to: `valotech.org/docs/design-gateway.md` and `valotech.org/scripts/sync-static-copy.mjs` both return 200 today. `robots.txt` disallows `/docs/`, and that is a request to well-behaved crawlers, not access control.
+`main` is what GitHub Pages serves at valotech.org. **Everything committed to it is readable by anyone**, including paths nothing links to and paths that look private -- Pages serves dot-directories, and `valotech.org/.claude/settings.json` returned 200 until the branch was narrowed. `robots.txt` disallows `/docs/`, and that is a request to well-behaved crawlers, not access control.
 
 Therefore `docs/PRD.md`, `docs/tasks.md`, `docs/roadmap.md`, `docs/decisions-log.md`, `credentials/`, runbooks, and anything else describing the business **must never land on `main`**. They live on `development`.
 
-Until the app replaces the static site, `main` carries exactly the site: `index.html`, `404.html`, `assets/`, `robots.txt`, `sitemap.xml`, `CNAME`, `.nojekyll`, `README.md`, `SECURITY.md`, `docs/design-gateway.md` (the scene's own record, and safe to publish), the i18n glossaries, and `scripts/sync-static-copy.mjs`.
+Until the app replaces the static site, `main` carries exactly the site and nothing else: `index.html`, `404.html`, `assets/`, `robots.txt`, `sitemap.xml`, `CNAME`, `.nojekyll`, the git and editor configuration, and the two files that exist to be read by strangers -- `README.md` and `SECURITY.md`, which is the address a vulnerability report is sent to.
 
 ### 1.2 Git safety — destructive commands are FORBIDDEN
 
@@ -126,7 +126,7 @@ Seven layers, carrying the tokens used in design frontmatter:
     3  domain     models, repositories, access rules
     2  data       PostgreSQL schema, migrations, retention
     1  infra      Docker, deploy, DNS and CDN, secrets
-    0  scene      the WebGL and canvas layer — its record is docs/design-gateway.md
+    0  scene      the WebGL and canvas layer — designed under docs/designs/scene/
 
 `scene` is a layer of its own because it is the one part of the product with no server, no data and no roles, and it is where most of this repository's hard-won knowledge lives.
 
@@ -169,7 +169,6 @@ Adding a domain means updating this table and the PRD Feature Catalogue.
     ├── roadmap.md             execution order                              development only
     ├── decisions-log.md       the decision register                        development only
     ├── operator-checklist.md  human-required actions still pending         development only
-    ├── design-gateway.md      the scene and the page — safe to publish     main + development
     ├── designs/<domain>/<code>-<slug>.md                                   development only
     └── compliance/<region>/*.md                                            development only
 
@@ -270,7 +269,7 @@ A change is done only when every axis passes.
 | Styles | `assets/site.css` |
 | Runtime i18n | `assets/i18n.js` — 20 locales × 303 keys |
 | The gate on the served copy | `scripts/sync-static-copy.mjs --check` |
-| The scene's record | `docs/design-gateway.md` — read this before touching the scene |
+| The scene's designs | `docs/designs/scene/` — read these before touching the scene |
 | The app, from `development` | `apps/web/` |
 | Migrations | `apps/web/migrations/` |
 | Documents | `docs/` |
@@ -318,7 +317,7 @@ There are exactly two roles. Do not invent a third; if one seems needed, that is
 
 ### 8.3 The scene
 
-- **SCENE-R01** `docs/design-gateway.md` is the record. Read it before changing the scene, and update it in the same commit.
+- **SCENE-R01** The designs under `docs/designs/scene/` are the record. Read the one you are changing before you change it, and update it in the same commit.
 - **SCENE-R02** Nothing in the scene is measured from a constant that duplicates a stylesheet value. The world's size, the orbit's reach and the disc's radius are read from the element that draws them. Three defects have come from a second copy going stale.
 - **SCENE-R03** No idle animation. A loop exists only while something is moving, and stops when nothing is.
 - **SCENE-R04** Reduced motion slows the scene; it never freezes it and never blanks a chapter.
@@ -346,7 +345,7 @@ There are exactly two roles. Do not invent a third; if one seems needed, that is
 - [ ] Tests pass; new behaviour has tests
 - [ ] No secret in the diff; nothing internal aimed at `main` (§1.1)
 - [ ] `node scripts/sync-static-copy.mjs --check` green if markup or the dictionary changed
-- [ ] Documents updated in the same commit — PRD, design, tasks, and `docs/design-gateway.md` for the scene
+- [ ] Documents updated in the same commit — PRD, the design, tasks
 - [ ] Any choice that is the owner's is filed in `docs/decisions-log.md`
 - [ ] `docs/tasks.md` reflects reality
 - [ ] Axis review walked; findings resolved or recorded
@@ -425,7 +424,7 @@ Every finding any review raises — front-end, scene, security, accessibility, l
 
 ## 14. Always, never, ask
 
-**Always** — read the PRD before business logic · grep before assuming · use the vocabulary in §7.3 · gate the investor room at the server · scope every read by role at the query · treat investor identity as personal data · fill `Evidence:` before closing a task · drain open `REVIEW` rows first · read `docs/design-gateway.md` before touching the scene.
+**Always** — read the PRD before business logic · grep before assuming · use the vocabulary in §7.3 · gate the investor room at the server · scope every read by role at the query · treat investor identity as personal data · fill `Evidence:` before closing a task · drain open `REVIEW` rows first · read the scene's design before touching the scene.
 
 **Never** — commit anything internal to `main` · use a destructive git command without turn-specific approval · switch branches · push to `staging` or `production` · write a secret into the repository · put personal data in a log · ship a string with no i18n key · leave the scene animating when nothing moves · claim a browser behaviour without having opened a browser.
 

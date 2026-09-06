@@ -23,7 +23,7 @@ VALO Tech Pte. Ltd. is a Singapore company that builds an AI-native product fami
 This product is **the company's own two rooms**:
 
 - **The gateway** — the public page at valotech.org. It makes one argument to a corporate buyer: that an AI workforce is worth having, that it needs a clean data foundation underneath it, and that VALO Tech builds both in the buyer's own environment. It is the company's face and, for most people who ever encounter VALO Tech, the whole of it.
-- **The investor room** — everything behind the sign-in. It holds the deeper case: how delivery actually works, what the portfolio is, where each product stands, and the presentation an investor is asked to read. It also holds the means of keeping investors informed.
+- **The investor room** — everything behind the sign-in, and its main job is **keeping an investor current**. What they come back for is progress: where each product stands, what the team announced this month, what it actually shipped. The deeper case — how delivery works, what the portfolio is, and the presentation an investor is asked to read — is there too, but it is read once; the updates are read repeatedly, and the room is designed around the thing that is read repeatedly rather than around the thing that is read once.
 
 ### 2.2 What it is not
 
@@ -31,7 +31,7 @@ It is not a product the company sells, it carries no payment, and it holds no cu
 
 ### 2.3 Where it is today
 
-The gateway is **live and complete**: one static page, no build step, served by GitHub Pages from `main`, fronted by Cloudflare, translated into twenty languages, carrying a WebGL scene whose record is `docs/design-gateway.md`. Its investor split is real — two chapters and the detail under each of seven claims are hidden from a visitor — but the gate that hides them is CSS, and the material is in the page source. It is a demonstration of the design, not a control.
+The gateway is **live and complete**: one static page, no build step, served by GitHub Pages from `main`, fronted by Cloudflare, translated into twenty languages, carrying a WebGL scene designed under `docs/designs/scene/`. Its investor split is real — two chapters and the detail under each of seven claims are hidden from a visitor — but the gate that hides them is CSS, and the material is in the page source. It is a demonstration of the design, not a control.
 
 The investor room does not exist. Building it is what turns this repository from a page into a product, and it is the whole of the work ahead.
 
@@ -79,7 +79,7 @@ A third role — an analyst who may read but not manage, an observer with time-l
 | `SITE-002` | Public and investor chapter split | live | Two chapters and the mechanism detail under seven claims are hidden from a visitor; the nav names the hidden pair only to a signed-in reader |
 | `SITE-003` | Chapter sequence | live | Problem, Answer, Your people, Why, Workforce, ValoStack, Yours-not-ours, Contact — the designer's order |
 | `SITE-004` | Contact close | live | A short call, an e-mail CTA, and the reason pricing is not published |
-| `SCENE-001` | The world and its journey | live | A lunar sphere that becomes Earth across the page; stations per chapter; the record is `docs/design-gateway.md` |
+| `SCENE-001` | The world and its journey | live | A lunar sphere that becomes Earth across the page; stations per chapter |
 | `SCENE-002` | Satellites and their rings | live | Three bodies on three drawn paths; one moon carrying the people, two craft carrying the work |
 | `SCENE-003` | The sky | live | A parallaxed star field with colour temperature, two kinds of twinkle, meteors with two endings, and a rare supernova |
 | `SCENE-004` | Annotation chips | live | Fifteen labels across five chapters, each pinned to one body |
@@ -104,14 +104,15 @@ A third role — an analyst who may read but not manage, an observer with time-l
 
 | Code | Feature | Status | What it is |
 |---|---|---|---|
-| `INV-001` | Investor room shell | planned | What a signed-in investor lands on, and how they reach a deck, the posts, and the gated chapters |
+| `INV-001` | Investor room shell | planned | What a signed-in investor lands on: the update stream first, with the progress board, the deck and the gated chapters reachable from it |
 | `INV-002` | Gated gateway chapters, served | planned | The two chapters and the seven mechanisms, delivered by the server to an authorised reader and to nobody else — this is what replaces the CSS demonstration |
+| `INV-003` | Portfolio progress | planned | Where each of the six products stands, and the milestones ahead of it — the thing an investor opens the room to check |
 | `DECK-001` | Deck authoring | planned | An admin composes a presentation as ordered sections |
 | `DECK-002` | Deck versioning and publishing | planned | A deck is published as a version; an investor reads the version they were granted; a draft is never visible |
 | `DECK-003` | Deck reading | planned | The investor's view: sequential, readable on a phone, printable |
 | `DECK-004` | Deck access grants | planned | Which investor may read which deck, granted and revoked by an admin, audited |
-| `POST-001` | Post authoring | planned | An admin writes an article |
-| `POST-002` | Post publishing and audience | planned | A post is public, investor-only, or draft; audience is enforced at the query |
+| `POST-001` | Update authoring | planned | An admin writes an update, of a stated kind: an announcement, an achievement, or a progress note |
+| `POST-002` | Update publishing and audience | planned | An update is public, investor-only, or draft; audience is enforced at the query, and the investor stream is ordered newest first |
 | `MAIL-001` | Investor mail | blocked | An admin sends a message to selected investors; every send is recorded — carrier at `docs/decisions-log.md#MAIL-DEC-01` |
 | `MAIL-002` | Mail log and unsubscribe | blocked | What was sent, to whom, when; a working unsubscribe that stops non-transactional mail — `docs/decisions-log.md#MAIL-DEC-01` |
 
@@ -162,7 +163,7 @@ These hold across every feature. A feature that breaks one is not finished, what
 
 ### The scene — `SCENE-R*`
 
-- **SCENE-R01** `docs/design-gateway.md` is the record; it is updated in the same commit as the change.
+- **SCENE-R01** The designs under `docs/designs/scene/` are the record; the one that governs a change is updated in the same commit as it.
 - **SCENE-R02** Nothing in the scene is measured from a constant duplicating a stylesheet value.
 - **SCENE-R03** No idle animation.
 - **SCENE-R04** Reduced motion slows the scene; it never freezes it and never blanks a chapter.
@@ -195,17 +196,37 @@ An investor additionally gets **how delivery works** — the five-phase engageme
 
 The reason for the line is not secrecy. It is that a buyer needs a decision and an investor needs a model, and one page cannot make both cases without becoming a hybrid that serves neither. The gateway was that hybrid until the split.
 
-### 7.2 What a deck is
+### 7.2 What the room is for
+
+An investor signs in to find out **what has happened since they last looked**.
+That shapes three things.
+
+The room's landing surface is the **update stream**, not the deck: a reverse-
+chronological list of what the team announced, what it achieved, and how each
+product moved. An update carries a **kind**, because the three are read
+differently — an announcement is news, an achievement is evidence, and a progress
+note is a number moving — and an investor scanning for one should not have to
+read the other two.
+
+The **progress board** (`INV-003`) answers the question the stream answers only
+in fragments: where does each of the six products stand right now. It is a state
+rather than a history, and it is the thing an admin updates when a milestone
+moves rather than when they have something to say.
+
+The **deck** is read once, at the start of a conversation, and the stream is read
+every time after. Both exist; the room is laid out for the second.
+
+### 7.3 What a deck is
 
 A deck is an ordered set of sections, published as a version. An investor is granted a deck, and reads the version current at the moment they read. A draft is never visible to anyone but an admin. Versioning exists because the fundraise story changes and an investor who was shown one thing must not silently be shown another; what they were shown, and when, is recoverable.
 
-### 7.3 Mail
+### 7.4 Mail
 
 Mail is the one feature that reaches outside the system irrecoverably. A send is therefore never automatic, never triggered by a loop, and always records what left, to whom, and when. An investor who unsubscribes stops receiving anything that is not a direct response to their own action.
 
-### 7.4 The scene's place
+### 7.5 The scene's place
 
-The scene is documented in `docs/design-gateway.md` in far more detail than this document should carry, because it is the part of the product that a reader cannot reason about from first principles. Its rules are in §6 above; its reasoning is there.
+The scene is documented under `docs/designs/scene/` in far more detail than this document should carry, because it is the part of the product a reader cannot reason about from first principles. Six designs hold it: the world and its journey, the satellites, the sky, the annotation chips, the orbit stages and the mapping stage. Its rules are in §6 above; its reasoning is there.
 
 ---
 

@@ -288,7 +288,7 @@ door and its investor room. Two surfaces live here.
   It makes the ValoLab argument: an AI workforce is worth having, it needs a clean data
   foundation underneath it, and VALO Tech builds both inside the buyer's own environment.
   It is a static page today, served verbatim by GitHub Pages, in twenty languages,
-  carrying a WebGL scene whose record is [docs/design-gateway.md](design-gateway.md).
+  carrying a WebGL scene designed under [docs/designs/scene/](designs/scene/).
 - **The investor room** behind its sign-in — the deeper case: how delivery works, what the
   portfolio is, where each product stands, and the presentation an investor is asked to
   read. It does not exist yet; building it is what turns this repository from a page into

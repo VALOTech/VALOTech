@@ -28,7 +28,6 @@ SKELETON = [
     ("docs/decisions-log.md", "the decision register"),
     ("docs/operator-checklist.md", "what waits on a human"),
     ("docs/ECOSYSTEM.md", "the shared map of the six products"),
-    ("docs/design-gateway.md", "the scene's record"),
     ("docs/designs", "per-feature designs"),
     ("docs/runbooks", "what an operator does at 3am"),
     ("brand", "the VALO corporate identity"),

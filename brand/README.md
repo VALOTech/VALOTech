@@ -16,8 +16,9 @@ maintained as a half-truth.
 The reasoning behind every decision in it — why the world is sized from the
 frame rather than capped in pixels, why a label opens away from the disc, why
 the sky carries a colour temperature — is in
-[docs/design-gateway.md](../docs/design-gateway.md). That file is the record;
-this directory is the interface to it.
+the designs under [docs/designs/scene/](../docs/designs/scene/) and in
+[SITE-001](../docs/designs/site/site-001-the-gateway-page.md). Those are the
+record; this directory is the interface to them.
 
 ## Contents
 
