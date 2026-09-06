@@ -1,0 +1,82 @@
+name: CI
+
+# The gates that hold this repository's documents together, run on the server as
+# well as in the pre-push hook. The hook is the fast feedback; this is what
+# catches a push that bypassed it, and it is the only check that runs on a
+# machine nobody configured.
+#
+# It is deliberately small. Every job here has something to check today: the
+# served English copy against its dictionary, the decision register against its
+# contract, the designs against theirs, and both halves of every REVIEW edge.
+# Jobs for lint, types, build and tests land with the first application code,
+# because a job that checks nothing has only ever passed.
+#
+# Actions are pinned to a commit SHA with the tag in a comment: a tag is a
+# moving reference, and a supply-chain compromise of a popular action is a
+# compromise of every repository that names it by tag.
+
+on:
+  push:
+    branches: [main, development]
+  pull_request:
+    branches: [development, staging, production]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  gates:
+    name: Documents and served copy
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version-file: .nvmrc
+
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.12"
+
+      - name: The served English copy matches the dictionary
+        run: node scripts/sync-static-copy.mjs --check
+
+      # The three document gates run on development, where the documents live.
+      # main carries only the site, and each gate says so rather than passing
+      # silently on an absent file.
+      - name: The decision register holds its contract
+        run: python scripts/validate-decisions.py
+
+      - name: Design frontmatter is coherent
+        run: python scripts/validate-designs.py --strict
+
+      - name: Every REVIEW edge is written from both ends
+        run: python scripts/check-review-refer-to.py
+
+  secrets:
+    name: Secret scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        with:
+          # gitleaks reads history, so a shallow clone would scan one commit and
+          # report clean for a secret committed yesterday.
+          fetch-depth: 0
+
+      # The published action refuses to run for an organisation without a paid
+      # licence key, so the binary is run directly and pinned by release --
+      # which is what VALO Ads does, and what keeps working when this
+      # repository goes private (docs/decisions-log.md#INFRA-DEC-04).
+      - name: gitleaks, full history
+        run: |
+          set -euo pipefail
+          VERSION="8.30.0"
+          curl -sSfL "https://github.com/gitleaks/gitleaks/releases/download/v${VERSION}/gitleaks_${VERSION}_linux_x64.tar.gz" | tar -xz -C /tmp gitleaks
+          /tmp/gitleaks detect --source . --redact --no-banner --exit-code 1

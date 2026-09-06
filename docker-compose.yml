@@ -1,0 +1,37 @@
+# VALO Tech — local development stack.
+#
+# One engine, because the product needs one: PostgreSQL. The host port is 5434
+# rather than 5432 because several VALO stacks run on one machine and the row
+# this repository claimed is in docs/ECOSYSTEM.md. A default is a value two
+# compose files reach for independently, and the second to start either fails
+# to bind or is silently remapped — which has already cost this ecosystem a day.
+#
+# The static gateway needs none of this. It is served verbatim and is developed
+# with `make serve`.
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: valotech-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: valotech
+      POSTGRES_PASSWORD: valotech
+      POSTGRES_DB: valotech
+      # Deterministic collation, so an ORDER BY does not depend on the host's
+      # locale and a migration written on one machine sorts the same on another.
+      POSTGRES_INITDB_ARGS: "--locale=C --encoding=UTF8"
+    ports:
+      - "5434:5432"
+    volumes:
+      - valotech-postgres:/var/lib/postgresql/data
+    healthcheck:
+      # The application waits for this rather than for the port, because
+      # Postgres accepts connections before it is ready to answer them.
+      test: ["CMD-SHELL", "pg_isready -U valotech -d valotech"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  valotech-postgres:

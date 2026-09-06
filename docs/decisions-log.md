@@ -44,6 +44,15 @@ An entry is filed the moment the choice surfaces, not when it is answered. Nothi
 
 ## Resolved decisions
 
+<a id="INFRA-DEC-04"></a>
+### `INFRA-DEC-04` — Whether this repository is public while the app is built — RESOLVED 2026-09-06
+
+- **Decision:** The GitHub repository is public, so every branch is readable by anyone without authentication — `raw.githubusercontent.com/VALOTech/VALOTech/development/docs/PRD.md` returns 200 and its content. The planning documents are therefore not hidden by living on `development`, whatever `main` carries.
+- **Options:** **A** Accept it for now and make the repository private when the application replaces the static site · **B** Make it private immediately, which requires a paid plan for GitHub Pages to keep serving valotech.org · **C** Move the planning documents to a separate private repository.
+- **Decision owner:** user
+- **Settled by:** user
+- **Status:** RESOLVED 2026-09-06 — **A**. A technically-minded reader digging through the repository is not a problem the owner wants solved today, and the repository goes private when the application takes over from the static page — at which point Pages is no longer serving from it and the plan requirement disappears. What was done anyway is narrower and independent: `main` now carries only the site, so the material is not served by the website itself and is not indexed with it.
+
 <a id="INFRA-DEC-01"></a>
 ### `INFRA-DEC-01` — The architecture of the application — RESOLVED 2026-09-06
 

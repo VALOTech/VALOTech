@@ -1,0 +1,18 @@
+# Disabled, and named so deliberately: GitHub Actions minutes are shared across
+# the organisation's repositories and are scarce, and this repository has no
+# dependency to update yet -- the one library it ships, three.js 0.166, is
+# vendored under assets/scene/ and pinned on purpose.
+#
+# Rename to dependabot.yml with the first package.json. Until then a weekly job
+# would open no pull request and spend the quota of a repository that has one.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /apps/web
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly

@@ -31,8 +31,9 @@ Every finding — front-end, scene, security, accessibility, language, legal —
 - [ ] REVIEW/T2 — A label crosses the face of the world in about a third of the frames it is shown in
   Note: measured at 1920 across the four label chapters, a chip's rectangle touched the drawn disc in 42 of 117 frames where it was shown. The dominant case is a satellite passing in front of or behind the world, where no horizontal offset clears the disc and the label rightly stays with its body — the reference design does the same. Filed as a deliberate acceptance, not a defect, so that a future reader does not rediscover it as one. Reopen if the owner reads it as clutter.
   Impact to: `SCENE-004`
-- [ ] REVIEW/T3 — Fifty-seven internal working files are published on the company domain
+- [x] REVIEW/T3 — Fifty-seven internal working files are published on the company domain
   Note: `.claude/` is committed to `main`, and GitHub Pages serves dot-directories. Measured: `valotech.org/.claude/settings.json` returns 200, as does every file of the four writing and translation skills — 336 KB of internal tooling on the company's public domain, linked from nothing and useful to no visitor. `settings.json` holds only a list of denied commands, so nothing here is a secret; the objection is that internal material is published at all, and that it is fetched by every crawler that walks the tree. `.githooks/pre-push`, `.editorconfig` and `.gitattributes` are served too and are unremarkable. Recommended: move `.claude/` off `main` and keep it on `development`, which loses nothing — the files stay in history and on the branch where work happens. Not done: removing files from the published branch is an owner's call (`.claude/CLAUDE.md` §14).
+  Evidence: commit 215d9c2 — 62 files removed from `main`; `valotech.org/.claude/settings.json`, `/docs/design-gateway.md`, `/glossary-vi.json`, `/scripts/sync-static-copy.mjs` and `/.githooks/pre-push` all return 404, while the site itself loads with 0 failed requests and 0 console errors. The wider exposure — the repository is public, so every branch including this one is readable — is the owner's accepted position at docs/decisions-log.md#INFRA-DEC-04.
   Impact to: — none — · the published branch itself
 
 ---
@@ -44,7 +45,6 @@ PRD: `SITE-001`, `SITE-003`, `SITE-004` · Record: [docs/design-gateway.md](desi
   Evidence: index.html · assets/site.css §10b
 - [x] SITE-001/T2 — Chapter sequence follows the reference: problem, answer, your people, why, workforce, ValoStack, yours-not-ours, contact
   Evidence: commit 7543b48
-  Refer to: REVIEW/T1
 - [x] SITE-001/T3 — The close carries the contact call to action and states why prices are not published
   Evidence: index.html:#engage · docs/decisions-log.md#SITE-DEC-03
 - [x] SITE-001/T4 — Navigation follows the page and folds into a menu below 1080px
@@ -251,7 +251,8 @@ PRD: `SEC-001`
 
 - [ ] SEC-001/T1 — Content-Security-Policy with no `unsafe-inline`, verified in a browser
 - [ ] SEC-001/T2 — HSTS, secure cookies, and no secret reachable from the client bundle
-- [ ] SEC-001/T3 — Dependency and secret scanning in CI
+- [~] SEC-001/T3 — Dependency and secret scanning in CI
+  Note: secret scanning runs on every push and pull request — gitleaks over full history, the binary pinned to release 8.30.0 rather than the published action, which refuses to run for an organisation without a paid licence and would therefore stop working the day this repository goes private. Dependency scanning waits on there being a dependency: the one library shipped, three.js 0.166, is vendored and pinned on purpose, and `.github/dependabot.yml.disabled` says what turns it on.
 
 ## SEC-002 · Audit log
 PRD: `SEC-002`, `SEC-R04`
@@ -274,13 +275,16 @@ PRD: `OPS-002`, `DATA-R02`
 ## INFRA-001 · Local development stack
 PRD: `INFRA-001`
 
-- [ ] INFRA-001/T1 — One command brings up PostgreSQL and the application against it
-- [ ] INFRA-001/T2 — `env.example` lists every variable the application reads, with no value that is a secret
+- [~] INFRA-001/T1 — One command brings up PostgreSQL and the application against it
+  Note: `make infra-up` starts PostgreSQL 17 on 5434 — the row this repository claimed in `docs/ECOSYSTEM.md`, not the engine's default, because two compose files reaching for 5432 is how a stack silently talks to a sibling's database. The health check waits for `pg_isready` rather than for the port, since Postgres accepts connections before it can answer them. The application half waits on there being an application.
+- [~] INFRA-001/T2 — `env.example` lists every variable the application reads, with no value that is a secret
+  Note: written and complete for the variables the designs name — app, database, session, rate limit — each with whether it is required and what a missing one does. It cannot close until code reads them, because the check that matters is that the list and the reader agree, and there is no reader yet. The mail block is deliberately empty and says why: `docs/decisions-log.md#MAIL-DEC-01`.
 
 ## CRED-001 · Credential handling
 PRD: `CRED-001`, `SEC-R05`
 
-- [ ] CRED-001/T1 — Every credential from the environment; a missing one degrades its feature and leaves the system up
+- [~] CRED-001/T1 — Every credential from the environment; a missing one degrades its feature and leaves the system up
+  Note: the rule and the three credentials are written in `credentials/README.md`, and `credentials/credential-input.html` generates what can be generated and takes what cannot, sending nothing anywhere. The behaviour half — that a missing credential degrades its own feature rather than the system — is a property of code that does not exist yet.
 
 ## LEGAL-SG-001 · PDPA posture
 PRD: `LEGAL-SG-001`

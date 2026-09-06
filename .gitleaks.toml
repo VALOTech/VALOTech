@@ -1,0 +1,22 @@
+# gitleaks configuration for VALO Tech.
+#
+# The repository is the deployed artifact for a public site, so a secret
+# committed here is a secret published. The default rule set does the work;
+# what is configured is the small set of paths where a high-entropy string is
+# expected and means nothing.
+
+title = "VALO Tech"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Paths whose high-entropy strings are not secrets"
+paths = [
+  # A vendored graphics library: minified source is entropy by construction.
+  '''assets/scene/three\.module\.min\.js''',
+  # Binary assets: fonts, textures, icons, flags.
+  '''assets/(fonts|textures|icons|flags)/.*''',
+  # The example environment names variables and never carries a value.
+  '''env\.example''',
+]
