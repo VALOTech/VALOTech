@@ -96,6 +96,25 @@ instead left the world about thirty pixels high at every size.
 Earth's 0.335% polar flattening is below a visible silhouette change at this
 size, so the mesh stays spherical and the geometry budget goes to map detail.
 
+### How large the world is
+
+`--planet` is `max(min(30vw, 440px), min(26vw, 46vh, 900px))`, and everything
+sized from the world — the orbits, and through them the published reach the
+labels clear against — is a multiple of it.
+
+A flat pixel cap is what a scene must not have. Held at 440px, the world was a
+quarter of the frame at 1920 and an eighth of it at 3840: every pixel the frame
+gained past 1470 made the world smaller in the reader's eye, which is what "on
+a large screen the Earth is too small" describes. The wide term takes over
+instead and holds the world at roughly a quarter of the frame at any width.
+
+The height term exists because width alone is the wrong measure of room: a
+2560 × 900 letterbox has the width for a 660px disc and nowhere to put it. The
+outer `max()` is the guarantee that widening a ceiling cannot shrink anything —
+the value is never below what the narrow frames were tuned against, so no size
+already verified can regress, and that is a property of the expression rather
+than of the sample that was measured.
+
 ### What scroll drives
 
 A single scrub, `growth = smoothstep((scroll − 0.06) / 0.84)`, drives every
@@ -186,6 +205,19 @@ Legs still want a real span of page, because a lead cannot cancel a trail
 larger than the leg itself. Measured at a reading pace of a viewport a second,
 every chapter’s disc now stands clear of its own argument from the moment that
 chapter’s heading can be read, not merely from the moment its top line arrives.
+
+**A jump is not a scroll, and is placed rather than eased.** Dragging the
+scrollbar, or restoring a position on reload, moves the page further in one
+frame than any reader does; easing across that gap leaves the world crossing
+the frame for two and a half seconds after the reader has already arrived,
+which from the chair is indistinguishable from a world that went to the wrong
+place. Past a step of 0.02 of the page in a single frame the scene is placed
+exactly as it is on the first frame — about forty thousand pixels a second,
+which is an order above the fastest fling a reader produces, so a real scroll
+is never mistaken for one. The step is measured before the frame's position is
+recorded: comparing the new position against a variable already assigned the
+new position is a guard whose difference is always zero, and such a guard reads
+as present in the source while never once having run.
 
 Self-rotation is 7.5° per second — a forty-eight second revolution. The
 reference turns at 1.5°, which measures as motion and reads as a photograph;
@@ -309,11 +341,18 @@ and a hidden tab stops scheduling them.
 
 Three bodies on three distinct paths about the planet, evenly spaced a third of
 a turn apart so that at any moment they stand apart rather than clustering —
-each one has to have room beside it for the label anchored to it. **No rings
-are drawn.** Two rings for three bodies was the visible half of a deeper
-problem: a drawn path is a promise about where a body will be, and the moment
-one body strays from it the whole system reads as decoration. Without them the
-motion alone says orbit, and each body is free to take its own path.
+each one has to have room beside it for the label anchored to it.
+
+**One ring per body, and each ring is that body's own path.** A drawn path is a
+promise about where a body will be, so there is exactly one ring for each
+promise: two rings serving three bodies leaves one of them visibly off its
+track and the whole system reads as decoration. The rings are drawn before the
+bodies, so a label's plate covers the ring it crosses rather than the reverse,
+and each ring arrives with the body that rides it — a path drawn ahead of its
+satellite is a promise the scene has not kept yet. The dash pattern is
+irregular so the line reads as particles strung along a path instead of a
+dotted rule, and the three run on coprime durations: on one timing they read as
+a single blinking figure rather than as three bodies sharing a world.
 
 Every path clears the drawn disc at every point, in both axes, by at least
 twenty pixels at each of the five chapters that anchor labels. That is a sizing
@@ -422,7 +461,11 @@ thing it names stops naming it.
 pin their labels to the same three bodies, so six labels land on three
 positions and print on top of each other — which reads as one line split in
 half rather than as two chapters overlapping. The chapter the reader is level
-with wins; the rest go dark.
+with wins; the rest go dark. Level with means the reading line falls **inside**
+that chapter, not that its centre is nearest the line: on a tall frame two
+chapters share the view, and a shorter one's centre can sit further away while
+its text is the text under the reader's eye — which is how a chapter with every
+right to name the bodies went its whole length without once doing so.
 
 That chapter shows its labels only when three further things hold: it holds the
 frame, the planet has stopped, and the planet stands in the space this chapter

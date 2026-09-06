@@ -56,6 +56,15 @@
 
   --maxw: 1240px;
   --gut: 28px;
+
+  /* The world's diameter. Below about 1470px it is a fraction of the frame;
+     above that a flat cap once held it at 440px, so every pixel the frame
+     gained past that point made the world smaller in the reader's eye. The
+     wide term takes over instead, and the height term keeps a long letterbox
+     frame from being filled by a disc it has no room for. The outer max()
+     guarantees the value never falls below what the narrow frames already
+     had, so widening the ceiling cannot shrink a size that was tuned. */
+  --planet: max(min(30vw, 440px), min(26vw, 46vh, 900px));
   --hdr: 68px;
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
 
@@ -748,10 +757,8 @@ p:last-child {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 30vw;
-  height: 30vw;
-  max-width: 440px;
-  max-height: 440px;
+  width: var(--planet);
+  height: var(--planet);
   transform: translate(-50%, -50%);
 }
 
@@ -785,7 +792,7 @@ html:not(.can-scene) .planet {
      satellites need a vertical semi-axis larger than that or they spend half
      of every revolution behind the disc — which is what "the satellites do
      not orbit" looks like to someone watching the cover. */
-  --orbit-r: calc(min(30vw, 440px) * 0.37);
+  --orbit-r: calc(var(--planet) * 0.37);
   --orbit-w: calc(var(--orbit-r) * 4.0);
   --orbit-h: calc(var(--orbit-r) * 4.0);
   width: var(--orbit-w);
@@ -815,10 +822,18 @@ html:not(.can-scene) .planet {
   animation: orbit-flow 13s linear infinite, orbit-sparkle 2.9s ease-in-out infinite alternate;
 }
 
+/* The inner two are dimmer and run on their own durations. Three rings on one
+   timing read as a single blinking figure; on coprime ones they read as three
+   bodies that happen to share a world. */
 .orbit-ring--1 {
   stroke: rgba(162, 178, 250, 0.6);
   animation-duration: 17s, 3.7s;
   animation-direction: reverse, alternate;
+}
+
+.orbit-ring--2 {
+  stroke: rgba(150, 166, 236, 0.48);
+  animation-duration: 11s, 4.3s;
 }
 
 @keyframes orbit-flow {
@@ -2673,8 +2688,8 @@ html:not(.can-scene) .planet {
   }
 
   .planet {
-    width: 92vw;
-    height: 92vw;
+    width: min(92vw, 440px);
+    height: min(92vw, 440px);
     opacity: 0.55;
   }
 

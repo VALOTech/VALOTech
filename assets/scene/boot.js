@@ -427,9 +427,22 @@ function buildOrbits() {
 
     const body = svg('g', { 'clip-path': 'url(#orbit-clip-' + depth + ')' });
 
-    /* No drawn rings. Three bodies moving on their own paths read as an orbit
-       on their own; the dashed ellipses only crowded the space the labels
-       anchored to them need. */
+    /* One dashed path per body, drawn before the bodies so a label's plate
+       covers the ring it crosses rather than the other way round. The dash
+       pattern is irregular so the line reads as particles strung along a path
+       instead of as a dotted rule; each ring runs on its own duration so the
+       three never sync into a single blinking figure. */
+    const rings = SATELLITES.map((sat, i) =>
+      body.appendChild(
+        svg('ellipse', {
+          class: 'orbit-ring orbit-ring--' + i,
+          cx: 100,
+          cy: 50,
+          rx: sat.rx,
+          ry: sat.ry
+        })
+      )
+    );
 
     const marks = SATELLITES.map((sat) => {
       const g = svg('g', { class: 'orbit-body' });
@@ -511,7 +524,7 @@ function buildOrbits() {
 
     root.appendChild(body);
     scene.insertBefore(root, depth === 'rear' ? container : null);
-    orbitNodes.push({ root, marks });
+    orbitNodes.push({ root, marks, rings });
   });
 }
 
@@ -527,13 +540,18 @@ function sceneCentreY(vh) {
 function moveOrbits(seconds, stage) {
   for (let n = 0; n < orbitNodes.length; n++) {
     const marks = orbitNodes[n].marks;
+    const rings = orbitNodes[n].rings;
     for (let i = 0; i < SATELLITES.length; i++) {
       const sat = SATELLITES[i];
       const turn = (seconds / sat.period + sat.phase) * Math.PI * 2;
       const x = 100 + Math.cos(turn) * sat.rx;
       const y = 50 + Math.sin(turn) * sat.ry;
+      const shown = (sat.kind === 'craft' ? stage.craft : stage.moon).toFixed(3);
       marks[i].setAttribute('transform', 'translate(' + x.toFixed(2) + ' ' + y.toFixed(2) + ')');
-      marks[i].setAttribute('opacity', (sat.kind === 'craft' ? stage.craft : stage.moon).toFixed(3));
+      marks[i].setAttribute('opacity', shown);
+      /* A path arrives with the body that rides it. A ring drawn before its
+         satellite is a promise the scene has not kept yet. */
+      rings[i].setAttribute('opacity', shown);
     }
   }
 }
@@ -599,7 +617,8 @@ function place(now) {
      multiplier further down. */
   const tick = now / 1000;
   const gap = Math.min(0.25, Math.max(1 / 120, tick - lastTick));
-  const drift = (progress - lastProgress) / gap;
+  const step = progress - lastProgress;
+  const drift = step / gap;
   const rate = Math.abs(drift);
   lastTick = tick;
   lastProgress = progress;
@@ -610,7 +629,7 @@ function place(now) {
      is indistinguishable, from the chair, from a world that went to the wrong
      place. Past this step the scene is placed rather than eased, exactly as it
      is on the first frame. */
-  if (Math.abs(progress - lastProgress) > JUMP_STEP) {
+  if (Math.abs(step) > JUMP_STEP) {
     primed = false;
     leadRate = 0;
   }

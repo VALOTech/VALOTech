@@ -414,15 +414,22 @@
          the reader is level with wins; the rest go dark. */
       var reading = window.innerHeight * 0.42;
       var lead = -1;
-      var leadDistance = Infinity;
+      var leadRank = Infinity;
       var bands = [];
       for (var q = 0; q < groups.length; q++) {
         bands.push(eligible(groups[q]));
         if (!bands[q]) continue;
         var mid = groups[q].section.getBoundingClientRect();
-        var distance = Math.abs((mid.top + mid.bottom) / 2 - reading);
-        if (distance < leadDistance) {
-          leadDistance = distance;
+        /* The chapter the reader is level with is the one the reading line
+           falls inside, not the one whose centre happens to be nearest it. On
+           a tall frame two chapters share the view and the shorter one's
+           centre can sit further away while its text is the text under the
+           reader's eye — which is how a chapter that had every right to name
+           the bodies went its whole length without doing so. */
+        var covers = mid.top <= reading && mid.bottom >= reading;
+        var rank = Math.abs((mid.top + mid.bottom) / 2 - reading) + (covers ? 0 : 1e6);
+        if (rank < leadRank) {
+          leadRank = rank;
           lead = q;
         }
       }
