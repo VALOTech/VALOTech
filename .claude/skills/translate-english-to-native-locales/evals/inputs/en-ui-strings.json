@@ -1,9 +1,0 @@
-{
-  "video_date.start.button": "Start Video Date",
-  "video_date.consent.title": "Both people need to agree",
-  "video_date.consent.body": "Video dates are only enabled when you and <b>{name}</b> both tap Agree. Either of you can end the call at any time.",
-  "video_date.error.network": "We couldn't connect your video date. Check your connection, then try again.",
-  "video_date.report.cta": "Report or block",
-  "match.count": "You have %1$d new matches",
-  "gift.send.button": "Send a Rose"
-}
