@@ -373,19 +373,23 @@ There are exactly two roles. Do not invent a third; if one seems needed, that is
 
 ### 11.1 Gates
 
-| Stage | Gate | Blocks |
-|---|---|---|
-| Lint | `eslint` and `prettier` | Yes |
-| Types | `tsc --noEmit` | Yes |
-| Build | `next build` | Yes |
-| T0 to T1 | smoke and unit | Yes |
-| T2 | integration against a real PostgreSQL | Yes |
-| Served-copy parity | `scripts/sync-static-copy.mjs --check` | Yes |
-| Design cross-reference | `scripts/validate-designs.py --strict` | Yes |
-| Decision register | `scripts/validate-decisions.py` | Yes |
-| Comment hygiene | `scripts/check-comments.py` | Yes |
-| Secrets | `gitleaks` | Yes |
-| End-to-end | Playwright | On push to `staging` and `production` |
+**Two of these exist today.** The rest are the target, and each lands with the
+first work that gives it something to check — a gate written before its subject
+is a gate that has only ever passed.
+
+| Stage | Gate | Exists | Blocks |
+|---|---|---|---|
+| Served-copy parity | `scripts/sync-static-copy.mjs --check` | yes, armed in the pre-push hook | Yes |
+| Decision register | `scripts/validate-decisions.py` | yes, armed in the pre-push hook | Yes |
+| Lint | `eslint` and `prettier` | with the first application code | Yes |
+| Types | `tsc --noEmit` | with the first application code | Yes |
+| Build | `next build` | with the first application code | Yes |
+| T0 to T1 | smoke and unit | with the first application code | Yes |
+| T2 | integration against a real PostgreSQL | with `DATA-001` | Yes |
+| Design cross-reference | `scripts/validate-designs.py --strict` | with the first design | Yes |
+| Comment hygiene | `scripts/check-comments.py` | with the first application code | Yes |
+| Secrets | `gitleaks` | with the first credential | Yes |
+| End-to-end | Playwright | with `AUTH-001` | On push to `staging` and `production` |
 
 ### 11.2 Branches
 
