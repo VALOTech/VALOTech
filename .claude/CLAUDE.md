@@ -111,7 +111,7 @@ The loop may settle a choice itself only when the answer is **forced** by one of
 
 ### 1.12 Decision register
 
-`docs/decisions-log.md` is the single home for every such choice. It carries `## Open decisions` then `## Resolved decisions`, both always present. Each entry has a stable `<a id="CODE"></a>` anchor; every other artifact links to `decisions-log.md#CODE` and restates nothing. A decision discovered mid-build is filed in the commit that discovers it. Nothing blocks on an open decision: each ships a fail-closed safe default named on its `Status:` line. A choice the loop settled adds `Settled by: loop`, `Forcing source:` and `Overturned by:` — a warrant carries what was observed, not that observing happened.
+`docs/decisions-log.md` is the single home for every such choice. It carries `## Open decisions` then `## Resolved decisions`, both always present. Each entry carries a stable anchor built from its own code; every other artifact links to the entry by its anchor and restates nothing. A decision discovered mid-build is filed in the commit that discovers it. Nothing blocks on an open decision: each ships a fail-closed safe default named on its `Status:` line. A choice the loop settled adds `Settled by: loop`, `Forcing source:` and `Overturned by:` — a warrant carries what was observed, not that observing happened.
 
 ---
 

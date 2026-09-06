@@ -31,6 +31,9 @@ Every finding — front-end, scene, security, accessibility, language, legal —
 - [ ] REVIEW/T2 — A label crosses the face of the world in about a third of the frames it is shown in
   Note: measured at 1920 across the four label chapters, a chip's rectangle touched the drawn disc in 42 of 117 frames where it was shown. The dominant case is a satellite passing in front of or behind the world, where no horizontal offset clears the disc and the label rightly stays with its body — the reference design does the same. Filed as a deliberate acceptance, not a defect, so that a future reader does not rediscover it as one. Reopen if the owner reads it as clutter.
   Impact to: `SCENE-004`
+- [ ] REVIEW/T3 — Fifty-seven internal working files are published on the company domain
+  Note: `.claude/` is committed to `main`, and GitHub Pages serves dot-directories. Measured: `valotech.org/.claude/settings.json` returns 200, as does every file of the four writing and translation skills — 336 KB of internal tooling on the company's public domain, linked from nothing and useful to no visitor. `settings.json` holds only a list of denied commands, so nothing here is a secret; the objection is that internal material is published at all, and that it is fetched by every crawler that walks the tree. `.githooks/pre-push`, `.editorconfig` and `.gitattributes` are served too and are unremarkable. Recommended: move `.claude/` off `main` and keep it on `development`, which loses nothing — the files stay in history and on the branch where work happens. Not done: removing files from the published branch is an owner's call (`.claude/CLAUDE.md` §14).
+  Impact to: — none — · the published branch itself
 
 ---
 

@@ -2,7 +2,7 @@
 
 > **Not for `main`.** This document lives on `development` only (`.claude/CLAUDE.md` §1.1).
 
-Every choice that shapes the product and is not settled by the code alone is filed here, once, with a stable anchor. Every other artifact links to `decisions-log.md#CODE` and restates nothing: when an answer lands, only this file is edited and every reference is correct by construction.
+Every choice that shapes the product and is not settled by the code alone is filed here, once, with a stable anchor. Every other artifact links to the entry by its anchor and restates nothing: when an answer lands, only this file is edited and every reference is correct by construction.
 
 An entry is filed the moment the choice surfaces, not when it is answered. Nothing blocks on an open decision — each ships a fail-closed safe default named on its `Status:` line.
 
