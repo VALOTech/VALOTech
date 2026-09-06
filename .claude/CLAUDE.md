@@ -283,8 +283,8 @@ A change is done only when every axis passes.
 | Runtime i18n | `assets/i18n.js` — 20 locales × 303 keys |
 | The gate on the served copy | `scripts/sync-static-copy.mjs --check` |
 | The scene's designs | `docs/designs/scene/` — read these before touching the scene |
-| The app, from `development` | `apps/web/` |
-| Migrations | `apps/web/migrations/` |
+| The app, from `development` | `apps/web/` (`DATA-001/T1`) |
+| Migrations | `apps/web/migrations/` (`DATA-001/T1`) |
 | Documents | `docs/` |
 
 ### 7.2 Environments

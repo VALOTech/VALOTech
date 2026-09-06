@@ -7,9 +7,7 @@ depends_on: [MAIL-001]
 depended_by: []
 layers_touched: [data, domain, service, api, frontend, ui]
 cross_cutting_rules: [DATA-R04, DATA-R02, DATA-R03, SEC-R04, A11Y-R01, I18N-R01]
-status: pending-decision
-decision_required: Which service carries mail to investors
-decision_owner: user
+status: design-ready
 ---
 
 # `MAIL-002` — Mail log and unsubscribe
@@ -24,10 +22,12 @@ sent is what answers a data-subject request; a working unsubscribe is what
 `DATA-R04`, Singapore's DNC provisions and every equivalent regime require. A
 send system without them is a send system that should not be used.
 
-Blocked on the same decision as `MAIL-001`
-([`MAIL-DEC-01`](../../decisions-log.md#MAIL-DEC-01)), because the log's shape
-depends on what the carrier reports back, and whether the carrier keeps its own
-suppression list decides whether this is one list or two.
+The carrier is SMTP against the company's own mailbox
+([`MAIL-DEC-01`](../../decisions-log.md#MAIL-DEC-01)), and that decides two
+things here. The carrier keeps **no** suppression list, so this one is
+authoritative and is the only one — the disagreement between two lists that
+lets an unsubscribed person hear from us again cannot occur. And SMTP reports
+nothing after hand-off, so the log records acceptance and never delivery.
 
 ## 2. Layer walkthrough
 
@@ -48,22 +48,32 @@ non-transactional message.
 | `account_id` | The recipient, by id. **Not the address** — the address is on the account and is deleted with it (`DATA-R03`) |
 | `subject` | What was sent |
 | `kind` | `transactional` or `bulk` — this is what the unsubscribe filters on |
-| `state` | `queued`, `sent`, `failed`, `bounced` |
-| `carrier_id`, `error` | The receipt, or why not |
+| `state` | `queued`, `accepted`, `failed` — and **not** `delivered`, because SMTP cannot tell us |
+| `queue_id`, `error` | The id the server returned on `250`, or its reply text |
 
 Written **before** the attempt, so a crash between write and send leaves a record
 of an attempt rather than no record at all. The body is not stored: the subject,
 the recipient and the time answer every question the log is asked, and storing
 the body would put a message about a person in a table with a long retention.
 
-### Bounces
+### Bounces, and why there are none here
 
-If the carrier reports them, a webhook updates the row and marks the account. A
-hard bounce twice in a row suspends sending to that address and tells an admin —
-continuing to mail an address that does not exist is how a sending domain's
-reputation is lost, which then costs the deliverability the whole feature is for.
+**SMTP gives no bounce signal.** The server answers once, at hand-off, and a
+message that bounces afterwards produces a delivery-status notification to the
+`MAIL_FROM` mailbox — a human-readable e-mail in an inbox this system does not
+read. So there is no automatic suspension of a dead address, and the log cannot
+mark one.
 
-Whether there is a webhook at all depends on the carrier, which is the decision.
+What is built instead is honest rather than absent: the send view shows the
+`MAIL_FROM` mailbox as **the place bounces arrive**, and the admin screen for an
+account carries a manual `stop sending` control with its reason. An admin who
+finds a bounce notice in that mailbox sets it, and the suppression list then
+holds. That is a person doing what a webhook would, and the design says so
+rather than implying the system noticed.
+
+The signal that this has become too expensive is the first send where somebody
+reports never receiving an invitation, which is also the signal named on
+`MAIL-DEC-01`.
 
 ### Unsubscribe
 
@@ -109,10 +119,9 @@ them. **`SEC-002`** records the send as a fact; this is the detail.
 
 ## 6. Open questions and trade-offs
 
-- **One suppression list or two.** If the carrier keeps its own, the two can
-  disagree, and the failure is that somebody who unsubscribed hears from us
-  again. The position when the decision lands: **this list is authoritative and
-  is checked before every send**, whatever the carrier also does.
+- **One suppression list, and it is this one.** SMTP keeps none, so the failure
+  where two lists disagree cannot happen. The list is checked before every send,
+  by account id, inside the same query that resolves recipients.
 - **Not storing the body.** It means "what exactly did we send them" is
   answerable only by subject and date. The alternative is a table of messages
   about named people with a two-year life, and the question is rare enough that
@@ -125,6 +134,6 @@ them. **`SEC-002`** records the send as a fact; this is the detail.
 - `MAIL-002/T1` — Rows written before the attempt, keyed by account and never by address
 - `MAIL-002/T2` — An unsubscribe that works in one click without signing in, and a preference inside the room
 - `MAIL-002/T3` — Transactional mail is never suppressed, enforced by the `kind` set at send time
-- `MAIL-002/T4` — Bounce handling where the carrier reports it, suspending a twice-hard-bounced address
+- `MAIL-002/T4` — A manual `stop sending` control with its reason, and the send view naming the mailbox bounces arrive in
 - `MAIL-002/T5` — Two-year retention, and immediate removal with the account
 - `MAIL-002/T6` — The admin log, filtered by recipient and date, showing state and error

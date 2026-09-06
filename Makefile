@@ -9,7 +9,7 @@ SHELL := /bin/sh
 
 PYTHON ?= python
 NODE   ?= node
-PORT   ?= 8123
+PORT   ?= 3101
 
 .PHONY: help
 help: ## Show this help
@@ -33,7 +33,7 @@ serve: ## Serve the gateway locally with no-store headers, on $(PORT)
 # --- Gates ----------------------------------------------------------------
 
 .PHONY: check
-check: check-site check-decisions check-designs check-tasks check-roadmap check-identifiers check-log ## Run every gate this repository has
+check: check-site check-decisions check-designs check-tasks check-roadmap check-identifiers check-log check-refs ## Run every gate this repository has
 
 .PHONY: check-site
 check-site: check-copy check-brand check-comments check-stream-guard ## Only the gates that guard what main publishes
@@ -84,6 +84,11 @@ check-comments: ## No bare deferral marker and no history prose in a comment
 .PHONY: check-stream-guard
 check-stream-guard: ## Every printing script survives a cp1252 console
 	@$(PYTHON) scripts/check-stream-guard.py
+
+.PHONY: check-refs
+check-refs: ## Every cited path exists, and env.example is the catalogue it claims to be
+	@$(PYTHON) scripts/check-doc-paths.py
+	@$(PYTHON) scripts/check-env-catalogue.py
 
 .PHONY: check-log
 check-log: ## The iteration log stays inside its bound

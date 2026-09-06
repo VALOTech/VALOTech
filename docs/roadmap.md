@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_261 tasks in the plan, 45 closed, 216 outstanding._
+_293 tasks in the plan, 45 closed, 248 outstanding._
 
 ---
 
@@ -60,7 +60,7 @@ _23/47 closed (48%) · 24 outstanding — 22 buildable now · 0 waiting on the o
 
 _Who may read what, and what records that they did. Everything above reads through the gate this wave builds, so a shortcut here is a shortcut in every feature after it. Sign-out precedes invitation deliberately: a session that cannot be ended server-side is a defect that grows with every account created. The scene sits here too, one layer above the page it moves behind._
 
-_22/69 closed (31%) · 47 outstanding — 46 buildable now · 1 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_22/69 closed (31%) · 47 outstanding — 47 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
 
 - **AUTH-001** · Sign-in — 0/5 closed · depth 2
   - `[ ] AUTH-001/T1` — Password hashing at the current cost, verified against a known vector
@@ -94,11 +94,11 @@ _22/69 closed (31%) · 47 outstanding — 46 buildable now · 1 waiting on the o
 - **AUTH-003** · Invitation and password reset — 0/7 closed · depth 3
   - `[ ] AUTH-003/T1` — Token generation, hashing, and storage that never holds a usable token
   - `[ ] AUTH-003/T2` — Single-use consumption in one atomic statement, with expiry in the same predicate
+  - `[ ] AUTH-003/T3` — The mail that carries the link, in the invitee's locale
   - `[ ] AUTH-003/T4` — The set-password form, its policy, and the sign-in that follows
   - `[ ] AUTH-003/T5` — Reset answers identically for an address that exists and one that does not
   - `[ ] AUTH-003/T6` — A new invitation invalidates every outstanding one for that account
   - `[ ] AUTH-003/T7` — With no mail credential, the invitation is still created and its link is shown to the admin
-  - `[!] AUTH-003/T3` — The mail that carries the link, in the invitee's locale  · _pending-decision_ · **Blocked by:** pending-decision: `MAIL-DEC-01` — [decisions-log.md#MAIL-DEC-01](decisions-log.md#MAIL-DEC-01). The invitation itself is built and the token is issue…
 
 - **SCENE-002** · Satellites and their rings — 2/2 closed
 - **SCENE-003** · The sky — 3/3 closed
@@ -226,7 +226,7 @@ _0/62 closed (0%) · 62 outstanding — 62 buildable now · 0 waiting on the own
 
 _The three content types, and the compliance posture that governs what is held about the people reading them. Updates come before decks, and not only because they are the simpler shape of the same problem: they are what the room is for. An investor signs in to find out what has happened since they last looked._
 
-_0/45 closed (0%) · 45 outstanding — 45 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_0/59 closed (0%) · 59 outstanding — 59 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
 
 - **DECK-001** · Deck authoring — 0/5 closed · depth 7
   - `[ ] DECK-001/T1` — Sections derived from level-2 headings, with the block array the single source
@@ -242,6 +242,16 @@ _0/45 closed (0%) · 45 outstanding — 45 buildable now · 0 waiting on the own
   - `[ ] LEGAL-SG-001/T4` — A named DPO recorded, and published in the notice
   - `[ ] LEGAL-SG-001/T5` — A breach runbook with the assessment steps and both notification paths
   - `[ ] LEGAL-SG-001/T6` — The backup window disclosed in the notice rather than omitted
+
+- **MAIL-001** · Investor mail — 0/8 closed · depth 7
+  - `[ ] MAIL-001/T1` — The `Mailer` port, and the composer that renders the exact bytes the send will use
+  - `[ ] MAIL-001/T2` — Recipients are a confirmed list of names, never a criterion re-evaluated at send time
+  - `[ ] MAIL-001/T3` — Suspended and unsubscribed accounts are excluded and shown as excluded, with the reason
+  - `[ ] MAIL-001/T4` — The send requires the recipient count to be typed, and re-resolves every recipient first
+  - `[ ] MAIL-001/T5` — One row per recipient written before the attempt; a failure leaves the row and the send continues
+  - `[ ] MAIL-001/T6` — Retry sends only to the ones that failed
+  - `[ ] MAIL-001/T7` — With no credential the composer works, the list resolves, and the send control is disabled with the reason
+  - `[ ] MAIL-001/T8` — One SMTP connection per send, TLS required, and a connection that cannot be secured fails rather than falling back
 
 - **POST-001** · Update authoring — 0/6 closed · depth 7
   - `[ ] POST-001/T1` — A composer that opens with the cursor in the body and fits without scrolling
@@ -273,6 +283,14 @@ _0/45 closed (0%) · 45 outstanding — 45 buildable now · 0 waiting on the own
   - `[ ] LEGAL-GLOBAL-001/T4` — The breach runbook uses the 72-hour clock for everyone
   - `[ ] LEGAL-GLOBAL-001/T5` — A one-page record of processing, and a written statement of what is deliberately not claimed
 
+- **MAIL-002** · Mail log and unsubscribe — 0/6 closed · depth 8
+  - `[ ] MAIL-002/T1` — Rows written before the attempt, keyed by account and never by address
+  - `[ ] MAIL-002/T2` — An unsubscribe that works in one click without signing in, and a preference inside the room
+  - `[ ] MAIL-002/T3` — Transactional mail is never suppressed, enforced by the `kind` set at send time
+  - `[ ] MAIL-002/T4` — A manual `stop sending` control with its reason, and the send view naming the mailbox bounces arrive in
+  - `[ ] MAIL-002/T5` — Two-year retention, and immediate removal with the account
+  - `[ ] MAIL-002/T6` — The admin log, filtered by recipient and date, showing state and error
+
 - **POST-002** · Update publishing and audience — 0/6 closed · depth 8
   - `[ ] POST-002/T1` — Audience on the item, with the predicate from `CMS-006` on every read
   - `[ ] POST-002/T2` — The stream pages by keyset on `(published_at, id)`, never by offset
@@ -293,7 +311,7 @@ _0/45 closed (0%) · 45 outstanding — 45 buildable now · 0 waiting on the own
 
 _The reading surfaces, the room they sit in, and the gateway served by the application — which is what finally makes the gate on the two hidden chapters real rather than a stylesheet. This wave ends with the product complete and still unpublished; what publishes it is outside the waves, waiting on the owner._
 
-_0/38 closed (0%) · 38 outstanding — 38 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_0/56 closed (0%) · 56 outstanding — 56 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
 
 - **DECK-003** · Deck reading — 0/5 closed · depth 9
   - `[ ] DECK-003/T1` — One column with sections in order, the version and date on the page
@@ -316,6 +334,13 @@ _0/38 closed (0%) · 38 outstanding — 38 buildable now · 0 waiting on the own
   - `[ ] INV-001/T3` — Flat navigation over four destinations, with the current one marked
   - `[ ] INV-001/T4` — The room's chrome is the gateway's, with no scene
   - `[ ] INV-001/T5` — An expired session returns the reader to where they were going
+
+- **LEGAL-GLOBAL-002** · Cookie and analytics posture — 0/5 closed · depth 9
+  - `[ ] LEGAL-GLOBAL-002/T1` — The three categories, with `necessary` fixed on and both others off until a visitor says otherwise
+  - `[ ] LEGAL-GLOBAL-002/T2` — The notice states the three storages, when each is set, and that nothing else is set on arrival
+  - `[ ] LEGAL-GLOBAL-002/T3` — A test proves a visitor who answers nothing, signs in to nothing and chooses no language leaves with an empty cookie ja…
+  - `[ ] LEGAL-GLOBAL-002/T4` — Nothing non-essential is present in the page until consent, rather than present and inert
+  - `[ ] LEGAL-GLOBAL-002/T5` — The stored choice is versioned, and a bump re-asks rather than extending an old answer
 
 - **RPT-003** · Report reading — 0/5 closed · depth 9
   - `[ ] RPT-003/T1` — One column at a reading measure, with the period, title and date on the page itself
@@ -347,11 +372,19 @@ _0/38 closed (0%) · 38 outstanding — 38 buildable now · 0 waiting on the own
   - `[ ] INV-003/T4` — All six always render, including paused, with an absent row filled rather than dropped
   - `[ ] INV-003/T5` — Stage is carried by a word as well as by colour, and the board states when it last changed
 
-## Outside the waves
+- **OPS-001** · Hosting and deploy — 0/7 closed · depth 10
+  - `[ ] OPS-001/T1` — Terraform under `deploy/`: VPC, ECS Fargate, ALB, RDS in private subnets, ECR, Route 53, ACM, with remote state and a l…
+  - `[ ] OPS-001/T2` — The deploy sequence: migrate as a one-off task on the same image, then the new task set, health-checked before it takes…
+  - `[ ] OPS-001/T3` — A short DNS TTL set a day before the cutover, and `main` left deployable for a month after
+  - `[ ] OPS-001/T4` — Secrets from Secrets Manager by ARN; values set by the owner, never in Terraform state or the image
+  - `[ ] OPS-001/T5` — The six post-deploy checks, run against the real deployment through Cloudflare
+  - `[ ] OPS-001/T6` — A staging service carrying `APP_ENV=staging`, so the console says which one it is
+  - `[ ] OPS-001/T7` — RDS unreachable from outside the VPC, proved by attempting it rather than by reading the security group
 
-_A design whose status is `pending-decision`, `pending-external` or `deprecated` takes no wave, so a feature waiting on the owner cannot hold a wave open. Its tasks stay claimable the moment the blocker clears._
-
-- **LEGAL-GLOBAL-002** · Cookie and analytics posture — status `pending-decision` · 0/3 closed · 3 outstanding
-- **MAIL-001** · Investor mail — status `pending-decision` · 0/7 closed · 7 outstanding
-- **MAIL-002** · Mail log and unsubscribe — status `pending-decision` · 0/6 closed · 6 outstanding
-- **OPS-001** · Hosting and deploy — status `pending-decision` · 0/6 closed · 6 outstanding
+- **SITE-006** · Legal pages and the consent surface — 0/6 closed · depth 10
+  - `[ ] SITE-006/T1` — Three legal pages in twenty locales, through the parity gate, linked in a footer row of their own
+  - `[ ] SITE-006/T2` — The banner: three categories, `necessary` fixed, three controls of equal weight, no dismissal without an answer
+  - `[ ] SITE-006/T3` — The banner is not first in the tab order, does not trap focus, and carries state without relying on colour
+  - `[ ] SITE-006/T4` — The stored choice read in a `try`/`catch`; an unreadable store means no answer, and nothing non-essential loads
+  - `[ ] SITE-006/T5` — A control on `legal/cookies` that changes the answer, and a footer link that reaches it
+  - `[ ] SITE-006/T6` — The legal pages print in black on white

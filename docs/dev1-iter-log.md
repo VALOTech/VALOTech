@@ -21,6 +21,12 @@ than noticed.
 
 ---
 
+## 2026-09-07 · go-live prep · iter 2
+STATUS: green · TIER: S · OUTCOME: CLOSED
+REASON: —
+WHAT CHANGED: the three owner decisions answered — AWS (`INFRA-DEC-03`/`INFRA-DEC-05` loop-settled to ECS Fargate + RDS), SMTP against the company mailbox (`MAIL-DEC-01`), the ecosystem's own consent posture (`OPS-DEC-01`). `OPS-001`, both `MAIL` designs and `LEGAL-GLOBAL-002` rewritten around the answers, no longer pending-decision. `SITE-006` added (legal pages + banner). Six `[!]` rows unblocked. Two new gates — `check-doc-paths` (5 dangling citations found) and `check-env-catalogue` (found the 3000/3100 port collision with VALO Ads and 4 vars missing from env.example). CI now runs `make check` split by ref. README rewritten to be true on both branches.
+NEXT: framework and go-live prep complete; the register is empty and every gate is green. The 248 open tasks are application code for `/dev1 valotech` to work from W0, which is a cold-start loop and does not depend on this window. Six items wait on the owner in `docs/operator-checklist.md`, none blocking.
+
 ## 2026-09-07 · design wave · iter 1
 STATUS: green · TIER: S · OUTCOME: CLOSED
 REASON: —

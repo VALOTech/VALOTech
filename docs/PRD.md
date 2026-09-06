@@ -92,6 +92,7 @@ A third role — an editor who may draft but not publish, an analyst who may rea
 | `I18N-001` | Twenty-locale runtime dictionary | live | 303 keys per locale, authored translations, swapped without a reload |
 | `I18N-002` | Served-copy parity gate | live | `scripts/sync-static-copy.mjs --check` refuses a push where markup and dictionary disagree |
 | `SITE-005` | The gateway served by the application | design | The same page, the same twenty locales and the same measured scene, served by the app instead of GitHub Pages — with the gated chapters resolved server-side rather than hidden by a stylesheet |
+| `SITE-006` | Legal pages and the consent surface | design | `legal/privacy`, `legal/cookies` and `legal/terms` in twenty locales, and the ecosystem's three-category consent banner with the non-essential categories off |
 | `A11Y-001` | Accessibility baseline | live | Keyboard reach, accessible names, AA contrast against the painted pixel, reduced motion, print |
 
 ### 5.2 Access — `AUTH`, `ADMIN`

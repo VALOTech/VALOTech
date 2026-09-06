@@ -92,7 +92,10 @@ def main():
             )
 
         if "pending-decision:" in h.lower():
-            named = DEC_CODE_RE.findall(body)
+            # A row names its decision three times -- the token, the link
+            # text and the link target -- so the raw findall reports one
+            # defect three times and a reader counts three defects.
+            named = sorted(set(DEC_CODE_RE.findall(body)))
             if not named:
                 problems.append(
                     "%s is blocked on a decision and names no `<DOMAIN>-DEC-NN` "

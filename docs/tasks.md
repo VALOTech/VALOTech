@@ -210,8 +210,7 @@ PRD: `AUTH-003`
 
 - [ ] AUTH-003/T1 — Token generation, hashing, and storage that never holds a usable token
 - [ ] AUTH-003/T2 — Single-use consumption in one atomic statement, with expiry in the same predicate
-- [!] AUTH-003/T3 — The mail that carries the link, in the invitee's locale
-  Blocked by: pending-decision: `MAIL-DEC-01` — [decisions-log.md#MAIL-DEC-01](decisions-log.md#MAIL-DEC-01). The invitation itself is built and the token is issued; what cannot be chosen for the owner is which carrier sends it, because that choice puts an investor's address in a third party's hands.
+- [ ] AUTH-003/T3 — The mail that carries the link, in the invitee's locale
 - [ ] AUTH-003/T4 — The set-password form, its policy, and the sign-in that follows
 - [ ] AUTH-003/T5 — Reset answers identically for an address that exists and one that does not
 - [ ] AUTH-003/T6 — A new invitation invalidates every outstanding one for that account
@@ -336,24 +335,22 @@ PRD: `POST-002`
 ## MAIL-001 · Investor mail
 PRD: `MAIL-001`
 
-- [!] MAIL-001/T1 — The `Mailer` port, and the composer that renders the exact bytes the send will use
-  Blocked by: pending-decision: `MAIL-DEC-01` — [decisions-log.md#MAIL-DEC-01](decisions-log.md#MAIL-DEC-01). Composition, recipient selection and the preview are buildable against a port; the adapter behind it cannot be written until the carrier is named.
+- [ ] MAIL-001/T1 — The `Mailer` port, and the composer that renders the exact bytes the send will use
 - [ ] MAIL-001/T2 — Recipients are a confirmed list of names, never a criterion re-evaluated at send time
 - [ ] MAIL-001/T3 — Suspended and unsubscribed accounts are excluded and shown as excluded, with the reason
 - [ ] MAIL-001/T4 — The send requires the recipient count to be typed, and re-resolves every recipient first
 - [ ] MAIL-001/T5 — One row per recipient written before the attempt; a failure leaves the row and the send continues
 - [ ] MAIL-001/T6 — Retry sends only to the ones that failed
 - [ ] MAIL-001/T7 — With no credential the composer works, the list resolves, and the send control is disabled with the reason
+- [ ] MAIL-001/T8 — One SMTP connection per send, TLS required, and a connection that cannot be secured fails rather than falling back
 
 ## MAIL-002 · Mail log and unsubscribe
 PRD: `MAIL-002`, `DATA-R04`
 
-- [!] MAIL-002/T1 — Rows written before the attempt, keyed by account and never by address
-  Blocked by: pending-decision: `MAIL-DEC-01` — [decisions-log.md#MAIL-DEC-01](decisions-log.md#MAIL-DEC-01). The log's shape depends on what the carrier reports back, and a record that cannot say whether a message was delivered is worse than none.
-- [!] MAIL-002/T2 — An unsubscribe that works in one click without signing in, and a preference inside the room
-  Blocked by: pending-decision: `MAIL-DEC-01` — [decisions-log.md#MAIL-DEC-01](decisions-log.md#MAIL-DEC-01). Whether the carrier keeps its own suppression list decides whether this is one list or two, and two lists that disagree is how somebody who unsubscribed hears from us again.
+- [ ] MAIL-002/T1 — Rows written before the attempt, keyed by account and never by address
+- [ ] MAIL-002/T2 — An unsubscribe that works in one click without signing in, and a preference inside the room
 - [ ] MAIL-002/T3 — Transactional mail is never suppressed, enforced by the `kind` set at send time
-- [ ] MAIL-002/T4 — Bounce handling where the carrier reports it, suspending a twice-hard-bounced address
+- [ ] MAIL-002/T4 — A manual `stop sending` control with its reason, and the send view naming the mailbox bounces arrive in
 - [ ] MAIL-002/T5 — Two-year retention, and immediate removal with the account
 - [ ] MAIL-002/T6 — The admin log, filtered by recipient and date, showing state and error
 
@@ -389,13 +386,13 @@ PRD: `SEC-002`, `SEC-R04`
 ## OPS-001 · Hosting and deploy
 PRD: `OPS-001`
 
-- [!] OPS-001/T1 — Deploy the application somewhere and point the domain at it
-  Blocked by: pending-decision: `INFRA-DEC-03` — [decisions-log.md#INFRA-DEC-03](decisions-log.md#INFRA-DEC-03). Every artefact this needs is buildable and none of it can be aimed anywhere until the host is chosen; this is also the task after which a defect has an audience (`.claude/CLAUDE.md` §12).
-- [ ] OPS-001/T2 — The deploy sequence: migrate before serve, health-check after, roll back on failure
+- [ ] OPS-001/T1 — Terraform under `deploy/`: VPC, ECS Fargate, ALB, RDS in private subnets, ECR, Route 53, ACM, with remote state and a lock table
+- [ ] OPS-001/T2 — The deploy sequence: migrate as a one-off task on the same image, then the new task set, health-checked before it takes traffic
 - [ ] OPS-001/T3 — A short DNS TTL set a day before the cutover, and `main` left deployable for a month after
-- [ ] OPS-001/T4 — Environment from the host's own mechanism; a missing required value stops the start
-- [ ] OPS-001/T5 — The five post-deploy checks, run against the real deployment through the CDN
-- [ ] OPS-001/T6 — A staging environment carrying `APP_ENV=staging`, so the console says which one it is
+- [ ] OPS-001/T4 — Secrets from Secrets Manager by ARN; values set by the owner, never in Terraform state or the image
+- [ ] OPS-001/T5 — The six post-deploy checks, run against the real deployment through Cloudflare
+- [ ] OPS-001/T6 — A staging service carrying `APP_ENV=staging`, so the console says which one it is
+- [ ] OPS-001/T7 — RDS unreachable from outside the VPC, proved by attempting it rather than by reading the security group
 
 ## OPS-002 · Logging and monitoring
 PRD: `OPS-002`, `DATA-R02`
@@ -450,10 +447,11 @@ PRD: `LEGAL-GLOBAL-001`
 ## LEGAL-GLOBAL-002 · Cookie and analytics posture
 PRD: `LEGAL-GLOBAL-002`
 
-- [!] LEGAL-GLOBAL-002/T1 — Whether the site measures anything about visitors, and what that obliges
-  Blocked by: pending-decision: `OPS-DEC-01` — [decisions-log.md#OPS-DEC-01](decisions-log.md#OPS-DEC-01). The obligation follows the answer rather than the other way round: measuring nothing needs no banner, no notice and no retention window, and the safe default ships exactly that.
-- [ ] LEGAL-GLOBAL-002/T2 — The notice states the two storages, when each is set, and that nothing is set on arrival
-- [ ] LEGAL-GLOBAL-002/T3 — A test proves a visitor who does not sign in and does not choose a language leaves with an empty cookie jar and empty storage
+- [ ] LEGAL-GLOBAL-002/T1 — The three categories, with `necessary` fixed on and both others off until a visitor says otherwise
+- [ ] LEGAL-GLOBAL-002/T2 — The notice states the three storages, when each is set, and that nothing else is set on arrival
+- [ ] LEGAL-GLOBAL-002/T3 — A test proves a visitor who answers nothing, signs in to nothing and chooses no language leaves with an empty cookie jar and empty storage
+- [ ] LEGAL-GLOBAL-002/T4 — Nothing non-essential is present in the page until consent, rather than present and inert
+- [ ] LEGAL-GLOBAL-002/T5 — The stored choice is versioned, and a bump re-asks rather than extending an old answer
 
 ## CMS-001 · Content model and revisions
 Design: [docs/designs/cms/cms-001-content-model-and-revisions.md](designs/cms/cms-001-content-model-and-revisions.md) · PRD: `CMS-001`
@@ -582,3 +580,13 @@ Design: [docs/designs/site/site-005-gateway-served-by-the-application.md](design
 - [ ] SITE-005/T4 — Edge caching for anonymous readers, `Vary` on the session cookie, verified through the CDN with and without one
 - [ ] SITE-005/T5 — First paint measured before and after, at the same viewport on the same machine
 - [ ] SITE-005/T6 — `main` stays deployable as the fallback until the owner answers `INFRA-DEC-03`
+
+## SITE-006 · Legal pages and the consent surface
+Design: [docs/designs/site/site-006-legal-pages-and-consent.md](designs/site/site-006-legal-pages-and-consent.md) · PRD: `SITE-006`
+
+- [ ] SITE-006/T1 — Three legal pages in twenty locales, through the parity gate, linked in a footer row of their own
+- [ ] SITE-006/T2 — The banner: three categories, `necessary` fixed, three controls of equal weight, no dismissal without an answer
+- [ ] SITE-006/T3 — The banner is not first in the tab order, does not trap focus, and carries state without relying on colour
+- [ ] SITE-006/T4 — The stored choice read in a `try`/`catch`; an unreadable store means no answer, and nothing non-essential loads
+- [ ] SITE-006/T5 — A control on `legal/cookies` that changes the answer, and a footer link that reaches it
+- [ ] SITE-006/T6 — The legal pages print in black on white

@@ -7,9 +7,7 @@ depends_on: [ADMIN-001, CMS-004, CRED-001]
 depended_by: [MAIL-002]
 layers_touched: [service, api, frontend, ui]
 cross_cutting_rules: [DATA-R04, DATA-R02, SEC-R04, SEC-R05, I18N-R01, A11Y-R01]
-status: pending-decision
-decision_required: Which service carries mail to investors
-decision_owner: user
+status: design-ready
 ---
 
 # `MAIL-001` — Investor mail
@@ -24,14 +22,19 @@ somebody's inbox cannot. So the design is shaped around one property: a send is
 an act a person takes deliberately, having seen exactly what will go and exactly
 who will get it.
 
-The carrier is unanswered at [`MAIL-DEC-01`](../../decisions-log.md#MAIL-DEC-01).
-Everything below is built against a port; only the adapter behind it waits.
+The carrier is **SMTP against the company's own mailbox**
+([`MAIL-DEC-01`](../../decisions-log.md#MAIL-DEC-01)). No third party holds an
+investor's address and no processor agreement is needed; what is given up is the
+bounce signal, and that consequence is carried explicitly in `MAIL-002` rather
+than left to be discovered by a message nobody received.
 
 ## 2. Layer walkthrough
 
-**Down.** A `Mailer` port with one method. One adapter behind it, chosen by the
-decision. A `mail_log` row written **before** the attempt and updated with the
-outcome (`MAIL-002`).
+**Down.** A `Mailer` port with one method, and one SMTP adapter behind it. The
+port stays because the adapter is the part most likely to change — `MAIL-DEC-01`
+names the signal that would change it — and because a port is what lets the send
+path be tested without a mail server. A `mail_log` row is written **before** the
+attempt and updated with the outcome (`MAIL-002`).
 
 **Up.** A composer, a recipient list the admin selects into, a preview of the
 actual message, and a send control that names the count and requires the count
@@ -45,14 +48,27 @@ to be typed.
       send(to: Address, subject: string, text: string, html: string): Promise<Receipt>
     }
 
-One method, plain text and HTML together, and a receipt carrying the carrier's
-own id so `MAIL-002` can reconcile. No templating in the port: the message is
-rendered before it reaches it, so a preview and a send are the same bytes.
+One method, plain text and HTML together, and a receipt. Over SMTP the receipt
+carries the **queue id the server returned on `250`** and nothing else; there is
+no delivery confirmation and no later callback, so `MAIL-002` records that the
+message was accepted for delivery and never that it arrived. Saying it that way
+in the log is the difference between a record and a claim.
+
+No templating in the port: the message is rendered before it reaches it, so a
+preview and a send are the same bytes.
+
+    SMTP_URL=smtps://user:pass@mail.example.com:465
+    MAIL_FROM="VALO Tech <investors@valotech.org>"
+
+Implicit TLS on 465, or STARTTLS on 587 with certificate verification on. A
+connection that cannot be secured **fails the send** rather than falling back to
+plaintext: an investor's address and the subject line would otherwise cross the
+network in the clear, and a silent downgrade is the way that happens.
 
 Absent credential: the port is unavailable and says why (`CRED-001`). The
 composer still works, the recipient list still resolves, and the send control is
 disabled with the reason on it — an admin who cannot see who they would have
-mailed cannot prepare the mail while waiting for a decision.
+mailed cannot prepare the mail while the credential is being arranged.
 
 ### Recipients
 
@@ -97,9 +113,18 @@ wrong.
 
 ### Failure
 
-A recipient that fails leaves its row `failed` with the carrier's error, and the
-send continues. At the end the admin sees which failed and can retry those alone
-— a retry that re-sends to everyone is how people receive a message twice.
+A recipient that fails leaves its row `failed` with the server's reply text, and
+the send continues. At the end the admin sees which failed and can retry those
+alone — a retry that re-sends to everyone is how people receive a message twice.
+
+**A `250` is not delivery.** It means the company's own mail server accepted the
+message; what happens after that is invisible to this system. The admin's view
+says *accepted* rather than *sent*, because the word people read as a guarantee
+is the one this carrier cannot give.
+
+One connection is opened per send and reused for every recipient, closed at the
+end. Opening one per message is how a mailbox provider decides this is a script
+and starts refusing.
 
 ## 4. Integration
 
@@ -120,12 +145,16 @@ transactional, so `MAIL-002`'s unsubscribe must never suppress it.
 
 ## 6. Open questions and trade-offs
 
-- **The carrier is unchosen.** [`MAIL-DEC-01`](../../decisions-log.md#MAIL-DEC-01).
-  The safe default while it waits is that nothing can be sent, and the mechanism
-  is built to the port so answering it is an adapter rather than a feature.
+- **SMTP gives no bounce signal, and that is the real cost of the choice.**
+  A dead address is indistinguishable from a delivered one, so
+  `MAIL-002` cannot suspend sending to it and the company's sending reputation
+  is protected by nothing but the recipient list being short and hand-picked.
+  The signal to revisit `MAIL-DEC-01` is a send to more than a few dozen people,
+  or the first time somebody reports never receiving an invitation.
 - **Sending in the foreground does not scale.** With fifty recipients it is
-  fine; at five hundred it is a timeout. The trade is deliberate at this size,
-  and the signal to change it is a recipient list that does not fit on a screen.
+  fine; at five hundred it is a timeout, and a mailbox provider will rate-limit
+  it long before that. The trade is deliberate at this size, and the signal to
+  change it is a recipient list that does not fit on a screen.
 - **No open or click tracking.** A pixel in a message to a named investor is
   surveillance of a person the company is asking for money. Whether they opened
   it is not worth what it costs to know.
@@ -139,3 +168,4 @@ transactional, so `MAIL-002`'s unsubscribe must never suppress it.
 - `MAIL-001/T5` — One row per recipient written before the attempt; a failure leaves the row and the send continues
 - `MAIL-001/T6` — Retry sends only to the ones that failed
 - `MAIL-001/T7` — With no credential the composer works, the list resolves, and the send control is disabled with the reason
+- `MAIL-001/T8` — One SMTP connection per send, TLS required, and a connection that cannot be secured fails rather than falling back

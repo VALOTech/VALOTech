@@ -21,7 +21,7 @@ if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DEFAULT_PORT = 8123
+DEFAULT_PORT = 3101
 
 
 class NoStore(http.server.SimpleHTTPRequestHandler):

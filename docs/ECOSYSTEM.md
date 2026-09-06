@@ -271,13 +271,15 @@ Every VALO repository is built and governed identically — read the repository'
 - **Truth in artifacts** — PRD ⇄ designs ⇄ tasks ⇄ code stay in sync; evidence closes a
   task, validators gate the commit.
 - **One contract registry across the boundary.** Every seam where one repository calls
-  another is declared in `docs/ecosystem-contracts.yaml` from **both** ends — the provider
-  that owns the contract and each consumer that builds against it — and
-  `scripts/validate-ecosystem-contracts.py` checks each declaration against the tree, both
-  ends at once when the sibling repositories are checked out beside each other. It exists
-  because every other gate stops at the repository boundary: a design's `depends_on` cannot
-  name a code that lives in another clone, so without it a provider and a consumer can each
-  stay green while disagreeing about the wire between them.
+  another is declared from **both** ends — the provider that owns the contract and each
+  consumer that builds against it — and a validator checks each declaration against the
+  tree, both ends at once when the sibling repositories are checked out beside each other.
+  It exists because every other gate stops at the repository boundary: a design's
+  `depends_on` cannot name a code that lives in another clone, so without it a provider and
+  a consumer can each stay green while disagreeing about the wire between them.
+  **This repository declares no contract and carries neither file.** Nothing here calls a
+  sibling and no sibling calls the gateway; the only thing crossing the boundary is the
+  ecosystem's shared vocabulary, which is prose in this document rather than a wire.
 
 ## This repository — **VALO Tech** (`VALOTech`)
 
@@ -317,7 +319,7 @@ sibling repository looks before claiming a port. The rule is VALO Ads' decision 
 |---|---|---|---|
 | VALO Ads | **5433** (test **15432**) | **6380** financial, **6381** cache (test **16380** / **16381**) | ClickHouse 8123 / 9000 · NATS 4222 / 8222 · API 8080 · web 3000 |
 | VALO Compliance (Verdiq) | **5432** | **6379** | — |
-| VALO Tech | **5434** | — | web 3100 |
+| VALO Tech | **5434** | — | web **3100** · static gateway **3101** |
 | VALO Pocket · Shimmra · Amavo · Farola | unallocated | unallocated | claim a row here before publishing a port |
 
 The engine ports are deliberately not the defaults for every product but one.

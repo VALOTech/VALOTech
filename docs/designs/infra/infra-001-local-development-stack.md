@@ -53,8 +53,8 @@ decision that belongs in the register.
 | Service | Port | Why this one |
 |---|---|---|
 | PostgreSQL | **5434** | Not 5432. Several VALO repositories run their own database on this machine at once, and the default port makes two projects fight over one socket — the failure looks like a migration applied to the wrong database, which is discovered later and elsewhere |
-| The application | 3000 | The Next.js default; nothing else here uses it |
-| The static gateway | 8123 | `make serve`, and deliberately not 3000 or 8000 |
+| The application | **3100** | The row this repository claimed in `docs/ECOSYSTEM.md`. Not Next.js's default 3000, which VALO Ads holds |
+| The static gateway | **3101** | `make serve`. Adjacent to the claimed row so it reads as ours, and deliberately not 8123 — that is VALO Ads' ClickHouse, and a browser pointed at it would get an answer from the wrong thing rather than a refusal |
 
 ### Environment
 
@@ -67,7 +67,8 @@ the first person to discover it will discover it as a crash.
 |---|---|---|
 | `DATABASE_URL` | `postgres://valotech:valotech@127.0.0.1:5434/valotech` | The application does not start. This is deliberate: a database-less start would serve empty pages that look like a working site |
 | `SESSION_SECRET` | a development value, clearly marked | The application does not start |
-| `APP_ORIGIN` | `http://127.0.0.1:3000` | The application does not start; cookies and links need to know their own origin |
+| `APP_ORIGIN` | `http://127.0.0.1:3100` | The application does not start; cookies and links need to know their own origin |
+| `PORT` | `3100` | Optional; the application listens on the claimed row. A value here that disagrees with `APP_ORIGIN` produces links that reach nothing |
 | `SMTP_*` | unset | Mail degrades and the system stays up (`SEC-R05`) — `CRED-001` owns this |
 
 **No secret is committed.** `env.example` carries shapes and development values;

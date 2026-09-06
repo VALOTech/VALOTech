@@ -5,9 +5,18 @@ name: CI
 # catches a push that bypassed it, and it is the only check that runs on a
 # machine nobody configured.
 #
-# It is deliberately small. Every job here has something to check today: the
-# served English copy against its dictionary, the decision register against its
-# contract, the designs against theirs, and both halves of every REVIEW edge.
+# It runs `make check` rather than a list of scripts. A workflow that enumerates
+# its own gates drifts from the Makefile the first time a gate is added, and what
+# it then reports is not that a check failed but that no check ran -- which is
+# exactly what happened here: nine gates were added and this file went on running
+# four of them.
+#
+# Which target runs follows what is being checked. `main` carries the site and
+# none of the planning documents, so the gates that read those documents have
+# nothing to say about it; coupling a live stylesheet fix to the state of a
+# design backlog would make the published page hostage to planning. The pre-push
+# hook makes the same split for the same reason.
+#
 # Jobs for lint, types, build and tests land with the first application code,
 # because a job that checks nothing has only ever passed.
 #
@@ -30,7 +39,7 @@ permissions:
 
 jobs:
   gates:
-    name: Documents and served copy
+    name: Gates
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -44,20 +53,22 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: The served English copy matches the dictionary
-        run: node scripts/sync-static-copy.mjs --check
+      - name: Install PyYAML
+        run: python -m pip install --quiet pyyaml
 
-      # The three document gates run on development, where the documents live.
-      # main carries only the site, and each gate says so rather than passing
-      # silently on an absent file.
-      - name: The decision register holds its contract
-        run: python scripts/validate-decisions.py
+      # The site gates only, on the published branch: it carries no PRD, no
+      # designs, no ledger and no register, so the gates that read them would be
+      # reporting on files that are absent by design.
+      - name: Every gate that guards what main publishes
+        if: github.ref == 'refs/heads/main'
+        run: make check-site
 
-      - name: Design frontmatter is coherent
-        run: python scripts/validate-designs.py --strict
-
-      - name: Every REVIEW edge is written from both ends
-        run: python scripts/check-review-refer-to.py
+      # Everything, on the branch that carries everything. `make check` is the
+      # same chain the pre-push hook runs, so a push that bypassed the hook is
+      # caught here by the identical set rather than by a subset of it.
+      - name: Every gate this repository has
+        if: github.ref != 'refs/heads/main'
+        run: make check
 
   secrets:
     name: Secret scan

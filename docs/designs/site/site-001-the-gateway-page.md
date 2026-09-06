@@ -4,7 +4,7 @@ title: The gateway page
 domain: site
 prd_refs: [SITE-001, P-01, P-04, P-06]
 depends_on: []
-depended_by: [A11Y-001, I18N-001, SCENE-001, SITE-002, SITE-003, SITE-004, SITE-005]
+depended_by: [A11Y-001, I18N-001, SCENE-001, SITE-002, SITE-003, SITE-004, SITE-005, SITE-006]
 layers_touched: [frontend, ui]
 cross_cutting_rules: [A11Y-R03, I18N-R01, P-01, P-04, P-06]
 status: implemented

@@ -10,39 +10,49 @@ An entry is filed the moment the choice surfaces, not when it is answered. Nothi
 
 ## Open decisions
 
-<a id="INFRA-DEC-03"></a>
-### `INFRA-DEC-03` — Where the application runs, and how valotech.org reaches it — OPEN
-
-- **Decision:** Which host runs the Next.js application, and how the domain is pointed at it without the gateway going dark.
-- **Options:** **A** A small VPS running the app and PostgreSQL under Docker, with Cloudflare in front as it is today · **B** A managed platform (Vercel, Fly, Railway) with a managed PostgreSQL, keeping Cloudflare for the domain · **C** AWS, matching where the products run.
-- **Recommendation:** **A.** The workload is one small application and one small database with no traffic spike to absorb, so a managed platform's price is paid for elasticity nobody needs; and a VPS keeps the whole system in one place the owner can inspect. **B** is the honest runner-up and would be right if deployment time turns out to matter more than cost. **C** is the shape the products use and would be over-built here.
-- **Decision owner:** user
-- **Blocks:** `OPS-001`
-- **Status:** OPEN. Safe default: nothing is deployed. The gateway continues to be served by GitHub Pages from `main`, unchanged, and the application is developed and run locally only. No DNS record moves until this is answered.
-
-<a id="OPS-DEC-01"></a>
-### `OPS-DEC-01` — Whether the site measures anything about visitors — OPEN
-
-- **Decision:** Does valotech.org collect analytics, and if so of what kind.
-- **Options:** **A** Nothing at all — no analytics, no cookies beyond the session cookie the investor room needs · **B** Privacy-preserving, cookieless server-side counts of page views and languages, retained briefly · **C** A conventional analytics product with a consent banner.
-- **Recommendation:** **A** for now, moving to **B** if the owner wants to know which languages are actually read. **A** needs no consent banner, no cookie policy and no data-protection posture for visitors, which removes an entire compliance surface from a page whose job is persuasion. **C** buys detail the company has no decision waiting on, at the cost of a banner in front of its own front door.
-- **Decision owner:** user
-- **Blocks:** `LEGAL-GLOBAL-002`
-- **Status:** OPEN. Safe default: the site collects nothing. No analytics script is loaded and no cookie is set for a visitor who does not sign in.
-
-<a id="MAIL-DEC-01"></a>
-### `MAIL-DEC-01` — Which service carries mail to investors — OPEN
-
-- **Decision:** How a message an admin composes actually reaches an investor's inbox.
-- **Options:** **A** A transactional mail provider (Resend, Postmark, SES) over API · **B** SMTP against the company's existing mailbox · **C** No sending at all — the admin console composes and the admin sends from their own client.
-- **Recommendation:** **A.** Deliverability to institutional inboxes is the whole point of the feature, and a provider gives SPF, DKIM and a bounce signal that a mailbox does not. **B** costs nothing extra and is acceptable for a handful of recipients, but a message that silently lands in spam is worse than one that was never sent. **C** is the honest fallback if the owner would rather not put investor addresses through a third party at all.
-- **Decision owner:** user
-- **Blocks:** `MAIL-001`, `MAIL-002`
-- **Status:** OPEN. Safe default: no mail is sent. `MAIL-001` is not built, and the contact path on the gateway stays a `mailto:` link that opens the reader's own client.
+— none —
 
 ---
 
 ## Resolved decisions
+
+<a id="INFRA-DEC-03"></a>
+### `INFRA-DEC-03` — Where the application runs, and how valotech.org reaches it — RESOLVED 2026-09-07
+
+- **Decision:** Which host runs the Next.js application, and how the domain is pointed at it without the gateway going dark.
+- **Options:** **A** A small VPS running the app and PostgreSQL under Docker, with Cloudflare in front as it is today · **B** A managed platform (Vercel, Fly, Railway) with a managed PostgreSQL, keeping Cloudflare for the domain · **C** AWS, matching where the products run.
+- **Decision owner:** user
+- **Settled by:** user
+- **Status:** RESOLVED 2026-09-07 — **C**. The ecosystem runs on AWS and the owner wants this on the same ground: one account, one identity model, one place to look when something is wrong, and no second operational vocabulary to learn for the smallest product in the family. The cost is a higher floor of things that must be right for a page with a dozen readers, and `OPS-001` is written to keep that floor as low as AWS allows.
+
+<a id="INFRA-DEC-05"></a>
+### `INFRA-DEC-05` — Which AWS shape, given that `INFRA-DEC-03` chose AWS — RESOLVED 2026-09-07 · loop-settled
+
+- **Decision:** AWS is not one thing. Within it: join the ecosystem's EKS cluster, run ECS Fargate, run App Runner, or run EC2 with Docker — and which managed database.
+- **Options:** **A** ECS Fargate + RDS PostgreSQL + ALB + Route 53 + ACM, described in Terraform under `deploy/` · **B** The ecosystem's EKS cluster, as VALO Ads and VALO Pocket are designed for · **C** EC2 with Docker Compose + RDS · **D** App Runner + RDS.
+- **Decision owner:** user — settled by the loop under §1.11, reversible at any time
+- **Settled by:** loop
+- **Forcing source:** MEASUREMENT `VALOAds/docs/decisions-log.md` — *"no EKS cluster is provisioned, so nothing is failing today; this decides what the first one does"*. **B**'s premise is false as filed: there is no cluster to join, so choosing it means provisioning the ecosystem's first EKS cluster to serve a corporate homepage, and the cluster's shape would then be decided by the smallest workload that will ever run on it. DOCTRINE §1.10 — build only what serves a real caller — then separates the remaining three: **C** puts host patching back on the owner, which is the one thing AWS was chosen to remove; **D** has no VPC-attached database path without extra work; **A** is the smallest shape that is genuinely AWS, genuinely managed, and genuinely operable by one person. The rejected option's strongest case is **B**'s: one operational surface for the whole family is worth real money, and it becomes right the day the cluster exists for another product — at which point moving is a deployment change and not an application change, because nothing above `OPS-001` knows what runs it.
+- **Overturned by:** the ecosystem provisioning an EKS cluster for another product. When that lands, this repository's deployment moves onto it and this entry is superseded rather than argued with.
+- **Status:** RESOLVED 2026-09-07 — **A**. ECS Fargate, RDS PostgreSQL, an ALB, Route 53 and ACM, all in Terraform under `deploy/`, with the EKS path named so it is a move rather than a rewrite.
+
+<a id="MAIL-DEC-01"></a>
+### `MAIL-DEC-01` — Which service carries mail to investors — RESOLVED 2026-09-07
+
+- **Decision:** How a message an admin composes actually reaches an investor's inbox.
+- **Options:** **A** A transactional mail provider (Resend, Postmark, SES) over API · **B** SMTP against the company's existing mailbox · **C** No sending at all — the admin console composes and the admin sends from their own client.
+- **Decision owner:** user
+- **Settled by:** user
+- **Status:** RESOLVED 2026-09-07 — **B**. SMTP against the company's own mailbox: no third party holds an investor's address, no processor agreement is needed, and the credential is one environment variable. What is given up is the bounce signal — SMTP answers once, at hand-off, and says nothing afterwards — so `MAIL-002` cannot mark an address dead and the suppression list is entirely ours. That consequence is written into both mail designs rather than left to be discovered, and it is the honest reason to revisit this if a send ever goes to more than a few dozen people.
+
+<a id="OPS-DEC-01"></a>
+### `OPS-DEC-01` — Whether the site measures anything about visitors — RESOLVED 2026-09-07
+
+- **Decision:** Does valotech.org collect analytics, and if so of what kind.
+- **Options:** **A** Nothing at all · **B** Cookieless server-side counts of page views and languages · **C** A conventional analytics product with a consent banner · **D** Whatever the rest of the ecosystem does on its own public pages.
+- **Decision owner:** user
+- **Settled by:** user
+- **Status:** RESOLVED 2026-09-07 — **D**, and what that resolves to was read from the siblings rather than assumed. Every VALO web surface carries `legal/privacy`, `legal/cookies` and `legal/terms`, and a consent banner with three categories — `necessary`, fixed on; `analytics`, default **off**; `marketing`, default **off** — whose choice is stored per visitor under a versioned key and can be withdrawn. VALO Tech adopts the same surface and the same defaults, so a person arriving from any product page meets the same posture. Analytics is therefore **permitted and off**: nothing non-essential loads until a visitor turns it on, and which analytics is loaded when one does is a later choice with no compliance weight, because the consent surface that governs it is the part being adopted now. `LEGAL-GLOBAL-002` carries the posture and `SITE-006` builds the pages and the banner.
 
 <a id="CMS-DEC-01"></a>
 ### `CMS-DEC-01` — Whether the gateway and the investor room share one content system — RESOLVED 2026-09-07

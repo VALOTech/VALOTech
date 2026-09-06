@@ -144,7 +144,7 @@ def main():
     print("----")
     print("  make check     run every gate this repository has")
     print("  make roadmap   regenerate docs/roadmap.md from the ledger")
-    print("  make serve     the gateway on http://127.0.0.1:8123, no-store")
+    print("  make serve     the gateway on http://127.0.0.1:3101, no-store")
     print("  make infra-up  PostgreSQL on 5434")
     print("  /dev1          one iteration of the autonomous loop")
     return 0

@@ -61,7 +61,8 @@ read record is about the person and goes.
 
 ### The check
 
-`scripts/check-erasure-manifest.py` compares this table against the schema:
+`scripts/check-erasure-manifest.py` (`DATA-002/T3`) compares this table against
+the schema:
 
 1. Every table in the database appears in the manifest.
 2. Every column referencing `accounts` has an `on delete` behaviour matching

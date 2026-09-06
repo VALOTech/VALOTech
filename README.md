@@ -52,10 +52,28 @@ assets/
 CNAME · robots.txt · sitemap.xml · .nojekyll   GitHub Pages and SEO configuration
 ```
 
-This branch carries the site and nothing else. The design record, the twenty-locale
-tooling, the Vietnamese glossary, the build and validation scripts and the project's
-own planning live on `development`, because everything committed here is served at
-valotech.org — including paths nothing links to.
+## Two branches, and what each carries
+
+`main` is the published branch and carries **the site and nothing else**, because
+everything committed to it is served at valotech.org — including paths nothing links
+to. `development` carries the site plus everything used to build it: the design
+record, the twenty-locale tooling, the Vietnamese glossary, the validation scripts
+and the project's own planning.
+
+The gateway is finished and live. Behind it, on `development`, is a product that does
+not exist yet: an investor room, and the content system an admin uses to keep it
+current. Where that stands is not narrated here — it is generated, and these four
+files are the whole map:
+
+| File | What it answers |
+|---|---|
+| [`docs/PRD.md`](docs/PRD.md) | What the product is, and every feature it has or will have, each with a stable code |
+| [`docs/designs/`](docs/designs/) | How one feature works, one document per code, in seven fixed sections |
+| [`docs/tasks.md`](docs/tasks.md) | Every task, its state, and the evidence that closed it |
+| [`docs/roadmap.md`](docs/roadmap.md) | The order to do them in — **generated** from the two above and the dependency graph, never edited |
+
+`make check` runs every gate; `make doctor` says where the work stands; `/dev1` is
+one iteration of the loop that works the queue.
 
 ## Internationalization
 

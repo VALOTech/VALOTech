@@ -68,8 +68,8 @@ one.
 
 There is no `make restore-production`. Restoring over live data is a deliberate,
 manual, documented act with the owner present, and it lives in
-`docs/runbooks/data-003-restore.md` rather than behind a command that can be run
-by accident.
+`docs/runbooks/data-003-restore.md` (`DATA-003/T5`) rather than behind a command
+that can be run by accident.
 
 ### The rehearsal is a schedule, not a task
 

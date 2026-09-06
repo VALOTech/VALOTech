@@ -81,8 +81,8 @@ designation is a fact to be recorded rather than an organisational change.
 The PDPA's notifiable data breach regime requires notice to the Commission
 without undue delay and, where the breach is likely to result in significant harm,
 to affected individuals. The runbook at `docs/runbooks/legal-sg-001-breach.md`
-carries the assessment steps and the two notification paths, and it is written
-before it is needed rather than during.
+(`LEGAL-SG-001/T5`) carries the assessment steps and the two notification paths,
+and it is written before it is needed rather than during.
 
 **The population is small enough to notify individually**, which is the one
 advantage of this system's size and is worth stating in the runbook so nobody
