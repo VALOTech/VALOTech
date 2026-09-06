@@ -27,6 +27,16 @@ fi
 # rule. They may still be brought into existence here — a ref that does not yet
 # exist cannot be promoted onto, and the model needs all three to exist before
 # the first promotion can happen.
+# The decision register lives on development only, so the gate skips itself on
+# a branch that does not carry it and says so. Python is optional here: a
+# machine without it can still push the site.
+if command -v python >/dev/null 2>&1; then
+	if ! python scripts/validate-decisions.py; then
+		echo "pre-push: the decision register does not hold" >&2
+		exit 1
+	fi
+fi
+
 ALLOWED_REFS="refs/heads/main refs/heads/development"
 CREATE_ONLY_REFS="refs/heads/staging refs/heads/production"
 ZERO=$(git hash-object --stdin </dev/null | tr '0-9a-f' '0')
