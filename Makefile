@@ -33,11 +33,15 @@ serve: ## Serve the gateway locally with no-store headers, on $(PORT)
 # --- Gates ----------------------------------------------------------------
 
 .PHONY: check
-check: check-copy check-decisions check-designs check-review ## Run every gate this repository has
+check: check-copy check-brand check-decisions check-designs check-review ## Run every gate this repository has
 
 .PHONY: check-copy
 check-copy: ## The served English copy still matches the dictionary
 	@$(NODE) scripts/sync-static-copy.mjs --check
+
+.PHONY: check-brand
+check-brand: ## The brand kit still publishes the stylesheet's own values
+	@$(PYTHON) scripts/check-brand-tokens.py
 
 .PHONY: check-decisions
 check-decisions: ## The decision register holds its contract

@@ -106,7 +106,7 @@ reduced-motion branch, because each has velocity of its own to stop.
 - **An audit by a screen-reader user.** Everything above was verified by
   measurement and by driving the page from a keyboard; none of it was verified by
   someone who uses a screen reader daily. That is the same class of gap as
-  `REVIEW/T1` for the locales, and it is not closed by any check written here.
+  `I18N-001/T4` for the locales, and it is not closed by any check written here.
 - **`prefers-contrast`.** Not implemented. The palette has one theme, and a
   high-contrast variant would be a second design rather than a token swap.
 

@@ -21,23 +21,6 @@ Tasks are grouped by feature code and carry a stable id `<CODE>/T<N>`. A task li
 
 ---
 
-## REVIEW · findings from any review of the running product
-
-Every finding — front-end, scene, security, accessibility, language, legal — is a row here. Each carries `Impact to:`; the task it names carries `Refer to:` back.
-
-- [ ] REVIEW/T1 — Eleven locales have never been read sentence by sentence by a native speaker
-  Note: the 2026-09-05 language pass cleared all sixteen non-`en`/`vi`/`zh`/`zt` locales on seven mechanical classes — coverage, brand preservation, register, typography, script, product-term consistency, and English function-word leakage — and read five of them line by line, fixing `ko`, `ur`, `hi`, `bn`, `fr` and `de`. The remaining eleven (`es`, `pt`, `ru`, `tr`, `id`, `ms`, `tl`, `th`, `ar`, `ja`, and the already-clean `zt`) passed every mechanical check but have not been read as prose by someone who speaks them. A mechanical pass cannot see a sentence that is correct and lifeless.
-  Impact to: `I18N-001`
-- [ ] REVIEW/T2 — A label crosses the face of the world in about a third of the frames it is shown in
-  Note: measured at 1920 across the four label chapters, a chip's rectangle touched the drawn disc in 42 of 117 frames where it was shown. The dominant case is a satellite passing in front of or behind the world, where no horizontal offset clears the disc and the label rightly stays with its body — the reference design does the same. Filed as a deliberate acceptance, not a defect, so that a future reader does not rediscover it as one. Reopen if the owner reads it as clutter.
-  Impact to: `SCENE-004`
-- [x] REVIEW/T3 — Fifty-seven internal working files are published on the company domain
-  Note: `.claude/` is committed to `main`, and GitHub Pages serves dot-directories. Measured: `valotech.org/.claude/settings.json` returns 200, as does every file of the four writing and translation skills — 336 KB of internal tooling on the company's public domain, linked from nothing and useful to no visitor. `settings.json` holds only a list of denied commands, so nothing here is a secret; the objection is that internal material is published at all, and that it is fetched by every crawler that walks the tree. `.githooks/pre-push`, `.editorconfig` and `.gitattributes` are served too and are unremarkable. Recommended: move `.claude/` off `main` and keep it on `development`, which loses nothing — the files stay in history and on the branch where work happens. Not done: removing files from the published branch is an owner's call (`.claude/CLAUDE.md` §14).
-  Evidence: commit 215d9c2 — 62 files removed from `main`; `valotech.org/.claude/settings.json`, `/docs/design-gateway.md`, `/glossary-vi.json`, `/scripts/sync-static-copy.mjs` and `/.githooks/pre-push` all return 404, while the site itself loads with 0 failed requests and 0 console errors. The wider exposure — the repository is public, so every branch including this one is readable — is the owner's accepted position at docs/decisions-log.md#INFRA-DEC-04.
-  Impact to: — none — · the published branch itself
-
----
-
 ## SITE-001 · The gateway page
 Design: [docs/designs/site/site-001-the-gateway-page.md](designs/site/site-001-the-gateway-page.md) · PRD: `SITE-001`, `SITE-003`, `SITE-004`
 
@@ -51,8 +34,10 @@ Design: [docs/designs/site/site-001-the-gateway-page.md](designs/site/site-001-t
   Evidence: assets/site.css:.nav-links · commit 7543b48
 - [x] SITE-001/T5 — The reading column yields to the frame so labels survive below 1440px
   Evidence: commit 3af6ea0
-- [x] SITE-001/T6 — A frame past 2000px shows a larger page rather than a further one
-  Evidence: commit ecf3f62 · docs/decisions-log.md#SITE-DEC-02
+- [x] SITE-001/T6 — A frame past 2000px shows a larger page rather than a further one, in every element the frame carries
+  Evidence: assets/site.css:@media (min-width: 2000px) · docs/decisions-log.md#SITE-DEC-02 — measured at 3840 x 2160: `.sun` 739px, `.hero-aside .marker` 422px, `#people .chapter-head` 686px, all previously flat at their 1440-tuned widths while the display face grew 32%
+- [x] SITE-001/T7 — The brand kit cannot publish a value the stylesheet has stopped using
+  Evidence: scripts/check-brand-tokens.py — 39 tokens verified against `assets/site.css`, wired into `make check`; proved able to fail on a drifted value, on a token the kit invents, and on a name one kit file publishes and the other does not
 
 ## SITE-002 · Public and investor chapter split
 PRD: `SITE-002` · Decision: [decisions-log.md#SITE-DEC-01](decisions-log.md#SITE-DEC-01)
@@ -77,8 +62,8 @@ Design: [docs/designs/scene/scene-001-world-and-journey.md](designs/scene/scene-
   Evidence: assets/scene/boot.js:LEAD_EASE
 - [x] SCENE-001/T4 — A jump is placed rather than eased
   Evidence: commit e180555
-- [x] SCENE-001/T5 — The world's size follows the frame, and its ceiling can never shrink a tuned size
-  Evidence: assets/site.css:--planet · docs/decisions-log.md#SITE-DEC-02
+- [x] SCENE-001/T5 — The world's size follows the frame, with no flat ceiling and a floor that cannot shrink a tuned size
+  Evidence: assets/site.css:--planet · docs/decisions-log.md#SITE-DEC-02 — 994px at 3840 x 2160 and 432px at 1440 x 900, 46% and 48% of the frame height; satellites re-measured over the larger disc at three points of the orbit stage, minimum pairwise gap 8px, none off-frame
 - [x] SCENE-001/T6 — The close takes the open side of the footer
   Evidence: commit 535d981
 
@@ -120,8 +105,9 @@ PRD: `I18N-001`, `I18N-002`
 - [x] I18N-001/T2 — The served copy and the dictionary cannot drift past a push
   Evidence: scripts/sync-static-copy.mjs
 - [x] I18N-001/T3 — Sixteen non-`en`/`vi`/`zh`/`zt` locales reviewed on seven mechanical classes; six corrected
-  Evidence: assets/i18n.js
-  Refer to: REVIEW/T1
+  Evidence: assets/i18n.js — coverage, brand preservation, register, typography, script, product-term consistency and English function-word leakage; `ko`, `ur`, `hi`, `bn`, `fr` and `de` corrected
+- [!] I18N-001/T4 — Eleven locales read as prose, sentence by sentence, by someone who speaks them
+  Blocked by: pending-external: a native reader for `es`, `pt`, `ru`, `tr`, `id`, `ms`, `tl`, `th`, `ar`, `ja` and `zt`. All eleven pass every mechanical class in `I18N-001/T3`; what no mechanical pass can see is a sentence that is correct and lifeless. Unblocks when a reader is available per locale — the eleven are independent, so the task closes locale by locale.
 
 ---
 

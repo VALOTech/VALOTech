@@ -97,7 +97,7 @@ draws its chips from keys the dictionary already carried.
   were read line by line, fixing `ko`, `ur`, `hi`, `bn`, `fr` and `de`. The
   remaining eleven passed every check a machine can make. **A mechanical pass
   cannot see a sentence that is correct and lifeless**, which is why this is filed
-  at `REVIEW/T1` rather than called done.
+  at `I18N-001/T4` rather than called done.
 - **A build-time i18n instead of a runtime one.** It would remove the swap and the
   parity gate. Rejected while the site is static: the whole point of no build step
   is that the repository is the artifact.

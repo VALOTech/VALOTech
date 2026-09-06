@@ -62,19 +62,27 @@ the window instead left the world about thirty pixels high at every size.
 
 ### How large the world is
 
-    --planet: max(min(30vw, 440px), min(26vw, 46vh, 900px))
+    --planet: max(min(30vw, 440px), min(26vw, 46vh))
 
 Everything sized from the world — the orbits, and through them the reach the
 labels clear against — is a multiple of it.
 
-A flat pixel cap is what a scene must not have. Held at 440px the world was a
-quarter of the frame at 1920 and an eighth at 3840: every pixel the frame gained
-past 1470 made it smaller in the reader's eye. The wide term takes over and
-holds it near a quarter of the frame at any width. The height term exists
-because width alone is the wrong measure of room — a 2560 × 900 letterbox has
-the width for a 660px disc and nowhere to put it. **The outer `max()` is a
-proof, not a sample:** the value can never fall below what the narrow frames were
-tuned against, so widening a ceiling cannot regress a verified size.
+**No term in that expression is a flat pixel ceiling, and the omission is the
+whole design.** Held at 440px the world was a quarter of the frame at 1920 and
+an eighth at 3840: every pixel the frame gained past 1470 made it smaller in the
+reader's eye. A ceiling does not fix that defect, it postpones it — the disc
+stops growing at the first frame that exceeds the number while the type and the
+column keep going, so the world shrinks in the reader's eye exactly as before,
+one screen size later and harder to see. What governs instead are two frame
+terms: the width term holds the disc near a quarter of any frame, and the height
+term exists because width alone is the wrong measure of room — a 2560 × 900
+letterbox has the width for a 660px disc and nowhere to put it. Both are
+proportions, so the disc is 46% of the frame's height at 1080 and at 2160 alike.
+
+**The outer `max()` is a floor, not a ceiling:** the value can never fall below
+what the narrow frames were tuned against, so widening the formula cannot
+regress a verified size. It is the one bound in the expression, and it binds
+downward — which is the direction that cannot reintroduce the defect above.
 
 ### What scroll drives
 

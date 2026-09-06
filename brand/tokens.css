@@ -57,8 +57,7 @@
   --gut: 28px;
   --hdr: 68px;
   --up: 1;
-  --planet: max(min(30vw, 440px), min(26vw, 46vh, 900px));
-
+  --planet: max(min(30vw, 440px), min(26vw, 46vh));
   /* motion */
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
 

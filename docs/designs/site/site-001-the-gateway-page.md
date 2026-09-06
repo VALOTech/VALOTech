@@ -119,6 +119,14 @@ column **together**. Two properties make it safe:
 while the display face grew, the cover's four lines became five and the last ran
 onto the disc: a type scale and a measure are one decision, not two.
 
+**Everything the frame carries grows, or the half that does not reads as
+debris.** The factor reaches the sun's corona, the cover's floating markers, the
+channel the mapping stage splits on, the people chapter's heading column and the
+annotation chips — each keeping its own viewport term so the frame still governs
+and only the ceiling moves. A surface where the type grows a third while five
+fixed ornaments stay put looks less finished than one where nothing grows at
+all, because the eye reads the mismatch before it reads either size.
+
 ### The reading side
 
 One rule, applied to every chapter: **the argument holds one side and the planet

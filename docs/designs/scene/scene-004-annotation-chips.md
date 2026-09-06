@@ -111,8 +111,11 @@ body it names. **`SCENE-001`** publishes whether the planet has arrived.
   chapters: a chip's rectangle touched the drawn disc in 42 of 117 frames it was
   shown in. The dominant case is a satellite passing in front of or behind the
   world, where no horizontal offset clears the disc and the label rightly stays
-  with its body. Filed as a deliberate acceptance at `REVIEW/T2` so a future
-  reader does not rediscover it as a defect.
+  with its body — the reference design does the same. **This is a deliberate
+  acceptance, recorded here so a future reader does not rediscover it as a
+  defect.** Reopen it if the owner reads the crossing as clutter; the fix is not
+  a wider offset, which was measured and pushes a chip off the frame, but a
+  depth cue on the chip that matches the one its satellite already carries.
 
 ## 7. Task list
 
