@@ -21,7 +21,14 @@ if ! node scripts/sync-static-copy.mjs --check; then
 	exit 1
 fi
 
-ALLOWED_REFS="refs/heads/main"
+# The loop publishes the site from main and works on development. staging and
+# production are promotion targets: the owner merges into them, and a hook that
+# let this side push them would make the one-way flow a convention rather than a
+# rule. They may still be brought into existence here — a ref that does not yet
+# exist cannot be promoted onto, and the model needs all three to exist before
+# the first promotion can happen.
+ALLOWED_REFS="refs/heads/main refs/heads/development"
+CREATE_ONLY_REFS="refs/heads/staging refs/heads/production"
 ZERO=$(git hash-object --stdin </dev/null | tr '0-9a-f' '0')
 
 while read -r _local_ref local_sha remote_ref remote_sha; do
@@ -30,9 +37,21 @@ while read -r _local_ref local_sha remote_ref remote_sha; do
 	case " $ALLOWED_REFS " in
 		*" $remote_ref "*) ;;
 		*)
-			echo "pre-push: refusing to push $remote_ref" >&2
-			echo "pre-push: allowed refs are: $ALLOWED_REFS" >&2
-			exit 1
+			case " $CREATE_ONLY_REFS " in
+				*" $remote_ref "*)
+					if [ "$remote_sha" != "$ZERO" ]; then
+						echo "pre-push: refusing to update $remote_ref" >&2
+						echo "pre-push: promotion into it is the owner's, not this side's" >&2
+						exit 1
+					fi
+					;;
+				*)
+					echo "pre-push: refusing to push $remote_ref" >&2
+					echo "pre-push: allowed refs are: $ALLOWED_REFS" >&2
+					echo "pre-push: creatable once: $CREATE_ONLY_REFS" >&2
+					exit 1
+					;;
+			esac
 			;;
 	esac
 
