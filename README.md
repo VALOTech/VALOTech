@@ -7,7 +7,7 @@ The page leads with **ValoLab** — a multi-agent AI workforce deployed on a cli
 ## Highlights
 
 - **No build step.** Hand-authored HTML, CSS and vanilla JavaScript; the repository is the deployed artifact, served verbatim. One graphics library is vendored under `assets/scene/`, and one dev-time generator writes the English copy into the markup (below). Nothing is compiled to serve the page.
-- **"Gateway" design system.** Deep space with condensed display type and glass panels held in a planet's orbit — the design language authored by our product designer, recorded in [docs/design-gateway.md](docs/design-gateway.md). One theme: the page is dark, because everything in it is lit.
+- **"Gateway" design system.** Deep space with condensed display type and glass panels held in a planet's orbit — the design language authored by our product designer. One theme: the page is dark, because everything in it is lit.
 - **A planet that grows as you read.** A cratered lunar sphere becomes a living Earth across the scroll — NASA Blue Marble surface, a cloud shell at the 15 km base, a Rayleigh atmosphere at the 100 km line, and one dithered frontier so each pixel belongs to exactly one surface. It turns on its own axis at 3.2° a second whether or not you scroll. It loads only where WebGL and module support are both present; everywhere else a still frame of the same planet stands in and the page reads identically.
 - **A sky that agrees with itself.** A star field in three parallax tiers, meteors crossing it at random about every twenty seconds, and a sun that keeps station with the planet as the page runs. The sun is not decoration: one vector derived from where its disc is drawn lights the lunar terminator, the Earth's day and night, the clouds and the atmosphere's limb — move the disc and the whole sky follows.
 - **20-language localization.** Dependency-free runtime locale switching with RTL support. English is the source of truth: it is generated into the markup so the whole page reads without JavaScript, and swapped for the visitor's locale on load. Each script is set in a face designed for it rather than in whatever the system calls `monospace`.
@@ -49,16 +49,13 @@ assets/
   flags/                20 locale flag SVGs for the language switcher
   og.html               Render source for the social-share card (og-cover.png, 1200x630)
   *.png / favicon.*     Brand marks, favicons, and the social-share image
-scripts/
-  sync-static-copy.mjs  Writes the English dictionary into index.html and 404.html;
-                        --check fails on drift, on a broken locale, and on a lost node
-docs/
-  design-gateway.md     The design system — palette, type, the scene, the chapters
-glossary-vi.json        Authoritative Vietnamese glossary — concept → approved / forbidden term
-glossary-vi.md          Provenance + voice notes behind each glossary-vi.json rendering
-.claude/skills/         Reviewed localization tooling — EN → locale translation + native writing
 CNAME · robots.txt · sitemap.xml · .nojekyll   GitHub Pages and SEO configuration
 ```
+
+This branch carries the site and nothing else. The design record, the twenty-locale
+tooling, the Vietnamese glossary, the build and validation scripts and the project's
+own planning live on `development`, because everything committed here is served at
+valotech.org — including paths nothing links to.
 
 ## Internationalization
 
