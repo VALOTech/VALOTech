@@ -607,6 +607,29 @@ the pinned column, and the room between the planet and the window edge. A
 card can therefore never land on the argument or leave the page, at any
 viewport, without a breakpoint being tuned for it.
 
+**It is also floored by the world.** Where the room and the disc disagree the
+disc wins: a card cannot be drawn inside the world, and a heading can be read
+beside a slightly wider ellipse. Held instead at a flat pixel figure while the
+world grew with the frame, a 312px radius put all three cards inside a 333px
+disc at 3840 and piled them on one another. For the same reason the disc's
+radius is read from the `.planet` element rather than restated from the
+stylesheet's numbers — that number has already changed once, and a second copy
+of it is true only until it does — and the card's own width grows with `--up`.
+
+**The stage takes the frame, because it is a stage and not a column.** Its
+cards are placed in viewport coordinates, so holding its argument inside the
+centred reading container leaves dead frame beside the heading and squeezes the
+heading into a ribbon: measured at 1920, the heading was 320px wide, the answer
+ran to seven lines, 348px of frame sat empty to the right of it, and the cards
+still reached 23px past its left edge.
+
+**And the stage keeps its own clock while it holds the frame.** The cards are
+placed against the planet, and the planet goes on easing to its station after
+the reader stops; driven by scroll alone the cards freeze where the world used
+to be, and the stage comes apart into a world in one place and its cards in
+another. The loop keeps itself alive exactly while a stage is pinned, and stops
+the moment none is, so the page still animates nothing when nothing is on stage.
+
 Below 950px, and under reduced motion at any width, the chapter is the plain
 stacked list it is underneath — same cards, same order, staggered indents,
 marker squares back.
