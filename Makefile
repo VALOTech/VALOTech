@@ -33,7 +33,10 @@ serve: ## Serve the gateway locally with no-store headers, on $(PORT)
 # --- Gates ----------------------------------------------------------------
 
 .PHONY: check
-check: check-copy check-brand check-comments check-stream-guard check-decisions check-designs check-tasks check-roadmap check-identifiers check-log ## Run every gate this repository has
+check: check-site check-decisions check-designs check-tasks check-roadmap check-identifiers check-log ## Run every gate this repository has
+
+.PHONY: check-site
+check-site: check-copy check-brand check-comments check-stream-guard ## Only the gates that guard what main publishes
 
 .PHONY: check-copy
 check-copy: ## The served English copy still matches the dictionary

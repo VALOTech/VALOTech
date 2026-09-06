@@ -8,16 +8,30 @@
 
 set -eu
 
-# The served English copy is generated from the English dictionary, so the two
-# can drift apart in a commit that edits only one of them. Pushing publishes,
-# so the drift would ship. Check before the ref walk: it holds for every push.
+# Git hands a hook the refs on stdin, and stdin can be read once. Capture it
+# first so the gate can be chosen by what is actually being pushed, and so the
+# ref walk below still has it.
+REFS="$(cat)"
+
+# Which gate runs depends on what this push publishes.
+#
+#   main         carries the site and none of the planning documents, so the
+#                gates that read those documents have nothing to say about it.
+#                Coupling a live stylesheet fix to the state of a design
+#                backlog would make the published page hostage to planning,
+#                and the first response to that is always --no-verify.
+#   development  carries everything, so everything is checked.
+#
+# The site gates run either way, because both refs can change what a visitor
+# sees and neither may ship a page whose markup and dictionary disagree.
+GATE=check-site
+case "$REFS" in
+	*refs/heads/development*) GATE=check ;;
+esac
+
 if ! command -v node >/dev/null 2>&1; then
 	echo "pre-push: node is required to verify the served copy" >&2
 	echo "pre-push: install Node, or run 'node scripts/sync-static-copy.mjs --check' elsewhere" >&2
-	exit 1
-fi
-if ! node scripts/sync-static-copy.mjs --check; then
-	echo "pre-push: index.html does not match assets/i18n.js" >&2
 	exit 1
 fi
 
@@ -38,23 +52,26 @@ fi
 # its own gates drifts from the Makefile the first time a gate is added, and
 # what it then reports is not that a check failed but that no check ran.
 if command -v python >/dev/null 2>&1 && command -v make >/dev/null 2>&1; then
-	if ! make check; then
-		echo "pre-push: a gate failed — see the output above" >&2
-		echo "pre-push: run 'make check' and fix it; do not push past this" >&2
+	if ! make "$GATE"; then
+		echo "pre-push: 'make $GATE' failed — see the output above" >&2
+		echo "pre-push: fix it; do not push past this" >&2
 		exit 1
 	fi
-elif command -v python >/dev/null 2>&1; then
-	if ! python scripts/validate-decisions.py; then
-		echo "pre-push: the decision register does not hold" >&2
-		exit 1
-	fi
-	echo "pre-push: make is absent, so only the register was checked" >&2
+elif ! node scripts/sync-static-copy.mjs --check; then
+	echo "pre-push: index.html does not match assets/i18n.js" >&2
+	exit 1
+else
+	echo "pre-push: make or python is absent, so only the served copy was checked" >&2
 fi
 
 ALLOWED_REFS="refs/heads/main refs/heads/development"
 CREATE_ONLY_REFS="refs/heads/staging refs/heads/production"
 ZERO=$(git hash-object --stdin </dev/null | tr '0-9a-f' '0')
 
+# A heredoc, never a pipeline. `... | while read` runs the loop in a subshell,
+# where every `exit 1` below ends the subshell and the hook then goes on to
+# succeed -- a refusal that refuses nothing, on the guard that stops a
+# force-push and the one that refuses a ref deletion.
 while read -r _local_ref local_sha remote_ref remote_sha; do
 	[ -z "${remote_ref:-}" ] && continue
 
@@ -99,6 +116,8 @@ while read -r _local_ref local_sha remote_ref remote_sha; do
 		echo "pre-push: .gitattributes must pin '* text=auto eol=lf'" >&2
 		exit 1
 	fi
-done
+done <<PUSHED_REFS
+$REFS
+PUSHED_REFS
 
 exit 0
