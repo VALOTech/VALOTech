@@ -51,7 +51,24 @@ PRD: `SITE-002` · Decision: [decisions-log.md#SITE-DEC-01](decisions-log.md#SIT
 - [!] SITE-002/T4 — The split is enforced by the server rather than by CSS
   Blocked by: AUTH-002/T1
 
+## SITE-003 · Chapter sequence
+Design: [docs/designs/site/site-003-chapter-sequence.md](designs/site/site-003-chapter-sequence.md) · PRD: `SITE-003`
+
+- [x] SITE-003/T1 — Nine sections in the reference order, each declaring the side its argument holds
+  Evidence: index.html — problem, approach, deliver, people, trust, workforce, valostack, outcome, ecosystem
+- [x] SITE-003/T2 — Two chapters gated, and the journey spans them when they are folded
+  Evidence: assets/scene/boot.js:CHAPTER_SPINE — a station whose chapter has no layout box is dropped from the route, so the world does not stop at a section the reader cannot see
+
+## SITE-004 · The contact close
+Design: [docs/designs/site/site-004-contact-close.md](designs/site/site-004-contact-close.md) · PRD: `SITE-004`
+
+- [x] SITE-004/T1 — The close carries the offer, the call to action, and the reason prices are not published
+  Evidence: index.html:engage · docs/decisions-log.md#SITE-DEC-03
+- [x] SITE-004/T2 — Company, contact and ecosystem links, with the legal line beneath
+  Evidence: index.html:footer-legal
+
 ## SCENE-001 · The world and its journey
+
 Design: [docs/designs/scene/scene-001-world-and-journey.md](designs/scene/scene-001-world-and-journey.md) · PRD: `SCENE-001`
 
 - [x] SCENE-001/T1 — A lunar sphere becomes Earth across one scroll scrub, with a lit frontier
@@ -85,7 +102,26 @@ PRD: `SCENE-003`
 - [x] SCENE-003/T3 — Colour temperature, a discrete twinkle, and a rare supernova
   Evidence: commit dc9e614
 
+## SCENE-004 · Annotation chips
+Design: [docs/designs/scene/scene-004-annotation-chips.md](designs/scene/scene-004-annotation-chips.md) · PRD: `SCENE-004`
+
+- [x] SCENE-004/T1 — Fifteen chips across five chapters, each pinned to one body
+  Evidence: assets/site.js:chips-showing
+- [x] SCENE-004/T2 — Only one chapter names the bodies at a time, chosen by the reading line
+  Evidence: assets/site.js — the chapter containing the reading line wins, rather than the first one intersecting the viewport, so a long chapter cannot hold the labels while the reader is in the next
+- [x] SCENE-004/T3 — A chip opens away from the disc, and never clamps
+  Evidence: assets/site.js:discRadius
+
+## SCENE-006 · The mapping stage
+Design: [docs/designs/scene/scene-006-mapping-stage.md](designs/scene/scene-006-mapping-stage.md) · PRD: `SCENE-006`
+
+- [x] SCENE-006/T1 — A sticky three-column stage with a centre channel the world stands in
+  Evidence: assets/site.css:--fit-channel
+- [x] SCENE-006/T2 — Five pairs arriving one at a time, each side from its own edge
+  Evidence: assets/site.css:.fit-row
+
 ## SCENE-005 · Orbit stages
+
 PRD: `SCENE-005`
 
 - [x] SCENE-005/T1 — Two chapters whose cards ride an ellipse about the world, a rear card masked rather than stacked
@@ -111,7 +147,30 @@ PRD: `I18N-001`, `I18N-002`
 
 ---
 
+## I18N-002 · Served-copy parity gate
+Design: [docs/designs/i18n/i18n-002-served-copy-parity-gate.md](designs/i18n/i18n-002-served-copy-parity-gate.md) · PRD: `I18N-002`
+
+- [x] I18N-002/T1 — The check fails on markup drift, on locale parity loss, and on a moved node count
+  Evidence: scripts/sync-static-copy.mjs — 245 localized nodes in index.html and twenty locales in 404.html, all three failure modes exercised
+- [x] I18N-002/T2 — It runs in the pre-push hook and in CI
+  Evidence: .githooks/pre-push · .github/workflows/ci.yml
+
+## A11Y-001 · Accessibility baseline
+Design: [docs/designs/a11y/a11y-001-accessibility-baseline.md](designs/a11y/a11y-001-accessibility-baseline.md) · PRD: `A11Y-001`
+
+- [x] A11Y-001/T1 — Keyboard reach and a focus ring measured against the panel, not the void
+  Evidence: assets/site.css:focus-visible — a ring tuned against the page ground disappears the moment the control sits on a panel, which is where most of them are
+- [x] A11Y-001/T2 — Contrast measured against the painted pixel across five label chapters
+  Evidence: assets/site.css — panel fill is opaque enough that the planet never reads through the right-hand side of a paragraph
+- [x] A11Y-001/T3 — Reduced motion slows the scene and shows every chapter as a stacked list
+  Evidence: assets/site.css:prefers-reduced-motion · assets/scene/boot.js
+- [x] A11Y-001/T4 — Reveals and the nav mark read position directly rather than waiting for a threshold
+  Evidence: assets/site.js — an IntersectionObserver is notified only when a ratio crosses a threshold, so a flick that carries a block from below the fold to above it in one frame crosses nothing and the block never appears
+- [x] A11Y-001/T5 — A print stylesheet in black on white
+  Evidence: assets/site.css:@media print
+
 ## DATA-001 · Schema and migrations
+
 Design: [docs/designs/data/data-001-schema-and-migrations.md](designs/data/data-001-schema-and-migrations.md) · PRD: `DATA-001`
 
 - [ ] DATA-001/T1 — Choose and wire the migration tool; one command applies and one rolls back
@@ -148,7 +207,7 @@ PRD: `AUTH-003`
 - [ ] AUTH-003/T1 — Single-use, expiring token; consumed atomically
 - [ ] AUTH-003/T2 — The invitation and reset pages, in twenty languages
 - [!] AUTH-003/T3 — The mail that carries the link
-  Blocked by: docs/decisions-log.md#MAIL-DEC-01
+  Blocked by: pending-decision: `MAIL-DEC-01` — [decisions-log.md#MAIL-DEC-01](decisions-log.md#MAIL-DEC-01). The invitation itself is built and the token is issued; what cannot be chosen for the owner is which carrier sends it, because that choice puts an investor's address in a third party's hands.
 
 ## AUTH-004 · Sign-out
 PRD: `AUTH-004`
@@ -226,15 +285,15 @@ PRD: `POST-002`
 PRD: `MAIL-001`
 
 - [!] MAIL-001/T1 — Compose and send to selected investors
-  Blocked by: docs/decisions-log.md#MAIL-DEC-01
+  Blocked by: pending-decision: `MAIL-DEC-01` — [decisions-log.md#MAIL-DEC-01](decisions-log.md#MAIL-DEC-01). Composition, recipient selection and the preview are buildable against a port; the adapter behind it cannot be written until the carrier is named.
 
 ## MAIL-002 · Mail log and unsubscribe
 PRD: `MAIL-002`, `DATA-R04`
 
 - [!] MAIL-002/T1 — Every send recorded: what, to whom, when
-  Blocked by: docs/decisions-log.md#MAIL-DEC-01
+  Blocked by: pending-decision: `MAIL-DEC-01` — [decisions-log.md#MAIL-DEC-01](decisions-log.md#MAIL-DEC-01). The log's shape depends on what the carrier reports back, and a record that cannot say whether a message was delivered is worse than none.
 - [!] MAIL-002/T2 — An unsubscribe that stops non-transactional mail
-  Blocked by: docs/decisions-log.md#MAIL-DEC-01
+  Blocked by: pending-decision: `MAIL-DEC-01` — [decisions-log.md#MAIL-DEC-01](decisions-log.md#MAIL-DEC-01). Whether the carrier keeps its own suppression list decides whether this is one list or two, and two lists that disagree is how somebody who unsubscribed hears from us again.
 
 ## CFG-001 · Runtime configuration
 PRD: `CFG-001`
@@ -259,7 +318,7 @@ PRD: `SEC-002`, `SEC-R04`
 PRD: `OPS-001`
 
 - [!] OPS-001/T1 — Deploy the application somewhere and point the domain at it
-  Blocked by: docs/decisions-log.md#INFRA-DEC-03
+  Blocked by: pending-decision: `INFRA-DEC-03` — [decisions-log.md#INFRA-DEC-03](decisions-log.md#INFRA-DEC-03). Every artefact this needs is buildable and none of it can be aimed anywhere until the host is chosen; this is also the task after which a defect has an audience (`.claude/CLAUDE.md` §12).
 
 ## OPS-002 · Logging and monitoring
 PRD: `OPS-002`, `DATA-R02`
@@ -297,4 +356,4 @@ PRD: `LEGAL-GLOBAL-001`
 PRD: `LEGAL-GLOBAL-002`
 
 - [!] LEGAL-GLOBAL-002/T1 — Whether the site measures anything about visitors, and what that obliges
-  Blocked by: docs/decisions-log.md#OPS-DEC-01
+  Blocked by: pending-decision: `OPS-DEC-01` — [decisions-log.md#OPS-DEC-01](decisions-log.md#OPS-DEC-01). The obligation follows the answer rather than the other way round: measuring nothing needs no banner, no notice and no retention window, and the safe default ships exactly that.

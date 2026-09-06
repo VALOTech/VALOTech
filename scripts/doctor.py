@@ -24,7 +24,12 @@ SKELETON = [
     (".claude/CLAUDE.md", "the development guide"),
     ("docs/PRD.md", "the feature catalogue"),
     ("docs/tasks.md", "the task ledger"),
-    ("docs/roadmap.md", "execution order"),
+    ("docs/roadmap.md", "execution order -- generated, never edited"),
+    ("docs/roadmap-policy.yaml", "where the wave boundaries fall"),
+    ("docs/dev1-iter-log.md", "where the last iteration stopped"),
+    (".claude/commands/dev1.md", "the autonomous loop"),
+    (".claude/agents", "the Critical-tier and review specialists"),
+    ("scripts/sync.sh", "fast-forward or stop"),
     ("docs/decisions-log.md", "the decision register"),
     ("docs/operator-checklist.md", "what waits on a human"),
     ("docs/ECOSYSTEM.md", "the shared map of the six products"),
@@ -49,6 +54,7 @@ ABSENT = [
     (".devn/", "multi-lane coordination; this repository has one lane"),
     ("packages/", "shared code between apps; there is one app"),
     ("go.work", "no Go here -- the stack is Next.js, see decisions-log.md#INFRA-DEC-01"),
+    ("docs/devn/", "multi-lane coordination; the loop here is single-lane"),
     ("CONTRIBUTING.md", "solo-maintained; the guide is .claude/CLAUDE.md"),
 ]
 
@@ -137,8 +143,10 @@ def main():
     print("Next")
     print("----")
     print("  make check     run every gate this repository has")
+    print("  make roadmap   regenerate docs/roadmap.md from the ledger")
     print("  make serve     the gateway on http://127.0.0.1:8123, no-store")
     print("  make infra-up  PostgreSQL on 5434")
+    print("  /dev1          one iteration of the autonomous loop")
     return 0
 
 

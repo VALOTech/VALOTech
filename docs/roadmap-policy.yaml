@@ -1,0 +1,114 @@
+# VALO Tech — roadmap policy.
+#
+# This file is the only hand-written input to docs/roadmap.md. The ordering
+# itself is computed: a feature's wave comes from its depth in the design
+# dependency graph, and depth comes from `depends_on` in design frontmatter.
+# What a human decides here is where the stage boundaries fall and what each
+# stage is called — the two things a graph cannot know.
+#
+# Consumers: scripts/lib_roadmap.py (the resolver), scripts/generate-roadmap.py
+# (the emitter), scripts/validate-roadmap.py (the gate). Nothing else parses it,
+# and nothing computes a wave any other way.
+#
+# There are no lanes. The sibling repositories partition features across three
+# concurrent lanes because three windows work them at once; this repository has
+# one, and a column whose every row reads the same teaches a reader nothing.
+
+# ---------------------------------------------------------------------------
+# active_wave — the wave a session takes work from. It moves forward when the
+# wave below it has no buildable task left, and scripts/validate-roadmap.py R8
+# refuses a value that skips work: a wave is not left while it can be worked.
+# ---------------------------------------------------------------------------
+active_wave: 0
+
+# ---------------------------------------------------------------------------
+# Waves, by topological depth.
+#
+#   depth(F) = 1 + max(depth(D) for D in F.depends_on), and 0 when a feature
+#   depends on nothing. Members of a declared bootstrap_cluster ignore edges to
+#   each other, so a foundation whose parts genuinely need one another still
+#   has a finite depth.
+#
+# A feature lands in the lowest-numbered wave whose band covers its depth.
+# Every depth the graph produces must be covered by some band — R3 fails
+# otherwise, so a new design cannot quietly fall out of the plan.
+#
+# The bands describe build stages rather than product areas, which is why a
+# finished feature and an unbuilt one can share a wave: they share it because
+# nothing else depends on either. A feature whose tasks are all closed
+# collapses to a single line in the generated file, so the queue stays the
+# queue.
+# ---------------------------------------------------------------------------
+waves:
+  W0:
+    depth_range: [0, 0]
+    title: "The ground"
+    summary: >
+      What nothing else stands on: the page that already serves, and the data
+      plane the application has not got yet. Until a schema exists and a
+      migration can be applied and rolled back, nothing above can be built or
+      tested — so this wave is finished when a developer brings the stack up
+      with one command and the round trip has actually been run.
+  W1:
+    depth_range: [1, 2]
+    title: "The door"
+    summary: >
+      Who may read what, and the cross-cutting layers the page already carries.
+      Everything in the room reads through the gate this wave builds, so a
+      shortcut here is a shortcut in every feature after it. Sign-out precedes
+      invitation deliberately: a session that cannot be ended server-side is a
+      defect that grows with every account created.
+  W2:
+    depth_range: [3, 4]
+    title: "The room"
+    summary: >
+      What a signed-in investor finds, and the scene that carries the public
+      page. Updates come before the deck, and not only because they are the
+      simpler shape of the same problem — they are what the room is for. An
+      investor signs in to find out what has happened since they last looked,
+      and a room that opens on a deck they read a month ago has answered a
+      question nobody asked.
+  W3:
+    depth_range: [5, 6]
+    title: "The desk"
+    summary: >
+      How the content gets there. Every word on the public page and in the room
+      is authored, translated, reviewed and published by somebody, and until
+      that is a surface it is a deployment. This wave is what turns the site
+      from something the developer edits into something the company runs.
+  W4:
+    depth_range: [7, 8]
+    title: "The outside"
+    summary: >
+      What leaves the system and cannot be recalled — mail to a real investor —
+      and the controls an operator needs before it does. Built last among the
+      buildable, behind everything that can be tested without sending anything
+      to a real person.
+  W5:
+    depth_range: [9, 99]
+    title: "The move"
+    summary: >
+      The security baseline, the logs, erasure, a restore that has actually been
+      performed, and the compliance posture — each of them easy to promise
+      before launch and expensive to add after. It ends at the one task that
+      ends the static site's tenure, and after which a defect has an audience.
+
+# ---------------------------------------------------------------------------
+# Per-feature wave overrides — for the case where a feature's natural depth
+# would separate it from the stage it belongs to. Every entry carries its
+# reason, because an override is the one place this file can lie about the
+# graph, and R9 refuses one naming a design or a wave that does not exist.
+#
+# Keep this empty if it can be. An override is friction at every future edit,
+# and a graph that needs many of them is a graph whose edges are wrong.
+# ---------------------------------------------------------------------------
+wave_overrides: {}
+
+# ---------------------------------------------------------------------------
+# Exclusion from wave-exit gating is auto-derived from design frontmatter:
+# status pending-decision, pending-external or deprecated takes no wave, so a
+# feature waiting on the owner cannot hold a wave open. There is no manual list
+# — to exclude a feature, set its own status; to re-include it, set it back.
+# Drift between this file and a design is impossible by construction.
+# ---------------------------------------------------------------------------
+excluded_from_exit: auto-from-frontmatter-status

@@ -27,14 +27,28 @@ fi
 # rule. They may still be brought into existence here — a ref that does not yet
 # exist cannot be promoted onto, and the model needs all three to exist before
 # the first promotion can happen.
-# The decision register lives on development only, so the gate skips itself on
-# a branch that does not carry it and says so. Python is optional here: a
-# machine without it can still push the site.
-if command -v python >/dev/null 2>&1; then
+# The remaining gates read the planning documents, which live on development
+# only. The working tree is always development (branch switching is the
+# owner's), so running the aggregate here is running it against what will be
+# pushed, whichever ref is being updated. Python and make are optional: a
+# machine without either can still publish the site, which is the one thing
+# this hook must never make impossible.
+#
+# `make check` rather than a list of scripts, deliberately. A hook enumerating
+# its own gates drifts from the Makefile the first time a gate is added, and
+# what it then reports is not that a check failed but that no check ran.
+if command -v python >/dev/null 2>&1 && command -v make >/dev/null 2>&1; then
+	if ! make check; then
+		echo "pre-push: a gate failed — see the output above" >&2
+		echo "pre-push: run 'make check' and fix it; do not push past this" >&2
+		exit 1
+	fi
+elif command -v python >/dev/null 2>&1; then
 	if ! python scripts/validate-decisions.py; then
 		echo "pre-push: the decision register does not hold" >&2
 		exit 1
 	fi
+	echo "pre-push: make is absent, so only the register was checked" >&2
 fi
 
 ALLOWED_REFS="refs/heads/main refs/heads/development"

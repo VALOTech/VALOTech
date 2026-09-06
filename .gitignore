@@ -84,6 +84,11 @@ desktop.ini
 #    tree (the kind removed in c77ae08) stays out as runtime state.
 # ----------------------------------------------------------------------
 .claude/*
+!.claude/CLAUDE.md
 !.claude/settings.json
+!.claude/commands/
+!.claude/agents/
 !.claude/skills/
+__pycache__/
+*.pyc
 .playwright-mcp/

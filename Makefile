@@ -33,7 +33,7 @@ serve: ## Serve the gateway locally with no-store headers, on $(PORT)
 # --- Gates ----------------------------------------------------------------
 
 .PHONY: check
-check: check-copy check-brand check-decisions check-designs check-review ## Run every gate this repository has
+check: check-copy check-brand check-comments check-stream-guard check-decisions check-designs check-tasks check-roadmap check-identifiers check-log ## Run every gate this repository has
 
 .PHONY: check-copy
 check-copy: ## The served English copy still matches the dictionary
@@ -51,12 +51,48 @@ check-decisions: ## The decision register holds its contract
 check-designs: ## Design frontmatter is coherent and its codes resolve
 	@$(PYTHON) scripts/validate-designs.py --strict
 
-.PHONY: check-review
-check-review: ## Every REVIEW row and the task it names point at each other
+.PHONY: check-tasks
+check-tasks: ## Every closed task cites something that exists; every blocker still blocks
+	@$(PYTHON) scripts/check-evidence-citation.py
+	@$(PYTHON) scripts/check-deferral-maturity.py
 	@$(PYTHON) scripts/check-review-refer-to.py
+
+.PHONY: check-roadmap
+check-roadmap: ## The roadmap, the ledger and the design graph describe one project
+	@$(PYTHON) scripts/validate-roadmap.py
+
+.PHONY: check-identifiers
+check-identifiers: ## No code was minted twice against origin/development
+	@$(PYTHON) scripts/check-identifier-allocation.py
+
+.PHONY: check-comments
+check-comments: ## No bare deferral marker and no history prose in a comment
+	@$(PYTHON) scripts/check-comments.py
+
+.PHONY: check-stream-guard
+check-stream-guard: ## Every printing script survives a cp1252 console
+	@$(PYTHON) scripts/check-stream-guard.py
+
+.PHONY: check-log
+check-log: ## The iteration log stays inside its bound
+	@$(PYTHON) scripts/check-log-retention.py
+
+.PHONY: roadmap
+roadmap: ## Regenerate docs/roadmap.md from the ledger and the design graph
+	@$(PYTHON) scripts/generate-roadmap.py
 
 .PHONY: precommit
 precommit: check ## What the hook runs; run it before committing
+
+# --- Working with origin --------------------------------------------------
+
+.PHONY: pull
+pull: ## Fast-forward development onto origin, or stop on a fork
+	@bash scripts/sync.sh pull
+
+.PHONY: push
+push: check ## Gate, then push development to origin
+	@bash scripts/sync.sh auto-push
 
 # --- Hooks ----------------------------------------------------------------
 

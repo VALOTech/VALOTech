@@ -147,7 +147,19 @@ Seven layers, carrying the tokens used in design frontmatter:
 | `<CODE>/T<N>` | Implementation task | `AUTH-001/T3` |
 | `<DOMAIN>-DEC-NN` | Decision register entry | `INFRA-DEC-01` |
 
-**One code, one thing, for the life of the repository.** Deleted codes leave holes, and a hole is never refilled. A code is allocated from `origin/development`, never from a local copy, and the claim is pushed rather than held.
+**One code, one thing, for the life of the repository.** Deleted codes leave holes, and a hole is never refilled, because a `grep` for any code must return one subject and a refilled hole returns two separated only by time. The same guarantee forbids the opposite failure more urgently: two subjects must never wear one code, not for a release and not for the minutes a merge takes to settle. A shared code makes every task row, gate, commit message and `Blocked by:` that names it resolve to a pair.
+
+**A code is allocated from `origin/development`, never from a local copy**, and the claim is pushed rather than held. The next free number comes from `git show origin/development:docs/tasks.md` — the one sequence every window can read. A window that takes the number from its own copy is reading a sequence only it can see: two windows diverged from origin both take the same one, both are right locally, and the collision surfaces at merge with both numbers already in committed messages. Allocation is where this is cheap; resolution is where it is not.
+
+**When a code is minted twice anyway, the collision is resolved mechanically and without asking.** Several windows work this ecosystem at once, so this is ordinary rather than exceptional, and a resolution that needs the owner turns an ordinary event into a stall. **Step zero is to look before moving:** re-read the ledger on `origin/development` and check whether the collision is already resolved there. If it is, adopt that assignment whether or not you would have chosen it.
+
+1. **Which side moves** — the side not yet pushed, because nothing outside this clone can hold a reference to a code it has never seen. If both are published, the one published later moves, measured by the first commit that cites it.
+2. **Where it moves** — to the first number *after the highest ever allocated in that sequence*, never into a hole. Holes are historical and stay empty; taking one re-uses a retired subject's code.
+3. **Which sequence** — `T<N>` is per feature code (one feature's `/T7` is unrelated to another's), `<DOMAIN>-DEC-NN` is per domain, migration numbers are repository-wide.
+4. **What "highest" is read from** — the maximum across `origin/development`, this tree, and any number a ledger row reserves, whichever is greater; then verified absent from *every* ledger, not only the one being edited.
+5. **Which references follow — the step that must never be mechanical.** A collision means both subjects wear one code, so every existing reference is ambiguous by construction and a find-and-replace rewrites the wrong half. `git grep` the code across `docs/`, `apps/`, `scripts/` and every ledger, and read enough of each hit to decide which subject it means. Only references to the subject that moved are rewritten.
+6. **Which references do not follow** — the test is not the document's age but what the reference *does*. A **pointer** somebody follows to reach the subject is repaired; an **account** of what happened at a moment is left standing, because rewriting it would make it false. Commit messages are always accounts.
+7. **What is recorded** — the moved row carries a `Note (renumbered ...):` naming the code it was filed under, and a `<DOMAIN>-DEC-NN` entry names both meanings and lists every commit that still cites the old code.
 
 ### 3.2 Domains
 
@@ -340,6 +352,15 @@ There are exactly two roles. Do not invent a third; if one seems needed, that is
 
 ---
 
+### 8.6 Data, migrations and consolidation
+
+- **`DATA-R06` Every migration ships a tested down-migration**, and the round trip — apply, roll back, apply again — is executed rather than asserted. A rollback nobody has run is a rollback that does not exist.
+- **`DATA-R07` Folding is the only sanctioned edit to a shipped migration.** Once a migration has run anywhere it can be reached from — a teammate's machine, staging, production — its number and its content are frozen, because a database that has already applied it will never apply it again and so will never see the edit. What looks like a fix is a schema that exists only on databases created after it. The sanctioned change is to **fold**: rewrite the baseline so a fresh database reaches the same final schema, then prove the fold by applying the old chain and the new baseline to two throwaway databases and diffing the catalogues. A re-stamped migration can never run; a fold is proved to arrive at the same place.
+- **`DATA-R08` A migration number is claimed from `origin/development`**, per §3.1, and the sequence is repository-wide — two windows that both take `0007` produce two different schemas wearing one name.
+- **`DATA-R09` Audit rows are append-only.** No `UPDATE` and no `DELETE` on the audit table, enforced by a trigger rather than by convention, because a convention is what the incident report is written about.
+
+---
+
 ## 9. Before committing
 
 - [ ] Tests pass; new behaviour has tests
@@ -372,22 +393,32 @@ There are exactly two roles. Do not invent a third; if one seems needed, that is
 
 ### 11.1 Gates
 
-**Two of these exist today.** The rest are the target, and each lands with the
-first work that gives it something to check — a gate written before its subject
-is a gate that has only ever passed.
+**The `Exists` column is the honest one.** A gate lands with the first work that
+gives it something to check — a gate written before its subject is a gate that
+has only ever passed — so the rows marked otherwise are the target and not a
+claim. Everything marked `yes` runs in `make check`, which the pre-push hook
+runs.
 
 | Stage | Gate | Exists | Blocks |
 |---|---|---|---|
-| Served-copy parity | `scripts/sync-static-copy.mjs --check` | yes, armed in the pre-push hook | Yes |
-| Decision register | `scripts/validate-decisions.py` | yes, armed in the pre-push hook | Yes |
+| Served-copy parity | `scripts/sync-static-copy.mjs --check` | yes | Yes |
+| Brand kit versus stylesheet | `scripts/check-brand-tokens.py` | yes | Yes |
+| Decision register | `scripts/validate-decisions.py` | yes | Yes |
+| Design cross-reference | `scripts/validate-designs.py --strict` | yes | Yes |
+| Roadmap integrity | `scripts/validate-roadmap.py` | yes | Yes |
+| Task evidence resolves | `scripts/check-evidence-citation.py` | yes | Yes |
+| Deferral maturity | `scripts/check-deferral-maturity.py` | yes | Yes |
+| Identifier allocation | `scripts/check-identifier-allocation.py` | yes | Yes |
+| Iteration-log retention | `scripts/check-log-retention.py` | yes | Yes |
+| Gate output survives cp1252 | `scripts/check-stream-guard.py` | yes | Yes |
+| Comment hygiene | `scripts/check-comments.py` | yes | Yes |
+| Finding edges, both ends | `scripts/check-review-refer-to.py` | yes, dormant until `OPS-001` (§12) | Yes |
 | Lint | `eslint` and `prettier` | with the first application code | Yes |
 | Types | `tsc --noEmit` | with the first application code | Yes |
 | Build | `next build` | with the first application code | Yes |
 | T0 to T1 | smoke and unit | with the first application code | Yes |
 | T2 | integration against a real PostgreSQL | with `DATA-001` | Yes |
-| Design cross-reference | `scripts/validate-designs.py --strict` | with the first design | Yes |
-| Comment hygiene | `scripts/check-comments.py` | with the first application code | Yes |
-| Secrets | `gitleaks` | with the first credential | Yes |
+| Secrets | `gitleaks` | yes, in CI | Yes |
 | End-to-end | Playwright | with `AUTH-001` | On push to `staging` and `production` |
 
 ### 11.2 Branches
@@ -402,23 +433,43 @@ Four refs exist. `main` is the published static site until the app replaces it. 
 
     Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
 
-**Parallel sessions share one tree.** Start with `git branch --show-current`; stage by explicit path, never `git add -A`; re-read `git diff --cached --name-only` immediately before committing; never touch another lane's uncommitted work.
+**Parallel sessions share one tree.** Start with `git branch --show-current`; stage by explicit path, never `git add -A`; re-read `git diff --cached --name-only` immediately before committing; never touch another session's uncommitted work — not to stash it, not to commit it, not to unblock your own push. If it blocks you, report the block and stop.
+
+**Merge and divergence — fast-forward or ask, and nothing else.** Work starts on origin's tip, so a session's first act after confirming the branch is `bash scripts/sync.sh pull`. It fetches and fast-forwards when local is behind, no-ops when local is in sync or strictly ahead, and **exits 3 when local and origin have both moved.** That third case is a true fork and it is a hard stop: rebase, reset and force each resolve it by discarding one side's work, and which side is discarded is not a decision a session may take alone. Report the fork and ask.
+
+A stale base stays invisible until push, by which point the commits already exist and the fork needs adjudication — which is why the pull is at the start and not at the end.
+
+**A conflict inside one file is resolved by reading both sides, never by taking one.** The registers — `docs/tasks.md`, `docs/decisions-log.md` — are where two windows most often edit the same lines, and the two edits are almost always both wanted: one closes a task, the other files a decision. Take both. Where the conflict is a genuine contradiction, the answer **pushed first** stands and the later one is rewritten to agree with it or is filed as a decision; a window cannot know what another has already published except by looking, so it looks.
 
 ---
 
 ## 12. Where a finding lives
 
-Every finding any review raises — front-end, scene, security, accessibility, language, legal, or a run of the live site — is a **`REVIEW/T<N>` row in `docs/tasks.md`**. There is no separate findings register. Each row carries `Impact to:` naming what it bears on, and the task it names carries `Refer to:` back, so neither side can be corrected without the other saying so. A choice a finding surfaces is filed in `decisions-log.md`; an external gate goes to `operator-checklist.md`. A finding accepted as not-a-defect closes with its reason as `Evidence:`. Open `REVIEW` rows are drained before other roadmap work.
+**While the product is being built, a finding is not filed — it is fixed, in the artefact that owns it.** A defect in the PRD is corrected in the PRD; one in a design is corrected in the design; one in the code is corrected in the code and in its task row. Nothing is under a user, nothing has shipped, and a second document tracking what the first should have said is overhead that buys nothing. Two things make this safe rather than lax: the correction lands in the same commit that finds it, and the commit message carries the measurement — so `git log` holds the account a finding row would otherwise hold.
+
+**The `REVIEW` code exists for when that stops being true.** Once the application is running and reachable by somebody who is not the owner, a defect found by driving it is no longer a correction to work in progress; it is an observation about a live system, made by one pass and acted on by another, and the two are separated by time. Then, and only then, every finding any review raises — front-end, scene, security, accessibility, language, legal, or a run of the live site — is a **`REVIEW/T<N>` row in `docs/tasks.md`**, and there is no separate findings register. Each row carries `Impact to:` naming what it bears on, and the task it names carries `Refer to:` back, so neither side can be corrected without the other saying so. A choice a finding surfaces is filed in `decisions-log.md`; an external gate goes to `operator-checklist.md`. A finding accepted as not-a-defect closes with its reason as `Evidence:`. Open `REVIEW` rows are then drained before other roadmap work, and `scripts/check-review-refer-to.py` holds both halves of the edge.
+
+**The switch is the product, not the calendar.** It flips at `OPS-001` — the task that points `valotech.org` at the application — because that is the commit after which a defect has an audience.
 
 ---
 
 ## 13. Session protocol
 
-**Start:** confirm the branch · confirm the tree is clean · read `docs/tasks.md`, open `REVIEW` rows first · `git log --oneline -10` · re-read this file if it changed · announce the task.
+Every session is a cold start. Nothing is remembered between them, so everything a session needs is in the files, and the protocol is how a session finds it.
 
-**During:** keep `docs/tasks.md` true as you go; record the exact stopping point for partial work; file unrelated findings as `REVIEW` rows rather than fixing them in passing.
+**Start:** confirm the branch is `development` — if it is not, stop and ask, because branch switching is the owner's · `bash scripts/sync.sh pull`, and stop on exit 3 (§11.2) · confirm the tree is clean, or that the changes in it are ones you already know about · read the tail of `docs/dev1-iter-log.md` for where the last iteration stopped · open `docs/roadmap.md`, which is the pre-computed queue and the only index a session needs to pick work from · re-read this file if it changed · run `make check` and fix what this session broke before opening new work · announce the task in one line.
 
-**End:** tasks reflect reality · no uncommitted work beyond one step · gates green · the honest report (§1.7).
+**During:** keep `docs/tasks.md` true as you go — `Evidence:` when a task closes, `Note:` when it is partial, `Blocked by:` when it stops · record the exact stopping point for partial work, so the next cold start resumes rather than re-derives · correct an unrelated defect in the artefact that owns it and say so in the commit (§12) · never leave a completed step uncommitted while starting another.
+
+**End:** the ledger reflects reality · gates green · the roadmap regenerated if five or more tasks closed · one entry appended to `docs/dev1-iter-log.md` and the file pruned to twenty · the honest report (§1.7).
+
+### 13.1 Rolling-log retention — newest twenty, promote before prune
+
+`docs/dev1-iter-log.md` is working state, not an archive: a cold start reads its tail every time, so a file that grows without bound turns a cheap orientation read into an expensive one and then into a file nobody reads.
+
+**The step that appends an entry also deletes the oldest until twenty remain** — the file is bounded by construction rather than by an occasional cleanup. `git log -p docs/dev1-iter-log.md` is the archive, so a pruned entry is recoverable verbatim and no second copy is kept on disk.
+
+**Promote before prune.** An entry may be deleted only once every durable fact in it already lives in its permanent home — task state in `docs/tasks.md`, a choice in `docs/decisions-log.md`, an external gate in `docs/operator-checklist.md`. If a fact has no home yet, give it one first, in the same commit. `scripts/check-log-retention.py` holds the bound; this rule is why the promotion that precedes it is not optional.
 
 ---
 
@@ -452,3 +503,11 @@ Automatic upgrades: auth or session to Medium · personal-data handling to Mediu
 Grep the code · read the PRD section · read the design in full · check `depends_on` · run the validator · **open the page in a browser** · ask the owner, framed as "I found X in this source, but the situation is Z — should I do A or B?"
 
 Never guess and proceed. On a page the whole company is judged by, a silent assumption becomes a public defect.
+
+---
+
+## 17. Model and thinking discipline
+
+The project policy in `.claude/settings.json` — `model`, `CLAUDE_CODE_EFFORT_LEVEL = max`, `alwaysThinkingEnabled = true` — is inherited by every session. Maximum effort and thinking are constants; the only cost lever is the model, and the quality bar does not move with it.
+
+This repository's failure mode is not carelessness, it is confidence. Almost everything it builds is verified by looking at a browser, and a browser is exactly where a plausible wrong answer is cheapest to produce: a measurement taken before a scroll lands, a file the server cached, a selector that matched something else. Four of this repository's wrong conclusions came from a probe rather than from the page. So the discipline that costs the most reasoning here is the one that pays: **measure the thing, not a proxy for it, and when a measurement disagrees with what is on the screen, the measurement is wrong until it is explained.**

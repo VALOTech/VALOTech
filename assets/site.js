@@ -576,10 +576,11 @@
        other by the window edge, both measured, so a card cannot land on the
        reading column or leave the page at any viewport. */
     function radii(sx, head, cardHalf, rock) {
-      /* Never inside the drawn disc. The ellipse used to be a flat pixel
-         figure while the world grew with the frame, so on a wide screen all
-         three cards sat within the silhouette and piled on each other. What
-         the cards have to clear is the world, so that is what sizes them. */
+      /* Floored on the drawn disc, because what a card has to clear is the
+         world and not a number: an ellipse sized in fixed pixels while the
+         world grows with the frame puts all three cards inside the silhouette
+         on a wide screen, piled on each other. The disc is measured rather
+         than recomputed, so the two cannot be tuned apart. */
       var clearDisc = rock + cardHalf + 24;
       var wanted = Math.max(clearDisc, Math.min(window.innerWidth * 0.54, 780) * 0.4);
       /* The pinned column is on the reading-start side, which swaps under
