@@ -54,6 +54,12 @@
   --type-card-body: 15px;
   --type-meta: 12px;
 
+  /* One factor for every size a wide frame is allowed to grow. It is 1 on
+     every frame below two thousand pixels, so a base rule may multiply by it
+     freely and mean nothing by it; a `var()` that resolves to nothing would
+     invalidate the whole declaration it sits in. */
+  --up: 1;
+
   --maxw: 1240px;
   --gut: 28px;
 
@@ -1010,11 +1016,14 @@ html:not(.can-scene) .planet {
      screen and pushes everything else into the right of it. The cover's own
      column is therefore nearly the frame, so the three lanes divide it. */
   .hero > .wrap {
-    max-width: min(94vw, 1520px);
+    max-width: min(94vw, calc(1520px * var(--up)));
   }
 
+  /* The column grows with the type it holds. Held at a fixed width while the
+     display face grew, the cover's four lines became five and the last of
+     them ran onto the disc. */
   .hero-copy {
-    max-width: min(36vw, 560px);
+    max-width: min(36vw, calc(560px * var(--up)));
   }
 
   .hero-aside {
@@ -2653,6 +2662,32 @@ html:not(.can-scene) .planet {
    no overflow, because the row clips rather than scrolls. The whole set folds
    into the menu well before that point, which is also where a laptop stops
    having room for a six-item bar. */
+/* A frame past two thousand pixels stops being a wider page and starts being a
+   further-away one. Every fixed size here is a reading distance measured on a
+   1440-wide screen; held there, a 4K frame shows the same page at two thirds
+   the apparent size with a third of the width in use. One factor grows the
+   fixed sizes and the column together, reaching 1.32 at 3840 and starting at
+   exactly 1 at the breakpoint, so nothing steps when the frame crosses it. The
+   viewport terms in the display clamps still cap the headings below this
+   width, which is why raising only the ceiling changes nothing until it is
+   the ceiling that binds. */
+@media (min-width: 2000px) {
+  :root {
+    --up: clamp(1, calc(1 + (100vw - 2000px) / 5750px), 1.32);
+
+    --maxw: clamp(1240px, 62vw, 1720px);
+
+    --type-display: clamp(52px, 4.35vw, calc(84px * var(--up)));
+    --type-feature: clamp(34px, 4.2vw, calc(58px * var(--up)));
+    --type-chapter: clamp(30px, 3.6vw, calc(44px * var(--up)));
+    --type-intro: calc(17px * var(--up));
+    --type-body: calc(16px * var(--up));
+    --type-card-title: calc(16px * var(--up));
+    --type-card-body: calc(15px * var(--up));
+    --type-meta: calc(12px * var(--up));
+  }
+}
+
 @media (max-width: 1080px) {
   .nav-links {
     display: none;

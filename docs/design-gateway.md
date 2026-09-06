@@ -115,6 +115,28 @@ the value is never below what the narrow frames were tuned against, so no size
 already verified can regress, and that is a property of the expression rather
 than of the sample that was measured.
 
+### A frame past two thousand pixels
+
+Every fixed size in the type scale is a reading distance measured on a
+1440-wide screen. Held there, a 3840-wide frame shows the same page at two
+thirds the apparent size with a third of its width in use — which is what "on a
+large screen everything is small" describes, and enlarging only the world would
+have answered a third of it.
+
+`--up` is one factor: `1` on every frame below 2000px, rising to `1.32` at
+3840. Above the breakpoint it multiplies the fixed sizes, the reading column
+and the cover's own column together. Two properties make it safe. It is
+declared as `1` in the base, so a rule may multiply by it anywhere — a `var()`
+that resolves to nothing invalidates the whole declaration it sits in, and the
+display face silently fell to inherited body size the first time it did. And
+its value at the breakpoint is exactly 1 while `--maxw`'s wide term reads
+`62vw`, which is exactly 1240px at 2000px, so nothing steps as the frame
+crosses it.
+
+The column grows with the type it holds rather than after it. Left fixed while
+the display face grew, the cover's four lines became five and the last of them
+ran onto the disc: a type scale and a measure are one decision, not two.
+
 ### What scroll drives
 
 A single scrub, `growth = smoothstep((scroll − 0.06) / 0.84)`, drives every
