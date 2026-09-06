@@ -25,7 +25,8 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REGISTER = os.path.join(ROOT, "docs", "decisions-log.md")
 TASKS = os.path.join(ROOT, "docs", "tasks.md")
 
-CODE = re.compile(r"^[A-Z][A-Z-]*-DEC-\d{2}$")
+# A domain may carry digits: I18N and A11Y are domains.
+CODE = re.compile(r"^[A-Z][A-Z0-9-]*-DEC-\d{2}$")
 ANCHOR = re.compile(r'<a id="([^"]+)"></a>')
 HEADING = re.compile(r"^### `([^`]+)` — (.+?) — (OPEN|RESOLVED|RATIFIED|WITHDRAWN)\b(.*)$")
 ISO = re.compile(r"\b\d{4}-\d{2}-\d{2}\b")

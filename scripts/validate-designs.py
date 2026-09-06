@@ -31,9 +31,12 @@ STATUSES = {"draft", "under-review", "design-ready", "implemented", "deprecated"
             "pending-external", "pending-decision"}
 BLOCKER_KINDS = {"credential", "vendor", "legal", "threshold"}
 
-FEATURE = re.compile(r"^[A-Z][A-Z-]*-\d{3}$")
-RULE = re.compile(r"^([A-Z][A-Z-]*-R\d{2}|P-\d{2})$")
-DEC = re.compile(r"^[A-Z][A-Z-]*-DEC-\d{2}$")
+# A domain may carry digits -- I18N and A11Y are domains, and a pattern that
+# allowed only letters rejected every rule they own. The gate reported six
+# problems on its first run against real designs and all six were its own.
+FEATURE = re.compile(r"^[A-Z][A-Z0-9-]*-\d{3}$")
+RULE = re.compile(r"^([A-Z][A-Z0-9-]*-R\d{2}|P-\d{2})$")
+DEC = re.compile(r"^[A-Z][A-Z0-9-]*-DEC-\d{2}$")
 
 
 def read(path):
@@ -113,7 +116,9 @@ def main():
         folder = os.path.basename(os.path.dirname(os.path.join(ROOT, rel)))
         if domain.lower() != folder:
             problems.append("%s: domain '%s' does not match its folder '%s'" % (rel, domain, folder))
-        if not code.startswith(domain + "-"):
+        # The folder is lowercase and the code is not: compare the parts, not
+        # the strings.
+        if code.split("-")[0].lower() != domain.lower():
             problems.append("%s: code %s does not begin with its domain %s" % (rel, code, domain))
         if not os.path.basename(rel).startswith(code.lower() + "-"):
             problems.append("%s: filename does not begin with %s" % (rel, code.lower()))

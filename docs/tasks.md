@@ -126,7 +126,7 @@ PRD: `I18N-001`, `I18N-002`
 ---
 
 ## DATA-001 · Schema and migrations
-PRD: `DATA-001`
+Design: [docs/designs/data/data-001-schema-and-migrations.md](designs/data/data-001-schema-and-migrations.md) · PRD: `DATA-001`
 
 - [ ] DATA-001/T1 — Choose and wire the migration tool; one command applies and one rolls back
 - [ ] DATA-001/T2 — Accounts table: identity, role, state, created and updated
@@ -140,7 +140,7 @@ PRD: `DATA-001`
 - [ ] DATA-001/T10 — Every migration has a down-migration that has been run
 
 ## AUTH-001 · Sign-in
-PRD: `AUTH-001`, `SEC-R01`, `SEC-R03`
+Design: [docs/designs/auth/auth-001-sign-in.md](designs/auth/auth-001-sign-in.md) · PRD: `AUTH-001`, `SEC-R01`, `SEC-R03`
 
 - [ ] AUTH-001/T1 — Password hashing at the current cost, verified against a known vector
 - [ ] AUTH-001/T2 — Sign-in route: identical failure for an unknown account and a wrong password
@@ -149,7 +149,7 @@ PRD: `AUTH-001`, `SEC-R01`, `SEC-R03`
 - [ ] AUTH-001/T5 — Regression test: a wrong password and an unknown account are indistinguishable in status, body and timing
 
 ## AUTH-002 · Session and role gate
-PRD: `AUTH-002`, `SEC-R02`, `DATA-R05`
+Design: [docs/designs/auth/auth-002-session-and-role-gate.md](designs/auth/auth-002-session-and-role-gate.md) · PRD: `AUTH-002`, `SEC-R02`, `DATA-R05`
 
 - [ ] AUTH-002/T1 — Session cookie: httpOnly, SameSite=Lax, Secure, rotated on sign-in
 - [ ] AUTH-002/T2 — Server-side invalidation, so a stolen cookie dies on sign-out
