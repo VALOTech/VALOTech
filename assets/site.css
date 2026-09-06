@@ -63,14 +63,16 @@
   --maxw: 1240px;
   --gut: 28px;
 
-  /* The world's diameter. Below about 1470px it is a fraction of the frame;
-     above that a flat cap once held it at 440px, so every pixel the frame
-     gained past that point made the world smaller in the reader's eye. The
-     wide term takes over instead, and the height term keeps a long letterbox
-     frame from being filled by a disc it has no room for. The outer max()
-     guarantees the value never falls below what the narrow frames already
-     had, so widening the ceiling cannot shrink a size that was tuned. */
-  --planet: max(min(30vw, 440px), min(26vw, 46vh, 900px));
+  /* The world's diameter, in terms of the frame and nothing else. Below about
+     1470px the width term governs; above it the height term does, so a long
+     letterbox frame is never filled by a disc it has no room for. There is no
+     pixel ceiling, because a ceiling only moves the defect to the first frame
+     that exceeds it: the disc stops growing while the type and the column keep
+     going, and the world shrinks in the reader's eye exactly as it did under
+     the 440px cap this replaced. The outer max() is a floor, not a cap — it
+     guarantees the value never falls below what the narrow frames were tuned
+     at, so widening the formula cannot shrink a size that already worked. */
+  --planet: max(min(30vw, 440px), min(26vw, 46vh));
   --hdr: 68px;
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
 
@@ -2713,6 +2715,32 @@ html:not(.can-scene) .planet {
     --type-card-title: calc(16px * var(--up));
     --type-card-body: calc(15px * var(--up));
     --type-meta: calc(12px * var(--up));
+  }
+
+  /* The type and the column grow with the frame above; these did not, and a
+     surface where half the elements scale is worse than one where none do —
+     the fixed half reads as debris the layout forgot. Each keeps its viewport
+     term, so the frame still governs; only the ceiling moves with --up. */
+  .sun {
+    width: min(46vw, calc(560px * var(--up)));
+    margin: calc(min(46vw, calc(560px * var(--up))) / -2) 0 0
+      calc(min(46vw, calc(560px * var(--up))) / -2);
+  }
+
+  .hero-aside .marker {
+    width: min(22vw, calc(320px * var(--up)));
+  }
+
+  .fit {
+    --fit-channel: min(33vw, calc(440px * var(--up)));
+  }
+
+  #people .chapter-head {
+    max-width: min(38vw, calc(520px * var(--up)));
+  }
+
+  .chip {
+    max-width: min(20vw, calc(250px * var(--up)));
   }
 }
 
