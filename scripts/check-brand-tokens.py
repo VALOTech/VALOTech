@@ -31,7 +31,11 @@ STYLESHEET = "assets/site.css"
 TOKENS_CSS = "brand/tokens.css"
 TOKENS_JSON = "brand/tokens.json"
 
-DECL_RE = re.compile(r"^\s*(--[a-z0-9-]+)\s*:\s*(.+?);\s*$", re.M)
+# DOTALL, because a declaration may wrap: `--shadow` spans two lines in the
+# stylesheet, and a line-anchored pattern reports it as absent -- which reads
+# as "the kit invented a token" and is really "the gate cannot see this shape".
+# A gate blind to a shape is a gate that has never checked the values in it.
+DECL_RE = re.compile(r"^[ 	]*(--[a-z0-9-]+)\s*:\s*(.+?);[ 	]*$", re.M | re.S)
 JSON_ENTRY_RE = re.compile(r'^\s*"([a-z0-9-]+)"\s*:\s*"(.*?)"\s*,?\s*$', re.M)
 
 
@@ -114,6 +118,17 @@ def main():
                     % (path, name, kit[name], STYLESHEET, site[name])
                 )
 
+    # The other direction, which is the half a one-way check cannot see: a
+    # value the stylesheet declares and the kit omits is a theme value nobody
+    # reading the kit knows exists. `--shadow` was exactly that for as long as
+    # the kit had been written, and the one-way check called the kit complete.
+    for name in sorted(set(site) - set(kit_css)):
+        problems.append(
+            "%s:root declares `%s` and the kit does not publish it — the kit "
+            "is the interface to the theme, so a value missing from it is a "
+            "value a designer cannot find" % (STYLESHEET, name)
+        )
+
     only_css = sorted(set(kit_css) - set(kit_json))
     only_json = sorted(set(kit_json) - set(kit_css))
     for name in only_css:
@@ -131,7 +146,7 @@ def main():
         return 1
 
     print(
-        "brand: %d tokens published, every one matches %s."
+        "brand: %d tokens published, every one matches %s, and the kit covers every value the stylesheet declares."
         % (len(kit_css), STYLESHEET)
     )
     return 0

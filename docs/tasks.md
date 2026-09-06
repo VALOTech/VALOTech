@@ -36,7 +36,9 @@ Design: [docs/designs/site/site-001-the-gateway-page.md](designs/site/site-001-t
   Evidence: commit 3af6ea0
 - [x] SITE-001/T6 — A frame past 2000px shows a larger page rather than a further one, in every element the frame carries
   Evidence: assets/site.css:@media (min-width: 2000px) · docs/decisions-log.md#SITE-DEC-02 — measured at 3840 x 2160: `.sun` 739px, `.hero-aside .marker` 422px, `#people .chapter-head` 686px, all previously flat at their 1440-tuned widths while the display face grew 32%
-- [x] SITE-001/T7 — The brand kit cannot publish a value the stylesheet has stopped using
+- [x] SITE-001/T8 — Gateway is defined as a theme: two panel families, the type roles, and every deviation from the reference named with its measurement
+  Evidence: brand/GUIDELINES.md — ground, panels, accent, text, type, scale, space, motion and contrast, with the three opacity deviations from the reference stated in one table
+- [x] SITE-001/T7 — The brand kit cannot publish a value the stylesheet has stopped using, and cannot omit one it declares
   Evidence: scripts/check-brand-tokens.py — 39 tokens verified against `assets/site.css`, wired into `make check`; proved able to fail on a drifted value, on a token the kit invents, and on a name one kit file publishes and the other does not
 
 ## SITE-002 · Public and investor chapter split
