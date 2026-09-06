@@ -541,8 +541,13 @@
        frame allows. Bounded on one side by the pinned argument and on the
        other by the window edge, both measured, so a card cannot land on the
        reading column or leave the page at any viewport. */
-    function radii(sx, head, cardHalf) {
-      var wanted = Math.min(window.innerWidth * 0.54, 780) * 0.4;
+    function radii(sx, head, cardHalf, rock) {
+      /* Never inside the drawn disc. The ellipse used to be a flat pixel
+         figure while the world grew with the frame, so on a wide screen all
+         three cards sat within the silhouette and piled on each other. What
+         the cards have to clear is the world, so that is what sizes them. */
+      var clearDisc = rock + cardHalf + 24;
+      var wanted = Math.max(clearDisc, Math.min(window.innerWidth * 0.54, 780) * 0.4);
       /* The pinned column is on the reading-start side, which swaps under
          Arabic and Urdu. Measure to whichever side of it the planet is on,
          and to the window edge beyond, rather than assuming either. */
@@ -550,16 +555,23 @@
       var toHead = past ? sx - head.right - CLEAR : head.left - sx - CLEAR;
       var toEdge = past ? window.innerWidth - EDGE - sx : sx - EDGE;
       var room = Math.min(toHead, toEdge) - cardHalf;
+      /* Where the room and the disc disagree the disc wins: a card cannot be
+         drawn inside the world, and a heading can be read beside a slightly
+         wider ellipse. */
       return {
-        x: Math.max(140, Math.min(wanted, room)),
-        y: Math.min(window.innerWidth * 0.34, 540) * 0.35
+        x: Math.max(clearDisc, Math.min(wanted, Math.max(room, clearDisc))),
+        y: Math.max(rock * 0.62, Math.min(window.innerWidth * 0.34, 540) * 0.35)
       };
     }
 
     /* Half the drawn disc, which is inset within its own box and scaled by
        the scene. The cutout has to match what the reader sees, not the box. */
     function rockRadius() {
-      var box = Math.min(window.innerWidth * 0.42, 620);
+      /* Measured from the element, never restated from the stylesheet's
+         numbers: the world's size is a stylesheet decision that has changed
+         once already, and a second copy of it is true only until it does. */
+      var el = doc.querySelector(".planet");
+      var box = el ? Math.min(el.offsetWidth, el.offsetHeight) : Math.min(window.innerWidth * 0.42, 620);
       var scale = (window.VALO_STAGE && window.VALO_STAGE.scale) || 1;
       return box * 0.37 * scale;
     }
@@ -580,7 +592,14 @@
       var headEl = stage.section.querySelector(".chapter-head");
       var head = headEl ? headEl.getBoundingClientRect() : { left: 0, right: 0 };
       var cards = stage.cards;
-      var r = radii(sx, head, cards[0].offsetWidth / 2);
+      var r = radii(sx, head, cards[0].offsetWidth / 2, rock);
+      if (!pinned) {
+        for (var q = 0; q < cards.length; q++) {
+          cards[q].style.opacity = "0";
+          cards[q].style.visibility = "hidden";
+        }
+        return false;
+      }
       var step = 360 / cards.length;
 
       for (var i = 0; i < cards.length; i++) {
@@ -617,6 +636,7 @@
         card.style.setProperty("--rock-rx", (rock / scale).toFixed(2) + "px");
         card.style.setProperty("--rock-ry", (rock / scale).toFixed(2) + "px");
       }
+      return true;
     }
 
     function clear() {
@@ -638,7 +658,18 @@
       var sx = readStone("x", window.innerWidth / 2);
       var sy = readStone("y", window.innerHeight / 2);
       var rock = rockRadius();
-      stages.forEach(function (stage) { place(stage, sx, sy, rock); });
+      var live = false;
+      stages.forEach(function (stage) {
+        if (place(stage, sx, sy, rock)) live = true;
+      });
+      /* The cards are placed against the planet, and the planet keeps moving
+         after the reader stops: it is easing to the station the chapter asked
+         for. Driven by scroll alone, the cards freeze where the planet used to
+         be and the stage comes apart — the world in one place and its cards in
+         another. While a stage holds the frame the loop keeps itself alive, and
+         it stops the moment none does, so the page still animates nothing when
+         nothing is on stage. */
+      if (live) queue();
     }
 
     function queue() {

@@ -2062,6 +2062,14 @@ html:not(.can-scene) .planet {
     padding: 0;
   }
 
+  /* An orbiting chapter is a stage, not a column of prose: the cards are placed
+     against the planet in viewport coordinates and use the whole frame, so
+     holding its argument inside the centred reading container leaves a strip
+     of dead frame beside the heading and squeezes the heading into a ribbon.
+     Measured at 1920 the heading was 320px wide and the answer ran to seven
+     lines, while 348px of frame sat empty to the right of it — and the cards
+     still reached 23px past its left edge. The stage takes the frame, as the
+     cover does. */
   [data-orbit] > .wrap {
     position: sticky;
     top: 0;
@@ -2069,10 +2077,11 @@ html:not(.can-scene) .planet {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    max-width: min(92vw, calc(1600px * var(--up)));
   }
 
   [data-orbit] .chapter-head {
-    max-width: min(26vw, 320px);
+    max-width: min(30vw, calc(540px * var(--up)));
     margin-bottom: 0;
   }
 
@@ -2097,7 +2106,7 @@ html:not(.can-scene) .planet {
     top: 0;
     z-index: 3;
     display: block;
-    width: min(16vw, 220px);
+    width: min(16vw, calc(220px * var(--up)));
     opacity: 0;
     transform-origin: center;
     will-change: left, top, transform, opacity, filter;
