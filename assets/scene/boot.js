@@ -164,20 +164,28 @@ const FRONT_RATIO = 0.71;
    Each chapter's measured top is mapped onto the fraction the journey was
    tuned against, piecewise-linearly between them, and the table always sees
    the page it was written for however long the real one is. */
+/* Measured on the investor view, because that is the only view that contains
+   every chapter and so defines one complete, monotone axis. The public view
+   folds two of them away; the spine drops the folded pair and the interpolation
+   spans them, so both views read the same table. */
 const CHAPTER_SPINE = [
-  ['problem', 0.048],
-  ['approach', 0.213],
-  ['deliver', 0.377],
-  ['workforce', 0.47],
-  ['valostack', 0.539],
-  ['trust', 0.588],
-  ['people', 0.686],
-  ['outcome', 0.899],
-  ['ecosystem', 0.952]
+  ['problem', 0.051],
+  ['approach', 0.224],
+  ['deliver', 0.396],
+  ['people', 0.479],
+  ['trust', 0.703],
+  ['workforce', 0.807],
+  ['valostack', 0.870],
+  ['outcome', 0.915],
+  ['ecosystem', 0.963]
 ];
 
 let spine = null;
 let spineHeight = -1;
+/* The journey with every station whose chapter is actually laid out. Rebuilt
+   whenever the spine is, which is whenever the page's length changes — and
+   folding a chapter away is exactly that. */
+let route = null;
 
 function measureSpine() {
   const total = root.scrollHeight - window.innerHeight;
@@ -189,7 +197,11 @@ function measureSpine() {
   const points = [[0, 0]];
   for (let i = 0; i < CHAPTER_SPINE.length; i++) {
     const el = document.getElementById(CHAPTER_SPINE[i][0]);
-    if (!el) continue;
+    /* A chapter the view has folded away has no box, and its rect reads as
+       zero — which at the top of the page looks like the start of the document
+       and further down looks like wherever the reader happens to be. Either
+       way it is a coordinate the chapter does not occupy. */
+    if (!el || !el.getClientRects().length) continue;
     const at = (window.scrollY + el.getBoundingClientRect().top) / total;
     /* Strictly increasing, or the interpolation divides by nothing. A chapter
        that measures at or below its predecessor is one the layout has folded
@@ -200,6 +212,12 @@ function measureSpine() {
   }
   points.push([1, 1]);
   spine = points.length > 2 ? points : null;
+
+  route = JOURNEY.filter((station) => {
+    if (!station.only) return true;
+    const el = document.getElementById(station.only);
+    return !!el && el.getClientRects().length > 0;
+  });
 }
 
 function onSpine(raw) {
@@ -251,46 +269,46 @@ const JOURNEY = [
   /* Two chapters a side. The planet settles once and stays, so a crossing is
      an event rather than the page's usual state, and the two long chapters
      that open the argument share one station instead of trading it. */
-  { at: 0.044, x: 30, y: 54, scale: 1.0 },
-  { at: 0.190, x: 30, y: 54, scale: 1.0 },
-  { at: 0.215, x: 32, y: 50, scale: 0.96 },
-  { at: 0.314, x: 32, y: 50, scale: 0.96 },
-  /* Across to the right, in plain sight, in the window the page opens for it.
-     The two arguments face each other: the chapter being left holds one side
-     and the chapter being entered holds the other, and between the moment the
-     first releases and the moment the second is level with the world there is
-     a gap of about half a second of reading. The crossing is timed to that
-     gap. It starts at the end of the pair it is leaving and is finished before
-     the next pair is entered, which is the whole of what makes the change of
-     side read as one movement rather than as a scramble. Leaving the frame
-     instead solves the collision and loses the world, which is worse. */
-  /* The crossing passes low. The chapter being left keeps its argument pinned
-     on the right for its whole length, and the world's destination is that
-     same side, so no timing avoids it: on a level path the disc slides behind
-     the outgoing heading and reads as sinking into the text. Dropping through
-     the lower part of the frame takes it under that heading instead, and it
-     stays in sight the whole way — which is the difference between a world
-     that travels and one that disappears. */
-  { at: 0.336, x: 52, y: 70, scale: 0.9 },
-  { at: 0.358, x: 75, y: 52, scale: 0.9 },
-  { at: 0.430, x: 75, y: 52, scale: 0.9 },
-  { at: 0.444, x: 76, y: 46, scale: 0.84 },
-  { at: 0.486, x: 76, y: 46, scale: 0.84 },
-  /* Back to the left, across the shortest stretch of page on the site. The
-     two stations are pulled as close together as the arguments allow — a
-     right station has to clear the column by the orbit's whole reach, and so
-     does a left one — because every viewport-width of crossing is a second of
-     scrolling during which neither chapter can name its bodies. */
-  { at: 0.514, x: 25, y: 52, scale: 0.88 },
-  { at: 0.586, x: 25, y: 52, scale: 0.88 },
-  { at: 0.602, x: 24, y: 46, scale: 0.84 },
-  { at: 0.644, x: 24, y: 46, scale: 0.84 },
-  /* Home and centred through the mapping chapter. */
-  { at: 0.674, x: 50, y: 56, scale: 0.9 },
-  { at: 0.830, x: 50, y: 56, scale: 0.9 },
-  /* Two on the right to close. */
-  { at: 0.873, x: 80, y: 46, scale: 0.84 },
-  { at: 1.0, x: 79, y: 46, scale: 0.9 }
+  { at: 0.038, x: 30, y: 54, scale: 1.0 },
+  { at: 0.206, x: 30, y: 54, scale: 1.0 },
+  { at: 0.224, x: 32, y: 50, scale: 0.96 },
+  { at: 0.372, x: 33, y: 50, scale: 0.96 },
+  /* The delivery chapter belongs to the investor view, and its station leaves
+     with it. Written as an ordinary station it was a place the world visited
+     for a chapter that was not there — a dip left and back that reads as the
+     world wandering; written far enough left to clear the chapter's own column
+     it made that dip worse. A station for a chapter the page does not carry is
+     not a station. */
+  { at: 0.396, x: 22, y: 52, scale: 0.94, only: 'deliver' },
+  { at: 0.448, x: 22, y: 52, scale: 0.94, only: 'deliver' },
+  /* Home and centred through the mapping chapter, which is where the argument
+     runs down the middle and leaves the world both margins. */
+  { at: 0.470, x: 50, y: 56, scale: 0.9 },
+  { at: 0.655, x: 50, y: 56, scale: 0.9 },
+  /* Two on the right. The mapping chapter is released well before it ends: its
+     argument runs down a centre channel and its own stage is pinned, so the
+     last of it costs nothing, while the chapter after it needs a leg long
+     enough that the world is standing still by the time its heading can be
+     read. A station written level with a chapter's top is a station the world
+     is still travelling to while the reader is already there. */
+  { at: 0.688, x: 75, y: 52, scale: 0.9 },
+  { at: 0.790, x: 75, y: 52, scale: 0.9 },
+  { at: 0.798, x: 76, y: 46, scale: 0.84 },
+  { at: 0.826, x: 76, y: 46, scale: 0.84 },
+  /* The one crossing of the page, taken low. The chapter being left keeps its
+     argument pinned on the left for its whole length and the world's
+     destination is that same side, so no timing avoids it: on a level path the
+     disc slides behind the outgoing heading and reads as sinking into the
+     text. Dropping through the lower part of the frame takes it under that
+     heading instead, and it stays in sight the whole way — which is the
+     difference between a world that travels and one that disappears. */
+  { at: 0.841, x: 52, y: 70, scale: 0.86 },
+  { at: 0.856, x: 25, y: 50, scale: 0.86 },
+  { at: 0.904, x: 25, y: 50, scale: 0.86 },
+  /* Two on the left to close, the last of them the portfolio the investor view
+     adds; the public view ends on the chapter before it. */
+  { at: 0.914, x: 24, y: 46, scale: 0.84 },
+  { at: 1.0, x: 22, y: 46, scale: 0.88 }
 ];
 
 /* Narrower on a phone: the planet sits behind the copy there, so a wide swing
@@ -641,7 +659,7 @@ function place(now) {
      so they are honoured as written — the lead moves when they are read, never
      what they say. Only the journey is read ahead: the growth scrub and the
      star's bearing stay honest to where the reader actually is. */
-  const path = wide ? JOURNEY : JOURNEY_NARROW;
+  const path = wide ? route || JOURNEY : JOURNEY_NARROW;
   let i = 0;
   while (i < path.length - 2 && look > path[i + 1].at) i++;
   const from = path[i];

@@ -1797,6 +1797,25 @@ html:not(.can-scene) .planet {
    The gate is a demonstration, not a security control: this is a static site
    with no server, so the detail ships in the page and anyone reading the
    source can find it. Nothing may be put here that would matter if read. */
+/* Two chapters and the links that name them belong to the investor view, the
+   way the seven answers' detail does. They stay in the document rather than
+   being cut from it: the copy and its twenty translations are the same copy
+   the investor deck will carry, and a chapter deleted to hide it is a chapter
+   that has to be written again. The chapter spine reads the laid-out page, so
+   a folded chapter drops out of the journey with no station left behind. */
+.chapter--gated,
+.nav-gated {
+  display: none;
+}
+
+.investor .chapter--gated {
+  display: block;
+}
+
+.investor .nav-gated {
+  display: inline-block;
+}
+
 .cap-detail {
   display: none;
 }

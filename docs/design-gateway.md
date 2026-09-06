@@ -548,10 +548,20 @@ team had already written stopped being orphaned.
 
 ### The investor gate
 
-Two views of the trust chapter, as the design has them. The **general view** is
-the seven answers and what each one is. The **detail view** — the three
-mechanisms under each — opens behind a sign-in reached from the nav, which
-sits between the language control and the call to action.
+Two views of one page. The **public view** is the argument a visitor is owed:
+the problem, the answer as three services, their own place in it, the reasons
+to believe it, the workforce, the brain, and what they keep. The **investor
+view** adds the two chapters that are the inside of the business — the
+five-phase delivery model and the portfolio — and the three mechanisms under
+each of the seven answers. It opens behind a sign-in reached from the nav,
+which sits between the language control and the call to action.
+
+The gated chapters stay in the document rather than being cut from it. The copy
+and its twenty translations are the same copy the investor deck will carry, and
+a chapter deleted to hide it is a chapter that has to be written again. A
+folded chapter has no box, so the chapter spine drops it and the journey spans
+it; a station written for a folded chapter is dropped with it, because a place
+the world visits for a chapter that is not there reads as the world wandering.
 
 The bar carries six links, that control, the sign-in and the call to action,
 and below about a thousand pixels that is more than fits. The whole set folds
@@ -695,19 +705,29 @@ under the heading, where a marker cannot cover anything.
 
 ## 4. Chapters
 
-| # | Chapter | What it does |
-|---|---|---|
-| 1 | Hero | The claim, three trust markers, one call to action |
-| 2 | The Problem | Three panels in orbit — hiring, disconnected tools, scattered data |
-| 3 | The Answer | Three services and the phases each covers |
-| 4 | How we deliver | Five phases, each with its outcome |
-| 5 | The workforce | Nine departments, what each one does |
-| 6 | ValoStack | The cross-engagement brain, and the consent it runs on |
-| 7 | Why leaders trust ValoLab | Seven structural answers |
-| 8 | How your people fit in | What your team directs against what the workforce delivers |
-| 9 | One company, a family of products | The six products, in recessed trays |
-| 10 | Pricing and engagement | How an engagement is priced, and the first step |
-| — | Footer | Contact, company, legal |
+The public page carries the argument; two chapters belong to the investor view
+and appear only behind the sign-in. The sequence is the designer's: the answer
+is followed by the reader's own place in it, then by the reasons to believe it,
+and only then by what the workforce does.
+
+| # | Chapter | View | What it does |
+|---|---|---|---|
+| 1 | Hero | public | The claim, three trust markers, one call to action |
+| 2 | The Problem | public | Three panels in orbit — hiring, disconnected tools, scattered data |
+| 3 | The Answer | public | Three services and the phases each covers |
+| — | How we deliver | investor | Five phases, each with its outcome |
+| 4 | How your people fit in | public | What your team directs against what the workforce delivers |
+| 5 | Why leaders trust ValoLab | public | Seven structural answers; the mechanisms under each are the investor view |
+| 6 | The workforce | public | Nine departments, what each one does |
+| 7 | ValoStack | public | The cross-engagement brain, and the consent it runs on |
+| 8 | Yours, not ours | public | What the engagement leaves in your hands |
+| — | One company, a family of products | investor | The six products, in recessed trays |
+| — | Footer | public | The engagement, contact, company, legal |
+
+The world takes the side each chapter leaves open: two on the left, the centre
+through the chapter whose argument runs down a channel, two on the right, two
+on the left to close. That is one crossing of the frame in the whole page, and
+a crossing is the movement most likely to put the disc behind a heading.
 
 ## 5. Language
 
