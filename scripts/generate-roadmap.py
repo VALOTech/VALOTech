@@ -123,6 +123,22 @@ def order(s):
     return {"~": 0, " ": 1, "!": 2}.get(s, 3)
 
 
+def task_number(code):
+    """`T10` sorts after `T2`, not between `T1` and `T2`.
+
+    A queue read top-to-bottom in string order puts T10, T11 and T12 above T2,
+    which reads as an arbitrary sequence and hides that the tasks have one.
+    """
+    tail = code.rsplit("/T", 1)[-1]
+    digits = ""
+    for ch in tail:
+        if ch.isdigit():
+            digits += ch
+        else:
+            break
+    return (int(digits) if digits else 0, tail)
+
+
 def trim(text, n=120):
     text = re.sub(r"\s+", " ", text).strip()
     return text if len(text) <= n else text[: n - 1].rstrip() + "…"
@@ -261,7 +277,9 @@ def emit(features):
                 "- **%s** · %s — %d/%d closed · depth %s"
                 % (f.code, f.title, f.closed, f.total, depths.get(f.code, "?"))
             )
-            for t in sorted(f.outstanding, key=lambda t: (order(t.status), t.code)):
+            for t in sorted(
+                f.outstanding, key=lambda t: (order(t.status), task_number(t.code))
+            ):
                 line = "  - `%s %s` — %s" % (marker(t.status), t.code, trim(t.title))
                 if t.status == "!" and t.blocker:
                     k = lr.classify_blocker(t.blocker, wid, designs, depths, policy)

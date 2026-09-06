@@ -3,7 +3,7 @@ code: CMS-007
 title: Search and filter in the room
 domain: cms
 prd_refs: [CMS-007, CMS-R03, DATA-R05]
-depends_on: [CMS-006]
+depends_on: [CMS-001, CMS-006]
 depended_by: [INV-001]
 layers_touched: [data, domain, service, api, frontend, ui]
 cross_cutting_rules: [CMS-R03, DATA-R05, I18N-R01, A11Y-R01, A11Y-R02]

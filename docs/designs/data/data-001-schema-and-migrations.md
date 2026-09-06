@@ -4,7 +4,7 @@ title: Schema and migrations
 domain: data
 prd_refs: [DATA-001, DATA-R01, DATA-R03, DATA-R05, SEC-R04, CMS-R01, CMS-R03]
 depends_on: [INFRA-001]
-depended_by: [AUTH-001, AUTH-002, CMS-001, SEC-002]
+depended_by: [AUTH-001, AUTH-002, CMS-001, DATA-003, SEC-002]
 layers_touched: [infra, data]
 cross_cutting_rules: [DATA-R01, DATA-R03, DATA-R05, SEC-R04, CMS-R01, CMS-R03]
 status: design-ready

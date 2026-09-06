@@ -3,8 +3,8 @@ code: AUTH-002
 title: Session and role gate
 domain: auth
 prd_refs: [AUTH-002, SEC-R01, SEC-R02, DATA-R05]
-depends_on: [DATA-001, AUTH-001]
-depended_by: []
+depends_on: [AUTH-001, DATA-001]
+depended_by: [ADMIN-002, AUTH-004, CMS-001, CMS-006, INV-001, INV-002, SEC-001, SITE-005]
 layers_touched: [data, domain, service, api, frontend]
 cross_cutting_rules: [SEC-R01, SEC-R02, DATA-R05, DATA-R02]
 status: design-ready

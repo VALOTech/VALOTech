@@ -2,11 +2,11 @@
 code: INFRA-001
 title: Local development stack
 domain: infra
-prd_refs: [INFRA-001, SEC-R05]
+prd_refs: [INFRA-001, SEC-R05, DATA-R06]
 depends_on: []
-depended_by: [DATA-001, CRED-001]
+depended_by: [CRED-001, DATA-001]
 layers_touched: [infra]
-cross_cutting_rules: [SEC-R05]
+cross_cutting_rules: [SEC-R05, DATA-R06]
 status: design-ready
 ---
 
@@ -97,6 +97,8 @@ Everything else depends on those two and therefore on this, transitively.
 
 ## 5. Cross-cutting compliance
 
+- **`DATA-R06`** — `make migrate-roundtrip` is what makes a down-migration
+  tested rather than written, and it is the reason that target exists.
 - **`SEC-R05`** — no secret in the repository; a missing optional credential
   degrades its feature rather than stopping the system. The two required
   variables are the exception and they fail loudly at startup, which is the

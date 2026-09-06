@@ -21,6 +21,12 @@ than noticed.
 
 ---
 
+## 2026-09-07 · design wave · iter 1
+STATUS: green · TIER: S · OUTCOME: CLOSED
+REASON: —
+WHAT CHANGED: thirty-six designs written in dependency order, so every one of the fifty PRD codes now has one. `DATA-001` rewritten around a single content model. The ledger grew from 112 to 283 rows, every one of them derived from a design's own §7 by `scripts/sync-tasks-from-designs.py` rather than copied by hand. `docs/roadmap.md` is now generated from the graph, in five waves.
+NEXT: W0 is active and has twenty-two buildable tasks. `INFRA-001/T3` is the top of the queue: the make targets for the stack and the three migration commands. Three decisions wait on the owner and none of them blocks W0.
+
 ## 2026-09-07 · bootstrap · iter 0
 STATUS: green · TIER: S · OUTCOME: CLOSED
 REASON: —

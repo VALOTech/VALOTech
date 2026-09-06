@@ -4,7 +4,7 @@ title: Locale variants and translation state
 domain: cms
 prd_refs: [CMS-005, CMS-R05, I18N-R02, I18N-R04]
 depends_on: [CMS-001, I18N-001]
-depended_by: [CMS-004, RPT-003, DECK-003]
+depended_by: [CMS-004, DECK-003, RPT-003]
 layers_touched: [data, domain, service, api, frontend, ui]
 cross_cutting_rules: [CMS-R05, I18N-R01, I18N-R02, I18N-R04, I18N-R05]
 status: design-ready

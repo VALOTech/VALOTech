@@ -3,7 +3,7 @@ code: POST-002
 title: Update publishing and audience
 domain: post
 prd_refs: [POST-002, CMS-R03, SEC-R01, DATA-R05]
-depends_on: [POST-001, CMS-004, CMS-006]
+depends_on: [CMS-004, CMS-006, POST-001]
 depended_by: [INV-001, SITE-005]
 layers_touched: [data, domain, service, api, frontend, ui]
 cross_cutting_rules: [CMS-R03, SEC-R01, DATA-R05, SEC-R04, I18N-R01, A11Y-R01]

@@ -3,8 +3,8 @@ code: CMS-004
 title: Preview, publish and withdraw
 domain: cms
 prd_refs: [CMS-004, CMS-R01, CMS-R02, CMS-R07, SEC-R04]
-depends_on: [CMS-001, SEC-002]
-depended_by: [POST-002, RPT-002, DECK-002]
+depends_on: [CMS-001, CMS-005, SEC-002]
+depended_by: [DECK-002, MAIL-001, POST-002, RPT-002]
 layers_touched: [domain, service, api, frontend, ui]
 cross_cutting_rules: [CMS-R01, CMS-R02, CMS-R07, SEC-R04, A11Y-R01]
 status: design-ready

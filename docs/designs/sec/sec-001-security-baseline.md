@@ -4,7 +4,7 @@ title: Security baseline
 domain: sec
 prd_refs: [SEC-001, SEC-R01, SEC-R02, SEC-R03, SEC-R05, DATA-R02]
 depends_on: [AUTH-002]
-depended_by: [OPS-001]
+depended_by: [CMS-003, OPS-001, OPS-002]
 layers_touched: [infra, api, frontend]
 cross_cutting_rules: [SEC-R01, SEC-R02, SEC-R03, SEC-R05, DATA-R02]
 status: design-ready

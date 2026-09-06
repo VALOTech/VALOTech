@@ -4,7 +4,7 @@ title: Audit log
 domain: sec
 prd_refs: [SEC-002, SEC-R04, DATA-R02, CMS-R07]
 depends_on: [DATA-001]
-depended_by: [ADMIN-001, CMS-004, CFG-001]
+depended_by: [ADMIN-001, CFG-001, CMS-004, DATA-002, INV-003]
 layers_touched: [data, domain, service]
 cross_cutting_rules: [SEC-R04, DATA-R02, CMS-R07]
 status: design-ready

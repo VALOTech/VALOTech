@@ -41,57 +41,52 @@ active_wave: 0
 # ---------------------------------------------------------------------------
 waves:
   W0:
-    depth_range: [0, 0]
+    depth_range: [0, 1]
     title: "The ground"
     summary: >
-      What nothing else stands on: the page that already serves, and the data
-      plane the application has not got yet. Until a schema exists and a
-      migration can be applied and rolled back, nothing above can be built or
-      tested — so this wave is finished when a developer brings the stack up
-      with one command and the round trip has actually been run.
+      What nothing else stands on. The page that already serves and its
+      cross-cutting layers are here because nothing depends on them; the local
+      stack, the schema and credential handling are here because everything
+      does. This wave is finished when a developer brings the stack up with one
+      command and a migration has been applied and rolled back — not written,
+      run, because a rollback nobody has executed is not a rollback.
   W1:
-    depth_range: [1, 2]
+    depth_range: [2, 4]
     title: "The door"
     summary: >
-      Who may read what, and the cross-cutting layers the page already carries.
-      Everything in the room reads through the gate this wave builds, so a
-      shortcut here is a shortcut in every feature after it. Sign-out precedes
-      invitation deliberately: a session that cannot be ended server-side is a
-      defect that grows with every account created.
+      Who may read what, and what records that they did. Everything above reads
+      through the gate this wave builds, so a shortcut here is a shortcut in
+      every feature after it. Sign-out precedes invitation deliberately: a
+      session that cannot be ended server-side is a defect that grows with every
+      account created. The scene sits here too, one layer above the page it
+      moves behind.
   W2:
-    depth_range: [3, 4]
-    title: "The room"
-    summary: >
-      What a signed-in investor finds, and the scene that carries the public
-      page. Updates come before the deck, and not only because they are the
-      simpler shape of the same problem — they are what the room is for. An
-      investor signs in to find out what has happened since they last looked,
-      and a room that opens on a deck they read a month ago has answered a
-      question nobody asked.
-  W3:
     depth_range: [5, 6]
     title: "The desk"
     summary: >
-      How the content gets there. Every word on the public page and in the room
-      is authored, translated, reviewed and published by somebody, and until
-      that is a surface it is a deployment. This wave is what turns the site
-      from something the developer edits into something the company runs.
-  W4:
+      The machinery every kind of writing shares — the editor, the media, the
+      locale states, the audience rule, publishing, search — plus the account,
+      configuration and logging surfaces an operator needs before anything is
+      published. Building it once is the whole reason a report, an update and a
+      deck are three navigations over one system rather than three systems.
+  W3:
     depth_range: [7, 8]
-    title: "The outside"
+    title: "What is written"
     summary: >
-      What leaves the system and cannot be recalled — mail to a real investor —
-      and the controls an operator needs before it does. Built last among the
-      buildable, behind everything that can be tested without sending anything
-      to a real person.
-  W5:
-    depth_range: [9, 99]
-    title: "The move"
+      The three content types, and the compliance posture that governs what is
+      held about the people reading them. Updates come before decks, and not
+      only because they are the simpler shape of the same problem: they are what
+      the room is for. An investor signs in to find out what has happened since
+      they last looked.
+  W4:
+    depth_range: [9, 10]
+    title: "The room"
     summary: >
-      The security baseline, the logs, erasure, a restore that has actually been
-      performed, and the compliance posture — each of them easy to promise
-      before launch and expensive to add after. It ends at the one task that
-      ends the static site's tenure, and after which a defect has an audience.
+      The reading surfaces, the room they sit in, and the gateway served by the
+      application — which is what finally makes the gate on the two hidden
+      chapters real rather than a stylesheet. This wave ends with the product
+      complete and still unpublished; what publishes it is outside the waves,
+      waiting on the owner.
 
 # ---------------------------------------------------------------------------
 # Per-feature wave overrides — for the case where a feature's natural depth

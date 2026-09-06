@@ -4,7 +4,7 @@ title: The gateway page
 domain: site
 prd_refs: [SITE-001, P-01, P-04, P-06]
 depends_on: []
-depended_by: [SITE-002, SITE-003, SITE-004, SCENE-001, I18N-001, A11Y-001]
+depended_by: [A11Y-001, I18N-001, SCENE-001, SITE-002, SITE-003, SITE-004, SITE-005]
 layers_touched: [frontend, ui]
 cross_cutting_rules: [A11Y-R03, I18N-R01, P-01, P-04, P-06]
 status: implemented
@@ -216,8 +216,10 @@ painted pixel this palette produces.
 ## 7. Task list
 
 - `SITE-001/T1` — One page, nine chapters, a fixed scene layer beneath them
-- `SITE-001/T2` — Chapter sequence follows the reference
+- `SITE-001/T2` — Chapter sequence follows the reference: problem, answer, your people, why, workforce, ValoStack, yours-not-ours, contact
 - `SITE-001/T3` — The close carries the contact call to action and states why prices are not published
 - `SITE-001/T4` — Navigation follows the page and folds into a menu below 1080px
 - `SITE-001/T5` — The reading column yields to the frame so labels survive below 1440px
-- `SITE-001/T6` — A frame past 2000px shows a larger page rather than a further one
+- `SITE-001/T6` — A frame past 2000px shows a larger page rather than a further one, in every element the frame carries
+- `SITE-001/T7` — The brand kit cannot publish a value the stylesheet has stopped using, and cannot omit one it declares
+- `SITE-001/T8` — Gateway is defined as a theme: two panel families, the type roles, and every deviation from the reference named with its measurement

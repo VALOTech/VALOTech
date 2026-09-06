@@ -4,7 +4,7 @@ title: Credential handling
 domain: cred
 prd_refs: [CRED-001, SEC-R05, DATA-R02]
 depends_on: [INFRA-001]
-depended_by: [MAIL-001, OPS-001]
+depended_by: [AUTH-003, DATA-003, MAIL-001, OPS-001, OPS-002]
 layers_touched: [infra, service]
 cross_cutting_rules: [SEC-R05, DATA-R02]
 status: design-ready

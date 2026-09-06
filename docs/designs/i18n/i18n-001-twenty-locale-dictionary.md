@@ -4,7 +4,7 @@ title: Twenty-locale runtime dictionary
 domain: i18n
 prd_refs: [I18N-001, I18N-R01, I18N-R02, I18N-R04, I18N-R05, P-05]
 depends_on: [SITE-001]
-depended_by: [I18N-002]
+depended_by: [CMS-005, I18N-002]
 layers_touched: [frontend, ui]
 cross_cutting_rules: [I18N-R01, I18N-R02, I18N-R04, I18N-R05, P-05]
 status: implemented
@@ -107,3 +107,4 @@ draws its chips from keys the dictionary already carried.
 - `I18N-001/T1` — 303 keys complete in twenty locales, swapped without a reload
 - `I18N-001/T2` — The served copy and the dictionary cannot drift past a push
 - `I18N-001/T3` — Sixteen non-`en`/`vi`/`zh`/`zt` locales reviewed on seven mechanical classes; six corrected
+- `I18N-001/T4` — Eleven locales read as prose, sentence by sentence, by someone who speaks them

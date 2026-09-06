@@ -3,7 +3,7 @@ code: RPT-003
 title: Report reading
 domain: rpt
 prd_refs: [RPT-003, CMS-R05, A11Y-R01, A11Y-R03]
-depends_on: [RPT-002, CMS-005]
+depends_on: [CMS-005, RPT-002]
 depended_by: []
 layers_touched: [frontend, ui]
 cross_cutting_rules: [CMS-R05, I18N-R01, I18N-R04, A11Y-R01, A11Y-R02, A11Y-R03, SCENE-R04]

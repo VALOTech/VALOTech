@@ -4,7 +4,7 @@ title: Media library
 domain: cms
 prd_refs: [CMS-003, CMS-R06, SEC-R01, DATA-R02]
 depends_on: [CMS-001, SEC-001]
-depended_by: [CMS-002, RPT-001, POST-001, DECK-001]
+depended_by: [CMS-002, DECK-001, POST-001, RPT-001]
 layers_touched: [data, domain, service, api, frontend, ui]
 cross_cutting_rules: [CMS-R06, SEC-R01, DATA-R02, A11Y-R02]
 status: design-ready

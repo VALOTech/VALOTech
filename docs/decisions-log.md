@@ -44,6 +44,33 @@ An entry is filed the moment the choice surfaces, not when it is answered. Nothi
 
 ## Resolved decisions
 
+<a id="CMS-DEC-01"></a>
+### `CMS-DEC-01` — Whether the gateway and the investor room share one content system — RESOLVED 2026-09-07
+
+- **Decision:** The investor room needs a content system an admin can write in. The gateway's own words are also content. One system for both, or two?
+- **Options:** **A** Two systems — the content system manages what an investor reads (reports, updates, achievements, decks), and the gateway's words stay in the page and its dictionary, changed by commit; the two share the audit trail and the locale catalogue · **B** One system for every word the company publishes.
+- **Decision owner:** user
+- **Settled by:** user
+- **Status:** RESOLVED 2026-09-07 — **A**. The two carry different risk and therefore want different processes: a wrong word on the gateway is the company's face, in twenty languages, behind a CDN, read by people deciding whether to make contact at all; a wrong word in an update is seen by a dozen people who already know us and is corrected in a minute. One system would have to pick a single process, and both choices are bad — either an update waits on twenty reviewed locales, or the gateway publishes as loosely as an update. The direction this can move is towards merging, which is why it starts apart: splitting a merged store means dividing rows that already exist.
+
+<a id="CMS-DEC-02"></a>
+### `CMS-DEC-02` — Whether a third role appears with the content system — RESOLVED 2026-09-07
+
+- **Decision:** A content system usually separates who writes from who publishes. Does VALO Tech add an editor role, or does the admin do both?
+- **Options:** **A** Exactly two roles: an admin writes and publishes; an investor reads · **B** A third `editor` role that drafts and cannot publish, with an admin approving.
+- **Decision owner:** user
+- **Settled by:** user
+- **Status:** RESOLVED 2026-09-07 — **A**. The team is small enough that the writer and the approver are the same person, so the second role would be held by nobody while still having to be honoured by every query, every screen and every access test that ships. `CMS-004`'s preview is what the approval step was actually for, and it costs one role instead of two. If a person is hired who should draft and not publish, the role is added then — with a name attached to it, which is the condition PRD §4 sets.
+
+<a id="I18N-DEC-01"></a>
+### `I18N-DEC-01` — What happens to a string that exists in English and nowhere else — RESOLVED 2026-09-07
+
+- **Decision:** Two principles in this repository disagree. `P-05` says twenty languages or none, and calls an English-only string unfinished. `I18N-R04` says a missing key falls back to English rather than showing a raw key. When new copy is written, which governs?
+- **Options:** **A** A machine draft is produced for every locale and shown to nobody; an admin reads and marks each locale reviewed; until then the reader sees the authored language · **B** Publication is blocked until all twenty locales are reviewed · **C** The machine draft is published immediately and reviewed afterwards.
+- **Decision owner:** user
+- **Settled by:** user
+- **Status:** RESOLVED 2026-09-07 — **A**, and the two principles are reconciled rather than ranked: `P-05` governs what may be *published as a translation*, and `I18N-R04` governs what a reader sees when one does not exist yet. A machine draft is not a translation, so publishing one would breach `P-05`; showing the authored language is exactly the fallback `I18N-R04` describes. **B** was rejected because an urgent correction that waits on twenty reviews is a correction people route around through code, which is worse than the gap it was meant to prevent. **C** was rejected because a machine translation reads grammatically and lifelessly, and no mechanical check in this repository can see the difference — the eleven locales at `I18N-001/T4` are open for exactly that reason. `CMS-005` carries the per-locale state this requires.
+
 <a id="INFRA-DEC-04"></a>
 ### `INFRA-DEC-04` — Whether this repository is public while the app is built — RESOLVED 2026-09-06
 

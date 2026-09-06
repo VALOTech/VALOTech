@@ -299,5 +299,5 @@ belong to the page's choreography too.
 - `SCENE-001/T2` — The journey is measured in chapters, not page fractions
 - `SCENE-001/T3` — The journey is read ahead of the reader so each chapter's disc is standing when its heading arrives
 - `SCENE-001/T4` — A jump is placed rather than eased
-- `SCENE-001/T5` — The world's size follows the frame, and its ceiling can never shrink a tuned size
+- `SCENE-001/T5` — The world's size follows the frame, with no flat ceiling and a floor that cannot shrink a tuned size
 - `SCENE-001/T6` — The close takes the open side of the footer

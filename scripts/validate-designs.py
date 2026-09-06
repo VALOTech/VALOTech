@@ -118,7 +118,10 @@ def main():
             problems.append("%s: domain '%s' does not match its folder '%s'" % (rel, domain, folder))
         # The folder is lowercase and the code is not: compare the parts, not
         # the strings.
-        if code.split("-")[0].lower() != domain.lower():
+        # rsplit, not split: a domain may carry a hyphen of its own
+        # (LEGAL-SG, LEGAL-GLOBAL), and taking the first segment rejects every
+        # one of them while reporting it as a code that does not match itself.
+        if code.rsplit("-", 1)[0].lower() != domain.lower():
             problems.append("%s: code %s does not begin with its domain %s" % (rel, code, domain))
         if not os.path.basename(rel).startswith(code.lower() + "-"):
             problems.append("%s: filename does not begin with %s" % (rel, code.lower()))

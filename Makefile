@@ -55,10 +55,19 @@ check-designs: ## Design frontmatter is coherent and its codes resolve
 	@$(PYTHON) scripts/validate-designs.py --strict
 
 .PHONY: check-tasks
-check-tasks: ## Every closed task cites something that exists; every blocker still blocks
+check-tasks: ## The ledger matches the designs; evidence resolves; blockers still block
+	@$(PYTHON) scripts/sync-tasks-from-designs.py
 	@$(PYTHON) scripts/check-evidence-citation.py
 	@$(PYTHON) scripts/check-deferral-maturity.py
 	@$(PYTHON) scripts/check-review-refer-to.py
+
+.PHONY: fix-symmetry
+fix-symmetry: ## Write the missing half of every design dependency edge
+	@$(PYTHON) scripts/fix-design-symmetry.py
+
+.PHONY: sync-tasks
+sync-tasks: ## Add a ledger row for every design task that has none
+	@$(PYTHON) scripts/sync-tasks-from-designs.py --write
 
 .PHONY: check-roadmap
 check-roadmap: ## The roadmap, the ledger and the design graph describe one project

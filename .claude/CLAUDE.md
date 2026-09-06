@@ -167,7 +167,8 @@ Seven layers, carrying the tokens used in design frontmatter:
 |---|---|
 | Surface | `SITE, SCENE, I18N, A11Y, UX` |
 | Access | `AUTH, ADMIN` |
-| Investor room | `INV, DECK, POST, MAIL` |
+| Content system | `CMS` |
+| Investor room | `INV, RPT, DECK, POST, MAIL` |
 | Platform | `DATA, SEC, OPS, INFRA, CRED, CFG` |
 | Compliance | `LEGAL-SG, LEGAL-GLOBAL` |
 
