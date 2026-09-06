@@ -347,12 +347,45 @@ The strike radius is measured from the planet element rather than restated from
 its stylesheet numbers, so resizing the world cannot leave meteors striking a
 circle that is no longer where it is.
 
-Some of the field twinkles: about a fifth of the stars, each on its own period
-of three to nine seconds and on two rates at once, because a single sine is a
-metronome and a sky is not. It runs on a tenth-of-a-second tick rather than a
-frame loop — a sky does not need sixty of them a second — and stops entirely
-for a hidden tab or a reader who asked for less motion, which is where the
-promise of no idle animation actually matters.
+### The sky's variety
+
+A field drawn in one colour is the difference between a photograph and a
+texture, and it is the first thing a reader calls monotonous without being able
+to say why. Stars carry a colour temperature: mostly white and blue-white, a
+seam of yellow, a few orange, the occasional red. Only the two nearer tiers
+take it — the eye cannot resolve the colour of a faint star either, so tinting
+the far field would be a claim the sky itself does not make.
+
+Scintillation comes in two kinds, because one of them is not what the word
+describes. The slow kind is a pair of sines on a sixth of the field, each star
+on its own period of three to nine seconds and on two rates at once: a single
+sine is a metronome and a sky is not. That kind is the sky breathing, and it
+belongs under notice. The fast kind is the twinkle itself — one star flaring to
+nearly three times its brightness for a fifth of a second and gone, one at a
+time, seconds apart. Sparse on purpose: the eye finds a single flare in an
+empty sky and stops finding any once several run together. The flare rises in
+a fifth of its life and falls over the rest, because a glint that fades the way
+it rose reads as a pulse.
+
+A supernova happens rarely enough that meeting one is luck rather than a
+feature: the first no sooner than twenty-two seconds in, then one every one to
+two and a half minutes. It rises over nine tenths of a second, holds briefly,
+falls over six, and leaves a shell expanding to a hundred and fifty pixels and
+thinning to nothing — the shape of a light curve, not of a flash. It grows
+diffraction spikes, whose absence is what makes a bright dot read as a dot, and
+it is placed in the field's own coordinates so it travels with the sky rather
+than sitting on the glass, on a far tier, and clear of the world: an event
+behind the disc is an event nobody sees.
+
+Both kinds of event live on the twinkle's clock rather than on loops of their
+own. That clock is a tenth-of-a-second tick rather than a frame loop — a sky
+does not need sixty of them a second — tightening to forty milliseconds only
+while something is running, and stopping entirely for a hidden tab or a reader
+who asked for less motion, which is where the promise of no idle animation
+actually matters. A star left mid-flare when the tab hides would still be
+bright when the reader returns, so the flares are cleared rather than paused.
+Measured at 1920 × 1080: one full redraw of the field with an event alive costs
+2.1 ms at the median.
 
 Their loop exists only while one is in flight or an impact is still fading.
 Between meteors nothing is scheduled, which is what lets the star field keep

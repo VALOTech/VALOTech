@@ -41,13 +41,49 @@
      photograph of a sky rather than as noise. */
   var HALO_SHARE = 0.014;
 
-  /* Scintillation. Air is what makes a star twinkle, so only some of them do
-     it here and none of them do it hard: a field where every point pulses
-     reads as a string of fairy lights rather than as a sky. Each one runs on
-     its own period and phase, and on two rates at once, because a single sine
-     is a metronome and a sky is not. */
-  var TWINKLE_SHARE = 0.22;
+  /* Colour temperature. A sky drawn in one colour is the difference between a
+     photograph and a texture, and it is the first thing a reader calls
+     monotonous without being able to say why. The shares below are the naked-
+     eye sky rounded off: mostly white and blue-white, a seam of yellow, a few
+     orange, the odd red. Only the two nearer tiers carry it — the eye cannot
+     resolve the colour of a faint star either, so tinting the far field would
+     be a claim the sky itself does not make. */
+  var SPECTRA = [
+    [0.60, "233,238,255"],
+    [0.78, "199,215,255"],
+    [0.91, "255,246,220"],
+    [0.975, "255,212,158"],
+    [1.00, "255,176,136"]
+  ];
+  var NEUTRAL = "233,238,255";
+
+  /* Scintillation, in two kinds, because one of them is not what the word
+     describes. The slow kind is a pair of sines on a small share of the field:
+     it is the sky breathing, and it must stay under notice. The fast kind is
+     the twinkle itself — a single star flaring hard for a fifth of a second
+     and gone. Sparse on purpose: the eye finds one flare in an empty sky and
+     stops finding any when several run at once. */
+  var TWINKLE_SHARE = 0.16;
   var TWINKLE_MS = 90;
+
+  /* One flare at a time, this far apart. */
+  var SPARK_GAP_MIN = 1500;
+  var SPARK_GAP_MAX = 5200;
+  var SPARK_MS = 460;
+  var SPARK_GAIN = 2.7;
+
+  /* A supernova. Rare enough that meeting one is luck rather than a feature:
+     a reader on the cover for a minute may well see none. It rises fast, holds
+     briefly, then falls over several seconds and leaves an expanding shell
+     that thins to nothing — the shape of the light curve, not of a flash. */
+  var NOVA_FIRST_MIN = 22000;
+  var NOVA_FIRST_MAX = 55000;
+  var NOVA_GAP_MIN = 55000;
+  var NOVA_GAP_MAX = 145000;
+  var NOVA_RISE = 900;
+  var NOVA_HOLD = 620;
+  var NOVA_FALL = 6200;
+  var NOVA_SHELL = 150;
 
   /* How far the sky slides across one full turn of the orbit, in pixels at a
      tier parallax of 1. Each star takes its own share, so the near field
@@ -67,9 +103,21 @@
   var twinkling = false;
   var twinkleTimer = 0;
   var raf = 0;
+  var sparks = [];
+  var sparkTimer = 0;
+  var nova = null;
+  var novaTimer = 0;
 
   function rand(a, b) {
     return a + Math.random() * (b - a);
+  }
+
+  function spectrum() {
+    var u = Math.random();
+    for (var i = 0; i < SPECTRA.length; i++) {
+      if (u <= SPECTRA[i][0]) return SPECTRA[i][1];
+    }
+    return NEUTRAL;
   }
 
   function sizeCanvas(el, c) {
@@ -81,6 +129,10 @@
   }
 
   function build() {
+    /* A flare holds a reference to a star. Rebuilding the field replaces every
+       star, so a flare left over from the old one would go on brightening an
+       object nothing draws. */
+    sparks.length = 0;
     vw = w.innerWidth || doc.documentElement.clientWidth;
     vh = w.innerHeight || doc.documentElement.clientHeight;
     dpr = Math.min(w.devicePixelRatio || 1, 2);
@@ -104,9 +156,12 @@
           r: rand(tier[0], tier[1]),
           a: rand(tier[2], tier[3]),
           p: tier[4],
+          c: t === 0 ? NEUTRAL : spectrum(),
           halo: Math.random() < HALO_SHARE,
           tw: Math.random() < TWINKLE_SHARE ? rand(3.2, 9.0) : 0,
-          tp: Math.random() * 6.2832
+          tp: Math.random() * 6.2832,
+          /* How hard this one is flaring right now, 0 at rest. */
+          fl: 0
         });
       }
     }
@@ -136,22 +191,101 @@
         alpha = s.a * (0.62 + 0.38 * (0.5 + 0.5 * wave));
       }
 
-      if (s.halo) {
-        var g = ctx.createRadialGradient(x, y, 0, x, y, s.r * 7);
-        g.addColorStop(0, "rgba(226,232,255," + alpha + ")");
-        g.addColorStop(0.4, "rgba(178,196,255," + alpha * 0.22 + ")");
+      var radius = s.r;
+      if (s.fl > 0) {
+        alpha = Math.min(1, alpha * (1 + s.fl * (SPARK_GAIN - 1)));
+        radius = s.r * (1 + s.fl * 0.5);
+      }
+
+      if (s.halo || s.fl > 0.35) {
+        var reach = s.halo ? radius * 7 : radius * 5.5 * s.fl;
+        var lead = s.halo ? alpha : alpha * s.fl;
+        var g = ctx.createRadialGradient(x, y, 0, x, y, reach);
+        g.addColorStop(0, "rgba(" + s.c + "," + lead + ")");
+        g.addColorStop(0.4, "rgba(178,196,255," + lead * 0.22 + ")");
         g.addColorStop(1, "rgba(140,158,255,0)");
         ctx.fillStyle = g;
         ctx.beginPath();
-        ctx.arc(x, y, s.r * 7, 0, 6.2832);
+        ctx.arc(x, y, reach, 0, 6.2832);
         ctx.fill();
       }
 
-      ctx.fillStyle = "rgba(233,238,255," + alpha + ")";
+      ctx.fillStyle = "rgba(" + s.c + "," + alpha + ")";
       ctx.beginPath();
-      ctx.arc(x, y, s.r, 0, 6.2832);
+      ctx.arc(x, y, radius, 0, 6.2832);
       ctx.fill();
     }
+
+    if (nova) drawNova(scrollY);
+  }
+
+  /* A star at a place in the field, transformed the way every other star is:
+     a supernova that did not travel with the sky it belongs to would read as
+     a mark on the glass rather than as an event in the distance. */
+  function drawNova(scrollY) {
+    var x = (nova.x - bearingX * nova.p) % vw;
+    if (x < 0) x += vw;
+    var y = (nova.y - scrollY * nova.p - bearingY * nova.p) % band;
+    if (y < 0) y += band;
+    if (y > vh + NOVA_SHELL || y < -NOVA_SHELL) return;
+
+    var lit = nova.lit;
+    if (lit <= 0) return;
+
+    /* The shell keeps expanding while the light falls, so the last thing the
+       reader sees is a ring with nothing at its centre. */
+    if (nova.shell > 0) {
+      var rr = 6 + nova.shell * NOVA_SHELL;
+      var ring = ctx.createRadialGradient(x, y, rr * 0.62, x, y, rr);
+      var fade = (1 - nova.shell) * 0.5;
+      ring.addColorStop(0, "rgba(120,150,255,0)");
+      ring.addColorStop(0.72, "rgba(168,196,255," + fade * 0.5 + ")");
+      ring.addColorStop(0.9, "rgba(226,236,255," + fade + ")");
+      ring.addColorStop(1, "rgba(150,180,255,0)");
+      ctx.fillStyle = ring;
+      ctx.beginPath();
+      ctx.arc(x, y, rr, 0, 6.2832);
+      ctx.fill();
+    }
+
+    var halo = 3 + lit * 34;
+    var g = ctx.createRadialGradient(x, y, 0, x, y, halo);
+    g.addColorStop(0, "rgba(255,253,246," + Math.min(1, lit * 1.1) + ")");
+    g.addColorStop(0.18, "rgba(226,238,255," + lit * 0.7 + ")");
+    g.addColorStop(0.52, "rgba(150,182,255," + lit * 0.22 + ")");
+    g.addColorStop(1, "rgba(110,140,255,0)");
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.arc(x, y, halo, 0, 6.2832);
+    ctx.fill();
+
+    /* Spikes. A point of light bright enough to bloom in a lens grows them,
+       and their absence is what makes a bright dot read as a dot. */
+    var arm = lit * lit * 74;
+    if (arm > 2) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(nova.tilt);
+      ctx.strokeStyle = "rgba(240,246,255," + lit * 0.6 + ")";
+      ctx.lineCap = "round";
+      for (var k = 0; k < 2; k++) {
+        var len = k ? arm * 0.45 : arm;
+        ctx.lineWidth = k ? 0.7 : 1.15;
+        ctx.beginPath();
+        ctx.moveTo(-len, 0);
+        ctx.lineTo(len, 0);
+        ctx.moveTo(0, -len);
+        ctx.lineTo(0, len);
+        ctx.stroke();
+        ctx.rotate(0.7854);
+      }
+      ctx.restore();
+    }
+
+    ctx.fillStyle = "rgba(255,255,255," + Math.min(1, lit * 1.2) + ")";
+    ctx.beginPath();
+    ctx.arc(x, y, 0.8 + lit * 2.2, 0, 6.2832);
+    ctx.fill();
   }
 
   /* Nothing here animates on its own: the field is redrawn when the page has
@@ -169,27 +303,137 @@
      tick rather than a frame loop — a sky does not need sixty of them a
      second — and it stops entirely for a hidden tab or a reader who asked for
      less motion, which is when the promise of no idle animation matters. */
+  function stamp() {
+    return w.performance ? w.performance.now() : Date.now();
+  }
+
+  /* One flare, on one star. Chosen from the two nearer tiers, because a faint
+     star flaring is a faint flare and the reader never finds it. Up in a fifth
+     of the life and down over the rest: a glint that fades the way it rose
+     reads as a pulse, which is a different thing entirely. */
+  function spark() {
+    sparkTimer = 0;
+    if (!twinkling) return;
+    for (var tries = 0; tries < 24; tries++) {
+      var s = stars[(Math.random() * stars.length) | 0];
+      if (s && s.p > 0.05 && s.fl === 0) {
+        sparks.push({ s: s, t0: stamp() });
+        break;
+      }
+    }
+    scheduleSpark();
+  }
+
+  function scheduleSpark() {
+    if (sparkTimer || !twinkling) return;
+    sparkTimer = w.setTimeout(spark, rand(SPARK_GAP_MIN, SPARK_GAP_MAX));
+  }
+
+  /* A star that was there all along, and then is not. It is placed in the
+     field's own coordinates so it travels with the sky, on a far tier so it
+     reads as distant, and clear of the world — an event behind the disc is an
+     event nobody sees. */
+  function burst() {
+    novaTimer = 0;
+    if (!twinkling) return;
+    var here = world();
+    var scrolled = lastScroll < 0 ? w.scrollY || 0 : lastScroll;
+    var tier = TIERS[Math.random() < 0.75 ? 0 : 1];
+    for (var tries = 0; tries < 30; tries++) {
+      var fx = rand(0.05, 0.95) * vw;
+      var fy = Math.random() * band;
+      var sx = (fx - bearingX * tier[4]) % vw;
+      if (sx < 0) sx += vw;
+      var sy = (fy - scrolled * tier[4] - bearingY * tier[4]) % band;
+      if (sy < 0) sy += band;
+      if (sy > vh * 0.92 || sy < vh * 0.06) continue;
+      if (here && Math.hypot(sx - here.x, sy - here.y) < here.r * 2.7) continue;
+      nova = {
+        x: fx, y: fy, p: tier[4],
+        tilt: Math.random() * 1.5708,
+        t0: stamp(), lit: 0, shell: 0
+      };
+      return;
+    }
+    scheduleNova(4000, 12000);
+  }
+
+  function scheduleNova(lo, hi) {
+    if (novaTimer || !twinkling) return;
+    novaTimer = w.setTimeout(burst, rand(lo, hi));
+  }
+
+  /* Both kinds of event live on the twinkle's clock rather than on a frame
+     loop of their own. The tick tightens only while one is running, so the
+     promise the field makes when nothing is happening — no idle animation —
+     is kept. */
+  function advance(t) {
+    for (var i = sparks.length - 1; i >= 0; i--) {
+      var k = (t - sparks[i].t0) / SPARK_MS;
+      if (k >= 1) {
+        sparks[i].s.fl = 0;
+        sparks.splice(i, 1);
+        continue;
+      }
+      sparks[i].s.fl =
+        k < 0.22 ? k / 0.22 : Math.pow(1 - (k - 0.22) / 0.78, 1.7);
+    }
+    if (!nova) return;
+    var e = t - nova.t0;
+    if (e < NOVA_RISE) nova.lit = Math.pow(e / NOVA_RISE, 0.55);
+    else if (e < NOVA_RISE + NOVA_HOLD) nova.lit = 1;
+    else nova.lit = Math.pow(Math.max(0, 1 - (e - NOVA_RISE - NOVA_HOLD) / NOVA_FALL), 2.4);
+    nova.shell = Math.min(1, Math.max(0, (e - NOVA_RISE) / (NOVA_HOLD + NOVA_FALL)));
+    if (e > NOVA_RISE + NOVA_HOLD + NOVA_FALL) {
+      nova = null;
+      scheduleNova(NOVA_GAP_MIN, NOVA_GAP_MAX);
+    }
+  }
+
   function twinkle() {
     twinkleTimer = 0;
     if (!twinkling) return;
-    clock = (w.performance ? w.performance.now() : Date.now()) / 1000;
+    var t = stamp();
+    clock = t / 1000;
+    advance(t);
     draw(lastScroll < 0 ? w.scrollY || 0 : lastScroll);
     scheduleTwinkle();
   }
 
   function scheduleTwinkle() {
     if (twinkleTimer || !twinkling) return;
-    twinkleTimer = w.setTimeout(twinkle, TWINKLE_MS);
+    twinkleTimer = w.setTimeout(
+      twinkle,
+      sparks.length || nova ? 42 : TWINKLE_MS
+    );
   }
 
   function setTwinkling(on) {
     twinkling = !!on;
-    if (twinkling) scheduleTwinkle();
-    else if (twinkleTimer) {
+    if (twinkling) {
+      scheduleTwinkle();
+      scheduleSpark();
+      scheduleNova(NOVA_FIRST_MIN, NOVA_FIRST_MAX);
+      return;
+    }
+    if (twinkleTimer) {
       w.clearTimeout(twinkleTimer);
       twinkleTimer = 0;
-      draw(lastScroll < 0 ? w.scrollY || 0 : lastScroll);
     }
+    if (sparkTimer) {
+      w.clearTimeout(sparkTimer);
+      sparkTimer = 0;
+    }
+    if (novaTimer) {
+      w.clearTimeout(novaTimer);
+      novaTimer = 0;
+    }
+    /* A star left mid-flare would stay bright for as long as the tab is
+       hidden, and be found that way on return. */
+    for (var i = 0; i < sparks.length; i++) sparks[i].s.fl = 0;
+    sparks.length = 0;
+    nova = null;
+    draw(lastScroll < 0 ? w.scrollY || 0 : lastScroll);
   }
 
   function schedule() {
