@@ -466,11 +466,27 @@
              nothing, which is worse than opening on the unexpected side. */
           var far = side > 0 ? x + gapPx : x - gapPx - w;
           var near = side > 0 ? x - gapPx - w : x + gapPx;
-          var left = far >= lo && far <= hi ? far
-            : near >= lo && near <= hi ? near
-            : Math.max(lo, Math.min(hi, far));
-          var wantRight = left >= x;
           var top = Math.max(80, Math.min(window.innerHeight - EDGE - h, y - h / 2));
+          /* "Away from the planet" has to mean away from the disc, not away
+             along the body's own path. The orbit is a flat ellipse, so a body
+             on its near or far half sits in front of or behind the world while
+             its horizontal direction still points inward — and the label then
+             lands on the face of the planet. Measured before this: a chip
+             touched the disc in 38% of the frames it was shown in. */
+          var disc = discRadius() + 10;
+          function onDisc(candidate) {
+            var nx = Math.max(candidate, Math.min(stageNow.x, candidate + w));
+            var ny = Math.max(top, Math.min(stageNow.y, top + h));
+            return Math.hypot(nx - stageNow.x, ny - stageNow.y) < disc;
+          }
+          var fits = function (v) { return v >= lo && v <= hi; };
+          var left;
+          if (fits(far) && !onDisc(far)) left = far;
+          else if (fits(near) && !onDisc(near)) left = near;
+          else if (fits(far)) left = far;
+          else if (fits(near)) left = near;
+          else left = Math.max(lo, Math.min(hi, far));
+          var wantRight = left >= x;
           chip.style.left = left.toFixed(1) + 'px';
           chip.style.top = top.toFixed(1) + 'px';
           chip.setAttribute('data-side', wantRight ? 'right' : 'left');
@@ -488,6 +504,24 @@
        orbit rather than the planet's centre, because what prints itself over
        a sentence is the body swinging out to the far side of its path.
        Returns the open band, which is also the answer, or null. */
+    /* The drawn disc, measured from the element rather than restated: what a
+       label has to clear is the world as painted, and the world's size is a
+       stylesheet decision. The box only changes on resize, so it is read once
+       and kept. */
+    var discBox = 0;
+    function measureDisc() {
+      var el = doc.querySelector('.planet');
+      discBox = el ? Math.min(el.offsetWidth, el.offsetHeight) : 0;
+    }
+    measureDisc();
+    window.addEventListener('resize', measureDisc, { passive: true });
+
+    function discRadius() {
+      var now = window.VALO_STAGE;
+      var scale = now && typeof now.scale === 'number' ? now.scale : 1;
+      return discBox * 0.37 * scale;
+    }
+
     function eligible(group) {
       var now = window.VALO_STAGE;
       if (!now || !wide.matches) return null;

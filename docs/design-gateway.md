@@ -512,6 +512,14 @@ pinned to **one body** and follows it round, measured at thirty to fifty pixels
 from it at every point of every orbit, because a label that drifts from the
 thing it names stops naming it.
 
+A label opens away from the **disc**, not away along its body's own path: the
+orbit is a flat ellipse, so a body on its near or far half sits in front of or
+behind the world while its horizontal direction still points inward, and the
+label then lands on the planet's face. Where neither side clears the disc the
+label stays with its body and crosses it — a body passing over the world is
+named over the world, as the reference has it, because a label that let go of
+its body to avoid the disc would be pointing at nothing.
+
 **Only one chapter names the bodies at a time.** Two chapters in frame together
 pin their labels to the same three bodies, so six labels land on three
 positions and print on top of each other — which reads as one line split in
@@ -746,6 +754,11 @@ and only then by what the workforce does.
 | 8 | Yours, not ours | public | What the engagement leaves in your hands |
 | — | One company, a family of products | investor | The six products, in recessed trays |
 | — | Footer | public | The engagement, contact, company, legal |
+
+The close is a station of the journey like any chapter: its copy holds the left
+of the frame and its two columns leave only the right strip open, so the world
+crosses out to the right as the footer arrives. Parked on the left it spent the
+last screen of the page behind the heading it was there to close under.
 
 The world takes the side each chapter leaves open: two on the left, the centre
 through the chapter whose argument runs down a channel, two on the right, two

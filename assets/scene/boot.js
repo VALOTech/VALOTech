@@ -177,7 +177,12 @@ const CHAPTER_SPINE = [
   ['workforce', 0.807],
   ['valostack', 0.870],
   ['outcome', 0.915],
-  ['ecosystem', 0.963]
+  ['ecosystem', 0.963],
+  /* The close is a chapter too, for the journey's purposes: its copy holds the
+     left of the frame, so the world has to be told to leave that side, and a
+     station with nothing to arrive at arrives whenever the page happens to
+     end. */
+  ['engage', 0.985]
 ];
 
 let spine = null;
@@ -308,7 +313,13 @@ const JOURNEY = [
   /* Two on the left to close, the last of them the portfolio the investor view
      adds; the public view ends on the chapter before it. */
   { at: 0.914, x: 24, y: 46, scale: 0.84 },
-  { at: 1.0, x: 22, y: 46, scale: 0.88 }
+  { at: 0.952, x: 23, y: 46, scale: 0.84 },
+  /* And out to the right for the close. The footer's argument holds the left
+     of the frame and its two columns leave only the right strip open, so a
+     world parked on the left spends the last screen of the page behind the
+     heading it should be closing under. */
+  { at: 0.985, x: 79, y: 50, scale: 0.86 },
+  { at: 1.0, x: 80, y: 50, scale: 0.86 }
 ];
 
 /* Narrower on a phone: the planet sits behind the copy there, so a wide swing
