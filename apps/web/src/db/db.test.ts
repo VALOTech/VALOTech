@@ -1,3 +1,4 @@
+import { Buffer } from 'node:buffer';
 import { readdirSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -62,8 +63,11 @@ function isConstraintLine(line: string): boolean {
  * Parse the CREATE TABLE body into one ColumnSpec per column, at the same
  * level of detail the descriptor in `SCHEMA` describes. Every property is read
  * from the column's own line and from nothing else: an inline `PRIMARY KEY` is
- * both `notNull` and `unique`, a `NOT NULL` or `UNIQUE` keyword sets the
- * matching flag, a `DEFAULT` sets `hasDefault`.
+ * both `notNull` and `unique`, a `serial` type is both `notNull` and
+ * `hasDefault` because that is what the shorthand expands to, a
+ * `GENERATED ... AS IDENTITY` column is likewise both because the database
+ * fills it and refuses a supplied value, a `NOT NULL` or `UNIQUE` keyword sets
+ * the matching flag, and a `DEFAULT` sets `hasDefault`.
  *
  * A column that is half of a composite key therefore reads as neither unique
  * nor a key, because its line says neither — the composite is a table-level
@@ -81,13 +85,16 @@ function parseColumns(sql: string, table: string): ColumnSpec[] {
     .map((line) => {
       const tokens = line.split(/\s+/);
       const upper = line.toUpperCase();
+      const type = (tokens[1] ?? '').toLowerCase();
       const primaryKey = upper.includes('PRIMARY KEY');
+      const serial = /^(?:smallserial|serial2|serial|serial4|bigserial|serial8)$/.test(type);
+      const identity = upper.includes('GENERATED') && upper.includes('IDENTITY');
 
       return {
         name: tokens[0] ?? '',
-        type: (tokens[1] ?? '').toLowerCase(),
-        notNull: primaryKey || upper.includes('NOT NULL'),
-        hasDefault: upper.includes('DEFAULT'),
+        type,
+        notNull: primaryKey || serial || identity || upper.includes('NOT NULL'),
+        hasDefault: serial || identity || upper.includes('DEFAULT'),
         unique: primaryKey || upper.includes('UNIQUE'),
       } satisfies ColumnSpec;
     });
@@ -189,6 +196,60 @@ const SELECTABLE_SAMPLES: { readonly [T in keyof Database]: Selectable<Database[
     granted_at: AT,
     granted_by: null,
   },
+  audit: {
+    id: '1',
+    at: AT,
+    actor_id: ID,
+    action: 'account.role_change',
+    subject_type: 'account',
+    subject_id: ID,
+    before: { role: 'investor' },
+    after: { role: 'admin' },
+  },
+  config: {
+    key: 'mail.enabled',
+    value: 'false',
+    previous_value: 'true',
+    changed_by: ID,
+    changed_at: AT,
+  },
+  mail_log: {
+    id: '1',
+    at: AT,
+    account_id: ID,
+    subject: 'The third quarter report is available',
+    kind: 'bulk',
+    state: 'accepted',
+    queue_id: '2QkP7r0000000001',
+    error: null,
+  },
+  unsubscribes: {
+    account_id: ID,
+    at: AT,
+    source: 'link',
+    token: 'k7Qm2s8yQ0Zt1p9r',
+    reason: null,
+  },
+  media: {
+    id: ID,
+    sha256: '0f7e6a1d3c5b9482e1a4f60d8b3c27a95e4d1f8b6c0a37d2e59b84f1c6a3d0e7',
+    mime: 'image/png',
+    byte_size: '4',
+    bytes: Buffer.from([0x89, 0x50, 0x4e, 0x47]),
+    uploaded_by: ID,
+    created_at: AT,
+  },
+  media_refs: {
+    media_id: ID,
+    item_id: ID,
+  },
+  portfolio: {
+    product: 'verdiq',
+    stage: 'building',
+    headline: 'The compliance backbone the other five products report through.',
+    updated_at: AT,
+    updated_by: ID,
+  },
 };
 
 /**
@@ -230,6 +291,53 @@ const INSERTABLE_SAMPLES: { readonly [T in keyof Database]: Insertable<Database[
     item_id: ID,
     account_id: ID,
     granted_by: null,
+  },
+  audit: {
+    actor_id: ID,
+    action: 'content.publish',
+    subject_type: 'content_item',
+    subject_id: ID,
+    before: null,
+    after: { current_revision_id: ID },
+  },
+  config: {
+    key: 'room.banner',
+    value: 'The fourth quarter report lands on the fifteenth.',
+    previous_value: null,
+    changed_by: ID,
+  },
+  // The row a send writes before it is attempted: queued, with no queue id yet
+  // and no error. That a `state` of `accepted` is not required here is the
+  // point of writing it first.
+  mail_log: {
+    account_id: ID,
+    subject: 'An invitation to the investor room',
+    kind: 'transactional',
+    state: 'queued',
+    queue_id: null,
+    error: null,
+  },
+  unsubscribes: {
+    account_id: ID,
+    source: 'link',
+    token: 'w3Nc5t8yR2Zq0p7v',
+  },
+  media: {
+    sha256: 'a1b2c3d4e5f60718293a4b5c6d7e8f900a1b2c3d4e5f60718293a4b5c6d7e8f9',
+    mime: 'image/webp',
+    byte_size: '4',
+    bytes: Buffer.from([0x52, 0x49, 0x46, 0x46]),
+    uploaded_by: ID,
+  },
+  media_refs: {
+    media_id: ID,
+    item_id: ID,
+  },
+  portfolio: {
+    product: 'farola',
+    stage: 'building',
+    headline: null,
+    updated_by: ID,
   },
 };
 

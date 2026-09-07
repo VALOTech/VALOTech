@@ -47,13 +47,15 @@ Every table, and what it holds about a person:
 | `deck_reads` | what they read, when | cascade |
 | `report_reads` | what they read, when | cascade |
 | `mail_log` | subject, time, state | cascade |
-| `unsubscribes` | the preference | cascade |
+| `unsubscribes` | the preference; an admin stop-sending reason | cascade |
 | `content_revisions` | `author_id` | **set null** — the document stays |
 | `content_items` | — | — |
+| `media_refs` | — (two uuids) | — |
 | `media` | `uploaded_by` | set null |
 | `portfolio` | `updated_by` | set null |
 | `config` | `changed_by` | set null |
 | `audit` | ids, actions, timestamps, changed field names | **retained** — holds no personal data by construction (`SEC-002`) |
+| `pgmigrations` | — (migration name, run time) | — (bookkeeping the migration tool owns; no person appears) |
 
 **The split is between what is about the person and what the person did on the
 company's behalf.** A report an admin wrote is the company's document; cascading

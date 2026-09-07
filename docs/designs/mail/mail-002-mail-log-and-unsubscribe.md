@@ -32,7 +32,9 @@ nothing after hand-off, so the log records acceptance and never delivery.
 ## 2. Layer walkthrough
 
 **Down.** `mail_log` rows, written before the attempt and updated after.
-`unsubscribes` keyed by account, with a timestamp and the token that did it.
+`unsubscribes` keyed by account, with a timestamp, the source that set it, and
+— for a one-click link — the token that did it; a manual admin stop-sending
+carries its reason instead.
 
 **Up.** An admin sees the log filtered by recipient and by date. An investor sees
 their own preference on their account page, and a one-click link in every

@@ -38,7 +38,7 @@ reorders itself cannot be scanned twice.
 
 | Column | Notes |
 |---|---|
-| `product` | One of the six, constrained. Not free text: a seventh product is a schema change and a conversation |
+| `product` | One of the six (`valo-ads`, `valo-pocket`, `shimmra`, `amavo`, `farola`, `verdiq`), constrained. Not free text: a seventh product is a schema change and a conversation |
 | `stage` | A closed vocabulary, below |
 | `headline` | One line, at most 140 characters, in the authored language |
 | `updated_at`, `updated_by` | Shown to the reader, because a board with no date is a board nobody believes |

@@ -41,8 +41,8 @@ control that does not exist cannot be reached by a bug.
 
 | Column | Type | Notes |
 |---|---|---|
-| `id` | `bigserial` PK | monotonic, so ordering does not depend on a clock |
-| `at` | `timestamptz` not null | UTC, database-generated — never supplied by the caller |
+| `id` | `bigint` identity PK | monotonic and caller-proof, so ordering does not depend on a clock |
+| `at` | `timestamptz` not null | UTC, forced by the database on insert — never the caller's value |
 | `actor_id` | `uuid` | the account that acted; null only for a system action, which names itself in `action` |
 | `action` | `text` not null | a closed vocabulary, below |
 | `subject_type`, `subject_id` | `text`, `uuid` | what was acted on |
@@ -57,7 +57,8 @@ everywhere else fails here (`DATA-R02`, `DATA-R03`).
 
 `account.create`, `account.suspend`, `account.delete`, `account.role_change`,
 `grant.add`, `grant.remove`, `content.publish`, `content.withdraw`,
-`media.delete`, `config.change`, `mail.send`, `session.invalidate_all`.
+`content.audience_change`, `media.delete`, `config.change`, `mail.send`,
+`session.invalidate_all`, `portfolio.change`, `mail.unsubscribe`.
 
 Closed, and constrained in the database. An action that is not in the list
 cannot be written, so a new privileged write has to declare itself in a
@@ -70,6 +71,14 @@ complained.
     CREATE TRIGGER audit_is_append_only
       BEFORE UPDATE OR DELETE ON audit
       FOR EACH ROW EXECUTE FUNCTION raise_append_only();
+
+    CREATE TRIGGER audit_no_truncate
+      BEFORE TRUNCATE ON audit
+      FOR EACH STATEMENT EXECUTE FUNCTION raise_append_only();
+
+A second trigger is needed because a row-level `BEFORE UPDATE OR DELETE`
+trigger never fires on `TRUNCATE` -- the one mutation that empties the table
+without touching a row -- so "append-only" is only true with both.
 
 The application's database role additionally holds no `UPDATE` or `DELETE`
 privilege on the table. Two mechanisms rather than one, because the trigger
@@ -102,14 +111,16 @@ reachable from it.
 `content.withdraw`, which is what makes "what were they shown, and when"
 answerable without a database restore (`CMS-R07`). **`CFG-001`** writes
 `config.change` and reads its own last entry to offer the undo. **`MAIL-002`**
-writes `mail.send` — the mail log is the detail and the audit row is the fact.
+writes `mail.send` and `mail.unsubscribe` — the mail log is the detail and
+the audit row is the fact.
 
 ## 5. Cross-cutting compliance
 
 - **`SEC-R04`** — every privileged write audited, append-only, in the same
   transaction.
 - **`DATA-R02`** — no personal data in the trail: ids, actions, timestamps, and
-  the changed field names.
+  the changed fields, recorded so no personal field's value enters it
+  (`SEC-DEC-01`).
 - **`CMS-R07`** — publishing and withdrawing are audited with what they
   replaced.
 
@@ -121,6 +132,12 @@ writes `mail.send` — the mail log is the detail and the audit row is the fact.
   retention, which defeats erasure. The questions it would have answered are
   answered instead by `content_revisions`, which is a real archive of the thing
   people actually ask about.
+- **What a changed field records — its name or its value.** `INV-003` reads
+  the audit as the portfolio's history and needs the previous stage and
+  headline as values; recording the value of every changed field would put a
+  name and an e-mail into the trail on `account.create`. The reconciliation is
+  a per-action allow-list of recordable fields — which fields each action may
+  record is `SEC-DEC-01`. Status: open — decisions-log.md#SEC-DEC-01.
 - **No signing or hash chain.** A tamper-evident chain would prove the trail
   has not been rewritten. With the database owner able to disable a trigger, the
   chain would only move the trust boundary rather than remove it, and the

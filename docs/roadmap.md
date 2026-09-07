@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_293 tasks in the plan, 53 closed, 240 outstanding._
+_293 tasks in the plan, 59 closed, 234 outstanding._
 
 ---
 
@@ -16,7 +16,7 @@ _293 tasks in the plan, 53 closed, 240 outstanding._
 
 _What nothing else stands on. The page that already serves and its cross-cutting layers are here because nothing depends on them; the local stack, the schema and credential handling are here because everything does. This wave is finished when a developer brings the stack up with one command and a migration has been applied and rolled back — not written, run, because a rollback nobody has executed is not a rollback._
 
-_31/47 closed (65%) · 16 outstanding — 14 buildable now · 0 waiting on the owner · 1 external residue · 1 parked to a later wave._
+_37/47 closed (78%) · 10 outstanding — 8 buildable now · 0 waiting on the owner · 1 external residue · 1 parked to a later wave._
 
 - **INFRA-001** · Local development stack — 3/5 closed · depth 0
   - `[~] INFRA-001/T2` — `env.example` names every variable the application reads, with what its absence means  · **Note:** written and complete for the variables the designs name — app, database, session, rate limit — each with whether it is required and what a missing on…
@@ -31,14 +31,8 @@ _31/47 closed (65%) · 16 outstanding — 14 buildable now · 0 waiting on the o
   - `[ ] CRED-001/T4` — A credential never reaches a log, an error message or a response, including through generic serialisation
   - `[ ] CRED-001/T5` — `credentials/README.md` says what the owner sets, and the local input form writes `.env` without the value crossing a c…
 
-- **DATA-001** · Schema and migrations — 5/12 closed · depth 1
+- **DATA-001** · Schema and migrations — 11/12 closed · depth 1
   - `[ ] DATA-001/T3` — Sessions table, or the session store the auth library needs
-  - `[ ] DATA-001/T7` — Mail log and unsubscribe state
-  - `[ ] DATA-001/T8` — Audit table, append-only, with a database-level guard against update and delete
-  - `[ ] DATA-001/T9` — Configuration table with a recorded prior value
-  - `[ ] DATA-001/T10` — Every migration has a down-migration that has been run
-  - `[ ] DATA-001/T11` — Media and its references, with the audience reached by join
-  - `[ ] DATA-001/T12` — The portfolio state table
 
 - **I18N-001** · Twenty-locale runtime dictionary — 3/4 closed · depth 1
   - `[!] I18N-001/T4` — Eleven locales read as prose, sentence by sentence, by someone who speaks them  · _external_ · **Blocked by:** pending-external: a native reader for `es`, `pt`, `ru`, `tr`, `id`, `ms`, `tl`, `th`, `ar`, `ja` and `zt`. All eleven pass every mechanical class in…
@@ -52,7 +46,7 @@ _31/47 closed (65%) · 16 outstanding — 14 buildable now · 0 waiting on the o
 
 _Who may read what, and what records that they did. Everything above reads through the gate this wave builds, so a shortcut here is a shortcut in every feature after it. Sign-out precedes invitation deliberately: a session that cannot be ended server-side is a defect that grows with every account created. The scene sits here too, one layer above the page it moves behind._
 
-_22/69 closed (31%) · 47 outstanding — 47 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_22/69 closed (31%) · 47 outstanding — 46 buildable now · 1 waiting on the owner · 0 external residue · 0 parked to a later wave._
 
 - **AUTH-001** · Sign-in — 0/5 closed · depth 2
   - `[ ] AUTH-001/T1` — Password hashing at the current cost, verified against a known vector
@@ -74,8 +68,8 @@ _22/69 closed (31%) · 47 outstanding — 47 buildable now · 0 waiting on the o
   - `[ ] SEC-002/T1` — The table, the closed action vocabulary, and the append-only trigger
   - `[ ] SEC-002/T2` — The application role holds no UPDATE or DELETE on it
   - `[ ] SEC-002/T3` — One insert function, called inside the caller's transaction, with no error discarded
-  - `[ ] SEC-002/T4` — Only changed fields are recorded, and no personal data reaches the trail
   - `[ ] SEC-002/T5` — The admin view: newest first, filterable by actor, subject and action, with no edit or delete control
+  - `[!] SEC-002/T4` — Only changed fields are recorded, and no personal data reaches the trail  · _pending-decision_ · **Blocked by:** pending-decision: SEC-DEC-01 — whether a changed field records its name or an allow-listed value is the trail's personal-data policy, and it is the u…
 
 - **AUTH-002** · Session and role gate — 0/4 closed · depth 3
   - `[ ] AUTH-002/T1` — Session cookie: httpOnly, SameSite=Lax, Secure, rotated on sign-in

@@ -10,7 +10,15 @@ An entry is filed the moment the choice surfaces, not when it is answered. Nothi
 
 ## Open decisions
 
-— none —
+<a id="SEC-DEC-01"></a>
+### `SEC-DEC-01` — What a changed field records in the audit: its name, or its value — OPEN
+
+- **Decision:** The audit's `before`/`after` hold the fields a privileged write changed. Do they record the field **names** only, or the field **values** — and if values, how is a name or an e-mail kept out of a trail retained for seven years past an erasure?
+- **Options:** **A** Names only — universally safe, but `INV-003` reads the audit as the portfolio's own history, and a field name tells a reader that a headline changed, not what it changed to · **B** Values, under a per-action allow-list of recordable fields — `portfolio.change` records the previous stage and headline, `config.change` the previous value, `account.role_change` the role and state, and no action may record `name` or `email`, so `DATA-R02`'s "no personal data" holds by construction rather than by the care of whoever writes the next call.
+- **Recommendation:** **B**. Only **B** can express the portfolio history `INV-003` rests on and the undo context `CFG-001` reads, and it keeps `DATA-R02` mechanical: the allow-list is a fixed table checked at the one insert site (`SEC-002/T3`), so a field the list does not name cannot reach the trail. **A** is simpler but would force `INV-003` to grow the portfolio-history table the schema was deliberately built without. The cost of **B** is that the allow-list must be complete before the first audited write — which is why it is settled now, not discovered when `account.create` first records a row into a seven-year table.
+- **Decision owner:** user
+- **Blocks:** SEC-002/T4
+- **Status:** OPEN. Safe default: no audit writer exists yet — `SEC-002/T3` is unbuilt and `grep -rn audit apps/web/src` finds only the types and the drift guard — so nothing is written into `before`/`after` until this settles; the trail cannot hold a personal value it has no code to write.
 
 ---
 

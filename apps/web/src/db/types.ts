@@ -50,6 +50,58 @@ export const CONTENT_LOCALE_STATES = ['machine', 'reviewed'] as const;
 
 export type ContentLocaleState = (typeof CONTENT_LOCALE_STATES)[number];
 
+// Every privileged write the audit can record. Adding a value here does not add
+// it to the database: the constraint is the migration's, and an action it does
+// not name cannot be written at all.
+export const AUDIT_ACTIONS = [
+  'account.create',
+  'account.suspend',
+  'account.delete',
+  'account.role_change',
+  'grant.add',
+  'grant.remove',
+  'content.publish',
+  'content.withdraw',
+  'content.audience_change',
+  'media.delete',
+  'config.change',
+  'mail.send',
+  'mail.unsubscribe',
+  'session.invalidate_all',
+  'portfolio.change',
+] as const;
+
+export type AuditAction = (typeof AUDIT_ACTIONS)[number];
+
+export const MAIL_LOG_KINDS = ['transactional', 'bulk'] as const;
+
+export type MailLogKind = (typeof MAIL_LOG_KINDS)[number];
+
+// There is no `delivered`: SMTP answers once, at hand-off, so `accepted` is the
+// strongest true statement the log can make about a message.
+export const MAIL_LOG_STATES = ['queued', 'accepted', 'failed'] as const;
+
+export type MailLogState = (typeof MAIL_LOG_STATES)[number];
+
+export const UNSUBSCRIBE_SOURCES = ['link', 'admin'] as const;
+
+export type UnsubscribeSource = (typeof UNSUBSCRIBE_SOURCES)[number];
+
+export const PORTFOLIO_PRODUCTS = [
+  'valo-ads',
+  'valo-pocket',
+  'shimmra',
+  'amavo',
+  'farola',
+  'verdiq',
+] as const;
+
+export type PortfolioProduct = (typeof PORTFOLIO_PRODUCTS)[number];
+
+export const PORTFOLIO_STAGES = ['building', 'in private use', 'in market', 'paused'] as const;
+
+export type PortfolioStage = (typeof PORTFOLIO_STAGES)[number];
+
 /**
  * What a `jsonb` column holds, at the only level this layer can honestly claim
  * to know. The block array's own shape belongs to the validator that writes it
@@ -67,6 +119,16 @@ export type Json = JsonValue | null;
  * `Generated` marks a column the database fills when an insert leaves it out.
  * Each interface's keys, `Generated` wrappers and `| null` unions follow that
  * table's entry in `SCHEMA`.
+ *
+ * Two column types map to something other than the obvious JavaScript one, and
+ * the mapping belongs to the driver rather than being a choice made here. An
+ * `int8` — `bigint`, the audit's identity key and the mail log's `bigserial` —
+ * arrives as a **string**: `pg` will not parse it into a number, because the
+ * type's range exceeds what a JavaScript number holds exactly and a driver that
+ * rounded silently would be worse than one handing back the digits. Typing such
+ * a column as `number` would be a claim about the driver that the first read
+ * disproves, so `byte_size` and both `id`s below are strings. A `bytea` arrives
+ * as a Node `Buffer`, which is what `media.bytes` is.
  */
 export interface AccountsTable {
   id: Generated<string>;
@@ -117,12 +179,84 @@ export interface ContentGrantsTable {
   granted_by: string | null;
 }
 
+// `actor_id` is a plain string and not a reference to an account, because the
+// column is a bare uuid in the database too: the row outlives the account it
+// names, and keeping the id is what lets the trail stay truthful after an
+// erasure has taken the person out of it.
+export interface AuditTable {
+  id: Generated<string>;
+  at: Generated<Date>;
+  actor_id: string | null;
+  action: AuditAction;
+  subject_type: string | null;
+  subject_id: string | null;
+  before: Json;
+  after: Json;
+}
+
+export interface ConfigTable {
+  key: string;
+  value: string;
+  previous_value: string | null;
+  changed_by: string | null;
+  changed_at: Generated<Date>;
+}
+
+export interface MailLogTable {
+  id: Generated<string>;
+  at: Generated<Date>;
+  account_id: string;
+  subject: string;
+  kind: MailLogKind;
+  state: MailLogState;
+  queue_id: string | null;
+  error: string | null;
+}
+
+export interface UnsubscribesTable {
+  account_id: string;
+  at: Generated<Date>;
+  source: UnsubscribeSource;
+  token: string | null;
+  reason: string | null;
+}
+
+export interface MediaTable {
+  id: Generated<string>;
+  sha256: string;
+  mime: string;
+  byte_size: string;
+  bytes: Buffer;
+  uploaded_by: string | null;
+  created_at: Generated<Date>;
+}
+
+export interface MediaRefsTable {
+  media_id: string;
+  item_id: string;
+}
+
+export interface PortfolioTable {
+  product: PortfolioProduct;
+  stage: PortfolioStage;
+  headline: string | null;
+  updated_at: Generated<Date>;
+  updated_by: string | null;
+}
+
 export interface Database {
   accounts: AccountsTable;
   content_items: ContentItemsTable;
   content_revisions: ContentRevisionsTable;
   content_locales: ContentLocalesTable;
   content_grants: ContentGrantsTable;
+  audit: AuditTable;
+  config: ConfigTable;
+  mail_log: MailLogTable;
+  unsubscribes: UnsubscribesTable;
+  media: MediaTable;
+  media_refs: MediaRefsTable;
+  portfolio: PortfolioTable;
 }
 
 /**
@@ -230,5 +364,94 @@ export const SCHEMA: Readonly<Record<keyof Database, TableSpec>> = {
     ],
     primaryKey: ['item_id', 'account_id'],
     checks: {},
+  },
+  audit: {
+    migration: '_platform.sql',
+    columns: [
+      { name: 'id', type: 'bigint', notNull: true, hasDefault: true, unique: true },
+      { name: 'at', type: 'timestamptz', notNull: true, hasDefault: true, unique: false },
+      { name: 'actor_id', type: 'uuid', notNull: false, hasDefault: false, unique: false },
+      { name: 'action', type: 'text', notNull: true, hasDefault: false, unique: false },
+      { name: 'subject_type', type: 'text', notNull: false, hasDefault: false, unique: false },
+      { name: 'subject_id', type: 'uuid', notNull: false, hasDefault: false, unique: false },
+      { name: 'before', type: 'jsonb', notNull: false, hasDefault: false, unique: false },
+      { name: 'after', type: 'jsonb', notNull: false, hasDefault: false, unique: false },
+    ],
+    primaryKey: ['id'],
+    checks: { action: AUDIT_ACTIONS },
+  },
+  config: {
+    migration: '_platform.sql',
+    columns: [
+      { name: 'key', type: 'text', notNull: true, hasDefault: false, unique: true },
+      { name: 'value', type: 'text', notNull: true, hasDefault: false, unique: false },
+      { name: 'previous_value', type: 'text', notNull: false, hasDefault: false, unique: false },
+      { name: 'changed_by', type: 'uuid', notNull: false, hasDefault: false, unique: false },
+      { name: 'changed_at', type: 'timestamptz', notNull: true, hasDefault: true, unique: false },
+    ],
+    primaryKey: ['key'],
+    checks: {},
+  },
+  mail_log: {
+    migration: '_platform.sql',
+    columns: [
+      { name: 'id', type: 'bigserial', notNull: true, hasDefault: true, unique: true },
+      { name: 'at', type: 'timestamptz', notNull: true, hasDefault: true, unique: false },
+      { name: 'account_id', type: 'uuid', notNull: true, hasDefault: false, unique: false },
+      { name: 'subject', type: 'text', notNull: true, hasDefault: false, unique: false },
+      { name: 'kind', type: 'text', notNull: true, hasDefault: false, unique: false },
+      { name: 'state', type: 'text', notNull: true, hasDefault: false, unique: false },
+      { name: 'queue_id', type: 'text', notNull: false, hasDefault: false, unique: false },
+      { name: 'error', type: 'text', notNull: false, hasDefault: false, unique: false },
+    ],
+    primaryKey: ['id'],
+    checks: { kind: MAIL_LOG_KINDS, state: MAIL_LOG_STATES },
+  },
+  unsubscribes: {
+    migration: '_platform.sql',
+    columns: [
+      { name: 'account_id', type: 'uuid', notNull: true, hasDefault: false, unique: true },
+      { name: 'at', type: 'timestamptz', notNull: true, hasDefault: true, unique: false },
+      { name: 'source', type: 'text', notNull: true, hasDefault: false, unique: false },
+      { name: 'token', type: 'text', notNull: false, hasDefault: false, unique: false },
+      { name: 'reason', type: 'text', notNull: false, hasDefault: false, unique: false },
+    ],
+    primaryKey: ['account_id'],
+    checks: { source: UNSUBSCRIBE_SOURCES },
+  },
+  media: {
+    migration: '_platform.sql',
+    columns: [
+      { name: 'id', type: 'uuid', notNull: true, hasDefault: true, unique: true },
+      { name: 'sha256', type: 'text', notNull: true, hasDefault: false, unique: true },
+      { name: 'mime', type: 'text', notNull: true, hasDefault: false, unique: false },
+      { name: 'byte_size', type: 'bigint', notNull: true, hasDefault: false, unique: false },
+      { name: 'bytes', type: 'bytea', notNull: true, hasDefault: false, unique: false },
+      { name: 'uploaded_by', type: 'uuid', notNull: false, hasDefault: false, unique: false },
+      { name: 'created_at', type: 'timestamptz', notNull: true, hasDefault: true, unique: false },
+    ],
+    primaryKey: ['id'],
+    checks: {},
+  },
+  media_refs: {
+    migration: '_platform.sql',
+    columns: [
+      { name: 'media_id', type: 'uuid', notNull: true, hasDefault: false, unique: false },
+      { name: 'item_id', type: 'uuid', notNull: true, hasDefault: false, unique: false },
+    ],
+    primaryKey: ['media_id', 'item_id'],
+    checks: {},
+  },
+  portfolio: {
+    migration: '_platform.sql',
+    columns: [
+      { name: 'product', type: 'text', notNull: true, hasDefault: false, unique: true },
+      { name: 'stage', type: 'text', notNull: true, hasDefault: false, unique: false },
+      { name: 'headline', type: 'text', notNull: false, hasDefault: false, unique: false },
+      { name: 'updated_at', type: 'timestamptz', notNull: true, hasDefault: true, unique: false },
+      { name: 'updated_by', type: 'uuid', notNull: false, hasDefault: false, unique: false },
+    ],
+    primaryKey: ['product'],
+    checks: { product: PORTFOLIO_PRODUCTS, stage: PORTFOLIO_STAGES },
   },
 };

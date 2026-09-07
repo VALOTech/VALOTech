@@ -45,8 +45,12 @@ try {
   await drop(); // clear any database a previous crashed run left behind
   await admin.query(`CREATE DATABASE "${scratch}"`);
 
+  // Down the whole chain, not one migration: DATA-001/T10 asks that *every*
+  // migration's down has been run, and a fold (DATA-R07) can rewrite an old
+  // down that a one-step roundtrip would never re-exercise. Full down -> full
+  // up on virgin ground proves each down reverses, in reverse order.
   await runner({ ...migrateOptions, direction: 'up', count: Infinity });
-  await runner({ ...migrateOptions, direction: 'down', count: 1 });
+  await runner({ ...migrateOptions, direction: 'down', count: Infinity });
   await runner({ ...migrateOptions, direction: 'up', count: Infinity });
 
   console.log('migrate-roundtrip: up -> down -> up complete');

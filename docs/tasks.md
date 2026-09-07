@@ -186,12 +186,18 @@ Design: [docs/designs/data/data-001-schema-and-migrations.md](designs/data/data-
   Evidence: apps/web/migrations/1788749077541_content.sql — content_grants with a composite PK, item and account cascading on erasure and granted_by set null, and the audience check on content_items; the on-delete behaviours verified against docs/designs/data/data-002-erasure-and-retention.md by a four-way erasure run.
 - [x] DATA-001/T6 — Locale rows carrying a review state a query can filter on
   Evidence: apps/web/migrations/1788749077541_content.sql — content_locales with a composite (revision_id, locale) PK, a state check, a reviewed row required to carry reviewed_at, and reviewed_by set null on erasure; the generalized drift guard apps/web/src/db/db.test.ts holds every content table's Kysely types to the migration column for column.
-- [ ] DATA-001/T7 — Mail log and unsubscribe state
-- [ ] DATA-001/T8 — Audit table, append-only, with a database-level guard against update and delete
-- [ ] DATA-001/T9 — Configuration table with a recorded prior value
-- [ ] DATA-001/T10 — Every migration has a down-migration that has been run
-- [ ] DATA-001/T11 — Media and its references, with the audience reached by join
-- [ ] DATA-001/T12 — The portfolio state table
+- [x] DATA-001/T7 — Mail log and unsubscribe state
+  Evidence: apps/web/migrations/1788752441424_platform.sql — mail_log keyed by account_id (cascade on erasure), a kind and a state check with no 'delivered' value that SMTP cannot honour, and an index on account_id; unsubscribes keyed by account with a source that names how it was set, the link token for a one-click unsubscribe and the admin reason for a manual stop-sending bound to their source by two checks (MAIL-002). Verified against PostgreSQL 17.11 and held column for column by apps/web/src/db/db.test.ts.
+- [x] DATA-001/T8 — Audit table, append-only, with a database-level guard against update and delete
+  Evidence: apps/web/migrations/1788752441424_platform.sql — audit with a caller-proof identity key (GENERATED ALWAYS refuses a supplied id), an at forced to now() by a BEFORE INSERT trigger so it cannot be backdated, a closed fifteen-action vocabulary, and a bare actor_id that survives erasure; append-only enforced by a BEFORE UPDATE OR DELETE row trigger and a BEFORE TRUNCATE statement trigger (SEC-R04). UPDATE, DELETE and TRUNCATE all refused and the id and at proven caller-proof against PostgreSQL 17.11. What before and after may record is the personal-data policy filed as docs/decisions-log.md#SEC-DEC-01, which blocks SEC-002/T4, not this table.
+- [x] DATA-001/T9 — Configuration table with a recorded prior value
+  Evidence: apps/web/migrations/1788752441424_platform.sql — config keyed by key, with value, the previous_value the CFG-001 undo reads, changed_by set null on erasure and changed_at; the table ships empty because each key's default lives beside its declaration in code. Held column for column by apps/web/src/db/db.test.ts.
+- [x] DATA-001/T10 — Every migration has a down-migration that has been run
+  Evidence: apps/web/scripts/migrate-roundtrip.mjs — the round trip runs the down step with count Infinity, so every migration's down is exercised on a throwaway database each run, not just the newest; `make migrate-roundtrip` completes up then down then up, verified against PostgreSQL 17.11.
+- [x] DATA-001/T11 — Media and its references, with the audience reached by join
+  Evidence: apps/web/migrations/1788752441424_platform.sql — media with a unique sha256 that deduplicates identical bytes, the bytes as bytea, a stored byte_size and uploaded_by set null on erasure; media_refs a composite (media_id, item_id) key with both sides cascading and an index on item_id, so a file is served to a reader by joining to the item that uses it (CMS-R06). Held column for column by apps/web/src/db/db.test.ts.
+- [x] DATA-001/T12 — The portfolio state table
+  Evidence: apps/web/migrations/1788752441424_platform.sql — portfolio keyed by a six-product check, a four-stage check including paused, a 140-character headline check and updated_by set null on erasure; the updated_at trigger carries a WHEN so it restamps only on a stage or headline change and an erasure nulling updated_by does not silently re-date the investor board (INV-003). Verified against PostgreSQL 17.11: a real change restamps, an erasure does not.
 
 ## AUTH-001 · Sign-in
 Design: [docs/designs/auth/auth-001-sign-in.md](designs/auth/auth-001-sign-in.md) · PRD: `AUTH-001`, `SEC-R01`, `SEC-R03`
@@ -385,7 +391,8 @@ PRD: `SEC-002`, `SEC-R04`
 - [ ] SEC-002/T1 — The table, the closed action vocabulary, and the append-only trigger
 - [ ] SEC-002/T2 — The application role holds no UPDATE or DELETE on it
 - [ ] SEC-002/T3 — One insert function, called inside the caller's transaction, with no error discarded
-- [ ] SEC-002/T4 — Only changed fields are recorded, and no personal data reaches the trail
+- [!] SEC-002/T4 — Only changed fields are recorded, and no personal data reaches the trail
+  Blocked by: pending-decision: SEC-DEC-01 — whether a changed field records its name or an allow-listed value is the trail's personal-data policy, and it is the user's to settle (special-category data).
 - [ ] SEC-002/T5 — The admin view: newest first, filterable by actor, subject and action, with no edit or delete control
 
 ## OPS-001 · Hosting and deploy

@@ -21,6 +21,19 @@ than noticed.
 
 ---
 
+## 2026-09-07 · DATA-001/T7-T12 (6 tasks) · iter 6
+STATUS: green · TIER: C · OUTCOME: CLOSED
+REASON: —
+WHAT CHANGED: the seven platform tables — audit, config, mail_log, unsubscribes, media, media_refs, portfolio — closing DATA-001/T7-T12, and migrate-roundtrip strengthened to run every migration's down (count Infinity), not just the newest, which is what T10 asks. critical-impl built them; deep-review measured them against its own PostgreSQL 17.11 and found real defects past what the run showed, all fixed and re-verified by running:
+  - audit could be TRUNCATEd (the one mutation a BEFORE UPDATE OR DELETE trigger never sees) — added a BEFORE TRUNCATE statement trigger; TRUNCATE now refused, rows survive.
+  - erasing a staff account silently re-dated the investor portfolio board: the SET NULL cascade fired the updated_at trigger. Added a WHEN so the restamp fires only on a real stage or headline change; measured — an erasure keeps the date, a real change still restamps.
+  - the audit's id and at were caller-supplyable, defeating SEC-002's stated monotonic-and-database-generated guarantee. id is now GENERATED ALWAYS AS IDENTITY (a supplied id is refused) and at is forced to now() by a BEFORE INSERT trigger (a backdate is overwritten); both measured.
+  - MAIL-002's audited unsubscribe had no action in the closed vocabulary — added mail.unsubscribe.
+  - the unsubscribes table could not hold MAIL-002/T4's admin stop-sending reason — reshaped to a source (link or admin) binding the token to a link and the reason to an admin, by two checks; measured.
+  - SEC-002/T2's REVOKE and the pgmigrations table were unhomed — the revoke is now on the operator checklist (AUDIT-GRANT), pgmigrations is in the erasure manifest.
+  On-delete correctness, append-only completeness (MERGE, ON CONFLICT, a data-modifying CTE all refused) and reversibility over populated tables were measured sound by the review and not changed. make check green (59 closed, 4 blocked); make check-app green (61 tests, typecheck clean).
+NEXT: what before and after may record is a personal-data policy the loop cannot settle (special-category data) — filed SEC-DEC-01 OPEN, blocking SEC-002/T4, safe default no writer exists. DATA-001/T3 (sessions) remains, coupled to AUTH-002's Auth.js adapter. Deferred with cause: on-delete drift belongs to DATA-002/T3's manifest gate (its designed home), not the drift guard; the SEC-002 depended_by under-recording (L4), the guard's blindness to numeric bounds (L2) and the space-carrying stage tokens (L6) are gate-green pre-existing items for their own designs. Descent continues into W1 — AUTH, SCENE, SEC-001, ADMIN-002, CMS-001.
+
 ## 2026-09-07 · DATA-001/T4-T6 (3 tasks) · iter 5
 STATUS: green · TIER: C · OUTCOME: CLOSED
 REASON: —

@@ -46,6 +46,13 @@ item leaves this file when its signal is true — not when it feels handled.
 - **Done when:** `select extname from pg_extension where extname='citext'` returns a row on the deployment database, or the app's migration role can create it.
 - **Until then:** migrations are not run against that database; local development is unaffected.
 
+<a id="AUDIT-GRANT"></a>
+### Revoke `UPDATE` and `DELETE` on `audit` from the application role
+
+- **What:** `SEC-002` keeps the audit append-only two independent ways — a database trigger *and* the application's role holding no `UPDATE`/`DELETE` on the `audit` table (`SEC-002/T2`). The trigger catches a bug, the revoke catches a compromised application, and neither failing takes the other with it, so both must be in force. The trigger ships in the migration; the revoke is a grant made where the database is deployed and is not the migration's to make.
+- **Who:** the owner, when the database is provisioned. After the migrations create the table, run `REVOKE UPDATE, DELETE ON audit FROM <application role>` (the role in `DATABASE_URL`) once.
+- **Done when:** `select has_table_privilege('<application role>', 'audit', 'UPDATE')` returns `f`, and the same for `DELETE`.
+
 <a id="TERMS-REVIEW"></a>
 ### Have counsel read the terms page before it publishes
 
