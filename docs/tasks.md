@@ -180,9 +180,12 @@ Design: [docs/designs/data/data-001-schema-and-migrations.md](designs/data/data-
 - [x] DATA-001/T2 — Accounts table: identity, role, state, created and updated
   Evidence: apps/web/migrations/1788744617066_accounts.sql — the accounts table per DATA-001 with the citext e-mail, the role and state checks, and a `BEFORE UPDATE` trigger that maintains `updated_at` (verified: after an update it exceeds created_at). apps/web/src/db/db.test.ts holds the hand-written Kysely types to the migration column for column, mutation-proved to catch a drift in type, nullability, default, or uniqueness.
 - [ ] DATA-001/T3 — Sessions table, or the session store the auth library needs
-- [ ] DATA-001/T4 — Content items and their revisions, with the published revision named by a pointer
-- [ ] DATA-001/T5 — Content grants and the audience constraint
-- [ ] DATA-001/T6 — Locale rows carrying a review state a query can filter on
+- [x] DATA-001/T4 — Content items and their revisions, with the published revision named by a pointer
+  Evidence: apps/web/migrations/1788749077541_content.sql — content_items and content_revisions per DATA-001, the circular current_revision_id FK made fail-closed (no on-delete: a published revision cannot be deleted while current), a CMS-R01 trigger that refuses editing a published revision's blocks while allowing publish and re-publish, and checks binding kind to updates and period to reports; verified against PostgreSQL 17.11 and mutation-proved by apps/web/src/db/db.test.ts.
+- [x] DATA-001/T5 — Content grants and the audience constraint
+  Evidence: apps/web/migrations/1788749077541_content.sql — content_grants with a composite PK, item and account cascading on erasure and granted_by set null, and the audience check on content_items; the on-delete behaviours verified against docs/designs/data/data-002-erasure-and-retention.md by a four-way erasure run.
+- [x] DATA-001/T6 — Locale rows carrying a review state a query can filter on
+  Evidence: apps/web/migrations/1788749077541_content.sql — content_locales with a composite (revision_id, locale) PK, a state check, a reviewed row required to carry reviewed_at, and reviewed_by set null on erasure; the generalized drift guard apps/web/src/db/db.test.ts holds every content table's Kysely types to the migration column for column.
 - [ ] DATA-001/T7 — Mail log and unsubscribe state
 - [ ] DATA-001/T8 — Audit table, append-only, with a database-level guard against update and delete
 - [ ] DATA-001/T9 — Configuration table with a recorded prior value

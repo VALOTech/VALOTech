@@ -29,7 +29,7 @@ while showing the source language is exactly what the second describes.
 
 **Down.** A `content_locales` row per revision per locale, carrying the same
 block array translated and a `state` of `machine` or `reviewed`. The serving
-query filters on `state = 'reviewed'` — an indexed column, not an inference from
+query filters on `state = 'reviewed'` — a single column, not an inference from
 a null timestamp.
 
 **Up.** A reader gets their locale when it is reviewed, and the authored language

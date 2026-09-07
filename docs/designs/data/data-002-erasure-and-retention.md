@@ -42,7 +42,8 @@ Every table, and what it holds about a person:
 | `accounts` | name, address | **deleted** — the row itself |
 | `sessions` | last-seen time, coarse location | cascade |
 | `invitations` | — (account id, token hash) | cascade |
-| `content_grants` | which decks | cascade |
+| `content_grants` | which decks (`account_id`); `granted_by` the granter | cascade; `granted_by` **set null** |
+| `content_locales` | `reviewed_by` the reviewer | **set null** — the reviewed translation stays |
 | `deck_reads` | what they read, when | cascade |
 | `report_reads` | what they read, when | cascade |
 | `mail_log` | subject, time, state | cascade |

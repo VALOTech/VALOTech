@@ -21,6 +21,12 @@ than noticed.
 
 ---
 
+## 2026-09-07 · DATA-001/T4-T6 (3 tasks) · iter 5
+STATUS: green · TIER: C · OUTCOME: CLOSED
+REASON: —
+WHAT CHANGED: the content system's core storage — content_items, content_revisions, content_locales, content_grants — with the circular current_revision_id FK, and the drift guard generalized from one table to a data-driven SCHEMA record covering all five tables (mutation-proved, 13 mutants). critical-impl built it; deep-review measured it (its own PG17 + mutation harness) and found real defects, all fixed and verified: a published revision was editable in place — now a CMS-R01 trigger refuses it (F2); the current_revision_id FK was fail-open — now no on-delete, so a published revision cannot be deleted while current (F3); kind/period were unbound to type and a null period defeated RPT-002 — now two checks bind them (F4); the Json type admitted null against a NOT NULL column — split JsonValue/Json (F5); a reviewed locale could lack reviewed_at (F9); and DATA-002's erasure manifest was missing content_locales and granted_by (F1). Verified by running against PostgreSQL 17.11: the four-way erasure lands per DATA-002, the trigger and checks reject, the round-trip reverses.
+NEXT: DATA-001 remaining — T3 (sessions, coupled to AUTH-002's Auth.js adapter), T7 (mail_log), T8 (audit, append-only trigger), T9 (config), T11 (media), T12 (portfolio). Each is a migration in the established form; the suite-level guard reds until each new table's descriptor lands with it.
+
 ## 2026-09-07 · DATA-001/T1-T2 + INFRA-001/T3-T4 (4 tasks) · iter 4
 STATUS: green · TIER: C · OUTCOME: CLOSED
 REASON: —

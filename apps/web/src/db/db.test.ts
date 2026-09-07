@@ -5,69 +5,87 @@ import { fileURLToPath } from 'node:url';
 import type { Insertable, Selectable } from 'kysely';
 import { describe, expect, it } from 'vitest';
 
-import {
-  ACCOUNT_ROLES,
-  ACCOUNT_STATES,
-  ACCOUNTS_COLUMNS,
-  type AccountsTable,
-  type ColumnSpec,
-  type Database,
-} from './types';
+import { SCHEMA, type ColumnSpec, type Database } from './types';
 
 const MIGRATIONS_DIR = join(dirname(fileURLToPath(import.meta.url)), '..', '..', 'migrations');
 
-const TABLE_BODY = /CREATE TABLE accounts \(([\s\S]*?)\n\);/;
-const ROLE_CHECK = /CHECK \(role IN \(([^)]*)\)\)/;
-const STATE_CHECK = /CHECK \(state IN \(([^)]*)\)\)/;
-
 // A line inside CREATE TABLE that starts with one of these is a table-level
-// constraint, not a column. Skipping them lets the schema grow the composite
-// keys and named checks DATA-001's later tables need, without the guard
-// reading the constraint keyword as a column name.
+// constraint, not a column. Skipping them lets the schema carry the composite
+// keys and named checks the content tables need, without the guard reading a
+// constraint keyword as a column name.
 const CONSTRAINT_KEYWORDS = new Set(['CONSTRAINT', 'PRIMARY', 'UNIQUE', 'FOREIGN', 'CHECK']);
 
-function accountsMigration(): string {
-  const name = readdirSync(MIGRATIONS_DIR).find((entry) => entry.endsWith('_accounts.sql'));
+// Object.keys widens its result to string[]. SCHEMA's key type is what makes
+// this assertion sound, and it is the reason the record is typed that way
+// rather than as a list.
+const TABLES = Object.keys(SCHEMA) as readonly (keyof Database)[];
 
-  if (name === undefined) {
-    throw new Error(`No migration ending in _accounts.sql under ${MIGRATIONS_DIR}`);
+function migrationSql(suffix: string): string {
+  const matches = readdirSync(MIGRATIONS_DIR).filter((entry) => entry.endsWith(suffix));
+  const [only] = matches;
+
+  if (only === undefined || matches.length > 1) {
+    throw new Error(`Expected one migration ending in ${suffix}, found ${matches.length}`);
   }
 
-  return readFileSync(join(MIGRATIONS_DIR, name), 'utf8');
+  return readFileSync(join(MIGRATIONS_DIR, only), 'utf8');
+}
+
+function migrationFor(table: keyof Database): string {
+  return migrationSql(SCHEMA[table].migration);
+}
+
+function tableBody(sql: string, table: string): string {
+  const body = new RegExp(`CREATE TABLE ${table} \\(([\\s\\S]*?)\\n\\);`).exec(sql)?.[1];
+
+  if (body === undefined) {
+    throw new Error(`The migration has no CREATE TABLE ${table} body to read`);
+  }
+
+  return body;
+}
+
+function bodyLines(body: string): string[] {
+  return body
+    .split('\n')
+    .map((line) => line.trim().replace(/,\s*$/, ''))
+    .filter((line) => line.length > 0 && !line.startsWith('--'));
+}
+
+function isConstraintLine(line: string): boolean {
+  const first = line.split(/\s+/)[0]?.toUpperCase() ?? '';
+
+  return CONSTRAINT_KEYWORDS.has(first);
 }
 
 /**
  * Parse the CREATE TABLE body into one ColumnSpec per column, at the same
- * level of detail `ACCOUNTS_COLUMNS` describes. A `PRIMARY KEY` is both
- * `notNull` and `unique`; a `NOT NULL` or `UNIQUE` keyword sets the matching
- * flag; a `DEFAULT` sets `hasDefault`. The type is the token after the name —
- * DATA-001's columns are single-token types (`uuid`, `citext`, `text`,
- * `timestamptz`), and a multi-word type would need this widened, deliberately.
+ * level of detail the descriptor in `SCHEMA` describes. Every property is read
+ * from the column's own line and from nothing else: an inline `PRIMARY KEY` is
+ * both `notNull` and `unique`, a `NOT NULL` or `UNIQUE` keyword sets the
+ * matching flag, a `DEFAULT` sets `hasDefault`.
+ *
+ * A column that is half of a composite key therefore reads as neither unique
+ * nor a key, because its line says neither — the composite is a table-level
+ * line, and `parsePrimaryKey` is what covers it. Reading the composite back
+ * into its columns would make the descriptor a claim about the table's
+ * semantics rather than about its text, and the guard could then no longer be
+ * a line-for-line comparison.
+ *
+ * The type is the token after the name. Every column here is a single-token
+ * type; a multi-word one would need this widened, deliberately.
  */
-function parseColumns(sql: string): ColumnSpec[] {
-  const body = TABLE_BODY.exec(sql)?.[1];
-
-  if (body === undefined) {
-    throw new Error('The accounts migration has no CREATE TABLE body to read columns from');
-  }
-
-  return body
-    .split('\n')
-    .map((line) => line.trim().replace(/,\s*$/, ''))
-    .filter((line) => line.length > 0 && !line.startsWith('--'))
-    .filter((line) => {
-      const first = line.split(/\s+/)[0]?.toUpperCase() ?? '';
-      return !CONSTRAINT_KEYWORDS.has(first);
-    })
+function parseColumns(sql: string, table: string): ColumnSpec[] {
+  return bodyLines(tableBody(sql, table))
+    .filter((line) => !isConstraintLine(line))
     .map((line) => {
       const tokens = line.split(/\s+/);
-      const name = tokens[0] ?? '';
-      const type = (tokens[1] ?? '').toLowerCase();
       const upper = line.toUpperCase();
       const primaryKey = upper.includes('PRIMARY KEY');
+
       return {
-        name,
-        type,
+        name: tokens[0] ?? '',
+        type: (tokens[1] ?? '').toLowerCase(),
         notNull: primaryKey || upper.includes('NOT NULL'),
         hasDefault: upper.includes('DEFAULT'),
         unique: primaryKey || upper.includes('UNIQUE'),
@@ -75,66 +93,201 @@ function parseColumns(sql: string): ColumnSpec[] {
     });
 }
 
-function checkedValues(sql: string, constraint: RegExp): string[] {
-  const list = constraint.exec(sql)?.[1];
+/**
+ * The primary key's columns in declaration order, from whichever of the two
+ * forms the table uses: a parenthesised list on a table-level line, or the
+ * `PRIMARY KEY` keyword on a single column's own line.
+ */
+function parsePrimaryKey(sql: string, table: string): string[] {
+  for (const line of bodyLines(tableBody(sql, table))) {
+    if (!line.toUpperCase().includes('PRIMARY KEY')) {
+      continue;
+    }
 
-  if (list === undefined) {
-    throw new Error(`The accounts migration has no constraint matching ${String(constraint)}`);
+    const listed = /PRIMARY KEY\s*\(([^)]*)\)/i.exec(line)?.[1];
+
+    return listed === undefined
+      ? [line.split(/\s+/)[0] ?? '']
+      : listed.split(',').map((column) => column.trim());
   }
 
-  return list.split(',').map((value) => value.trim().replace(/^'|'$/g, ''));
+  throw new Error(`CREATE TABLE ${table} declares no primary key`);
 }
 
-describe('the hand-written accounts schema', () => {
-  it('names the table the application queries', () => {
-    const table: keyof Database = 'accounts';
+/**
+ * The values one column's CHECK constraint admits. The list is found by the
+ * `<column> IN (...)` inside the constraint rather than by anchoring on
+ * `CHECK (`, because a nullable column writes its constraint as
+ * `CHECK (col IS NULL OR col IN (...))` and one pattern should read both
+ * forms. Scoping the search to the table's own body is what keeps two tables
+ * that share a column name from answering for each other.
+ */
+function checkedValues(sql: string, table: string, column: string): string[] {
+  const body = tableBody(sql, table);
+  const listed = new RegExp(`\\b${column}\\s+IN\\s*\\(([^)]*)\\)`).exec(body)?.[1];
 
-    expect(table).toBe('accounts');
-  });
+  if (listed === undefined) {
+    throw new Error(`${table}.${column} has no CHECK ... IN (...) list in its migration`);
+  }
 
-  it('matches the migration column for column — name, type, nullability, default, uniqueness', () => {
-    // This is the whole point of the hand-written types (INFRA-DEC-06): the
-    // migration is the source of truth, ACCOUNTS_COLUMNS is the code's claim
-    // about it, and this asserts they agree in every property that a query
-    // built on the wrong assumption would get wrong.
-    expect(parseColumns(accountsMigration())).toEqual([...ACCOUNTS_COLUMNS]);
-  });
+  return listed.split(',').map((value) => value.trim().replace(/^'|'$/g, ''));
+}
 
-  it('gives the interface exactly the columns ACCOUNTS_COLUMNS names', () => {
-    // Links the Kysely interface's keys to the descriptor at runtime, so a
-    // column added to one and not the other is caught. A full Selectable
-    // sample must have every key and no more.
-    const account: Selectable<AccountsTable> = {
-      id: '00000000-0000-0000-0000-000000000000',
-      email: 'investor@example.com',
-      name: 'An Investor',
-      role: 'investor',
-      password_hash: null,
-      state: 'invited',
-      created_at: new Date('2026-01-01T00:00:00.000Z'),
-      updated_at: new Date('2026-01-01T00:00:00.000Z'),
-    };
+const ID = '00000000-0000-0000-0000-000000000000';
+const AT = new Date('2026-01-01T00:00:00.000Z');
+const BLOCKS = [{ type: 'paragraph', text: 'The quarter in one line.' }];
 
-    expect(Object.keys(account).sort()).toEqual(ACCOUNTS_COLUMNS.map((c) => c.name).sort());
-  });
+/**
+ * One fully-populated row per table. The mapped key type requires an entry for
+ * every table the Database interface names, so a table cannot be added to the
+ * schema without the sample that binds its interface to its descriptor — and
+ * the sample is what makes a column present in one and missing from the other
+ * a failure rather than an oversight.
+ */
+const SELECTABLE_SAMPLES: { readonly [T in keyof Database]: Selectable<Database[T]> } = {
+  accounts: {
+    id: ID,
+    email: 'investor@example.com',
+    name: 'An Investor',
+    role: 'investor',
+    password_hash: null,
+    state: 'invited',
+    created_at: AT,
+    updated_at: AT,
+  },
+  content_items: {
+    id: ID,
+    type: 'report',
+    slug: '2026-q3',
+    title: 'Third quarter 2026',
+    kind: null,
+    period: '2026-Q3',
+    audience: 'investor',
+    current_revision_id: null,
+    created_at: AT,
+    updated_at: AT,
+  },
+  content_revisions: {
+    id: ID,
+    item_id: ID,
+    blocks: BLOCKS,
+    author_id: null,
+    created_at: AT,
+    published_at: null,
+  },
+  content_locales: {
+    revision_id: ID,
+    locale: 'vi',
+    blocks: BLOCKS,
+    state: 'machine',
+    reviewed_by: null,
+    reviewed_at: null,
+  },
+  content_grants: {
+    item_id: ID,
+    account_id: ID,
+    granted_at: AT,
+    granted_by: null,
+  },
+};
 
-  it('leaves the database to fill the columns it defaults', () => {
-    const invitation: Insertable<AccountsTable> = {
-      email: 'invited@example.com',
-      name: 'An Invitation',
-      role: 'investor',
-      password_hash: null,
-    };
+/**
+ * The narrowest row an insert can carry: every column the database fills is
+ * left out. That each of these type-checks is the assertion — a column that
+ * has a default in the migration and no `Generated` in its interface would not
+ * compile here.
+ */
+const INSERTABLE_SAMPLES: { readonly [T in keyof Database]: Insertable<Database[T]> } = {
+  accounts: {
+    email: 'invited@example.com',
+    name: 'An Invitation',
+    role: 'investor',
+    password_hash: null,
+  },
+  content_items: {
+    type: 'report',
+    slug: '2026-q4',
+    title: 'Fourth quarter 2026',
+    kind: null,
+    period: '2026-Q4',
+    current_revision_id: null,
+  },
+  content_revisions: {
+    item_id: ID,
+    blocks: BLOCKS,
+    author_id: null,
+    published_at: null,
+  },
+  content_locales: {
+    revision_id: ID,
+    locale: 'vi',
+    blocks: BLOCKS,
+    state: 'machine',
+    reviewed_by: null,
+    reviewed_at: null,
+  },
+  content_grants: {
+    item_id: ID,
+    account_id: ID,
+    granted_by: null,
+  },
+};
 
-    for (const column of ACCOUNTS_COLUMNS.filter((c) => c.hasDefault)) {
-      expect(Object.keys(invitation)).not.toContain(column.name);
-    }
-  });
+describe('the hand-written schema', () => {
+  it('describes every table the migrations create', () => {
+    // The gate that makes the guard cover the schema rather than the tables
+    // somebody remembered: a CREATE TABLE with no entry in SCHEMA fails here,
+    // and so does an entry naming a table no migration creates.
+    const created = readdirSync(MIGRATIONS_DIR)
+      .filter((entry) => entry.endsWith('.sql'))
+      .flatMap((entry) => [
+        ...readFileSync(join(MIGRATIONS_DIR, entry), 'utf8').matchAll(/^CREATE TABLE (\w+) \(/gm),
+      ])
+      .map((match) => match[1] ?? '');
 
-  it('accepts exactly the roles and states the migration constrains', () => {
-    const sql = accountsMigration();
-
-    expect([...ACCOUNT_ROLES]).toEqual(checkedValues(sql, ROLE_CHECK));
-    expect([...ACCOUNT_STATES]).toEqual(checkedValues(sql, STATE_CHECK));
+    expect(created.sort()).toEqual([...TABLES].sort());
   });
 });
+
+for (const table of TABLES) {
+  describe(`the hand-written ${table} schema`, () => {
+    const spec = SCHEMA[table];
+
+    it('matches the migration column for column - name, type, nullability, default, uniqueness', () => {
+      // This is the whole point of the hand-written types: the migration is
+      // the source of truth, the descriptor is the code's claim about it, and
+      // this asserts they agree in every property a query built on the wrong
+      // assumption would get wrong.
+      expect(parseColumns(migrationFor(table), table)).toEqual([...spec.columns]);
+    });
+
+    it('names the primary key the migration declares, in the same order', () => {
+      expect(parsePrimaryKey(migrationFor(table), table)).toEqual([...spec.primaryKey]);
+    });
+
+    it('gives the interface exactly the columns the descriptor names', () => {
+      // Links the Kysely interface's keys to the descriptor at runtime, so a
+      // column added to one and not the other is caught. A full Selectable
+      // sample must have every key and no more.
+      const names = spec.columns.map((column) => column.name);
+
+      expect(Object.keys(SELECTABLE_SAMPLES[table]).sort()).toEqual(names.sort());
+    });
+
+    it('leaves the database to fill the columns it defaults', () => {
+      const keys = Object.keys(INSERTABLE_SAMPLES[table]);
+
+      for (const column of spec.columns.filter((candidate) => candidate.hasDefault)) {
+        expect(keys).not.toContain(column.name);
+      }
+    });
+
+    it('accepts exactly the values the migration constrains', () => {
+      const sql = migrationFor(table);
+
+      for (const [column, values] of Object.entries(spec.checks)) {
+        expect([...values]).toEqual(checkedValues(sql, table, column));
+      }
+    });
+  });
+}

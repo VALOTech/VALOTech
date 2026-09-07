@@ -88,7 +88,7 @@ browser to forget it.
 | `kind` | `text` | for `update` only: `announcement`, `achievement`, `progress` |
 | `period` | `text` | for `report` only: `2026-Q3`. Unique **per type** among published items, so "the Q3 report" names one document (`RPT-002`) |
 | `audience` | `text` not null | `public`, `investor`, `granted` — the value a query filters on, never a template |
-| `current_revision_id` | `uuid` FK → content_revisions | null while nothing is published; **this column alone decides what a reader sees** |
+| `current_revision_id` | `uuid` FK → content_revisions, no `on delete` | null while nothing is published; **this column alone decides what a reader sees**. The FK carries no `on delete`, so a published revision cannot be deleted while it is the current one — the only way to stop showing it is to withdraw (move the pointer) and then delete, which is the correct order. Deleting the item cascades cleanly regardless. |
 | `created_at`, `updated_at` | `timestamptz` not null | |
 
 **`content_revisions`** — the content itself, and every version of it.
@@ -117,7 +117,7 @@ again (`CMS-R01`). Nothing here is a soft delete: the pointer is the state.
 | `reviewed_by`, `reviewed_at` | `uuid`, `timestamptz` | null until a person has read it |
 
 The state lives on the row rather than being inferred from `reviewed_at` being
-null, because the query that serves a reader must filter on one indexed column
+null, because the query that serves a reader must filter on one column
 and must not be able to express "probably reviewed".
 
 **`content_grants`** — which account may read an item whose audience is `granted`.
