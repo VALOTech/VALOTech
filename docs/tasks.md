@@ -421,8 +421,8 @@ PRD: `INFRA-001`
 
 - [x] INFRA-001/T1 — PostgreSQL 17 on 5434 under docker-compose, with a named volume and a health check
   Evidence: docker-compose.yml — `make infra-up` brought up `postgres:17-alpine` (PostgreSQL 17.11), the `pg_isready` health check reached `healthy` at t+16s, the host port mapped 5434→5432, and the named volume `valotech-postgres` was created; `make infra-reset` tore it all down with no residue. Verified by running, not asserting. The task's text is the Postgres side alone; bringing the application up against it is `INFRA-001/T3`.
-- [~] INFRA-001/T2 — `env.example` names every variable the application reads, with what its absence means
-  Note: written and complete for the variables the designs name — app, database, session, rate limit — each with whether it is required and what a missing one does. It cannot close until code reads them, because the check that matters is that the list and the reader agree, and there is no reader yet. The mail block is deliberately empty and says why: `docs/decisions-log.md#MAIL-DEC-01`.
+- [x] INFRA-001/T2 — `env.example` names every variable the application reads, with what its absence means
+  Evidence: env.example declares all twelve variables the application reads, each with whether it is required and what its absence does; apps/web/src/config/index.ts exposes the reader's own list as `DECLARED_VARIABLES`, and apps/web/src/config/index.test.ts asserts that list equals the set env.example declares, so the file and the reader cannot drift.
 - [x] INFRA-001/T3 — Make targets for up, down, reset, and the three migration commands
   Evidence: `make migrate`, `make migrate-down`, `make migrate-roundtrip`, `make infra-up`, `make infra-down`, `make infra-reset` — the connecting targets print the target before they act; verified end to end.
 - [x] INFRA-001/T4 — `make migrate-roundtrip` applies, rolls back and re-applies against a throwaway database
@@ -432,12 +432,16 @@ PRD: `INFRA-001`
 ## CRED-001 · Credential handling
 PRD: `CRED-001`, `SEC-R05`
 
-- [~] CRED-001/T1 — One module reads the environment once, validates it, and exports a frozen object
-  Note: the rule and the three credentials are written in `credentials/README.md`, and `credentials/credential-input.html` generates what can be generated and takes what cannot, sending nothing anywhere. The behaviour half — that a missing credential degrades its own feature rather than the system — is a property of code that does not exist yet.
-- [ ] CRED-001/T2 — A required variable that is absent stops the application before it listens, naming the variable
-- [ ] CRED-001/T3 — An absent optional credential disables its feature with a stated reason, and the system stays up
-- [ ] CRED-001/T4 — A credential never reaches a log, an error message or a response, including through generic serialisation
-- [ ] CRED-001/T5 — `credentials/README.md` says what the owner sets, and the local input form writes `.env` without the value crossing a chat
+- [x] CRED-001/T1 — One module reads the environment once, validates it, and exports a frozen object
+  Evidence: apps/web/src/config/index.ts — the sole reader of `process.env`; `loadConfig` reads every variable `env.example` declares, validates the set, and returns a deep-frozen typed `Config`, and `getConfig` reads once and caches. Verified by apps/web/src/config/index.test.ts (a valid environment yields a frozen object whose mutation throws).
+- [x] CRED-001/T2 — A required variable that is absent stops the application before it listens, naming the variable
+  Evidence: apps/web/src/config/index.ts — `loadConfig` collects every problem and throws `ConfigError` naming each absent or unparseable required variable, not the first only; apps/web/src/instrumentation.ts calls `getConfig` in Next's `register`, so a misconfiguration aborts startup before the server listens. Verified by apps/web/src/config/index.test.ts (`names every missing required variable`; `refuses to load when X alone is missing`).
+- [x] CRED-001/T3 — An absent optional credential disables its feature with a stated reason, and the system stays up
+  Evidence: apps/web/src/config/index.ts — an absent `SMTP_URL` or `BACKUP_TARGET` yields `{ available: false, unavailable: <reason> }` and `loadConfig` still returns, so the feature is disabled and the system is not. Verified by apps/web/src/config/index.test.ts (mail and backups each disable with a reason while the config loads).
+- [x] CRED-001/T4 — A credential never reaches a log, an error message or a response, including through generic serialisation
+  Evidence: apps/web/src/config/index.ts — every secret is a `Secret` whose `toString`, `toJSON` and `util.inspect` hook redact, so a value survives explicit `.value` access and nothing else. Verified by apps/web/src/config/index.test.ts: `JSON.stringify` and `util.inspect` of the whole config, a lone secret, a spread sub-object, and an `Error` built from the config all omit the secret bytes while `.value` returns them.
+- [x] CRED-001/T5 — `credentials/README.md` says what the owner sets, and the local input form writes `.env` without the value crossing a chat
+  Evidence: credentials/README.md states the rule and the three secrets the owner sets; credentials/credential-input.html generates `SESSION_SECRET` in the browser with `crypto.getRandomValues`, takes the two it cannot generate, and emits a `.env` block with no network call — the value never crosses a chat window.
 
 ## LEGAL-SG-001 · PDPA posture
 PRD: `LEGAL-SG-001`

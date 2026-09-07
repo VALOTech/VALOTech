@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_293 tasks in the plan, 59 closed, 234 outstanding._
+_293 tasks in the plan, 65 closed, 228 outstanding._
 
 ---
 
@@ -16,21 +16,14 @@ _293 tasks in the plan, 59 closed, 234 outstanding._
 
 _What nothing else stands on. The page that already serves and its cross-cutting layers are here because nothing depends on them; the local stack, the schema and credential handling are here because everything does. This wave is finished when a developer brings the stack up with one command and a migration has been applied and rolled back — not written, run, because a rollback nobody has executed is not a rollback._
 
-_37/47 closed (78%) · 10 outstanding — 8 buildable now · 0 waiting on the owner · 1 external residue · 1 parked to a later wave._
+_43/47 closed (91%) · 4 outstanding — 2 buildable now · 0 waiting on the owner · 1 external residue · 1 parked to a later wave._
 
-- **INFRA-001** · Local development stack — 3/5 closed · depth 0
-  - `[~] INFRA-001/T2` — `env.example` names every variable the application reads, with what its absence means  · **Note:** written and complete for the variables the designs name — app, database, session, rate limit — each with whether it is required and what a missing on…
+- **INFRA-001** · Local development stack — 4/5 closed · depth 0
   - `[ ] INFRA-001/T5` — A first-run path that works from a fresh clone with no prior state
 
 - **SITE-001** · The gateway page — 8/8 closed
 - **A11Y-001** · Accessibility baseline — 5/5 closed
-- **CRED-001** · Credential handling — 0/5 closed · depth 1
-  - `[~] CRED-001/T1` — One module reads the environment once, validates it, and exports a frozen object  · **Note:** the rule and the three credentials are written in `credentials/README.md`, and `credentials/credential-input.html` generates what can be generated an…
-  - `[ ] CRED-001/T2` — A required variable that is absent stops the application before it listens, naming the variable
-  - `[ ] CRED-001/T3` — An absent optional credential disables its feature with a stated reason, and the system stays up
-  - `[ ] CRED-001/T4` — A credential never reaches a log, an error message or a response, including through generic serialisation
-  - `[ ] CRED-001/T5` — `credentials/README.md` says what the owner sets, and the local input form writes `.env` without the value crossing a c…
-
+- **CRED-001** · Credential handling — 5/5 closed
 - **DATA-001** · Schema and migrations — 11/12 closed · depth 1
   - `[ ] DATA-001/T3` — Sessions table, or the session store the auth library needs
 

@@ -76,9 +76,12 @@ cannot run**, and only the second is allowed to stop anything.
 ### What is never done
 
 - A credential is never logged, never included in an error message, and never
-  returned by any route (`DATA-R02`). The config object's `toString` and
-  `toJSON` are overridden to say so, because the way a secret reaches a log is
-  almost always an object being serialised whole by something generic.
+  returned by any route (`DATA-R02`). Each secret value is wrapped so that
+  `toString`, `toJSON` and Node's inspection redact it — wrapping the value
+  rather than the config object keeps the guarantee when a sub-object is
+  serialised on its own, and cannot be forgotten for a credential added later.
+  The way a secret reaches a log is almost always an object serialised whole
+  by something generic, and this closes that path.
 - A credential is never written to the database. There is nothing to encrypt
   because there is nothing stored.
 - A missing credential is never substituted with a placeholder that "works".

@@ -21,6 +21,13 @@ than noticed.
 
 ---
 
+## 2026-09-07 · CRED-001/T1-T5 + INFRA-001/T2 (6 tasks) · iter 7
+STATUS: green · TIER: S · OUTCOME: CLOSED
+REASON: —
+WHAT CHANGED: the credential-handling module (CRED-001). apps/web/src/config/index.ts is the application's sole reader of process.env: loadConfig reads the twelve declared variables, validates the set, and returns a deep-frozen typed Config; getConfig reads once. The two required credentials (DATABASE_URL, SESSION_SECRET) fail startup closed — apps/web/src/instrumentation.ts calls getConfig in Next's register, so a misconfiguration aborts before the server listens and names every offending variable, not the first. The two optional (SMTP_URL, BACKUP_TARGET) degrade their own feature with a stated reason and leave the system up. Every secret is a Secret wrapper that redacts under toString, toJSON and util.inspect, so a credential survives explicit .value access and no generic serialisation. 25 tests, including that JSON.stringify/inspect of the whole config, a lone secret and an Error built from the config never carry the secret bytes. INFRA-001/T2 closed with it: the reader exposes DECLARED_VARIABLES and a test holds it equal to env.example, so the file and the reader cannot drift.
+  Diverged from the design's stated mechanism (override the config object's toString/toJSON) to a per-value Secret wrapper, which keeps the guarantee when a sub-object is serialised alone and cannot be forgotten for a credential added later; updated CRED-001 §3 to match (§4). make check and make check-app green (86 tests, typecheck clean).
+NEXT: W0 is nearly ground-complete. Buildable there: INFRA-001/T5 (a first-run path from a fresh clone) and DATA-001/T3 (the session store, coupled to AUTH-002's Auth.js adapter). I18N-001/T4 (eleven native readers) is external residue and SITE-002/T4 is parked to W1. Next iter finishes W0's buildable tail or descends into W1 — AUTH-001 sign-in.
+
 ## 2026-09-07 · DATA-001/T7-T12 (6 tasks) · iter 6
 STATUS: green · TIER: C · OUTCOME: CLOSED
 REASON: —
