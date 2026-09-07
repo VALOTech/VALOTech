@@ -65,7 +65,15 @@ been used says so plainly and offers the one next step: ask for another.
   person did not choose.
 
 - Issuing a new invitation or reset for an account **invalidates every
-  outstanding one** for that account, in the same transaction.
+  outstanding one** for that account, in the same transaction, serialised on
+  the account so two issues racing cannot both leave a live token — the issue
+  path's single-use, alongside the consume path's.
+- Consumption checks the token's three predicates and not the account's state.
+  That check belongs to the step that acts on the result: setting the password
+  (`AUTH-003/T4`) refuses a `suspended` account and performs `invited → active`
+  only, never `suspended → active`, and suspending an account deletes its
+  outstanding invitations in the same transaction (`ADMIN-001`), so a link
+  cannot re-activate access that was just ended.
 
 ### What the response reveals
 
@@ -73,7 +81,9 @@ been used says so plainly and offers the one next step: ask for another.
 the same page, the same wording, the same timing envelope (`SEC-R03`). The mail
 is the only difference and it goes to an inbox the requester may not control.
 This is the enumeration surface people forget, because the sign-in form gets the
-attention and the reset form is where the address list gets confirmed.
+attention and the reset form is where the address list gets confirmed. It is
+rate-limited per account and per address by the limiter `AUTH-001` already
+uses, so the identical answer is not an invitation to confirm the list at volume.
 
 ### The password
 
@@ -103,14 +113,17 @@ one place those two features can contradict each other.
 
 **`AUTH-001`** owns the password hash and the sign-in that follows consumption.
 **`CRED-001`** decides whether mail can be sent at all. **`ADMIN-001`** is the
-surface an admin invites from and where the on-screen link appears.
+surface an admin invites from and where the on-screen link appears; it deletes
+an account's outstanding invitations when it suspends or deletes the account,
+in the same transaction, so a token issued before cannot outlive that access.
 **`MAIL-DEC-01`** decides the carrier; until it is answered the send path is
 built against a port with no adapter behind it, and the on-screen link is the
 whole delivery mechanism.
 
 ## 5. Cross-cutting compliance
 
-- **`SEC-R03`** — reset and invitation answer identically whatever the address.
+- **`SEC-R03`** — reset and invitation answer identically whatever the address,
+  and the request is rate-limited per account and per address.
 - **`SEC-R05`** — no credential in the tree; absence degrades delivery only.
 - **`DATA-R01`** — an invitation stores an account id and a hash. Nothing else.
 - **`DATA-R04`** — this mail is transactional and consented by the act of being

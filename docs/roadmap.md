@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_294 tasks in the plan, 85 closed, 209 outstanding._
+_294 tasks in the plan, 88 closed, 206 outstanding._
 
 ---
 
@@ -35,7 +35,7 @@ _46/48 closed (95%) · 2 outstanding — 0 buildable now · 0 waiting on the own
 
 _Who may read what, and what records that they did. Everything above reads through the gate this wave builds, so a shortcut here is a shortcut in every feature after it. Sign-out precedes invitation deliberately: a session that cannot be ended server-side is a defect that grows with every account created. The scene sits here too, one layer above the page it moves behind._
 
-_39/69 closed (56%) · 30 outstanding — 26 buildable now · 3 waiting on the owner · 1 external residue · 0 parked to a later wave._
+_42/69 closed (60%) · 27 outstanding — 23 buildable now · 3 waiting on the owner · 1 external residue · 0 parked to a later wave._
 
 - **AUTH-001** · Sign-in — 4/5 closed · depth 2
   - `[!] AUTH-001/T4` — The sign-in form, in twenty languages, keyboard-reachable, with an accessible name on every field  · _pending-decision_ · **Blocked by:** pending-decision: I18N-DEC-02 — the form must render in the reader's locale across twenty, and the application has no i18n framework yet; which one i…
@@ -51,13 +51,10 @@ _39/69 closed (56%) · 30 outstanding — 26 buildable now · 3 waiting on the o
 - **AUTH-002** · Session and role gate — 3/4 closed · depth 3
   - `[ ] AUTH-002/T4` — Isolation test: an investor request for another investor's deck returns nothing, not a redirect
 
-- **AUTH-003** · Invitation and password reset — 0/7 closed · depth 3
-  - `[ ] AUTH-003/T1` — Token generation, hashing, and storage that never holds a usable token
-  - `[ ] AUTH-003/T2` — Single-use consumption in one atomic statement, with expiry in the same predicate
+- **AUTH-003** · Invitation and password reset — 3/7 closed · depth 3
   - `[ ] AUTH-003/T3` — The mail that carries the link, in the invitee's locale
   - `[ ] AUTH-003/T4` — The set-password form, its policy, and the sign-in that follows
   - `[ ] AUTH-003/T5` — Reset answers identically for an address that exists and one that does not
-  - `[ ] AUTH-003/T6` — A new invitation invalidates every outstanding one for that account
   - `[ ] AUTH-003/T7` — With no mail credential, the invitation is still created and its link is shown to the admin
 
 - **SCENE-002** · Satellites and their rings — 2/2 closed
