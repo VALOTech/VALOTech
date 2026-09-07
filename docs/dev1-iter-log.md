@@ -21,6 +21,12 @@ than noticed.
 
 ---
 
+## 2026-09-07 · AUTH-002/T1 + AUTH-001/T2,T3,T5 · iter 11
+STATUS: green · TIER: C · OUTCOME: CLOSED
+REASON: —
+WHAT CHANGED: the sign-in request path, end to end. A lazy Kysely connection (apps/web/src/db/index.ts), issue() writing a fresh sessions row that stores only sha256 of a CSPRNG token and returning the cookie (apps/web/src/auth/session.ts), and the route (apps/web/src/app/api/auth/sign-in/route.ts): both rate-limit counters before any query, a hash verified on every path so unknown/wrong/suspended/invited return a byte-identical 401 at one argon2 cost, 204 + cookie on success, 429 before the DB. critical-impl built it and caught its own timing test surviving a cold-connection-pool artifact (fixed with warm-up + a self-timed floor, mutation-proved seven of seven). deep-review then measured and I fixed: a ?sslmode=disable in DATABASE_URL silently disabled TLS (the guard read only DB_SSLMODE) — config now refuses it outside dev (A1); login CSRF, no origin check on a route handler — the route now refuses a cross-origin POST 403 (A3); the production __Host-+Secure cookie had zero coverage — session.test.ts pins it (A2); the timing test omitted the invited (null-hash) arm — added (A4); the address rate-limit key was unbounded — capped (A5). CI gained a postgres service so the 19 DB tests run rather than skip silently; next build's tsconfig rewrite is settled by committing what it writes; OPS-DEC-02 files the X-Forwarded-For trusted-hop question. 163 tests with a database, make check green, a Critical-tier runbook written.
+NEXT: AUTH-002/T3 (the role gate — requireInvestor/requireAdmin, a read filter that cannot be forgotten) is the frontier: it unblocks SITE-002/T4 (server-enforced chapter split) and INV-002. AUTH-002/T2 (server-side sign-out invalidation) and AUTH-001/T4 (the twenty-locale form) remain. Deferred with a home: accounts.email has no length/whitespace bound the route's 254/trim assumes — ADMIN-001/AUTH-003 must normalise on write (A8).
+
 ## 2026-09-07 · AUTH-001/T1 (+T3 partial) · iter 10
 STATUS: green · TIER: C · OUTCOME: CLOSED
 REASON: —

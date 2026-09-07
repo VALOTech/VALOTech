@@ -97,3 +97,8 @@ desktop.ini
 __pycache__/
 *.pyc
 .playwright-mcp/
+
+# Next.js 16 agentRules generates these on dev/build
+/apps/web/AGENTS.md
+/apps/web/CLAUDE.md
+*.tsbuildinfo

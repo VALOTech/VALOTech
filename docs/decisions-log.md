@@ -27,8 +27,20 @@ An entry is filed the moment the choice surfaces, not when it is answered. Nothi
 - **Options:** **A** Sign it — the cookie is `<token>.<HMAC(SESSION_SECRET, token)>`; rotating `SESSION_SECRET` becomes a real emergency sign-out lever and a tampered cookie fails before it reaches the database · **B** Leave it bare — validity is the `token_hash` lookup alone, `SESSION_SECRET` has no consumer on the session path, and the emergency lever is deleting the session rows (`AUTH-004`'s `session.invalidate_all`).
 - **Recommendation:** **A**. It makes the emergency lever `env.example` and `CRED-001` document real, adds tamper rejection before a database round-trip, and gives `SESSION_SECRET` — a required credential — an actual consumer rather than leaving it orphaned. **B** is simpler but orphans a required credential and turns a documented security lever into a false statement, which is the defect this entry was opened on.
 - **Decision owner:** user
-- **Blocks:** — none — (`AUTH-002/T1` builds the safe default and a resolution to **A** revises it; the tables are unaffected either way)
+- **Blocks:** — none —
+- **Revises:** AUTH-002/T1 — the session cookie ships the bare-token safe default; a resolution to **A** signs the token with `SESSION_SECRET`
 - **Status:** OPEN. Safe default: the store validates by `token_hash` lookup and `SESSION_SECRET` is unused on the session path; `env.example` and `config` name the lever that works today — deleting the session rows — rather than claiming rotation signs sessions out, so no fail-open lever is documented while this waits.
+
+<a id="OPS-DEC-02"></a>
+### `OPS-DEC-02` — Which `X-Forwarded-For` hop is the client, for the sign-in rate limit — OPEN
+
+- **Decision:** The per-address half of the sign-in rate limit (`AUTH-001` §3) keys on the client's network address. Behind Cloudflare and an ALB (`OPS-001` §3) the address arrives in `X-Forwarded-For`, which the client writes the left of and each proxy appends to. Which hop is the real client, and how many rightmost hops are trusted?
+- **Options:** **A** The leftmost hop (as built) — the real client when nothing is bypassed, but forgeable, so an attacker sets any address and slips the per-address counter · **B** The rightmost hop — unforgeable, but it is the ALB's own address, which collapses all traffic onto one key and turns the per-address limit into a lockout of everyone at once · **C** The hop a fixed offset from the right equal to the number of trusted proxies (Cloudflare + ALB is two), which is correct but only once the chain is fixed by the deploy.
+- **Recommendation:** **C**, once `OPS-001` fixes the proxy count; until then **A**, because the per-account counter is the binding protection — an attacker who forges addresses still meets the per-account limit, and the per-address limit is a best-effort second bound.
+- **Decision owner:** user
+- **Blocks:** — none —
+- **Revises:** AUTH-001/T2 — the route's `clientAddress` ships the leftmost-hop safe default; the answer changes which hop it reads
+- **Status:** OPEN. Safe default: the leftmost `X-Forwarded-For` hop, with the trust boundary documented in the route. The per-account limit is unaffected and is the real protection against stuffing one account; the per-address limit is best-effort until the trusted-proxy count is known.
 
 ---
 

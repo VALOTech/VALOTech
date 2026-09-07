@@ -98,6 +98,19 @@ describe('loadConfig', () => {
       expect(() => loadConfig(validEnv({ SESSION_SECRET: 'tooshort' }))).toThrow(/SESSION_SECRET/);
     });
 
+    it('refuses a DATABASE_URL that disables TLS through its own sslmode outside development', () => {
+      expect(() =>
+        loadConfig(
+          validEnv({
+            APP_ENV: 'production',
+            APP_ORIGIN: 'https://valotech.org',
+            DB_SSLMODE: 'require',
+            DATABASE_URL: `postgres://valotech:${DB_SECRET}@db.internal:5432/valotech?sslmode=disable`,
+          }),
+        ),
+      ).toThrow(/DATABASE_URL must not carry sslmode/);
+    });
+
     it("refuses DB_SSLMODE 'disable' outside development", () => {
       expect(() =>
         loadConfig(validEnv({ APP_ENV: 'production', APP_ORIGIN: 'https://valotech.org', DB_SSLMODE: 'disable' })),

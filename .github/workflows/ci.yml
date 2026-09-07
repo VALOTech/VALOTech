@@ -79,6 +79,26 @@ jobs:
     # the mitigation INFRA-DEC-06 rests on, and a guard nothing runs is a guard
     # that has only ever passed. Only when apps/web exists -- guarded by the
     # path check -- so the job is a no-op until the first application code lands.
+    #
+    # A PostgreSQL service runs so the database-touching suites -- the sign-in
+    # route, session issue -- actually execute; without DATABASE_URL they skip
+    # silently, which is how a security test comes to never run.
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: valotech
+          POSTGRES_PASSWORD: valotech
+          POSTGRES_DB: valotech
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U valotech"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgres://valotech:valotech@127.0.0.1:5432/valotech
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
@@ -90,11 +110,12 @@ jobs:
         with:
           node-version-file: .nvmrc
 
-      - name: Install, type-check, and run the schema drift guard
+      - name: Install, migrate, type-check, and run the suite against a database
         if: steps.exists.outputs.app == 'yes'
         working-directory: apps/web
         run: |
           npm ci
+          npm run migrate:up
           npm run typecheck
           npm test
 

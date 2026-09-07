@@ -52,8 +52,11 @@ hides: the row was never fetched.
 
 ### Rotation and invalidation
 
-- **On sign-in** a new session row is written and any cookie already presented is
-  discarded, so a fixed session cannot be planted before the reader signs in.
+- **On sign-in** a new session row is written and the `Set-Cookie` replaces any
+  cookie already presented, so a value planted in the reader's browser before
+  they sign in never becomes their authenticated session. The planted row, if
+  there was one, is left server-side — signing in defeats fixation, it does not
+  revoke a stolen cookie; that is `AUTH-004`'s sign-out or a privilege change.
 - **On a privilege change** — role changed, password changed, account suspended —
   every session for that account is deleted. The change is not complete until
   they are.

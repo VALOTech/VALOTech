@@ -203,6 +203,21 @@ export function loadConfig(source: Source = process.env): Config {
     problems.push(`DB_SSLMODE must not be 'disable' when APP_ENV is ${env}`);
   }
 
+  // `pg` applies an `sslmode` inside the connection string over the ssl option
+  // the pool is built with, so a URL carrying one silently overrides DB_SSLMODE
+  // and the guard above -- a `?sslmode=disable` would send password and session
+  // hashes in the clear while everything here claimed otherwise. Outside
+  // development, refuse a URL whose sslmode does not guarantee TLS; DB_SSLMODE is
+  // the one place the policy is set.
+  if (isProduction && databaseUrl !== '') {
+    const urlSslmode = new URL(databaseUrl).searchParams.get('sslmode');
+    if (urlSslmode !== null && !['require', 'verify-ca', 'verify-full'].includes(urlSslmode)) {
+      problems.push(
+        `DATABASE_URL must not carry sslmode=${urlSslmode} when APP_ENV is ${env}; DB_SSLMODE governs TLS`,
+      );
+    }
+  }
+
   const secretRaw = present(source, 'SESSION_SECRET');
   let sessionSecret = '';
   if (secretRaw === undefined) {

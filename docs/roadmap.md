@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_294 tasks in the plan, 69 closed, 225 outstanding._
+_294 tasks in the plan, 73 closed, 221 outstanding._
 
 ---
 
@@ -27,7 +27,7 @@ _46/48 closed (95%) · 2 outstanding — 0 buildable now · 0 waiting on the own
   - `[!] I18N-001/T4` — Eleven locales read as prose, sentence by sentence, by someone who speaks them  · _external_ · **Blocked by:** pending-external: a native reader for `es`, `pt`, `ru`, `tr`, `id`, `ms`, `tl`, `th`, `ar`, `ja` and `zt`. All eleven pass every mechanical class in…
 
 - **SITE-002** · Public and investor chapter split — 3/4 closed · depth 1
-  - `[!] SITE-002/T4` — The split is enforced by the server rather than by CSS  · _cross-wave-parked_ · **Blocked by:** AUTH-002/T1
+  - `[!] SITE-002/T4` — The split is enforced by the server rather than by CSS  · _cross-wave-parked_ · **Blocked by:** AUTH-002/T3
 
 - **SITE-003** · Chapter sequence — 2/2 closed
 - **SITE-004** · The contact close — 2/2 closed
@@ -35,13 +35,10 @@ _46/48 closed (95%) · 2 outstanding — 0 buildable now · 0 waiting on the own
 
 _Who may read what, and what records that they did. Everything above reads through the gate this wave builds, so a shortcut here is a shortcut in every feature after it. Sign-out precedes invitation deliberately: a session that cannot be ended server-side is a defect that grows with every account created. The scene sits here too, one layer above the page it moves behind._
 
-_23/69 closed (33%) · 46 outstanding — 45 buildable now · 1 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_27/69 closed (39%) · 42 outstanding — 41 buildable now · 1 waiting on the owner · 0 external residue · 0 parked to a later wave._
 
-- **AUTH-001** · Sign-in — 1/5 closed · depth 2
-  - `[~] AUTH-001/T3` — Rate limit per account and per address, with the limit stated in config  · **Note:** apps/web/src/auth/rate-limit.ts is the config-driven sliding-window limiter (in-memory, per INFRA-001's no-Redis stack), key-agnostic and read from c…
-  - `[ ] AUTH-001/T2` — Sign-in route: identical failure for an unknown account and a wrong password
+- **AUTH-001** · Sign-in — 4/5 closed · depth 2
   - `[ ] AUTH-001/T4` — The sign-in form, in twenty languages, keyboard-reachable, with an accessible name on every field
-  - `[ ] AUTH-001/T5` — Regression test: a wrong password and an unknown account are indistinguishable in status, body and timing
 
 - **DATA-003** · Backup and restore — 0/5 closed · depth 2
   - `[ ] DATA-003/T1` — A daily dump, encrypted before it leaves the host, to a target from the environment
@@ -59,8 +56,7 @@ _23/69 closed (33%) · 46 outstanding — 45 buildable now · 1 waiting on the o
   - `[ ] SEC-002/T5` — The admin view: newest first, filterable by actor, subject and action, with no edit or delete control
   - `[!] SEC-002/T4` — Only changed fields are recorded, and no personal data reaches the trail  · _pending-decision_ · **Blocked by:** pending-decision: SEC-DEC-01 — whether a changed field records its name or an allow-listed value is the trail's personal-data policy, and it is the u…
 
-- **AUTH-002** · Session and role gate — 0/4 closed · depth 3
-  - `[ ] AUTH-002/T1` — Session cookie: httpOnly, SameSite=Lax, Secure, rotated on sign-in
+- **AUTH-002** · Session and role gate — 1/4 closed · depth 3
   - `[ ] AUTH-002/T2` — Server-side invalidation, so a stolen cookie dies on sign-out
   - `[ ] AUTH-002/T3` — Role gate at the query, not the template; a helper that cannot be forgotten
   - `[ ] AUTH-002/T4` — Isolation test: an investor request for another investor's deck returns nothing, not a redirect

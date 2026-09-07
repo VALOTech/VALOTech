@@ -51,7 +51,7 @@ PRD: `SITE-002` · Decision: [decisions-log.md#SITE-DEC-01](decisions-log.md#SIT
 - [x] SITE-002/T3 — The navigation names the gated pair only to a signed-in reader
   Evidence: assets/site.css:.nav-gated
 - [!] SITE-002/T4 — The split is enforced by the server rather than by CSS
-  Blocked by: AUTH-002/T1
+  Blocked by: AUTH-002/T3
 
 ## SITE-003 · Chapter sequence
 Design: [docs/designs/site/site-003-chapter-sequence.md](designs/site/site-003-chapter-sequence.md) · PRD: `SITE-003`
@@ -207,16 +207,19 @@ Design: [docs/designs/auth/auth-001-sign-in.md](designs/auth/auth-001-sign-in.md
 
 - [x] AUTH-001/T1 — Password hashing at the current cost, verified against a known vector
   Evidence: apps/web/src/auth/password.ts — Argon2id via the library chosen at docs/decisions-log.md#AUTH-DEC-03, at the OWASP first configuration (19 MiB, two iterations, one lane, version pinned), the cost in one const the sign-in and the invitation share so it cannot diverge. hashPassword, verifyPassword and needsRehash (rehash-on-sign-in when the stored cost is below target). verifyPassword takes a nullable hash and normalises a null or unreadable one to DUMMY_HASH inside the module, so an invited account with no password and a wrong password cost the same argon2 milliseconds and the call site cannot reintroduce a timing oracle (SEC-R03) — deep-review measured the equalisation sound (AUC 0.4881) and the pre-fix short-circuit 300x cheaper. Verified by apps/web/src/auth/password.test.ts (known-answer on the encoding, the non-throwing unreadable path, and a floor proving the null path pays the hash cost).
-- [ ] AUTH-001/T2 — Sign-in route: identical failure for an unknown account and a wrong password
-- [~] AUTH-001/T3 — Rate limit per account and per address, with the limit stated in config
-  Note: apps/web/src/auth/rate-limit.ts is the config-driven sliding-window limiter (in-memory, per INFRA-001's no-Redis stack), key-agnostic and read from config.auth, hardened after the axis review: a refused attempt records nothing (deep-review measured the pre-fix behaviour permanently locking out a client that obeyed its own Retry-After), the clock defaults to monotonic and Retry-After is clamped to the window. The task's own words — per account AND per address — become true when the route (AUTH-001/T2) calls it for both keys; the unbounded key-space is the edge's to cap (OPS-001), noted in the module. Closes with T2.
+- [x] AUTH-001/T2 — Sign-in route: identical failure for an unknown account and a wrong password
+  Evidence: apps/web/src/app/api/auth/sign-in/route.ts — POST verifies a hash on every path (DUMMY_HASH when the account or its password is absent), so an unknown address, a wrong password, a suspended account and an invited one return a byte-identical 401 at the same argon2 cost; 204 with the session cookie on success, 429 before any query when limited, 403 for a cross-origin POST (login CSRF), 400 for a malformed body. Verified against PostgreSQL 17.11 and mutation-proved (seven of seven mutants) by apps/web/src/app/api/auth/sign-in/route.test.ts.
+- [x] AUTH-001/T3 — Rate limit per account and per address, with the limit stated in config
+  Evidence: apps/web/src/app/api/auth/sign-in/route.ts — the route calls the config-driven limiter (apps/web/src/auth/rate-limit.ts) for the account key and the address key before any query, and refuses with 429 and the larger of the two Retry-Afters when either is over the limit; the address key is length-bounded so an over-long X-Forwarded-For cannot mint unbounded counters, and which forwarded hop is the client is docs/decisions-log.md#OPS-DEC-02. Verified against PostgreSQL 17.11 that spraying one account from many addresses hits the account limit and one address across many accounts hits the address limit (apps/web/src/app/api/auth/sign-in/route.test.ts).
 - [ ] AUTH-001/T4 — The sign-in form, in twenty languages, keyboard-reachable, with an accessible name on every field
-- [ ] AUTH-001/T5 — Regression test: a wrong password and an unknown account are indistinguishable in status, body and timing
+- [x] AUTH-001/T5 — Regression test: a wrong password and an unknown account are indistinguishable in status, body and timing
+  Evidence: apps/web/src/app/api/auth/sign-in/route.test.ts — the four failing states (unknown, wrong password, suspended, invited) return an identical 401 in status and body, and each is held above an argon2 timing floor derived from a warmed reference verification, so a short circuit on any path fails the test; a 429 is proved never to touch the database. Mutation-proved seven of seven against PostgreSQL 17.11.
 
 ## AUTH-002 · Session and role gate
 Design: [docs/designs/auth/auth-002-session-and-role-gate.md](designs/auth/auth-002-session-and-role-gate.md) · PRD: `AUTH-002`, `SEC-R02`, `DATA-R05`
 
-- [ ] AUTH-002/T1 — Session cookie: httpOnly, SameSite=Lax, Secure, rotated on sign-in
+- [x] AUTH-002/T1 — Session cookie: httpOnly, SameSite=Lax, Secure, rotated on sign-in
+  Evidence: apps/web/src/auth/session.ts — issue() writes a fresh sessions row storing sha256 of a 32-byte CSPRNG token (never the token) and returns the cookie: `__Host-valotech` outside development and `valotech` in it, HttpOnly, SameSite=Lax, Secure outside development, Path=/, Max-Age from SESSION_TTL_SECONDS; a fresh row per call is the rotation that keeps a planted cookie from becoming a session. Verified against PostgreSQL 17.11 (row token_hash equals sha256 of the cookie and not the raw token); apps/web/src/auth/session.test.ts pins the production __Host- cookie's Secure and Path attributes, which the route suite under development cannot reach. The bare-token vs signed cookie is docs/decisions-log.md#AUTH-DEC-02.
 - [ ] AUTH-002/T2 — Server-side invalidation, so a stolen cookie dies on sign-out
 - [ ] AUTH-002/T3 — Role gate at the query, not the template; a helper that cannot be forgotten
 - [ ] AUTH-002/T4 — Isolation test: an investor request for another investor's deck returns nothing, not a redirect
