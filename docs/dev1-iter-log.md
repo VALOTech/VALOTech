@@ -21,6 +21,12 @@ than noticed.
 
 ---
 
+## 2026-09-07 · SEC-002/T1,T3 (2 tasks) · iter 15
+STATUS: green · TIER: S · OUTCOME: CLOSED
+REASON: —
+WHAT CHANGED: the audit trail's writer, and the proof its append-only guarantee holds. apps/web/src/audit/record.ts:recordAudit inserts one audit row and takes a Transaction<Database>, never the pool -- a Transaction is not assignable from a Kysely, so SEC-R04's "same transaction as the write it records" is enforced by the compiler rather than by the caller's care; it catches no error, so a refused insert rolls the caller's write back with it, and before/after are written null until SEC-DEC-01 settles which fields each action may record (T4). The table, the fifteen-action closed vocabulary, and both append-only triggers were already in migrations/1788752441424_platform.sql under DATA-001; apps/web/src/audit/audit.test.ts now proves the enforcement behaviorally -- UPDATE, DELETE and TRUNCATE on a written row each refused, an unknown action refused by the database, a backdated at overwritten by the clock -- so T1 closes on the migration plus that test. T2 (the deploy REVOKE) is reclassified pending-external: it is the operator's grant, documented at operator-checklist.md#AUDIT-GRANT, with the trigger enforcing the same property meanwhile. Verified against PostgreSQL 17.11: 231 app tests, recordAudit's no-discard and same-transaction properties each mutation-proved (a swallowed error and a pool write each redden a test), make check green (85 closed).
+NEXT: SEC-002/T4 (which fields each action records) stays blocked on SEC-DEC-01; SEC-002/T5 (the admin view) waits on ADMIN-002/T1, the /admin shell. The natural next Critical iter wires the real audit callers, each in its own transaction: ADMIN-001 (account.create, suspend, delete, role_change; grant.add, grant.remove) and the session.invalidate_all that AUTH-004/T3 deferred -- recordAudit is the one function all of them now call. Frontier past SEC-002: AUTH-003 (invitation acceptance, 7 tasks, the next clean W1 auth), AUTH-002/T4 (the deck-isolation test), and the depth-4 ADMIN-002 and CMS-001 shells.
+
 ## 2026-09-07 · AUTH-004/T1,T3,T5 + AUTH-002/T2 (4 tasks) · iter 14
 STATUS: green · TIER: C · OUTCOME: CLOSED
 REASON: —
