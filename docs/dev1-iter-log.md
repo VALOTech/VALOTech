@@ -21,6 +21,15 @@ than noticed.
 
 ---
 
+## 2026-09-07 · AUTH-001/T1 (+T3 partial) · iter 10
+STATUS: green · TIER: C · OUTCOME: CLOSED
+REASON: —
+WHAT CHANGED: sign-in's two foundations. apps/web/src/auth/password.ts is Argon2id (AUTH-DEC-03 chose @node-rs/argon2, prebuilt, verified to install and to produce the OWASP params) in one const the sign-in and the invitation share; apps/web/src/auth/rate-limit.ts is the config-driven in-memory sliding-window limiter. critical-impl built both and mutation-proved them (19/19). deep-review then measured two P1 defects a green suite and a mutation run structurally cannot reach, because both are properties of time, not return values — and both are fixed and regression-tested:
+  - the limiter recorded a refused attempt, so a client obeying its own Retry-After refilled the sliding window and was locked out forever (measured: any retry <=179s held the only door shut permanently). Now a refusal records nothing; a new test drives an obedient client and proves it clears.
+  - accounts.password_hash is nullable (an invited account), a fourth sign-in state with no equalised path, and verifyPassword's string signature funnelled the route into `?? ''`, whose empty-hash short-circuit returned in 0.095ms against 28.8ms for a real hash — a 300x membership-and-state oracle. verifyPassword now takes string|null and normalises a null or unreadable hash to DUMMY_HASH inside the module, so the call site cannot reintroduce it; a floor test proves the null path pays the argon2 cost.
+  Also fixed: the limiter defaults to a monotonic clock and clamps Retry-After to the window (a stepped wall clock emitted a wait longer than a window); the argon2 version is pinned so a library default change cannot make every hash rehash forever. Deferred, documented in the module: the limiter's key-space is unbounded (deep-review measured ~448 MiB at 1M keys and an O(n) sweep on the request path) — capping it is the edge's job (OPS-001 rate-limits per address first), and this limiter is the second layer. make check and make check-app green (137 tests).
+NEXT: AUTH-001/T2 (the sign-in route) and T5 (its timing regression) pair with AUTH-002/T1 (issue()), because the route verifies the password then hands off to AUTH-002 to write a session and set the cookie — the success path needs the session store. That batch calls getRateLimiter().hit() for the account and the address keys (closing T3's per-account-and-per-address), verifies against the hash or DUMMY_HASH, and rehashes at the current cost while the plaintext is in hand. T4 (the twenty-locale form) is a later frontend iter. ⭐ I batched T1+T3 expecting both to close; T3 is route-coupled and could only advance to [~].
+
 ## 2026-09-07 · DATA-001/T3 + DATA-001/T13 (2 tasks) · iter 9
 STATUS: green · TIER: C · OUTCOME: CLOSED
 REASON: —

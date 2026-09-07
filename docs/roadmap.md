@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_294 tasks in the plan, 68 closed, 226 outstanding._
+_294 tasks in the plan, 69 closed, 225 outstanding._
 
 ---
 
@@ -35,12 +35,11 @@ _46/48 closed (95%) · 2 outstanding — 0 buildable now · 0 waiting on the own
 
 _Who may read what, and what records that they did. Everything above reads through the gate this wave builds, so a shortcut here is a shortcut in every feature after it. Sign-out precedes invitation deliberately: a session that cannot be ended server-side is a defect that grows with every account created. The scene sits here too, one layer above the page it moves behind._
 
-_22/69 closed (31%) · 47 outstanding — 46 buildable now · 1 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_23/69 closed (33%) · 46 outstanding — 45 buildable now · 1 waiting on the owner · 0 external residue · 0 parked to a later wave._
 
-- **AUTH-001** · Sign-in — 0/5 closed · depth 2
-  - `[ ] AUTH-001/T1` — Password hashing at the current cost, verified against a known vector
+- **AUTH-001** · Sign-in — 1/5 closed · depth 2
+  - `[~] AUTH-001/T3` — Rate limit per account and per address, with the limit stated in config  · **Note:** apps/web/src/auth/rate-limit.ts is the config-driven sliding-window limiter (in-memory, per INFRA-001's no-Redis stack), key-agnostic and read from c…
   - `[ ] AUTH-001/T2` — Sign-in route: identical failure for an unknown account and a wrong password
-  - `[ ] AUTH-001/T3` — Rate limit per account and per address, with the limit stated in config
   - `[ ] AUTH-001/T4` — The sign-in form, in twenty languages, keyboard-reachable, with an accessible name on every field
   - `[ ] AUTH-001/T5` — Regression test: a wrong password and an unknown account are indistinguishable in status, body and timing
 

@@ -13,6 +13,7 @@
     "migrate:roundtrip": "node scripts/migrate-roundtrip.mjs"
   },
   "dependencies": {
+    "@node-rs/argon2": "^2.0.2",
     "kysely": "0.29.5",
     "next": "16.3.4",
     "node-pg-migrate": "9.0.0",

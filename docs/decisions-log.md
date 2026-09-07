@@ -34,6 +34,17 @@ An entry is filed the moment the choice surfaces, not when it is answered. Nothi
 
 ## Resolved decisions
 
+<a id="AUTH-DEC-03"></a>
+### `AUTH-DEC-03` — The Argon2id implementation library — RESOLVED 2026-09-07 · loop-settled
+
+- **Decision:** `AUTH-001` §3 mandates Argon2id (memory 19 MiB, iterations 2, parallelism 1); Node ships no Argon2id, so a library is needed. Which?
+- **Options:** **A** `@node-rs/argon2` — Rust via napi-rs, prebuilt binaries · **B** `argon2` (node-argon2) — a C binding built at install by node-gyp · **C** `hash-wasm` — pure WebAssembly, no native code.
+- **Decision owner:** user — settled by the loop under §1.11, reversible at any time
+- **Settled by:** loop
+- **Forcing source:** MEASUREMENT — `npm install @node-rs/argon2@2.0.2` on this Node 24 Windows box reported `added 2 packages` with no node-gyp step, and a round-trip produced `$argon2id$v=19$m=19456,t=2,p=1$…` and verified a correct password true and a wrong one false. **B** needs a C toolchain at install, which this box and a slim CI image may lack; **C** is portable but slower, with no offsetting benefit at a handful of sign-ins. **A** installs prebuilt on win32-x64 and linux-x64 — dev and the AWS deploy. Option **C**'s strongest case is zero native code in the tree; it loses only because **A** ships no build step here either, so portability does not separate them, and **A** is the faster of the two.
+- **Overturned by:** `@node-rs/argon2` dropping a prebuilt binary for a target this deploys to, or the hashing moving off Node — at which point the algorithm and parameters (fixed by `AUTH-001`) move to another library unchanged.
+- **Status:** RESOLVED 2026-09-07 — **A**. `@node-rs/argon2` is a dependency of `apps/web`; the hashing lives in one module both `AUTH-001` and `AUTH-003` call, so the parameters cannot diverge between sign-in and invitation.
+
 <a id="AUTH-DEC-01"></a>
 ### `AUTH-DEC-01` — The session store: the auth library's, or the schema's own — RESOLVED 2026-09-07 · loop-settled
 

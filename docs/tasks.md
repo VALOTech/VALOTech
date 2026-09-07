@@ -205,9 +205,11 @@ Design: [docs/designs/data/data-001-schema-and-migrations.md](designs/data/data-
 ## AUTH-001 · Sign-in
 Design: [docs/designs/auth/auth-001-sign-in.md](designs/auth/auth-001-sign-in.md) · PRD: `AUTH-001`, `SEC-R01`, `SEC-R03`
 
-- [ ] AUTH-001/T1 — Password hashing at the current cost, verified against a known vector
+- [x] AUTH-001/T1 — Password hashing at the current cost, verified against a known vector
+  Evidence: apps/web/src/auth/password.ts — Argon2id via the library chosen at docs/decisions-log.md#AUTH-DEC-03, at the OWASP first configuration (19 MiB, two iterations, one lane, version pinned), the cost in one const the sign-in and the invitation share so it cannot diverge. hashPassword, verifyPassword and needsRehash (rehash-on-sign-in when the stored cost is below target). verifyPassword takes a nullable hash and normalises a null or unreadable one to DUMMY_HASH inside the module, so an invited account with no password and a wrong password cost the same argon2 milliseconds and the call site cannot reintroduce a timing oracle (SEC-R03) — deep-review measured the equalisation sound (AUC 0.4881) and the pre-fix short-circuit 300x cheaper. Verified by apps/web/src/auth/password.test.ts (known-answer on the encoding, the non-throwing unreadable path, and a floor proving the null path pays the hash cost).
 - [ ] AUTH-001/T2 — Sign-in route: identical failure for an unknown account and a wrong password
-- [ ] AUTH-001/T3 — Rate limit per account and per address, with the limit stated in config
+- [~] AUTH-001/T3 — Rate limit per account and per address, with the limit stated in config
+  Note: apps/web/src/auth/rate-limit.ts is the config-driven sliding-window limiter (in-memory, per INFRA-001's no-Redis stack), key-agnostic and read from config.auth, hardened after the axis review: a refused attempt records nothing (deep-review measured the pre-fix behaviour permanently locking out a client that obeyed its own Retry-After), the clock defaults to monotonic and Retry-After is clamped to the window. The task's own words — per account AND per address — become true when the route (AUTH-001/T2) calls it for both keys; the unbounded key-space is the edge's to cap (OPS-001), noted in the module. Closes with T2.
 - [ ] AUTH-001/T4 — The sign-in form, in twenty languages, keyboard-reachable, with an accessible name on every field
 - [ ] AUTH-001/T5 — Regression test: a wrong password and an unknown account are indistinguishable in status, body and timing
 
