@@ -10,22 +10,20 @@ An entry is filed the moment the choice surfaces, not when it is answered. Nothi
 
 ## Open decisions
 
-<a id="INFRA-DEC-06"></a>
-### `INFRA-DEC-06` — The application's data stack: migration tool, query layer, test runner — OPEN
-
-- **Decision:** `INFRA-DEC-01` settled Next.js + App Router + route handlers + PostgreSQL + Auth.js. Three foundational pieces it did not name have to be chosen before a single migration or query is written, because everything in `DATA-001` and above is built on them and they are first-of-class here — nothing in the repository establishes them yet. `DATA-001/T1` is literally "choose and wire the migration tool," and the query layer and test runner travel with it. `DATA-001`'s design fixes the shape they must fit: **the migration is the source of truth for the schema, no ORM generates it, and the types are written against it** — so an ORM that owns the schema in TypeScript is out of scope by design, not by preference.
-- **Options:**
-  - **A** — `node-pg-migrate` (SQL/JS up+down migrations) · **Kysely** (a type-safe query builder written *against* the migrated schema, not owning it) · **Vitest** for unit/integration + the already-vendored **Playwright** for end-to-end.
-  - **B** — plain `.sql` migration files with a tiny in-repo runner · the raw `pg` driver with hand-written row types · Vitest + Playwright. The most minimal, the fewest dependencies, and the most hand-maintained boilerplate — every query is a string and every type is kept in step by hand.
-  - **C** — **Drizzle ORM** with `drizzle-kit` migrations · Vitest + Playwright. Fewest moving parts and good ergonomics, but Drizzle defines the schema in TypeScript and generates the migration from it, which **inverts** `DATA-001`'s rule that the migration is the source of truth. Choosing it means amending that design.
-- **Recommendation:** **A.** Kysely is the query layer `DATA-001` already describes without naming — "the migration is the source of truth and the types are written against it" is Kysely's exact model: it owns no schema, it is a typed surface over the one the migrations built, and every query is checked against those types at compile time. `node-pg-migrate` gives real up-and-down SQL migrations, which `DATA-R06` requires be *run*, not merely written. **B** is the honest fallback if the owner would rather carry no query-layer dependency at all, at the cost of hand-maintained types that drift from the schema silently. **C** is rejected on the merits: it is the most comfortable to write and it contradicts the one principle `DATA-001` is built on, and a data layer whose schema lives in two places — the migration and the TypeScript — is the drift this product's designs work hardest to prevent.
-- **Decision owner:** user
-- **Blocks:** `DATA-001/T1`, `INFRA-001/T3`
-- **Status:** OPEN. Safe default: nothing is scaffolded and no dependency is added. The gateway keeps serving from `main`, and the application build waits here rather than committing the whole codebase to a stack picked in passing.
+— none —
 
 ---
 
 ## Resolved decisions
+
+<a id="INFRA-DEC-06"></a>
+### `INFRA-DEC-06` — The application's data stack: migration tool, query layer, test runner — RESOLVED 2026-09-07
+
+- **Decision:** `INFRA-DEC-01` settled Next.js + App Router + PostgreSQL + Auth.js but not the three foundational pieces everything in `DATA-001` and above is built on: the migration tool, the query layer, and the test runner. `DATA-001`'s design fixes the shape they must fit — the migration is the source of truth for the schema, no ORM generates it, and the types are written against it.
+- **Options:** **A** node-pg-migrate + Kysely + Vitest/Playwright · **B** plain `.sql` + a custom runner + raw `pg` + hand-written types · **C** Drizzle ORM + drizzle-kit.
+- **Decision owner:** user
+- **Settled by:** user
+- **Status:** RESOLVED 2026-09-07 — **A**. `node-pg-migrate` gives real up-and-down SQL migrations, which `DATA-R06` requires be run rather than written. **Kysely** is the query layer `DATA-001` already describes without naming: it owns no schema, it is a typed surface over the one the migrations built, and every query is checked at compile time against types written against that schema. **Vitest** for unit and integration, **Playwright** (already vendored for the gateway) for end to end. **C** was rejected on the merits — it defines the schema in TypeScript and inverts the one principle the data layer is built on — and **B** was the fallback if no query-layer dependency were wanted, at the cost of hand-maintained types that drift from the schema silently. The consequence: the app is scaffolded on this set, and `DATA-001`'s migrations are node-pg-migrate SQL with the types under a hand-written Kysely schema kept in step by `DATA-001/T10`'s round-trip.
 
 <a id="INFRA-DEC-03"></a>
 ### `INFRA-DEC-03` — Where the application runs, and how valotech.org reaches it — RESOLVED 2026-09-07

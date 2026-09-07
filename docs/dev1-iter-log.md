@@ -25,7 +25,7 @@ than noticed.
 STATUS: green · TIER: S · OUTCOME: CLOSED
 REASON: —
 WHAT CHANGED: INFRA-001/T1 closed — brought the compose stack up (PostgreSQL 17.11, health `healthy` at t+16s, host 5434, named volume), verified by running rather than asserting, then `make infra-reset` with no residue. The application build past this is gated on a first-of-class stack choice — migration tool + query layer + test runner — so filed `INFRA-DEC-06` OPEN and blocked `DATA-001/T1-12` and `INFRA-001/T3-5` on it. Fixed `check-evidence-citation` reading a task code (`INFRA-001/T3`) as a file path (mutation-proved it still catches a real broken path).
-NEXT: `INFRA-DEC-06` is asked. Until the owner answers, every W0 build task is gated on the stack, so this is a controlled wait on the owner, not a re-firing loop — it resumes when the answer lands.
+NEXT: `INFRA-DEC-06` answered — **A** (node-pg-migrate + Kysely + Vitest/Playwright). Frontier reopened: `DATA-001/T1` is buildable. Next iteration scaffolds the Next.js app on that stack and wires the migration tool — Critical-tier (infra + schema), via `critical-impl` + `deep-review`.
 
 ## 2026-09-07 · go-live prep · iter 2
 STATUS: green · TIER: S · OUTCOME: CLOSED

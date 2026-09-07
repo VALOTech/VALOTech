@@ -16,11 +16,11 @@ _293 tasks in the plan, 46 closed, 247 outstanding._
 
 _What nothing else stands on. The page that already serves and its cross-cutting layers are here because nothing depends on them; the local stack, the schema and credential handling are here because everything does. This wave is finished when a developer brings the stack up with one command and a migration has been applied and rolled back — not written, run, because a rollback nobody has executed is not a rollback._
 
-_24/47 closed (51%) · 23 outstanding — 20 buildable now · 1 waiting on the owner · 1 external residue · 1 parked to a later wave._
+_24/47 closed (51%) · 23 outstanding — 21 buildable now · 0 waiting on the owner · 1 external residue · 1 parked to a later wave._
 
 - **INFRA-001** · Local development stack — 1/5 closed · depth 0
   - `[~] INFRA-001/T2` — `env.example` names every variable the application reads, with what its absence means  · **Note:** written and complete for the variables the designs name — app, database, session, rate limit — each with whether it is required and what a missing on…
-  - `[!] INFRA-001/T3` — Make targets for up, down, reset, and the three migration commands  · _pending-decision_ · **Blocked by:** pending-decision: `INFRA-DEC-06` — [decisions-log.md#INFRA-DEC-06](decisions-log.md#INFRA-DEC-06). up/down/reset exist; the three migration commands…
+  - `[!] INFRA-001/T3` — Make targets for up, down, reset, and the three migration commands  · _in-graph_ · **Blocked by:** DATA-001/T1 — up/down/reset exist; the three migration commands call node-pg-migrate, which `DATA-001/T1` wires.
   - `[!] INFRA-001/T4` — `make migrate-roundtrip` applies, rolls back and re-applies against a throwaway database  · _in-graph_ · **Blocked by:** INFRA-001/T3 — the round-trip runs the migrate commands T3 wires.
   - `[!] INFRA-001/T5` — A first-run path that works from a fresh clone with no prior state  · _in-graph_ · **Blocked by:** INFRA-001/T3 — a first run applies the migrations, which T3 wires.
 
@@ -34,7 +34,7 @@ _24/47 closed (51%) · 23 outstanding — 20 buildable now · 1 waiting on the o
   - `[ ] CRED-001/T5` — `credentials/README.md` says what the owner sets, and the local input form writes `.env` without the value crossing a c…
 
 - **DATA-001** · Schema and migrations — 0/12 closed · depth 1
-  - `[!] DATA-001/T1` — Choose and wire the migration tool; one command applies and one rolls back  · _in-graph_ · **Blocked by:** DATA-001/T1 — writes a migration in the form the chosen tool takes, so it cannot begin until the tool is wired.
+  - `[ ] DATA-001/T1` — Choose and wire the migration tool; one command applies and one rolls back
   - `[!] DATA-001/T2` — Accounts table: identity, role, state, created and updated  · _in-graph_ · **Blocked by:** DATA-001/T1 — writes a migration in the form the chosen tool takes, so it cannot begin until the tool is wired.
   - `[!] DATA-001/T3` — Sessions table, or the session store the auth library needs  · _in-graph_ · **Blocked by:** DATA-001/T1 — writes a migration in the form the chosen tool takes, so it cannot begin until the tool is wired.
   - `[!] DATA-001/T4` — Content items and their revisions, with the published revision named by a pointer  · _in-graph_ · **Blocked by:** DATA-001/T1 — writes a migration in the form the chosen tool takes, so it cannot begin until the tool is wired.
