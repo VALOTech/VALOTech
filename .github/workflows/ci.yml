@@ -70,6 +70,34 @@ jobs:
         if: github.ref != 'refs/heads/main'
         run: make check
 
+  app:
+    name: Application
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    # The drift guard between the migration and the hand-written Kysely types
+    # (apps/web/src/db/db.test.ts) is run here and nowhere else automated: it is
+    # the mitigation INFRA-DEC-06 rests on, and a guard nothing runs is a guard
+    # that has only ever passed. Only when apps/web exists -- guarded by the
+    # path check -- so the job is a no-op until the first application code lands.
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - id: exists
+        run: echo "app=$(test -f apps/web/package.json && echo yes || echo no)" >> "$GITHUB_OUTPUT"
+
+      - if: steps.exists.outputs.app == 'yes'
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: Install, type-check, and run the schema drift guard
+        if: steps.exists.outputs.app == 'yes'
+        working-directory: apps/web
+        run: |
+          npm ci
+          npm run typecheck
+          npm test
+
   secrets:
     name: Secret scan
     runs-on: ubuntu-latest

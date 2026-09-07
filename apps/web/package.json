@@ -1,0 +1,34 @@
+{
+  "name": "valotech-web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --port 3100",
+    "build": "next build",
+    "start": "next start --port 3100",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "migrate:up": "node-pg-migrate up --migrations-dir migrations --migrations-table pgmigrations",
+    "migrate:down": "node-pg-migrate down 1 --migrations-dir migrations --migrations-table pgmigrations",
+    "migrate:roundtrip": "node scripts/migrate-roundtrip.mjs"
+  },
+  "dependencies": {
+    "kysely": "0.29.5",
+    "next": "16.3.4",
+    "node-pg-migrate": "9.0.0",
+    "pg": "8.23.0",
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
+  },
+  "devDependencies": {
+    "@types/node": "24.13.3",
+    "@types/pg": "8.23.1",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.7",
+    "typescript": "6.0.3",
+    "vitest": "4.1.11"
+  },
+  "engines": {
+    "node": ">=24"
+  }
+}

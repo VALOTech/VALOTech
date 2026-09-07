@@ -17,6 +17,13 @@ paths = [
   '''assets/scene/three\.module\.min\.js''',
   # Binary assets: fonts, textures, icons, flags.
   '''assets/(fonts|textures|icons|flags)/.*''',
-  # The example environment names variables and never carries a value.
-  '''env\.example''',
+]
+
+# A content allow, not a path allow: env.example carries one development-local
+# literal — the throwaway valotech:valotech on the loopback — and allowing the
+# whole file by path would exempt a real credential pasted into the one file
+# developers paste connection strings into. This clears that exact string
+# wherever it appears; any other secret in env.example still trips.
+regexes = [
+  '''postgres://valotech:valotech@127\.0\.0\.1:5434/valotech''',
 ]

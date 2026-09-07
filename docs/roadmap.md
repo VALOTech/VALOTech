@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_293 tasks in the plan, 46 closed, 247 outstanding._
+_293 tasks in the plan, 50 closed, 243 outstanding._
 
 ---
 
@@ -16,13 +16,11 @@ _293 tasks in the plan, 46 closed, 247 outstanding._
 
 _What nothing else stands on. The page that already serves and its cross-cutting layers are here because nothing depends on them; the local stack, the schema and credential handling are here because everything does. This wave is finished when a developer brings the stack up with one command and a migration has been applied and rolled back — not written, run, because a rollback nobody has executed is not a rollback._
 
-_24/47 closed (51%) · 23 outstanding — 21 buildable now · 0 waiting on the owner · 1 external residue · 1 parked to a later wave._
+_28/47 closed (59%) · 19 outstanding — 17 buildable now · 0 waiting on the owner · 1 external residue · 1 parked to a later wave._
 
-- **INFRA-001** · Local development stack — 1/5 closed · depth 0
+- **INFRA-001** · Local development stack — 3/5 closed · depth 0
   - `[~] INFRA-001/T2` — `env.example` names every variable the application reads, with what its absence means  · **Note:** written and complete for the variables the designs name — app, database, session, rate limit — each with whether it is required and what a missing on…
-  - `[!] INFRA-001/T3` — Make targets for up, down, reset, and the three migration commands  · _in-graph_ · **Blocked by:** DATA-001/T1 — up/down/reset exist; the three migration commands call node-pg-migrate, which `DATA-001/T1` wires.
-  - `[!] INFRA-001/T4` — `make migrate-roundtrip` applies, rolls back and re-applies against a throwaway database  · _in-graph_ · **Blocked by:** INFRA-001/T3 — the round-trip runs the migrate commands T3 wires.
-  - `[!] INFRA-001/T5` — A first-run path that works from a fresh clone with no prior state  · _in-graph_ · **Blocked by:** INFRA-001/T3 — a first run applies the migrations, which T3 wires.
+  - `[ ] INFRA-001/T5` — A first-run path that works from a fresh clone with no prior state
 
 - **SITE-001** · The gateway page — 8/8 closed
 - **A11Y-001** · Accessibility baseline — 5/5 closed
@@ -33,19 +31,17 @@ _24/47 closed (51%) · 23 outstanding — 21 buildable now · 0 waiting on the o
   - `[ ] CRED-001/T4` — A credential never reaches a log, an error message or a response, including through generic serialisation
   - `[ ] CRED-001/T5` — `credentials/README.md` says what the owner sets, and the local input form writes `.env` without the value crossing a c…
 
-- **DATA-001** · Schema and migrations — 0/12 closed · depth 1
-  - `[ ] DATA-001/T1` — Choose and wire the migration tool; one command applies and one rolls back
-  - `[!] DATA-001/T2` — Accounts table: identity, role, state, created and updated  · _in-graph_ · **Blocked by:** DATA-001/T1 — writes a migration in the form the chosen tool takes, so it cannot begin until the tool is wired.
-  - `[!] DATA-001/T3` — Sessions table, or the session store the auth library needs  · _in-graph_ · **Blocked by:** DATA-001/T1 — writes a migration in the form the chosen tool takes, so it cannot begin until the tool is wired.
-  - `[!] DATA-001/T4` — Content items and their revisions, with the published revision named by a pointer  · _in-graph_ · **Blocked by:** DATA-001/T1 — writes a migration in the form the chosen tool takes, so it cannot begin until the tool is wired.
-  - `[!] DATA-001/T5` — Content grants and the audience constraint  · _in-graph_ · **Blocked by:** DATA-001/T1 — writes a migration in the form the chosen tool takes, so it cannot begin until the tool is wired.
-  - `[!] DATA-001/T6` — Locale rows carrying a review state a query can filter on  · _in-graph_ · **Blocked by:** DATA-001/T1 — writes a migration in the form the chosen tool takes, so it cannot begin until the tool is wired.
-  - `[!] DATA-001/T7` — Mail log and unsubscribe state  · _in-graph_ · **Blocked by:** DATA-001/T1 — writes a migration in the form the chosen tool takes, so it cannot begin until the tool is wired.
-  - `[!] DATA-001/T8` — Audit table, append-only, with a database-level guard against update and delete  · _in-graph_ · **Blocked by:** DATA-001/T1 — writes a migration in the form the chosen tool takes, so it cannot begin until the tool is wired.
-  - `[!] DATA-001/T9` — Configuration table with a recorded prior value  · _in-graph_ · **Blocked by:** DATA-001/T1 — writes a migration in the form the chosen tool takes, so it cannot begin until the tool is wired.
-  - `[!] DATA-001/T10` — Every migration has a down-migration that has been run  · _in-graph_ · **Blocked by:** DATA-001/T1 — writes a migration in the form the chosen tool takes, so it cannot begin until the tool is wired.
-  - `[!] DATA-001/T11` — Media and its references, with the audience reached by join  · _in-graph_ · **Blocked by:** DATA-001/T1 — writes a migration in the form the chosen tool takes, so it cannot begin until the tool is wired.
-  - `[!] DATA-001/T12` — The portfolio state table  · _in-graph_ · **Blocked by:** DATA-001/T1 — writes a migration in the form the chosen tool takes, so it cannot begin until the tool is wired.
+- **DATA-001** · Schema and migrations — 2/12 closed · depth 1
+  - `[ ] DATA-001/T3` — Sessions table, or the session store the auth library needs
+  - `[ ] DATA-001/T4` — Content items and their revisions, with the published revision named by a pointer
+  - `[ ] DATA-001/T5` — Content grants and the audience constraint
+  - `[ ] DATA-001/T6` — Locale rows carrying a review state a query can filter on
+  - `[ ] DATA-001/T7` — Mail log and unsubscribe state
+  - `[ ] DATA-001/T8` — Audit table, append-only, with a database-level guard against update and delete
+  - `[ ] DATA-001/T9` — Configuration table with a recorded prior value
+  - `[ ] DATA-001/T10` — Every migration has a down-migration that has been run
+  - `[ ] DATA-001/T11` — Media and its references, with the audience reached by join
+  - `[ ] DATA-001/T12` — The portfolio state table
 
 - **I18N-001** · Twenty-locale runtime dictionary — 3/4 closed · depth 1
   - `[!] I18N-001/T4` — Eleven locales read as prose, sentence by sentence, by someone who speaks them  · _external_ · **Blocked by:** pending-external: a native reader for `es`, `pt`, `ru`, `tr`, `id`, `ms`, `tl`, `th`, `ar`, `ja` and `zt`. All eleven pass every mechanical class in…

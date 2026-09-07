@@ -21,6 +21,12 @@ than noticed.
 
 ---
 
+## 2026-09-07 · DATA-001/T1-T2 + INFRA-001/T3-T4 (4 tasks) · iter 4
+STATUS: green · TIER: C · OUTCOME: CLOSED
+REASON: —
+WHAT CHANGED: the greenfield application scaffold. apps/web is a Next.js 16 + node-pg-migrate + Kysely + Vitest project (INFRA-DEC-06); the accounts table migration matches DATA-001 and carries an `updated_at` trigger; a drift guard holds the hand-written Kysely types to the migration column by column (mutation-proved). `make migrate`/`migrate-down`/`migrate-roundtrip` wired, the round-trip on a throwaway scratch database. critical-impl authored the scaffold, deep-review returned it red, and its findings were fixed: the round-trip no longer drops the developer's data (F1), the premature unscoped Kysely connection was dropped to land with the first query (F2/F5/F12), the drift guard now catches type/nullability/default/uniqueness drift and no longer trips on a legitimate constraint (F3/F13), a CI job runs it (F4), the register names the real guard (F11), gitleaks stops blanket-allowing env.example (F10), and the citext privilege is on the operator checklist (F15). Verified by running: npm install/typecheck/test on Node 24, and the migration round-trip against PostgreSQL 17.11.
+NEXT: DATA-001/T3-T12 (sessions, content, grants, audit, ...) and INFRA-001/T5 are unblocked — the tool is wired, each is a migration in the established form. The next iteration writes the next tables.
+
 ## 2026-09-07 · INFRA-001/T1 (1 task) · iter 3
 STATUS: green · TIER: S · OUTCOME: CLOSED
 REASON: —

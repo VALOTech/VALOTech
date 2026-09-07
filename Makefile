@@ -90,6 +90,11 @@ check-refs: ## Every cited path exists, and env.example is the catalogue it clai
 	@$(PYTHON) scripts/check-doc-paths.py
 	@$(PYTHON) scripts/check-env-catalogue.py
 
+.PHONY: check-app
+check-app: ## The application type-checks and its drift guard passes (needs apps/web deps installed)
+	@test -d apps/web/node_modules || { echo "check-app: run 'cd apps/web && npm install' first"; exit 1; }
+	@cd apps/web && npm run typecheck && npm test
+
 .PHONY: check-log
 check-log: ## The iteration log stays inside its bound
 	@$(PYTHON) scripts/check-log-retention.py
@@ -137,6 +142,29 @@ infra-down: ## Stop the stack, keeping its data
 .PHONY: infra-reset
 infra-reset: ## Stop the stack and delete its data
 	@docker compose down -v
+
+# --- Migrations -----------------------------------------------------------
+# The tool is node-pg-migrate, wired in apps/web (decisions-log.md#INFRA-DEC-06).
+# DATABASE_URL must be set: a migration with no target is refused rather than
+# guessed at, and the target is printed before connecting so a wrong port
+# announces itself instead of arriving disguised as an authentication error.
+
+.PHONY: migrate
+migrate: ## Apply pending migrations
+	@test -n "$(DATABASE_URL)" || { echo "migrate: DATABASE_URL is not set"; exit 1; }
+	@$(NODE) -e "const u=new URL(process.env.DATABASE_URL);console.log('migrate: '+u.host+u.pathname+' as '+u.username)"
+	@cd apps/web && npm run migrate:up
+
+.PHONY: migrate-down
+migrate-down: ## Roll back the last migration
+	@test -n "$(DATABASE_URL)" || { echo "migrate-down: DATABASE_URL is not set"; exit 1; }
+	@$(NODE) -e "const u=new URL(process.env.DATABASE_URL);console.log('migrate-down: '+u.host+u.pathname+' as '+u.username)"
+	@cd apps/web && npm run migrate:down
+
+.PHONY: migrate-roundtrip
+migrate-roundtrip: ## Prove the down-migration runs, against a throwaway database (DATA-R06)
+	@test -n "$(DATABASE_URL)" || { echo "migrate-roundtrip: DATABASE_URL is not set"; exit 1; }
+	@cd apps/web && npm run migrate:roundtrip
 
 # --- Orientation ----------------------------------------------------------
 

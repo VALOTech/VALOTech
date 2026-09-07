@@ -38,6 +38,14 @@ item leaves this file when its signal is true — not when it feels handled.
 - **Done when:** the name and address are recorded here and published in the privacy notice.
 - **Until then:** no investor account exists, so no personal data is held.
 
+<a id="DB-EXTENSIONS"></a>
+### Ensure the database role can install `citext`, or pre-install it
+
+- **What:** the first migration runs `CREATE EXTENSION IF NOT EXISTS citext`. Locally the container's `valotech` role is a superuser and this just works; a managed PostgreSQL (RDS on the chosen host, `INFRA-DEC-05`) gives the application role no such privilege by default, and the migration fails at deploy on its first statement.
+- **Who:** the owner, when the database is provisioned. On RDS, `citext` is on the extension allowlist and is installed with `CREATE EXTENSION` by a role granted `rds_superuser`, or once by an admin before the app's role runs migrations.
+- **Done when:** `select extname from pg_extension where extname='citext'` returns a row on the deployment database, or the app's migration role can create it.
+- **Until then:** migrations are not run against that database; local development is unaffected.
+
 <a id="TERMS-REVIEW"></a>
 ### Have counsel read the terms page before it publishes
 

@@ -13,7 +13,9 @@
 # This repository IS the deployed artifact — GitHub Pages serves the
 # tree verbatim at valotech.org. Ignoring a served file removes it from
 # the site, so no rule here may ever match an asset, page, or config
-# the site loads. There is no build step and nothing to regenerate.
+# the site loads. The application under apps/web/ lives on development
+# and is never published here; what a build regenerates is the only
+# thing in this tree that is not written by hand.
 #
 # Conventions:
 #   · Entries are alphabetised within each section.
@@ -48,12 +50,15 @@ keys/
 .envrc
 
 # ----------------------------------------------------------------------
-# 3. Node tooling — the ecosystem raster pipeline (sharp, png-to-ico) is
-#    run ad hoc; its install must never land in the published tree.
-#    Debug logs need no rule here: section 4's `*.log` already covers
-#    them. A lockfile deliberately has no rule — if this repo ever gains
-#    a real Node project, its lockfile must be committed.
+# 3. Node tooling and build output — apps/web/ is a real Node project,
+#    so its lockfile is committed and everything a build regenerates is
+#    not. `node_modules/` also covers the ecosystem raster pipeline
+#    (sharp, png-to-ico), which is run ad hoc and whose install must
+#    never land in the published tree. Debug logs need no rule here:
+#    section 4's `*.log` already covers them.
 # ----------------------------------------------------------------------
+.next/
+next-env.d.ts
 node_modules/
 
 # ----------------------------------------------------------------------
