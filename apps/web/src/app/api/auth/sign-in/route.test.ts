@@ -86,8 +86,12 @@ const SEEDED = [ACTIVE, SUSPENDED, INVITED, LOCKED_OUT, OLD_COST];
  * credential: no account outside this file holds it.
  */
 const AT_THE_OLD_COST =
-  '$argon2id$v=19$m=4096,t=1,p=1$sHDB+ifshnWpqmn00pu+tA$lvLBPUlBwJeUI5V5nEPQC3cGDr4FXtxj0UAPsFpwywM';
-const VECTOR_PASSWORD = 'pw';
+  '$argon2id$v=19$m=4096,t=1,p=1$414LJSlJ6yb56ncu3/NvAQ$NC6P1l+UwgtIlgBd/jxv/KRe+W5dFBg6pBE9EObPhm8';
+// Long and distinctive on purpose: the rehash test asserts the new encoding
+// does not contain the plaintext, and a two-character vector occurs in the
+// random base64 of an Argon2 hash by chance about once in sixty runs — a
+// distinctive one does not, so the check is the leak it means to catch.
+const VECTOR_PASSWORD = 'RehashVectorPassword2026';
 
 /** The head an encoding written at the current configuration carries. */
 const CURRENT_HEAD = /^\$argon2id\$v=19\$m=19456,t=2,p=1\$/;
