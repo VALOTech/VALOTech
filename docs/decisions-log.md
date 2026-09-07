@@ -42,6 +42,16 @@ An entry is filed the moment the choice surfaces, not when it is answered. Nothi
 - **Revises:** AUTH-001/T2 — the route's `clientAddress` ships the leftmost-hop safe default; the answer changes which hop it reads
 - **Status:** OPEN. Safe default: the leftmost `X-Forwarded-For` hop, with the trust boundary documented in the route. The per-account limit is unaffected and is the real protection against stuffing one account; the per-address limit is best-effort until the trusted-proxy count is known.
 
+<a id="I18N-DEC-02"></a>
+### `I18N-DEC-02` — The Next.js application's own i18n framework — OPEN
+
+- **Decision:** The gateway localises through a static dictionary (`I18N-001`: `assets/i18n.js` + `data-i18n`), which suits a file served without a build. The application under `apps/web` renders server-side, has no i18n runtime and no design for one, yet `AUTH-001/T4` and every gated surface must render in the reader's locale across twenty (`I18N-R01`, `I18N-R02`). What framework does the application localise through, and where do its dictionaries come from?
+- **Options:** **A** `next-intl` — the App Router standard: server components, locale negotiation, message catalogues; the twenty gateway locales become its content, adapted to the catalogue shape · **B** A thin custom loader that reads the gateway's existing `assets/i18n.js` dictionaries directly, so one dictionary serves both surfaces and no dependency is added · **C** Another library (`@lingui`, `react-i18next`).
+- **Recommendation:** **A**. `next-intl` is built for this rendering model and carries the locale routing, negotiation and pluralisation the application would otherwise hand-roll; the gateway's twenty locales become its message content, so the translation already done is reused rather than redone. **B** adds no dependency but reimplements what the library solves, against a dictionary shaped for a static page. The cost of **A** is one dependency and a catalogue format, which is the shape the translation skills already target.
+- **Decision owner:** user
+- **Blocks:** AUTH-001/T4
+- **Status:** OPEN. Safe default: the application ships no localised UI until this lands. `AUTH-001/T4` waits rather than shipping an English-only form that would violate `I18N-R01` silently; the sign-in route and gate it sits on are already built and unaffected.
+
 ---
 
 ## Resolved decisions

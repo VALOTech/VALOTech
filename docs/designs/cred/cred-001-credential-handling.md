@@ -47,6 +47,7 @@ variable would enable it. It does not fail on first use, in front of a person.
 | `SESSION_SECRET` | `AUTH-002` | yes | The application refuses to start |
 | `SMTP_URL` (or the provider key at `MAIL-DEC-01`) | `MAIL-001`, `AUTH-003` | no | Mail is disabled. An admin sees a disabled send control with the reason on it, and an invitation is created with its link shown on screen to be delivered by hand |
 | `BACKUP_TARGET` | `DATA-003` | no | Backups are not taken, and `make doctor` says so rather than the system pretending they are |
+| `BACKUP_KEY` | `DATA-003` | no | The passphrase the dump is encrypted with, kept away from the target. Absent while `BACKUP_TARGET` is set, no backup is taken — an unencrypted dump is not written |
 
 ### Startup validation
 

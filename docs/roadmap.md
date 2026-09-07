@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_294 tasks in the plan, 74 closed, 220 outstanding._
+_294 tasks in the plan, 79 closed, 215 outstanding._
 
 ---
 
@@ -35,18 +35,12 @@ _46/48 closed (95%) · 2 outstanding — 0 buildable now · 0 waiting on the own
 
 _Who may read what, and what records that they did. Everything above reads through the gate this wave builds, so a shortcut here is a shortcut in every feature after it. Sign-out precedes invitation deliberately: a session that cannot be ended server-side is a defect that grows with every account created. The scene sits here too, one layer above the page it moves behind._
 
-_28/69 closed (40%) · 41 outstanding — 40 buildable now · 1 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_33/69 closed (47%) · 36 outstanding — 34 buildable now · 2 waiting on the owner · 0 external residue · 0 parked to a later wave._
 
 - **AUTH-001** · Sign-in — 4/5 closed · depth 2
-  - `[ ] AUTH-001/T4` — The sign-in form, in twenty languages, keyboard-reachable, with an accessible name on every field
+  - `[!] AUTH-001/T4` — The sign-in form, in twenty languages, keyboard-reachable, with an accessible name on every field  · _pending-decision_ · **Blocked by:** pending-decision: I18N-DEC-02 — the form must render in the reader's locale across twenty, and the application has no i18n framework yet; which one i…
 
-- **DATA-003** · Backup and restore — 0/5 closed · depth 2
-  - `[ ] DATA-003/T1` — A daily dump, encrypted before it leaves the host, to a target from the environment
-  - `[ ] DATA-003/T2` — Seven daily, four weekly, twelve monthly, enforced rather than intended
-  - `[ ] DATA-003/T3` — `make restore-rehearsal` into a throwaway database, asserting schema and row counts, printing the elapsed time
-  - `[ ] DATA-003/T4` — `make doctor` reports the last successful backup and the last successful rehearsal, and fails the second after two mont…
-  - `[ ] DATA-003/T5` — A restore runbook whose every command was executed in the rehearsal, with measured timings
-
+- **DATA-003** · Backup and restore — 5/5 closed
 - **I18N-002** · Served-copy parity gate — 2/2 closed
 - **SCENE-001** · The world and its journey — 6/6 closed
 - **SEC-002** · Audit log — 0/5 closed · depth 2

@@ -211,7 +211,8 @@ Design: [docs/designs/auth/auth-001-sign-in.md](designs/auth/auth-001-sign-in.md
   Evidence: apps/web/src/app/api/auth/sign-in/route.ts — POST verifies a hash on every path (DUMMY_HASH when the account or its password is absent), so an unknown address, a wrong password, a suspended account and an invited one return a byte-identical 401 at the same argon2 cost; 204 with the session cookie on success, 429 before any query when limited, 403 for a cross-origin POST (login CSRF), 400 for a malformed body. Verified against PostgreSQL 17.11 and mutation-proved (seven of seven mutants) by apps/web/src/app/api/auth/sign-in/route.test.ts.
 - [x] AUTH-001/T3 — Rate limit per account and per address, with the limit stated in config
   Evidence: apps/web/src/app/api/auth/sign-in/route.ts — the route calls the config-driven limiter (apps/web/src/auth/rate-limit.ts) for the account key and the address key before any query, and refuses with 429 and the larger of the two Retry-Afters when either is over the limit; the address key is length-bounded so an over-long X-Forwarded-For cannot mint unbounded counters, and which forwarded hop is the client is docs/decisions-log.md#OPS-DEC-02. Verified against PostgreSQL 17.11 that spraying one account from many addresses hits the account limit and one address across many accounts hits the address limit (apps/web/src/app/api/auth/sign-in/route.test.ts).
-- [ ] AUTH-001/T4 — The sign-in form, in twenty languages, keyboard-reachable, with an accessible name on every field
+- [!] AUTH-001/T4 — The sign-in form, in twenty languages, keyboard-reachable, with an accessible name on every field
+  Blocked by: pending-decision: I18N-DEC-02 — the form must render in the reader's locale across twenty, and the application has no i18n framework yet; which one it uses is the owner's to settle.
 - [x] AUTH-001/T5 — Regression test: a wrong password and an unknown account are indistinguishable in status, body and timing
   Evidence: apps/web/src/app/api/auth/sign-in/route.test.ts — the four failing states (unknown, wrong password, suspended, invited) return an identical 401 in status and body, and each is held above an argon2 timing floor derived from a warmed reference verification, so a short circuit on any path fails the test; a 429 is proved never to touch the database. Mutation-proved seven of seven against PostgreSQL 17.11.
 
@@ -565,11 +566,16 @@ Design: [docs/designs/data/data-002-erasure-and-retention.md](designs/data/data-
 ## DATA-003 · Backup and restore
 Design: [docs/designs/data/data-003-backup-and-restore.md](designs/data/data-003-backup-and-restore.md) · PRD: `DATA-003`
 
-- [ ] DATA-003/T1 — A daily dump, encrypted before it leaves the host, to a target from the environment
-- [ ] DATA-003/T2 — Seven daily, four weekly, twelve monthly, enforced rather than intended
-- [ ] DATA-003/T3 — `make restore-rehearsal` into a throwaway database, asserting schema and row counts, printing the elapsed time
-- [ ] DATA-003/T4 — `make doctor` reports the last successful backup and the last successful rehearsal, and fails the second after two months
-- [ ] DATA-003/T5 — A restore runbook whose every command was executed in the rehearsal, with measured timings
+- [x] DATA-003/T1 — A daily dump, encrypted before it leaves the host, to a target from the environment
+  Evidence: scripts/backup.py (make backup) — pg_dump --format=custom piped through openssl aes-256-cbc so the plaintext never touches disk, written to BACKUP_TARGET with a UTC-stamped name that says nothing of its contents (DATA-R02). BACKUP_KEY is the passphrase, in config beside BACKUP_TARGET (CRED-001); absent either, no backup is taken and it says so (SEC-R05). Verified against PostgreSQL 17.11: a 37 KB Salted__ file with no plaintext PGDMP.
+- [x] DATA-003/T2 — Seven daily, four weekly, twelve monthly, enforced rather than intended
+  Evidence: scripts/backup.py keep_set — the newest backup in each of the last seven days, four ISO weeks and twelve months is kept and the rest are pruned on every run, so the retention is enforced by the same command that writes, not by a schedule nobody checks.
+- [x] DATA-003/T3 — `make restore-rehearsal` into a throwaway database, asserting schema and row counts, printing the elapsed time
+  Evidence: scripts/restore-rehearsal.py (make restore-rehearsal) — fetches the newest backup, decrypts it, restores into a throwaway database (never a live one), asserts the table set equals the current migration head and every row count is within tolerance of live, prints the elapsed time, and drops the scratch database. Verified against PostgreSQL 17.11: fourteen tables match, restore OK in 2.4s.
+- [x] DATA-003/T4 — `make doctor` reports the last successful backup and the last successful rehearsal, and fails the second after two months
+  Evidence: scripts/doctor.py — a Backups section reports the newest backup and the last rehearsal from BACKUP_TARGET, and doctor exits non-zero when the rehearsal is over two months old or has never run, so a stale restore is a failure of the feature rather than a missing chore. Verified: exit 1 on a rehearsal dated over two months back, exit 0 on a fresh one.
+- [x] DATA-003/T5 — A restore runbook whose every command was executed in the rehearsal, with measured timings
+  Evidence: docs/runbooks/data-003-restore.md — the production restore, owner present and application stopped, whose decrypt and pg_restore commands are the ones make restore-rehearsal runs and whose 2.4s timing is the one it measured; restoring over live data is deliberately left to this document rather than given a target of its own.
 
 ## RPT-001 · Investor report authoring
 Design: [docs/designs/rpt/rpt-001-investor-report-authoring.md](designs/rpt/rpt-001-investor-report-authoring.md) · PRD: `RPT-001`

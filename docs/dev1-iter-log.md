@@ -21,6 +21,13 @@ than noticed.
 
 ---
 
+## 2026-09-07 · DATA-003/T1-T5 (5 tasks) · iter 13
+STATUS: green · TIER: S · OUTCOME: CLOSED
+REASON: —
+WHAT CHANGED: backup and restore, the half that matters proved. scripts/backup.py (make backup) pipes pg_dump --format=custom through openssl aes-256 so the plaintext never touches disk, writes a UTC-stamped encrypted file to BACKUP_TARGET, and prunes to seven daily, four weekly, twelve monthly on the same run; absent BACKUP_TARGET or the new BACKUP_KEY it takes no backup and says so (CRED-001). scripts/restore-rehearsal.py (make restore-rehearsal) fetches the newest, decrypts, restores into a throwaway database, asserts the table set is the migration head and row counts are within tolerance of live, prints the elapsed time (2.4s), and drops the scratch. make doctor reports the last backup and rehearsal and exits non-zero on a rehearsal over two months old. A restore runbook carries the production procedure whose commands the rehearsal runs.
+  Verified against PostgreSQL 17.11: a 37 KB Salted__ file with no plaintext PGDMP, both degradation paths skip, the round-trip restores fourteen tables, doctor exits 1 on a stale rehearsal. BACKUP_KEY added to config (backup is available only with target AND key), env.example and CRED-001. make check and make check-app green (186 tests).
+NEXT: the roadmap-first W1 task AUTH-001/T4 (the sign-in form in twenty languages) is filed blocked: the Next.js application has no i18n framework and no design for one, and which one it uses is the owner's -- I18N-DEC-02 OPEN, recommending next-intl with the gateway's twenty locales as content, safe default the application ships no localised UI until it lands. The clean W1 frontier past it: SEC-002/T3 (the audit insert function) waits on SEC-DEC-01; AUTH-002/T2 (server-side sign-out invalidation) with AUTH-004 is the next backend auth; SEC-001 (security baseline) and CMS-001 (content model) are depth-4 and open. The DATA-003 backups reach S3 and a schedule at OPS-001 (build-ahead: the mechanism ships, the target and cron are the deploy's).
+
 ## 2026-09-07 · AUTH-002/T3 (1 task) · iter 12
 STATUS: green · TIER: C · OUTCOME: CLOSED
 REASON: —

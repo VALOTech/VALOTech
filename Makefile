@@ -170,6 +170,16 @@ migrate-roundtrip: ## Prove the down-migration runs, against a throwaway databas
 	@test -n "$(DATABASE_URL)" || { echo "migrate-roundtrip: DATABASE_URL is not set"; exit 1; }
 	@cd apps/web && npm run migrate:roundtrip
 
+# --- Backups --------------------------------------------------------------
+
+.PHONY: backup
+backup: ## Take one encrypted backup and prune old ones (DATA-003)
+	@$(PYTHON) scripts/backup.py
+
+.PHONY: restore-rehearsal
+restore-rehearsal: ## Restore the newest backup into a throwaway database and time it (DATA-R06)
+	@$(PYTHON) scripts/restore-rehearsal.py
+
 # --- Orientation ----------------------------------------------------------
 
 .PHONY: doctor

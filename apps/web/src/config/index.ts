@@ -60,7 +60,7 @@ export type MailConfig =
   | { readonly available: false; readonly unavailable: string };
 
 export type BackupConfig =
-  | { readonly available: true; readonly target: string }
+  | { readonly available: true; readonly target: string; readonly key: Secret }
   | { readonly available: false; readonly unavailable: string };
 
 export interface Config {
@@ -88,6 +88,7 @@ export const DECLARED_VARIABLES = [
   'SMTP_URL',
   'MAIL_FROM',
   'BACKUP_TARGET',
+  'BACKUP_KEY',
   'AUTH_MAX_ATTEMPTS',
   'AUTH_WINDOW_SECONDS',
 ] as const;
@@ -267,10 +268,15 @@ export function loadConfig(source: Source = process.env): Config {
   // Backups degrade when absent: none are taken and `make doctor` says so,
   // rather than the system implying otherwise (DATA-003).
   const backupTarget = present(source, 'BACKUP_TARGET');
-  const backup: BackupConfig =
-    backupTarget === undefined
-      ? { available: false, unavailable: 'BACKUP_TARGET is not set; no backup is taken' }
-      : { available: true, target: backupTarget };
+  const backupKey = present(source, 'BACKUP_KEY');
+  let backup: BackupConfig;
+  if (backupTarget === undefined) {
+    backup = { available: false, unavailable: 'BACKUP_TARGET is not set; no backup is taken' };
+  } else if (backupKey === undefined) {
+    backup = { available: false, unavailable: 'BACKUP_KEY is not set; a backup would be written unencrypted, so none is taken' };
+  } else {
+    backup = { available: true, target: backupTarget, key: new Secret(backupKey) };
+  }
 
   const maxAttempts = optionalPositiveInt(source, 'AUTH_MAX_ATTEMPTS', 5, problems);
   const windowSeconds = optionalPositiveInt(source, 'AUTH_WINDOW_SECONDS', 900, problems);

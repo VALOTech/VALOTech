@@ -3,11 +3,14 @@
 
 A new session's first question is where the work stands, and the honest answer
 is spread across four documents and a directory listing. This reads them and
-says it once. It asserts nothing and fails nothing -- `make check` is the gate.
+says it once. It reports rather than checks -- `make check` is the gate -- with one
+exception: a restore left un-rehearsed for over two months is a failure of
+DATA-003, and this exits non-zero on it (DATA-003/T4).
 
 Run: python scripts/doctor.py
 """
 
+import datetime as dt
 import io
 import os
 import re
@@ -140,6 +143,47 @@ def main():
             print("  nothing open")
         print("")
 
+    target = (os.environ.get("BACKUP_TARGET") or "").strip()
+    stale = False
+    print("Backups")
+    print("-------")
+    if not target:
+        print("  BACKUP_TARGET is not set -- no backups are taken (DATA-003).")
+    elif target.startswith("s3://"):
+        print("  target %s -- the deploy reports its own freshness (OPS-001)." % target)
+    else:
+        name_re = re.compile(r"^valotech-(\d{8}T\d{6}Z)\.dump\.enc$")
+        stamps = []
+        try:
+            for entry in os.listdir(target):
+                match = name_re.match(entry)
+                if match:
+                    stamps.append(match.group(1))
+        except OSError:
+            pass
+        if stamps:
+            print("  last backup     %s (%d kept)" % (max(stamps), len(stamps)))
+        else:
+            print("  last backup     none found in the target")
+            stale = True
+        rehearsed = None
+        try:
+            with io.open(os.path.join(target, ".last-rehearsal"), encoding="utf-8") as handle:
+                rehearsed = handle.read().strip()
+        except OSError:
+            pass
+        if rehearsed:
+            when = dt.datetime.strptime(rehearsed, "%Y%m%dT%H%M%SZ").replace(tzinfo=dt.timezone.utc)
+            age = (dt.datetime.now(dt.timezone.utc) - when).days
+            print("  last rehearsal  %s (%d days ago)" % (rehearsed, age))
+            if age > 62:
+                print("  FAIL  the restore has not been rehearsed in over two months (DATA-003/T4)")
+                stale = True
+        else:
+            print("  last rehearsal  never -- run make restore-rehearsal")
+            stale = True
+    print("")
+
     print("Next")
     print("----")
     print("  make check     run every gate this repository has")
@@ -147,7 +191,7 @@ def main():
     print("  make serve     the gateway on http://127.0.0.1:3101, no-store")
     print("  make infra-up  PostgreSQL on 5434")
     print("  /dev1          one iteration of the autonomous loop")
-    return 0
+    return 1 if stale else 0
 
 
 if __name__ == "__main__":

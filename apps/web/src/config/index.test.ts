@@ -159,11 +159,20 @@ describe('loadConfig', () => {
       expect(() => loadConfig(validEnv({ SMTP_URL: 'smtps://user@mail.example.com:465' }))).toThrow(/MAIL_FROM/);
     });
 
-    it('enables backups when BACKUP_TARGET is set', () => {
-      const config = loadConfig(validEnv({ BACKUP_TARGET: 's3://valotech-backups' }));
+    it('enables backups only when BACKUP_TARGET and BACKUP_KEY are both set', () => {
+      const config = loadConfig(validEnv({ BACKUP_TARGET: 's3://valotech-backups', BACKUP_KEY: 'a-long-passphrase' }));
       expect(config.backup.available).toBe(true);
       if (config.backup.available) {
         expect(config.backup.target).toBe('s3://valotech-backups');
+        expect(config.backup.key.value).toBe('a-long-passphrase');
+      }
+    });
+
+    it('disables backups when the target is set but the encryption key is not', () => {
+      const config = loadConfig(validEnv({ BACKUP_TARGET: 's3://valotech-backups' }));
+      expect(config.backup.available).toBe(false);
+      if (!config.backup.available) {
+        expect(config.backup.unavailable).toMatch(/BACKUP_KEY/);
       }
     });
   });
