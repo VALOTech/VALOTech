@@ -106,8 +106,10 @@ rather than a leak.
 
 **`DATA-001`** declares the tables. **`AUTH-002`** supplies the reader whose role
 these functions take. **`CMS-002`** is the editor that produces blocks and the
-validator that rejects an unknown one. **`CMS-004`** owns `publish` and
-`withdraw` and the audit rows they write. **`CMS-005`** attaches locale rows to a
+validator that rejects an unknown one. **`CMS-004`** is the preview and the
+admin surface that invokes `publish` and `withdraw`; the audit row each writes is
+written in the same transaction as the pointer move (`SEC-R04`), since only the
+function that moves the pointer can record the move atomically with it. **`CMS-005`** attaches locale rows to a
 revision. **`CMS-006`** is where `audience` becomes a query predicate.
 **`RPT-001`**, **`POST-001`** and **`DECK-001`** are three authoring surfaces
 over this one model.
@@ -117,8 +119,9 @@ over this one model.
 - **`CMS-R01`** — no in-place edit; the published revision survives.
 - **`CMS-R04`** — structured blocks, closed set, validated on write.
 - **`DATA-R05`** — every read takes the reader.
-- **`SEC-R04`** — publish and withdraw are privileged writes and audited by
-  `CMS-004`.
+- **`SEC-R04`** — publish and withdraw are privileged writes; each records its
+  audit row in the same transaction as the pointer move, so the record and the
+  move commit or roll back together, and `CMS-004` is the surface that calls them.
 - **`A11Y-R02`** — an image block without alternative text does not validate.
 
 ## 6. Open questions and trade-offs

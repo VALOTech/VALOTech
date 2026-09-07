@@ -21,6 +21,12 @@ than noticed.
 
 ---
 
+## 2026-09-07 · CMS-001/T5 (1 task) · iter 19
+STATUS: green · TIER: S · OUTCOME: CLOSED
+REASON: —
+WHAT CHANGED: publication, as moves of the pointer a reader consults (apps/web/src/content/publish.ts). publish re-validates the revision's body (publish is the gate past which a reader sees it, so it does not trust a row it never checked), stamps published_at, moves content_items.current_revision_id, and records content.publish — all in one transaction, so the audit row and the pointer move commit or roll back together (SEC-R04). withdraw moves the pointer to the revision published before the current one, or to null, and records content.withdraw; the withdrawn revision keeps its published_at, so the prior version is intact and re-publishable. This is the first real caller of recordAudit (SEC-002/T3): its Transaction parameter makes the same-transaction rule the type rather than a hope. Verified against PostgreSQL 17.11: 23 content tests, full app suite 274 green. Mutation-proved: publish skipping re-validation, withdraw always moving to null, and publish recording no audit each redden a test. The design's §4/§5 were reconciled — the audit is written in CMS-001's publish/withdraw because only the function that moves the pointer can record the move atomically with it; CMS-004 is the surface that calls them (§1.9).
+NEXT: CMS-001/T6 (the reader-scoped reads forReader/forAuthor) is the last CMS-001 task, and it is coupled to CMS-006 — "the single most dangerous design in the repository," the one visibleTo(reader) predicate every content query composes — so forReader uses that predicate rather than re-implementing audience. The clean next move is CMS-006 (the access predicate, Critical) then CMS-001/T6 reading through it, which together close CMS-001 and unblock CMS-002 (editor), INV-001 and the authoring surfaces. ADMIN-001 (account management) remains the other high-leverage W1 frontier.
+
 ## 2026-09-07 · CMS-001/T1,T2,T3,T4 (4 tasks) · iter 18
 STATUS: green · TIER: S · OUTCOME: CLOSED
 REASON: —

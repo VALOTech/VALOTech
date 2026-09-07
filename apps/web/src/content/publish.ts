@@ -1,0 +1,138 @@
+/**
+ * Publishing and withdrawing, as moves of the pointer a reader consults
+ * (`CMS-001`, `CMS-R01`, `SEC-R04`).
+ *
+ * Publication is not a flag on a revision; it is `content_items.current_revision_id`
+ * naming the revision a reader sees. Publishing moves that pointer to a revision
+ * and stamps its `published_at`; withdrawing moves the pointer back to the
+ * revision published before it, or to nothing. The revision just withdrawn stays
+ * on disk with its `published_at` intact — what an investor read is still there
+ * to be read again, and re-publishing is moving the pointer forward once more.
+ *
+ * Both are privileged writes, so both audit — and the audit row and the pointer
+ * move commit or roll back together (`SEC-R04`). That atomicity is why the audit
+ * is written here, in the same transaction, rather than by the surface that
+ * calls these (`CMS-004`): an audit in a second transaction could succeed while
+ * the move it records was rolled back, or the reverse. `recordAudit` takes the
+ * transaction, so the same-transaction rule is the type rather than a hope.
+ */
+
+import { type Transaction, sql } from 'kysely';
+
+import { recordAudit } from '../audit/record';
+import { getDb } from '../db/index';
+import type { Database } from '../db/types';
+
+import { validateBlocks } from './blocks';
+import type { ContentItem } from './items';
+
+/** The item's id and pointer, locked so two publications of it cannot interleave. */
+async function lockItem(trx: Transaction<Database>, itemId: string) {
+  return trx
+    .selectFrom('content_items')
+    .select(['id', 'current_revision_id'])
+    .where('id', '=', itemId)
+    .forUpdate()
+    .executeTakeFirstOrThrow();
+}
+
+/**
+ * Publish a revision: stamp its `published_at`, move the item's pointer to it,
+ * and record the act. The body is re-validated first — publish is the gate past
+ * which a reader sees it, so it does not trust a stored row it never checked (a
+ * direct write, or a validator tightened since the draft was saved).
+ */
+export async function publish(itemId: string, revisionId: string, actorId: string): Promise<ContentItem> {
+  return getDb()
+    .transaction()
+    .execute(async (trx) => {
+      await lockItem(trx, itemId);
+
+      const revision = await trx
+        .selectFrom('content_revisions')
+        .select('blocks')
+        .where('id', '=', revisionId)
+        .where('item_id', '=', itemId)
+        .executeTakeFirst();
+
+      if (revision === undefined) {
+        throw new Error(`revision ${revisionId} does not belong to item ${itemId}`);
+      }
+
+      validateBlocks(revision.blocks);
+
+      await trx
+        .updateTable('content_revisions')
+        .set({ published_at: sql`now()` })
+        .where('id', '=', revisionId)
+        .execute();
+
+      const item = await trx
+        .updateTable('content_items')
+        .set({ current_revision_id: revisionId })
+        .where('id', '=', itemId)
+        .returningAll()
+        .executeTakeFirstOrThrow();
+
+      await recordAudit(trx, {
+        actorId,
+        action: 'content.publish',
+        subjectType: 'content_item',
+        subjectId: itemId,
+      });
+
+      return item;
+    });
+}
+
+/**
+ * Withdraw the current publication: move the pointer to the revision published
+ * before it, or to nothing if there is none, and record the act. Withdrawing an
+ * item that shows nothing is refused — there is no pointer to move back.
+ */
+export async function withdraw(itemId: string, actorId: string): Promise<ContentItem> {
+  return getDb()
+    .transaction()
+    .execute(async (trx) => {
+      const item = await lockItem(trx, itemId);
+
+      if (item.current_revision_id === null) {
+        throw new Error(`item ${itemId} has no published revision to withdraw`);
+      }
+
+      const current = await trx
+        .selectFrom('content_revisions')
+        .select('published_at')
+        .where('id', '=', item.current_revision_id)
+        .executeTakeFirstOrThrow();
+
+      if (current.published_at === null) {
+        throw new Error(`item ${itemId} points at an unpublished revision`);
+      }
+
+      const previous = await trx
+        .selectFrom('content_revisions')
+        .select('id')
+        .where('item_id', '=', itemId)
+        .where('published_at', 'is not', null)
+        .where('published_at', '<', current.published_at)
+        .orderBy('published_at', 'desc')
+        .executeTakeFirst();
+
+      const updated = await trx
+        .updateTable('content_items')
+        .set({ current_revision_id: previous?.id ?? null })
+        .where('id', '=', itemId)
+        .returningAll()
+        .executeTakeFirstOrThrow();
+
+      await recordAudit(trx, {
+        actorId,
+        action: 'content.withdraw',
+        subjectType: 'content_item',
+        subjectId: itemId,
+      });
+
+      return updated;
+    });
+}

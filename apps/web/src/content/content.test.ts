@@ -18,8 +18,10 @@ import { runner } from 'node-pg-migrate';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { closeDb, getDb } from '../db/index';
+import type { AuditAction } from '../db/types';
 import { type Block, BlockValidationError, validateBlocks } from './blocks';
 import { createItem, saveDraft } from './items';
+import { publish, withdraw } from './publish';
 
 const DATABASE_URL = (process.env.DATABASE_URL ?? '').trim();
 const HAS_DATABASE = DATABASE_URL !== '';
@@ -165,6 +167,81 @@ describe.skipIf(!HAS_DATABASE)('CMS-001 content model', () => {
       ]);
 
       expect(await revisionsOf(item.id)).toHaveLength(1);
+    });
+  });
+
+  describe('publish and withdraw', () => {
+    async function pointerOf(itemId: string): Promise<string | null> {
+      const row = await getDb()
+        .selectFrom('content_items')
+        .select('current_revision_id')
+        .where('id', '=', itemId)
+        .executeTakeFirstOrThrow();
+      return row.current_revision_id;
+    }
+
+    async function auditCount(itemId: string, action: AuditAction): Promise<number> {
+      const rows = await getDb()
+        .selectFrom('audit')
+        .select('id')
+        .where('subject_id', '=', itemId)
+        .where('action', '=', action)
+        .execute();
+      return rows.length;
+    }
+
+    it('moves the pointer to the revision and records the publish', async () => {
+      const item = await createItem({ type: 'update', slug: `u-${randomUUID()}`, title: 'To publish', kind: 'progress' });
+      const draft = await saveDraft(item.id, [{ type: 'heading', level: 2, text: 'Live' }], authorId);
+
+      const published = await publish(item.id, draft.id, authorId);
+
+      expect(published.current_revision_id).toBe(draft.id);
+      const [rev] = await revisionsOf(item.id);
+      expect(rev?.published_at).not.toBeNull();
+      expect(await auditCount(item.id, 'content.publish')).toBe(1);
+    });
+
+    it('re-validates the body, refusing an invalid revision and recording nothing', async () => {
+      const item = await createItem({ type: 'update', slug: `u-${randomUUID()}`, title: 'Invalid publish', kind: 'progress' });
+      // A revision inserted past saveDraft's validator, the way a direct write or
+      // a tightened validator would leave one.
+      const bad = await getDb()
+        .insertInto('content_revisions')
+        .values({ item_id: item.id, blocks: sql`'[{"type":"marquee"}]'::jsonb`, author_id: authorId })
+        .returning('id')
+        .executeTakeFirstOrThrow();
+
+      await expect(publish(item.id, bad.id, authorId)).rejects.toThrow();
+      // Nothing moved and nothing was recorded: the audit and the pointer move
+      // share the transaction that rolled back.
+      expect(await pointerOf(item.id)).toBeNull();
+      expect(await auditCount(item.id, 'content.publish')).toBe(0);
+    });
+
+    it('withdraws to the previously published revision, then to nothing, recording each', async () => {
+      const item = await createItem({ type: 'update', slug: `u-${randomUUID()}`, title: 'Withdraw walk', kind: 'progress' });
+      const r1 = await saveDraft(item.id, [{ type: 'heading', level: 2, text: 'One' }], authorId);
+      await publish(item.id, r1.id, authorId);
+      const r2 = await saveDraft(item.id, [{ type: 'heading', level: 2, text: 'Two' }], authorId);
+      await publish(item.id, r2.id, authorId);
+      expect(await pointerOf(item.id)).toBe(r2.id);
+
+      await withdraw(item.id, authorId);
+      expect(await pointerOf(item.id)).toBe(r1.id);
+
+      await withdraw(item.id, authorId);
+      expect(await pointerOf(item.id)).toBeNull();
+
+      // Withdrawal is a pointer move, not a delete: both revisions survive.
+      expect(await revisionsOf(item.id)).toHaveLength(2);
+      expect(await auditCount(item.id, 'content.withdraw')).toBe(2);
+    });
+
+    it('refuses to withdraw an item that shows nothing', async () => {
+      const item = await createItem({ type: 'update', slug: `u-${randomUUID()}`, title: 'Nothing to withdraw', kind: 'progress' });
+
+      await expect(withdraw(item.id, authorId)).rejects.toThrow();
     });
   });
 });
