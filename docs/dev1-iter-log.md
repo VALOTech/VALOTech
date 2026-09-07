@@ -21,6 +21,12 @@ than noticed.
 
 ---
 
+## 2026-09-07 · CMS-006/T3 + AUTH-002/T4 (2 tasks) · iter 22
+STATUS: green · TIER: S · OUTCOME: CLOSED
+REASON: —
+WHAT CHANGED: the grant write side (CMS-006/T3), so an admin can now grant and revoke an account's access to a granted item, not only read through a grant that already stands. apps/web/src/content/grants.ts:addGrant inserts a content_grants row ON CONFLICT DO NOTHING and apps/web/src/content/grants.ts:removeGrant deletes one, each in a transaction with the audit that records it (SEC-R04 — recordAudit takes the transaction, so the row and the audit commit or roll back together), each idempotent: a re-grant and a revoke of nothing return false and write nothing, so the trail carries acts not re-assertions. The audited subject is the grantee account, because a grant is a permission on an account. The read side is unchanged — the granted branch of visibleTo (iter 20) admits an item to an investor only where such a row names them — and the deck admin UI that calls these is DECK-004's (depended_by); this ships the mechanism it composes. AUTH-002/T4 (the deck-isolation test) closed by cross-reference (§1.10): apps/web/src/content/read.test.ts already proves an investor asking for another investor's granted deck gets null and never a redirect, now reinforced by a deck-type, granted-audience case that turns visible across addGrant and back to null across removeGrant. Verified against PostgreSQL 17.11: content read suite 21 tests, the grant case mutation-proved three ways — dropping addGrant's idempotency guard, mislabeling the grant.add action, dropping removeGrant's guard. make check and make check-app green, 103 closed.
+NEXT: CMS-006 is 4/6 — T4 (the read route: one 404 for a refusal, a missing item and a malformed id alike, narrowing forReader's row to drop author_id — design §6 F5/F6) and T6 (audience-change audit and a short cache) remain, both on the same read path no route mounts yet. The large W1 frontiers are ADMIN-001 (account management, wiring the account audit callers, unblocks AUTH-003/T7) and SEC-001 (T1 the headers, entangled with T2 CSP and its nonce). SEC-002 stays 3/5 (T2 external, T4 pending SEC-DEC-01); the i18n-blocked UI waits on I18N-DEC-02.
+
 ## 2026-09-07 · SEC-002/T5 (1 task) · iter 21
 STATUS: green · TIER: S · OUTCOME: CLOSED
 REASON: —
@@ -153,9 +159,3 @@ STATUS: green · TIER: S · OUTCOME: CLOSED
 REASON: —
 WHAT CHANGED: INFRA-001/T1 closed — brought the compose stack up (PostgreSQL 17.11, health `healthy` at t+16s, host 5434, named volume), verified by running rather than asserting, then `make infra-reset` with no residue. The application build past this is gated on a first-of-class stack choice — migration tool + query layer + test runner — so filed `INFRA-DEC-06` OPEN and blocked `DATA-001/T1-12` and `INFRA-001/T3-5` on it. Fixed `check-evidence-citation` reading a task code (`INFRA-001/T3`) as a file path (mutation-proved it still catches a real broken path).
 NEXT: `INFRA-DEC-06` answered — **A** (node-pg-migrate + Kysely + Vitest/Playwright). Frontier reopened: `DATA-001/T1` is buildable. Next iteration scaffolds the Next.js app on that stack and wires the migration tool — Critical-tier (infra + schema), via `critical-impl` + `deep-review`.
-
-## 2026-09-07 · go-live prep · iter 2
-STATUS: green · TIER: S · OUTCOME: CLOSED
-REASON: —
-WHAT CHANGED: the three owner decisions answered — AWS (`INFRA-DEC-03`/`INFRA-DEC-05` loop-settled to ECS Fargate + RDS), SMTP against the company mailbox (`MAIL-DEC-01`), the ecosystem's own consent posture (`OPS-DEC-01`). `OPS-001`, both `MAIL` designs and `LEGAL-GLOBAL-002` rewritten around the answers, no longer pending-decision. `SITE-006` added (legal pages + banner). Six `[!]` rows unblocked. Two new gates — `check-doc-paths` (5 dangling citations found) and `check-env-catalogue` (found the 3000/3100 port collision with VALO Ads and 4 vars missing from env.example). CI now runs `make check` split by ref. README rewritten to be true on both branches.
-NEXT: framework and go-live prep complete; the register is empty and every gate is green. The 248 open tasks are application code for `/dev1 valotech` to work from W0, which is a cold-start loop and does not depend on this window. Six items wait on the owner in `docs/operator-checklist.md`, none blocking.

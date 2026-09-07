@@ -27,6 +27,7 @@ import type { ContentAudience } from '../db/types';
 
 import { visibleTo } from './access';
 import type { Block } from './blocks';
+import { addGrant, removeGrant } from './grants';
 import { createItem, saveDraft } from './items';
 import { publish } from './publish';
 import { forAuthor, forReader } from './read';
@@ -378,6 +379,47 @@ describe.skipIf(!HAS_DATABASE)('CMS-006 audience and access', () => {
 
         expect(await forReader(item.id, null)).toBeNull();
       } finally {
+        await getDb().deleteFrom('content_items').where('id', '=', item.id).execute();
+      }
+    });
+  });
+
+  describe('grant write and revoke (CMS-006/T3)', () => {
+    async function auditCount(accountId: string, action: 'grant.add' | 'grant.remove'): Promise<number> {
+      const rows = await getDb()
+        .selectFrom('audit')
+        .select('id')
+        .where('subject_id', '=', accountId)
+        .where('action', '=', action)
+        .execute();
+      return rows.length;
+    }
+
+    it('grants access, is idempotent, revokes it, and audits each act once', async () => {
+      const item = await createItem({ type: 'deck', slug: `grant-${randomUUID()}`, title: 'a granted deck', audience: 'granted' });
+      const revision = await saveDraft(item.id, body('the deck body'), admin.id);
+      await publish(item.id, revision.id, admin.id);
+      try {
+        // investorB holds no grant on this item, so forReader withholds it.
+        expect(await forReader(item.id, investorB)).toBeNull();
+
+        expect(await addGrant(item.id, investorB.id, admin.id)).toBe(true);
+        expect((await forReader(item.id, investorB))?.revision.blocks).toEqual(body('the deck body'));
+        expect(await auditCount(investorB.id, 'grant.add')).toBe(1);
+
+        // A second grant is the same state, so it is a no-op and records nothing.
+        expect(await addGrant(item.id, investorB.id, admin.id)).toBe(false);
+        expect(await auditCount(investorB.id, 'grant.add')).toBe(1);
+
+        expect(await removeGrant(item.id, investorB.id, admin.id)).toBe(true);
+        expect(await forReader(item.id, investorB)).toBeNull();
+        expect(await auditCount(investorB.id, 'grant.remove')).toBe(1);
+
+        // Revoking a grant that is not there records nothing either.
+        expect(await removeGrant(item.id, investorB.id, admin.id)).toBe(false);
+        expect(await auditCount(investorB.id, 'grant.remove')).toBe(1);
+      } finally {
+        // The audit rows are append-only and stay; the item and its grants go.
         await getDb().deleteFrom('content_items').where('id', '=', item.id).execute();
       }
     });
