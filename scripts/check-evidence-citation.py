@@ -46,6 +46,12 @@ PATH_RE = re.compile(
     r"(?<![\w/.-])((?:[\w.-]+/)+[\w.-]+(?::[A-Za-z_][\w.@-]*)?"
     r"|[\w.-]+\.(?:md|css|js|mjs|ts|tsx|json|html|py|yaml|yml|sql|sh|toml))"
 )
+# A task code (`INFRA-001/T3`) is `word/word` and matches PATH_RE, but it is a
+# reference in prose, never a file. An Evidence line legitimately names another
+# task -- which task owns a neighbouring half of the work -- and that name must
+# not be checked as a path that does not exist. It is excluded before the path
+# scan rather than after, so the reference is invisible to the file check.
+TASK_CODE_RE = re.compile(r"\b[A-Z][A-Z0-9-]*-\d{3}/T\d+[a-z]?\d*\b")
 SHA_RE = re.compile(r"(?<![\w])(?:commit\s+)?([0-9a-f]{7,40})(?![\w])")
 MAKE_RE = re.compile(r"\bmake\s+([a-z][a-z0-9-]*)")
 
@@ -118,9 +124,13 @@ def main():
         if status == "x" and code in closed_without:
             closed_without.remove(code)
         body = m.group(1)
+        # Strip task-code references so a prose mention like "owned by
+        # INFRA-001/T3" is not scanned as a path. The count of real citations
+        # is unaffected: a task code was never one.
+        scan = TASK_CODE_RE.sub(" ", body)
 
         resolved = 0
-        for token in PATH_RE.findall(body):
+        for token in PATH_RE.findall(scan):
             # An anchor citation is checked against the document it names.
             reason = check_citation(token, targets)
             if reason:
