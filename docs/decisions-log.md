@@ -49,8 +49,8 @@ An entry is filed the moment the choice surfaces, not when it is answered. Nothi
 - **Options:** **A** `next-intl` — the App Router standard: server components, locale negotiation, message catalogues; the twenty gateway locales become its content, adapted to the catalogue shape · **B** A thin custom loader that reads the gateway's existing `assets/i18n.js` dictionaries directly, so one dictionary serves both surfaces and no dependency is added · **C** Another library (`@lingui`, `react-i18next`).
 - **Recommendation:** **A**. `next-intl` is built for this rendering model and carries the locale routing, negotiation and pluralisation the application would otherwise hand-roll; the gateway's twenty locales become its message content, so the translation already done is reused rather than redone. **B** adds no dependency but reimplements what the library solves, against a dictionary shaped for a static page. The cost of **A** is one dependency and a catalogue format, which is the shape the translation skills already target.
 - **Decision owner:** user
-- **Blocks:** AUTH-001/T4
-- **Status:** OPEN. Safe default: the application ships no localised UI until this lands. `AUTH-001/T4` waits rather than shipping an English-only form that would violate `I18N-R01` silently; the sign-in route and gate it sits on are already built and unaffected.
+- **Blocks:** AUTH-001/T4, AUTH-004/T2
+- **Status:** OPEN. Safe default: the application ships no localised UI until this lands. `AUTH-001/T4` and `AUTH-004/T2` wait rather than shipping English-only pages that would violate `I18N-R01` silently; the routes and the gate they sit on are already built and unaffected — a person can sign in and sign out without either page existing.
 
 ---
 

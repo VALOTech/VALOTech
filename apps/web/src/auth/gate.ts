@@ -63,8 +63,15 @@ const SIGN_IN = '/sign-in';
  * no sibling host can set one. Development serves plain HTTP, cannot use the
  * prefix, and accepts that a cookie planted by another service on `localhost`
  * would be read here.
+ *
+ * Exported because three surfaces read the cookie and only one of them
+ * resolves it: the gate, `AUTH-004`'s sign-out — which deletes a session by
+ * the token it was handed and never needs an actor — and the proxy, which
+ * only asks whether a request is an authenticated one. A second parser on
+ * any of those paths is a second place for the cookie name, the
+ * first-cookie-wins rule and the empty value to be wrong.
  */
-function presentedToken(headers: Headers): string | null {
+export function presentedToken(headers: Headers): string | null {
   const header = headers.get('cookie');
 
   if (header === null) {
@@ -123,6 +130,33 @@ export async function resolveSession(token: string | null): Promise<Actor | null
     .where('sessions.expires_at', '>', sql<Date>`now()`)
     .where('accounts.state', '=', 'active')
     .returning(['accounts.id as id', 'accounts.role as role'])
+    .executeTakeFirst();
+
+  return reader ?? null;
+}
+
+/**
+ * The reader a token belongs to, resolved without sliding the session.
+ *
+ * `resolveSession` slides the expiry on every gated read, which is right for a
+ * read and wrong for a destructive one: a path that is about to delete the
+ * session must not first extend it, because a delete that then fails would
+ * leave the session live with a fresh full lifetime -- worse than doing
+ * nothing. This is the same predicate as a plain read, so an expired cookie or
+ * a suspended account yields nobody; it just does not write.
+ */
+export async function accountForToken(token: string | null): Promise<Actor | null> {
+  if (token === null) {
+    return null;
+  }
+
+  const reader = await getDb()
+    .selectFrom('sessions')
+    .innerJoin('accounts', 'accounts.id', 'sessions.account_id')
+    .where('sessions.token_hash', '=', createHash('sha256').update(token).digest('hex'))
+    .where('sessions.expires_at', '>', sql<Date>`now()`)
+    .where('accounts.state', '=', 'active')
+    .select(['accounts.id as id', 'accounts.role as role'])
     .executeTakeFirst();
 
   return reader ?? null;

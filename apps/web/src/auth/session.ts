@@ -1,5 +1,6 @@
 /**
- * Issuing a session (`AUTH-002`). Sign-in is the only thing that calls it.
+ * Writing and unwriting a session (`AUTH-002`). Sign-in is the only thing that
+ * issues one; `AUTH-004` and `ADMIN-001` are the only things that end one.
  *
  * The cookie carries a random token and the `sessions` row stores only its
  * hash, so a database dump is a set of hashes rather than a set of live
@@ -82,6 +83,32 @@ export function serializeCookie(cookie: SessionCookie): string {
 }
 
 /**
+ * The cookie that ends the one `issue` set: same name, no value, `Max-Age=0`.
+ *
+ * A browser matches a cookie for replacement by name, path and domain, so every
+ * attribute the issued cookie carries is carried here too. A `Max-Age=0` sent
+ * under a different path would leave the original standing and add a second,
+ * already-expired cookie beside it — and the reader would go on presenting a
+ * token whose row `AUTH-004` had just deleted, which looks like a sign-out that
+ * did not take.
+ *
+ * `Secure` matters for the same reason on the production cookie: the `__Host-`
+ * prefix requires it, and a browser rejects a `__Host-` cookie sent without it —
+ * including the one sent to expire it.
+ */
+export function expiredCookie(): SessionCookie {
+  return {
+    name: sessionCookieName(),
+    value: '',
+    httpOnly: true,
+    sameSite: 'Lax',
+    secure: getConfig().app.env !== 'development',
+    path: '/',
+    maxAge: 0,
+  };
+}
+
+/**
  * Write a session for `accountId` and return the cookie that presents it.
  *
  * Every call mints a fresh token and a fresh row, which is the rotation
@@ -113,4 +140,44 @@ export async function issue(accountId: string): Promise<SessionCookie> {
     path: '/',
     maxAge: config.session.ttlSeconds,
   };
+}
+
+/**
+ * Delete the session a token presents.
+ *
+ * Deleting nothing is success. A token whose row is already gone — signed out
+ * twice, or a stale tab posting after a privilege change — has had its intent
+ * satisfied already, and `AUTH-004` requires that state to redirect rather than
+ * to raise: an error there would show alarming text to somebody who did the
+ * right thing.
+ *
+ * The lookup is by hash, as everywhere else on this path: the row holds the
+ * SHA-256 and never the token, so a delete keyed on the raw value would match
+ * nothing and report the same success it reports for a session that was really
+ * ended. That failure is silent by construction, which is why `AUTH-004`'s
+ * suite asserts the row is gone rather than asserting the call returned.
+ */
+export async function invalidateSession(token: string): Promise<void> {
+  await getDb()
+    .deleteFrom('sessions')
+    .where('token_hash', '=', createHash('sha256').update(token).digest('hex'))
+    .execute();
+}
+
+/**
+ * Delete every session an account holds, on any device.
+ *
+ * It takes an account id and nothing about who asked, because two callers need
+ * exactly this and for different reasons: a person ending every session because
+ * they think their password is known (`AUTH-004`), and an admin suspending or
+ * re-roling that account (`ADMIN-001`). Whether the caller may do it is the
+ * caller's question — this one is the write, and putting an authorisation check
+ * inside it would be a check the admin path has to defeat.
+ *
+ * Revocation that takes effect at the next natural expiry is not revocation, so
+ * this is a delete rather than a flag: the gate resolves a session by looking
+ * the row up, and a row that is gone cannot be resolved by anything.
+ */
+export async function invalidateAllForAccount(accountId: string): Promise<void> {
+  await getDb().deleteFrom('sessions').where('account_id', '=', accountId).execute();
 }

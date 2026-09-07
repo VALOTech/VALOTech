@@ -40,12 +40,19 @@ public gateway, signed out, with nothing from the room in the back-forward cache
 
 | Route | Method | What |
 |---|---|---|
-| `/signout` | POST | Deletes this session, expires the cookie, redirects to `/` |
+| `/api/auth/sign-out` | POST | Deletes this session, expires the cookie, redirects to `/` |
 | `/account/sessions` | GET | Lists this account's live sessions: when each began, when last seen, and which is this one |
-| `/account/sessions/all` | POST | Deletes every session for this account, including this one |
+| `/api/account/sessions/all` | POST | Deletes every session for this account, including this one |
 
-**POST, never GET.** A `GET /signout` is signed out by any page that can embed an
-image, and it is signed out by a link checker.
+The two writes answer under `/api`, which is where `AUTH-001` put the door: a
+route handler is addressed there and the page it is posted from is not, so
+`/account/sessions` is the list a person opens and `/api/account/sessions/all`
+is what its button posts to.
+
+**POST, never GET.** A `GET` sign-out is signed out by any page that can embed an
+image, and it is signed out by a link checker. Both handlers export `POST` alone,
+so every other method is answered `405` by the framework rather than by a check
+somebody has to remember to write.
 
 ### Ending everything
 
@@ -71,6 +78,21 @@ alarming text to somebody who did the right thing.
   after a sign-out shows the sign-in page rather than a rendered room from the
   history cache. This is the part that is usually missed, and it is verified in
   a browser by pressing the back button, not by reading the header.
+
+  **What counts as authenticated is the cookie, not the path.** `proxy.ts` marks
+  a response when the request that asked for it presented a session, so a
+  surface added later is covered by the commit that mounts it. A list of
+  authenticated prefixes would be the same rule written as a proxy for itself,
+  and would be under-inclusive the day somebody adds a surface and not the list
+  — silently, because a storable room is indistinguishable from an unstorable
+  one until the back button is pressed.
+
+  The proxy marks the response at the origin, so a shared cache in front of it
+  must not answer a signed-in request from store: the CDN (`OPS-001`) bypasses
+  its cache when the session cookie is present, because a response served from a
+  shared cache never reaches the origin and the proxy never runs. The origin's
+  `no-store` and the CDN's cookie-keyed bypass are one rule enforced at the two
+  places a signed-in page can be held.
 - The redirect target is the public gateway. Never a page the person can no
   longer see, which would greet a sign-out with an access refusal.
 

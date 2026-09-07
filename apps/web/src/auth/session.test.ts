@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { serializeCookie, sessionCookieName, type SessionCookie } from './session';
+import { expiredCookie, serializeCookie, sessionCookieName, type SessionCookie } from './session';
 
 // The parts of a session cookie a test can pin without a database: the
 // serialisation and the name. Issuing a row is exercised through the sign-in
@@ -45,5 +45,28 @@ describe('sessionCookieName', () => {
     process.env.SESSION_SECRET = 'x'.repeat(40);
 
     expect(sessionCookieName()).toBe('__Host-valotech');
+  });
+});
+
+describe('expiredCookie', () => {
+  it('empties the production cookie while keeping __Host-, Secure and every attribute', () => {
+    // The singleton is production by now (sessionCookieName above built it). The
+    // cookie sent to expire the session must be the same one issue() set, down to
+    // Secure: a browser rejects a __Host- cookie sent without it -- including the
+    // expiry -- and would then leave the session cookie, and the session, standing.
+    process.env.APP_ENV = 'production';
+    process.env.APP_ORIGIN = 'https://valotech.org';
+    process.env.DATABASE_URL = 'postgres://valotech:pw@db.internal:5432/valotech';
+    process.env.DB_SSLMODE = 'require';
+    process.env.SESSION_SECRET = 'x'.repeat(40);
+
+    const header = serializeCookie(expiredCookie());
+
+    expect(header.startsWith('__Host-valotech=;')).toBe(true);
+    expect(header).toContain('Secure');
+    expect(header).toContain('Path=/');
+    expect(header).toContain('Max-Age=0');
+    expect(header).toContain('HttpOnly');
+    expect(header).toContain('SameSite=Lax');
   });
 });

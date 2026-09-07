@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_294 tasks in the plan, 79 closed, 215 outstanding._
+_294 tasks in the plan, 83 closed, 211 outstanding._
 
 ---
 
@@ -35,7 +35,7 @@ _46/48 closed (95%) · 2 outstanding — 0 buildable now · 0 waiting on the own
 
 _Who may read what, and what records that they did. Everything above reads through the gate this wave builds, so a shortcut here is a shortcut in every feature after it. Sign-out precedes invitation deliberately: a session that cannot be ended server-side is a defect that grows with every account created. The scene sits here too, one layer above the page it moves behind._
 
-_33/69 closed (47%) · 36 outstanding — 34 buildable now · 2 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_37/69 closed (53%) · 32 outstanding — 29 buildable now · 3 waiting on the owner · 0 external residue · 0 parked to a later wave._
 
 - **AUTH-001** · Sign-in — 4/5 closed · depth 2
   - `[!] AUTH-001/T4` — The sign-in form, in twenty languages, keyboard-reachable, with an accessible name on every field  · _pending-decision_ · **Blocked by:** pending-decision: I18N-DEC-02 — the form must render in the reader's locale across twenty, and the application has no i18n framework yet; which one i…
@@ -50,8 +50,7 @@ _33/69 closed (47%) · 36 outstanding — 34 buildable now · 2 waiting on the o
   - `[ ] SEC-002/T5` — The admin view: newest first, filterable by actor, subject and action, with no edit or delete control
   - `[!] SEC-002/T4` — Only changed fields are recorded, and no personal data reaches the trail  · _pending-decision_ · **Blocked by:** pending-decision: SEC-DEC-01 — whether a changed field records its name or an allow-listed value is the trail's personal-data policy, and it is the u…
 
-- **AUTH-002** · Session and role gate — 2/4 closed · depth 3
-  - `[ ] AUTH-002/T2` — Server-side invalidation, so a stolen cookie dies on sign-out
+- **AUTH-002** · Session and role gate — 3/4 closed · depth 3
   - `[ ] AUTH-002/T4` — Isolation test: an investor request for another investor's deck returns nothing, not a redirect
 
 - **AUTH-003** · Invitation and password reset — 0/7 closed · depth 3
@@ -74,12 +73,9 @@ _33/69 closed (47%) · 36 outstanding — 34 buildable now · 2 waiting on the o
   - `[ ] ADMIN-002/T4` — An environment bar wherever `APP_ENV` is not production
   - `[ ] ADMIN-002/T5` — Console chrome in English, with the exception stated where a reader will find it
 
-- **AUTH-004** · Sign-out — 0/5 closed · depth 4
-  - `[ ] AUTH-004/T1` — POST sign-out deletes the session row, then expires the cookie
-  - `[ ] AUTH-004/T2` — The session list shows this account's live sessions and marks the current one
-  - `[ ] AUTH-004/T3` — Ending every session, including this one, in one action
-  - `[ ] AUTH-004/T4` — Every authenticated response is `no-store`, verified by pressing the back button
-  - `[ ] AUTH-004/T5` — Signing out twice succeeds; there is no already-signed-out error
+- **AUTH-004** · Sign-out — 3/5 closed · depth 4
+  - `[~] AUTH-004/T4` — Every authenticated response is `no-store`, verified by pressing the back button  · **Note:** The mechanism ships and is header-verified; the acceptance the row names — pressing Back — is owed, so this is in-progress rather than closed. apps/w…
+  - `[!] AUTH-004/T2` — The session list shows this account's live sessions and marks the current one  · _pending-decision_ · **Blocked by:** pending-decision: I18N-DEC-02 — the list is a localised page and the application has no i18n framework yet; which one it uses is the owner's to settl…
 
 - **CMS-001** · Content model and revisions — 0/6 closed · depth 4
   - `[ ] CMS-001/T1` — Items, revisions, and a published pointer that is the only thing a reader query consults
