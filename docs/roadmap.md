@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_294 tasks in the plan, 88 closed, 206 outstanding._
+_294 tasks in the plan, 91 closed, 203 outstanding._
 
 ---
 
@@ -35,7 +35,7 @@ _46/48 closed (95%) · 2 outstanding — 0 buildable now · 0 waiting on the own
 
 _Who may read what, and what records that they did. Everything above reads through the gate this wave builds, so a shortcut here is a shortcut in every feature after it. Sign-out precedes invitation deliberately: a session that cannot be ended server-side is a defect that grows with every account created. The scene sits here too, one layer above the page it moves behind._
 
-_42/69 closed (60%) · 27 outstanding — 23 buildable now · 3 waiting on the owner · 1 external residue · 0 parked to a later wave._
+_45/69 closed (65%) · 24 outstanding — 20 buildable now · 3 waiting on the owner · 1 external residue · 0 parked to a later wave._
 
 - **AUTH-001** · Sign-in — 4/5 closed · depth 2
   - `[!] AUTH-001/T4` — The sign-in form, in twenty languages, keyboard-reachable, with an accessible name on every field  · _pending-decision_ · **Blocked by:** pending-decision: I18N-DEC-02 — the form must render in the reader's locale across twenty, and the application has no i18n framework yet; which one i…
@@ -61,12 +61,9 @@ _42/69 closed (60%) · 27 outstanding — 23 buildable now · 3 waiting on the o
 - **SCENE-003** · The sky — 3/3 closed
 - **SCENE-005** · Orbit stages — 4/4 closed
 - **SCENE-006** · The mapping stage — 2/2 closed
-- **ADMIN-002** · Admin console shell — 0/5 closed · depth 4
-  - `[ ] ADMIN-002/T1` — A `/admin` segment layout whose role check every page inherits, answering `404` to a non-admin
-  - `[ ] ADMIN-002/T2` — The seven destinations, with the landing surface listing what needs attention
+- **ADMIN-002** · Admin console shell — 3/5 closed · depth 4
+  - `[~] ADMIN-002/T2` — The seven destinations, with the landing surface listing what needs attention  · **Note:** The seven-destination nav ships in apps/web/src/app/admin/layout.tsx as the console's navigational chrome. The landing surface's listing of what need…
   - `[ ] ADMIN-002/T3` — One destructive-action component, naming the subject, with a typed confirmation for the three that cannot be undone
-  - `[ ] ADMIN-002/T4` — An environment bar wherever `APP_ENV` is not production
-  - `[ ] ADMIN-002/T5` — Console chrome in English, with the exception stated where a reader will find it
 
 - **AUTH-004** · Sign-out — 3/5 closed · depth 4
   - `[~] AUTH-004/T4` — Every authenticated response is `no-store`, verified by pressing the back button  · **Note:** The mechanism ships and is header-verified; the acceptance the row names — pressing Back — is owed, so this is in-progress rather than closed. apps/w…

@@ -21,6 +21,12 @@ than noticed.
 
 ---
 
+## 2026-09-07 · ADMIN-002/T1,T4,T5 (3 tasks) · iter 17
+STATUS: green · TIER: S · OUTCOME: CLOSED
+REASON: —
+WHAT CHANGED: the admin console shell (apps/web/src/app/admin/). layout.tsx gates the admin segment — a structural check every page beneath it inherits (SEC-R01) — through a new apps/web/src/auth/page-guard.ts:requireAdminPage, the consumer-side translator deep-review flagged in iter 12: it maps AUTH-002's requireAdmin answer into the App Router's control flow, notFound() for the 404 a non-admin receives (not 403, so the console's existence is not confirmed to a guess) and redirect() for a signed-out reader. T4 is the not-production environment bar (named in text and a hue used nowhere else, A11Y-R03); T5 the English chrome (a left rail of the seven destinations, a content column) with the I18N-R01 exception stated in the layout's own doc. Verified against the built server (next build then next start, Next 16.3.4, PostgreSQL 17.11): admin 200, investor 404, signed-out redirected to sign-in, and both the investor 404 and the admin page carried no-store from the proxy, so a shared cache cannot hold the who-asked 404 to serve an admin. The translator is pinned by page-guard.test.ts (3 tests, mutation-proved: a 404 rendered as a redirect reddens it). Full app suite 251 tests green.
+NEXT: ADMIN-002/T2 is [~] — the seven-destination nav ships in the layout, the what-needs-attention landing is build-ahead (its sources arrive with content, decks, the portfolio board and a queryable register). ADMIN-002/T3 (the destructive-action component) waits on its first callers (ADMIN-001 delete, MAIL-001 send). With the shell up, ADMIN-001 (account management — it unblocks AUTH-003/T7 and the account audit callers) and SEC-002/T5 (the admin audit view) are the next W1 work; CMS-001 (the content model) is the clean depth-4 data feature with no UI or i18n dependency.
+
 ## 2026-09-07 · AUTH-003/T1,T2,T6 (3 tasks) · iter 16
 STATUS: green · TIER: C · OUTCOME: CLOSED
 REASON: —

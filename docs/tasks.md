@@ -269,11 +269,15 @@ PRD: `ADMIN-001`, `SEC-R04`
 ## ADMIN-002 · Admin console shell
 PRD: `ADMIN-002`
 
-- [ ] ADMIN-002/T1 — A `/admin` segment layout whose role check every page inherits, answering `404` to a non-admin
-- [ ] ADMIN-002/T2 — The seven destinations, with the landing surface listing what needs attention
+- [x] ADMIN-002/T1 — A `/admin` segment layout whose role check every page inherits, answering `404` to a non-admin
+  Evidence: apps/web/src/app/admin/layout.tsx gates the admin segment through apps/web/src/auth/page-guard.ts:requireAdminPage, which resolves the request's session through AUTH-002's requireAdmin and translates its answer into the App Router's control flow — notFound() for the 404 a non-admin receives, redirect() for a signed-out reader. Every page beneath the segment is a child of this layout and inherits the check structurally (SEC-R01). Verified against the built server (next build then next start, Next 16.3.4, PostgreSQL 17.11): an admin request answered 200, an investor request answered 404 — not 403, so the console's existence is not confirmed to a guess — and a signed-out request redirected to the sign-in page; the investor 404 and the admin page both carried Cache-Control no-store from the proxy, so a shared cache cannot hold the who-asked 404 to serve an admin. The translation is pinned by apps/web/src/auth/page-guard.test.ts (3 tests, mutation-proved: a 404 rendered as a redirect, which would confirm the console exists, reddens the test).
+- [~] ADMIN-002/T2 — The seven destinations, with the landing surface listing what needs attention
+  Note: The seven-destination nav ships in apps/web/src/app/admin/layout.tsx as the console's navigational chrome. The landing surface's listing of what needs attention is build-ahead: its sources — content with unreviewed locales, decks whose grants were never opened, a portfolio row gone stale, the register's open questions — each arrive with the feature that raises them, and none of those reads exists yet, so apps/web/src/app/admin/page.tsx says there is nothing to attend to rather than inventing items. Closes when at least one attention source is queryable.
 - [ ] ADMIN-002/T3 — One destructive-action component, naming the subject, with a typed confirmation for the three that cannot be undone
-- [ ] ADMIN-002/T4 — An environment bar wherever `APP_ENV` is not production
-- [ ] ADMIN-002/T5 — Console chrome in English, with the exception stated where a reader will find it
+- [x] ADMIN-002/T4 — An environment bar wherever `APP_ENV` is not production
+  Evidence: apps/web/src/app/admin/layout.tsx renders an environment bar above the console when apps/web/src/config/index.ts reports app.env is not production, naming the environment in text and in a hue the console uses nowhere else (apps/web/src/app/admin/admin.module.css holds the warning token, distinct from the link accent), so it carries meaning beyond colour (A11Y-R03). Verified against the built server under APP_ENV=development: the bar rendered, reading the environment name and the words not production.
+- [x] ADMIN-002/T5 — Console chrome in English, with the exception stated where a reader will find it
+  Evidence: apps/web/src/app/admin/layout.tsx renders the console chrome — a left rail of the seven destinations, a content column, the environment bar — in English, and states the I18N-R01 exception in its own doc comment where a developer reading the layout finds it, matching the design §3 statement: I18N-R01 governs visitor-facing strings, both admins read English, and the content an admin writes is translated separately (CMS-005). Verified against the built server: the rail and its destination labels rendered in English.
 
 ## INV-001 · Investor room shell
 PRD: `INV-001`

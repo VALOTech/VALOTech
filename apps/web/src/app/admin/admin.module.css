@@ -1,0 +1,87 @@
+/* The admin console chrome (ADMIN-002). Deliberately plain: a staff surface,
+   English, legible, and not competing with the gateway's scene. Colours are
+   named as tokens so a later theme pass changes them in one place. */
+
+.console {
+  --admin-ink: #1a1a2e;
+  --admin-rail: #f4f4f7;
+  --admin-line: #d8d8e0;
+  --admin-link: #2b3a8c;
+  /* The not-production warning: amber, a hue the console uses nowhere else, so
+     it cannot be mistaken for an ordinary surface. Meaning is never carried by
+     the colour alone — the bar also names the environment (A11Y-R03). */
+  --admin-warn-bg: #fde68a;
+  --admin-warn-ink: #713f12;
+
+  min-height: 100vh;
+  color: var(--admin-ink);
+  font:
+    15px/1.5 system-ui,
+    -apple-system,
+    Segoe UI,
+    sans-serif;
+}
+
+.envBar {
+  background: var(--admin-warn-bg);
+  color: var(--admin-warn-ink);
+  padding: 0.4rem 1rem;
+  text-align: center;
+  font-size: 0.85rem;
+  letter-spacing: 0.02em;
+}
+
+.envBar strong {
+  text-transform: uppercase;
+}
+
+.frame {
+  display: flex;
+  align-items: stretch;
+  min-height: 100vh;
+}
+
+.rail {
+  flex: 0 0 14rem;
+  background: var(--admin-rail);
+  border-right: 1px solid var(--admin-line);
+  padding: 1.25rem 1rem;
+}
+
+.wordmark {
+  display: block;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  margin-bottom: 1.25rem;
+}
+
+.rail ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.rail li {
+  margin: 0.15rem 0;
+}
+
+.rail a {
+  display: block;
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  color: var(--admin-link);
+  text-decoration: none;
+}
+
+.rail a:hover,
+.rail a:focus-visible {
+  background: #fff;
+  outline: 2px solid var(--admin-link);
+  outline-offset: -2px;
+}
+
+.content {
+  flex: 1 1 auto;
+  padding: 1.5rem 2rem;
+  max-width: 60rem;
+}
