@@ -40,7 +40,7 @@ Every table, and what it holds about a person:
 | Table | Personal data | On erasure |
 |---|---|---|
 | `accounts` | name, address | **deleted** — the row itself |
-| `sessions` | last-seen time, coarse location | cascade |
+| `sessions` | last-seen time | cascade |
 | `invitations` | — (account id, token hash) | cascade |
 | `content_grants` | which decks (`account_id`); `granted_by` the granter | cascade; `granted_by` **set null** |
 | `content_locales` | `reviewed_by` the reviewer | **set null** — the reviewed translation stays |
@@ -84,6 +84,7 @@ pattern. A gate that gets quieter each time it fires stops being a gate.
 | `audit` | 7 years | The longest applicable Singapore record-keeping obligation; holds no personal data |
 | `mail_log` | 2 years | Long enough to answer a question about a past campaign (`MAIL-002`) |
 | `sessions` | until expiry, then deleted | Nothing is learned from an expired session |
+| `invitations` | until consumed or expired, then deleted | An unused invitation is a live credential; a spent or lapsed one is not |
 | `content_revisions` | forever | The archive is the point (`CMS-R01`) |
 
 A retention window is enforced by a scheduled deletion, not by a policy

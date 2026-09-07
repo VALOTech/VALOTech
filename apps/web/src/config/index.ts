@@ -206,7 +206,7 @@ export function loadConfig(source: Source = process.env): Config {
   const secretRaw = present(source, 'SESSION_SECRET');
   let sessionSecret = '';
   if (secretRaw === undefined) {
-    problems.push('SESSION_SECRET is required — it signs the session cookie');
+    problems.push('SESSION_SECRET is required — it secures the session cookie');
   } else if (secretRaw.length < SESSION_SECRET_MIN_LENGTH) {
     problems.push(`SESSION_SECRET must be at least ${SESSION_SECRET_MIN_LENGTH} characters`);
   } else {

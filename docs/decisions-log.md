@@ -20,9 +20,30 @@ An entry is filed the moment the choice surfaces, not when it is answered. Nothi
 - **Blocks:** SEC-002/T4
 - **Status:** OPEN. Safe default: no audit writer exists yet — `SEC-002/T3` is unbuilt and `grep -rn audit apps/web/src` finds only the types and the drift guard — so nothing is written into `before`/`after` until this settles; the trail cannot hold a personal value it has no code to write.
 
+<a id="AUTH-DEC-02"></a>
+### `AUTH-DEC-02` — Is the session cookie signed with `SESSION_SECRET` — OPEN
+
+- **Decision:** The session cookie carries a random token whose hash the `sessions` row stores (`AUTH-002` §3). Is that token additionally signed with `SESSION_SECRET`, so a tampered cookie is rejected before the row lookup and rotating the secret signs every live session out — or is the cookie the bare token, with `SESSION_SECRET` used for nothing on this path?
+- **Options:** **A** Sign it — the cookie is `<token>.<HMAC(SESSION_SECRET, token)>`; rotating `SESSION_SECRET` becomes a real emergency sign-out lever and a tampered cookie fails before it reaches the database · **B** Leave it bare — validity is the `token_hash` lookup alone, `SESSION_SECRET` has no consumer on the session path, and the emergency lever is deleting the session rows (`AUTH-004`'s `session.invalidate_all`).
+- **Recommendation:** **A**. It makes the emergency lever `env.example` and `CRED-001` document real, adds tamper rejection before a database round-trip, and gives `SESSION_SECRET` — a required credential — an actual consumer rather than leaving it orphaned. **B** is simpler but orphans a required credential and turns a documented security lever into a false statement, which is the defect this entry was opened on.
+- **Decision owner:** user
+- **Blocks:** — none — (`AUTH-002/T1` builds the safe default and a resolution to **A** revises it; the tables are unaffected either way)
+- **Status:** OPEN. Safe default: the store validates by `token_hash` lookup and `SESSION_SECRET` is unused on the session path; `env.example` and `config` name the lever that works today — deleting the session rows — rather than claiming rotation signs sessions out, so no fail-open lever is documented while this waits.
+
 ---
 
 ## Resolved decisions
+
+<a id="AUTH-DEC-01"></a>
+### `AUTH-DEC-01` — The session store: the auth library's, or the schema's own — RESOLVED 2026-09-07 · loop-settled
+
+- **Decision:** `INFRA-DEC-01` named Auth.js as the expected shape and `AUTH-002` §6 left the library-or-hand-rolled choice to the build, requiring a register entry rather than a silent substitution. `DATA-001/T3` built the store; which shape did it take?
+- **Options:** **A** Auth.js with its database adapter · **B** A hand-rolled `sessions` table the application's own middleware resolves.
+- **Decision owner:** user — settled by the loop under §1.11, reversible at any time
+- **Settled by:** loop
+- **Forcing source:** MEASUREMENT `docs/designs/auth/auth-002-session-and-role-gate.md` — the store must support server-side invalidation ("every session for that account is deleted") and must not hold a presentable credential ("stores only the token's hash ... a database dump is then not a set of live sessions"). Auth.js's Credentials provider cannot use database sessions, so that invalidation is unbuildable on it, and Auth.js's session model stores the raw session token, the exact property `token_hash` exists to deny. Option **A**'s strongest case is one operational surface across the family; it fails because the two behavioural guarantees `AUTH-002` already fixed are unbuildable on Auth.js's session model, so adopting it would mean rewriting them rather than inheriting them.
+- **Overturned by:** Auth.js gaining a database-session Credentials path that stores only a token hash — at which point the store could move onto it with no change above `AUTH-002`.
+- **Status:** RESOLVED 2026-09-07 — **B**. `sessions` and `invitations` are hand-rolled tables (`apps/web/migrations/1788758032000_auth_store.sql`); `next-auth`/`@auth/*` is not a dependency, and `AUTH-002`'s middleware resolves the cookie to an account.
 
 <a id="INFRA-DEC-06"></a>
 ### `INFRA-DEC-06` — The application's data stack: migration tool, query layer, test runner — RESOLVED 2026-09-07

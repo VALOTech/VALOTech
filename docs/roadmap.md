@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_293 tasks in the plan, 66 closed, 227 outstanding._
+_294 tasks in the plan, 68 closed, 226 outstanding._
 
 ---
 
@@ -16,15 +16,13 @@ _293 tasks in the plan, 66 closed, 227 outstanding._
 
 _What nothing else stands on. The page that already serves and its cross-cutting layers are here because nothing depends on them; the local stack, the schema and credential handling are here because everything does. This wave is finished when a developer brings the stack up with one command and a migration has been applied and rolled back — not written, run, because a rollback nobody has executed is not a rollback._
 
-_44/47 closed (93%) · 3 outstanding — 1 buildable now · 0 waiting on the owner · 1 external residue · 1 parked to a later wave._
+_46/48 closed (95%) · 2 outstanding — 0 buildable now · 0 waiting on the owner · 1 external residue · 1 parked to a later wave._
 
 - **INFRA-001** · Local development stack — 5/5 closed
 - **SITE-001** · The gateway page — 8/8 closed
 - **A11Y-001** · Accessibility baseline — 5/5 closed
 - **CRED-001** · Credential handling — 5/5 closed
-- **DATA-001** · Schema and migrations — 11/12 closed · depth 1
-  - `[ ] DATA-001/T3` — Sessions table, or the session store the auth library needs
-
+- **DATA-001** · Schema and migrations — 13/13 closed
 - **I18N-001** · Twenty-locale runtime dictionary — 3/4 closed · depth 1
   - `[!] I18N-001/T4` — Eleven locales read as prose, sentence by sentence, by someone who speaks them  · _external_ · **Blocked by:** pending-external: a native reader for `es`, `pt`, `ru`, `tr`, `id`, `ms`, `tl`, `th`, `ar`, `ja` and `zt`. All eleven pass every mechanical class in…
 

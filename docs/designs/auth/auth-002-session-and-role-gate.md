@@ -111,7 +111,9 @@ invalidation whenever it suspends or re-roles an account.
   repository above it. The decision is not settled here because it is
   implementation, not behaviour, and `INFRA-DEC-01` already names Auth.js as the
   expected shape; if the build finds it a poor fit, that is a note on this design
-  and a register entry, not a silent substitution.
+  and a register entry, not a silent substitution. The build found the session
+  model a poor fit and chose the hand-rolled store; the reasoning is
+  `AUTH-DEC-01`.
 
 ## 7. Task list
 

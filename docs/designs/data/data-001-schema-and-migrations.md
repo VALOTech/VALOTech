@@ -4,7 +4,7 @@ title: Schema and migrations
 domain: data
 prd_refs: [DATA-001, DATA-R01, DATA-R03, DATA-R05, SEC-R04, CMS-R01, CMS-R03]
 depends_on: [INFRA-001]
-depended_by: [AUTH-001, AUTH-002, CMS-001, DATA-003, SEC-002]
+depended_by: [AUTH-001, AUTH-002, AUTH-003, CMS-001, DATA-003, SEC-002]
 layers_touched: [infra, data]
 cross_cutting_rules: [DATA-R01, DATA-R03, DATA-R05, SEC-R04, CMS-R01, CMS-R03]
 status: design-ready
@@ -63,9 +63,10 @@ browser to forget it.
 
 | Column | Type | Notes |
 |---|---|---|
-| `id` | `uuid` PK | the value in the cookie is a hash of this, never this |
+| `id` | `uuid` PK | the internal identifier, never in the cookie |
 | `account_id` | `uuid` FK → accounts | `on delete cascade`: erasing a person ends their sessions |
-| `created_at`, `last_seen_at`, `expires_at` | `timestamptz` | |
+| `token_hash` | `text` unique not null | the cookie carries a random token; only its hash is stored, so a database dump is not a set of live sessions (`AUTH-002`) |
+| `created_at`, `last_seen_at`, `expires_at` | `timestamptz` not null | |
 
 **`invitations`** — a single-use token with an expiry, consumed atomically.
 
@@ -244,6 +245,7 @@ archive to satisfy a staff member's erasure request.
 - `DATA-001/T6` — Locale rows carrying a review state a query can filter on
 - `DATA-001/T11` — Media and its references, with the audience reached by join
 - `DATA-001/T12` — The portfolio state table
+- `DATA-001/T13` — The invitations table: single-use token, expiry, and an atomic consume
 - `DATA-001/T7` — Mail log and unsubscribe state
 - `DATA-001/T8` — Audit table, append-only, with a database-level guard against update and delete
 - `DATA-001/T9` — Configuration table with a recorded prior value

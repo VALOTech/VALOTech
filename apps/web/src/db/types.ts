@@ -141,6 +141,23 @@ export interface AccountsTable {
   updated_at: Generated<Date>;
 }
 
+export interface SessionsTable {
+  id: Generated<string>;
+  account_id: string;
+  token_hash: string;
+  created_at: Generated<Date>;
+  last_seen_at: Generated<Date>;
+  expires_at: Date;
+}
+
+export interface InvitationsTable {
+  id: Generated<string>;
+  account_id: string;
+  token_hash: string;
+  expires_at: Date;
+  consumed_at: Date | null;
+}
+
 export interface ContentItemsTable {
   id: Generated<string>;
   type: ContentType;
@@ -246,6 +263,8 @@ export interface PortfolioTable {
 
 export interface Database {
   accounts: AccountsTable;
+  sessions: SessionsTable;
+  invitations: InvitationsTable;
   content_items: ContentItemsTable;
   content_revisions: ContentRevisionsTable;
   content_locales: ContentLocalesTable;
@@ -310,6 +329,31 @@ export const SCHEMA: Readonly<Record<keyof Database, TableSpec>> = {
     ],
     primaryKey: ['id'],
     checks: { role: ACCOUNT_ROLES, state: ACCOUNT_STATES },
+  },
+  sessions: {
+    migration: '_auth_store.sql',
+    columns: [
+      { name: 'id', type: 'uuid', notNull: true, hasDefault: true, unique: true },
+      { name: 'account_id', type: 'uuid', notNull: true, hasDefault: false, unique: false },
+      { name: 'token_hash', type: 'text', notNull: true, hasDefault: false, unique: true },
+      { name: 'created_at', type: 'timestamptz', notNull: true, hasDefault: true, unique: false },
+      { name: 'last_seen_at', type: 'timestamptz', notNull: true, hasDefault: true, unique: false },
+      { name: 'expires_at', type: 'timestamptz', notNull: true, hasDefault: false, unique: false },
+    ],
+    primaryKey: ['id'],
+    checks: {},
+  },
+  invitations: {
+    migration: '_auth_store.sql',
+    columns: [
+      { name: 'id', type: 'uuid', notNull: true, hasDefault: true, unique: true },
+      { name: 'account_id', type: 'uuid', notNull: true, hasDefault: false, unique: false },
+      { name: 'token_hash', type: 'text', notNull: true, hasDefault: false, unique: true },
+      { name: 'expires_at', type: 'timestamptz', notNull: true, hasDefault: false, unique: false },
+      { name: 'consumed_at', type: 'timestamptz', notNull: false, hasDefault: false, unique: false },
+    ],
+    primaryKey: ['id'],
+    checks: {},
   },
   content_items: {
     migration: '_content.sql',

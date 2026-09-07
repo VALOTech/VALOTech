@@ -142,6 +142,10 @@ function checkedValues(sql: string, table: string, column: string): string[] {
 
 const ID = '00000000-0000-0000-0000-000000000000';
 const AT = new Date('2026-01-01T00:00:00.000Z');
+// Twelve hours after AT, which is what SESSION_TTL_SECONDS defaults to. An
+// expiry is computed by the caller and passed, never defaulted by the
+// database, so it is the one timestamp here that is not the row's own.
+const EXPIRES_AT = new Date('2026-01-01T12:00:00.000Z');
 const BLOCKS = [{ type: 'paragraph', text: 'The quarter in one line.' }];
 
 /**
@@ -161,6 +165,21 @@ const SELECTABLE_SAMPLES: { readonly [T in keyof Database]: Selectable<Database[
     state: 'invited',
     created_at: AT,
     updated_at: AT,
+  },
+  sessions: {
+    id: ID,
+    account_id: ID,
+    token_hash: '3b8f1c4d90a7e25f6b0d38c1a9e47f52d6c8b013a5f2e97c4d1b6a08f3e5c729',
+    created_at: AT,
+    last_seen_at: AT,
+    expires_at: EXPIRES_AT,
+  },
+  invitations: {
+    id: ID,
+    account_id: ID,
+    token_hash: 'c41d9f0a7b62e58d3f1a04c96e2b7d85f30c1a6b9e47d258f0c3a1b6d94e7f02',
+    expires_at: EXPIRES_AT,
+    consumed_at: null,
   },
   content_items: {
     id: ID,
@@ -264,6 +283,24 @@ const INSERTABLE_SAMPLES: { readonly [T in keyof Database]: Insertable<Database[
     name: 'An Invitation',
     role: 'investor',
     password_hash: null,
+  },
+  // The row a sign-in writes: an account, the hash of the token that went
+  // into the cookie, and when it stops working. The database fills the rest, and
+  // last_seen_at starting equal to created_at is what a session that has been
+  // used exactly once looks like.
+  sessions: {
+    account_id: ID,
+    token_hash: '7e2a5c1f83b04d69e5c7a2f14b8d306c9f1e5a7b3c0d248e6f9a1b5c7d3e0f82',
+    expires_at: EXPIRES_AT,
+  },
+  // consumed_at is written by the consumption, never by the issue, so it is
+  // null here -- and the UPDATE that sets it is what makes the token
+  // single-use under two simultaneous posts.
+  invitations: {
+    account_id: ID,
+    token_hash: 'd05b3e8a1c74f296b8e0d3a5c1f74b92e60a8d3c5b1f907e4a2c6d8b0f3e5a71',
+    expires_at: EXPIRES_AT,
+    consumed_at: null,
   },
   content_items: {
     type: 'report',
