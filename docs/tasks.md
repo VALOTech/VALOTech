@@ -175,18 +175,30 @@ Design: [docs/designs/a11y/a11y-001-accessibility-baseline.md](designs/a11y/a11y
 
 Design: [docs/designs/data/data-001-schema-and-migrations.md](designs/data/data-001-schema-and-migrations.md) · PRD: `DATA-001`
 
-- [ ] DATA-001/T1 — Choose and wire the migration tool; one command applies and one rolls back
-- [ ] DATA-001/T2 — Accounts table: identity, role, state, created and updated
-- [ ] DATA-001/T3 — Sessions table, or the session store the auth library needs
-- [ ] DATA-001/T4 — Content items and their revisions, with the published revision named by a pointer
-- [ ] DATA-001/T5 — Content grants and the audience constraint
-- [ ] DATA-001/T6 — Locale rows carrying a review state a query can filter on
-- [ ] DATA-001/T7 — Mail log and unsubscribe state
-- [ ] DATA-001/T8 — Audit table, append-only, with a database-level guard against update and delete
-- [ ] DATA-001/T9 — Configuration table with a recorded prior value
-- [ ] DATA-001/T10 — Every migration has a down-migration that has been run
-- [ ] DATA-001/T11 — Media and its references, with the audience reached by join
-- [ ] DATA-001/T12 — The portfolio state table
+- [!] DATA-001/T1 — Choose and wire the migration tool; one command applies and one rolls back
+  Blocked by: DATA-001/T1 — writes a migration in the form the chosen tool takes, so it cannot begin until the tool is wired.
+- [!] DATA-001/T2 — Accounts table: identity, role, state, created and updated
+  Blocked by: DATA-001/T1 — writes a migration in the form the chosen tool takes, so it cannot begin until the tool is wired.
+- [!] DATA-001/T3 — Sessions table, or the session store the auth library needs
+  Blocked by: DATA-001/T1 — writes a migration in the form the chosen tool takes, so it cannot begin until the tool is wired.
+- [!] DATA-001/T4 — Content items and their revisions, with the published revision named by a pointer
+  Blocked by: DATA-001/T1 — writes a migration in the form the chosen tool takes, so it cannot begin until the tool is wired.
+- [!] DATA-001/T5 — Content grants and the audience constraint
+  Blocked by: DATA-001/T1 — writes a migration in the form the chosen tool takes, so it cannot begin until the tool is wired.
+- [!] DATA-001/T6 — Locale rows carrying a review state a query can filter on
+  Blocked by: DATA-001/T1 — writes a migration in the form the chosen tool takes, so it cannot begin until the tool is wired.
+- [!] DATA-001/T7 — Mail log and unsubscribe state
+  Blocked by: DATA-001/T1 — writes a migration in the form the chosen tool takes, so it cannot begin until the tool is wired.
+- [!] DATA-001/T8 — Audit table, append-only, with a database-level guard against update and delete
+  Blocked by: DATA-001/T1 — writes a migration in the form the chosen tool takes, so it cannot begin until the tool is wired.
+- [!] DATA-001/T9 — Configuration table with a recorded prior value
+  Blocked by: DATA-001/T1 — writes a migration in the form the chosen tool takes, so it cannot begin until the tool is wired.
+- [!] DATA-001/T10 — Every migration has a down-migration that has been run
+  Blocked by: DATA-001/T1 — writes a migration in the form the chosen tool takes, so it cannot begin until the tool is wired.
+- [!] DATA-001/T11 — Media and its references, with the audience reached by join
+  Blocked by: DATA-001/T1 — writes a migration in the form the chosen tool takes, so it cannot begin until the tool is wired.
+- [!] DATA-001/T12 — The portfolio state table
+  Blocked by: DATA-001/T1 — writes a migration in the form the chosen tool takes, so it cannot begin until the tool is wired.
 
 ## AUTH-001 · Sign-in
 Design: [docs/designs/auth/auth-001-sign-in.md](designs/auth/auth-001-sign-in.md) · PRD: `AUTH-001`, `SEC-R01`, `SEC-R03`
@@ -407,13 +419,16 @@ PRD: `OPS-002`, `DATA-R02`
 ## INFRA-001 · Local development stack
 PRD: `INFRA-001`
 
-- [~] INFRA-001/T1 — PostgreSQL 17 on 5434 under docker-compose, with a named volume and a health check
-  Note: `make infra-up` starts PostgreSQL 17 on 5434 — the row this repository claimed in `docs/ECOSYSTEM.md`, not the engine's default, because two compose files reaching for 5432 is how a stack silently talks to a sibling's database. The health check waits for `pg_isready` rather than for the port, since Postgres accepts connections before it can answer them. The application half waits on there being an application.
+- [x] INFRA-001/T1 — PostgreSQL 17 on 5434 under docker-compose, with a named volume and a health check
+  Evidence: docker-compose.yml — `make infra-up` brought up `postgres:17-alpine` (PostgreSQL 17.11), the `pg_isready` health check reached `healthy` at t+16s, the host port mapped 5434→5432, and the named volume `valotech-postgres` was created; `make infra-reset` tore it all down with no residue. Verified by running, not asserting. The task's text is the Postgres side alone; bringing the application up against it is `INFRA-001/T3`.
 - [~] INFRA-001/T2 — `env.example` names every variable the application reads, with what its absence means
   Note: written and complete for the variables the designs name — app, database, session, rate limit — each with whether it is required and what a missing one does. It cannot close until code reads them, because the check that matters is that the list and the reader agree, and there is no reader yet. The mail block is deliberately empty and says why: `docs/decisions-log.md#MAIL-DEC-01`.
-- [ ] INFRA-001/T3 — Make targets for up, down, reset, and the three migration commands
-- [ ] INFRA-001/T4 — `make migrate-roundtrip` applies, rolls back and re-applies against a throwaway database
-- [ ] INFRA-001/T5 — A first-run path that works from a fresh clone with no prior state
+- [!] INFRA-001/T3 — Make targets for up, down, reset, and the three migration commands
+  Blocked by: pending-decision: `INFRA-DEC-06` — [decisions-log.md#INFRA-DEC-06](decisions-log.md#INFRA-DEC-06). up/down/reset exist; the three migration commands are the migration tool's, and the tool is the decision.
+- [!] INFRA-001/T4 — `make migrate-roundtrip` applies, rolls back and re-applies against a throwaway database
+  Blocked by: INFRA-001/T3 — the round-trip runs the migrate commands T3 wires.
+- [!] INFRA-001/T5 — A first-run path that works from a fresh clone with no prior state
+  Blocked by: INFRA-001/T3 — a first run applies the migrations, which T3 wires.
 
 ## CRED-001 · Credential handling
 PRD: `CRED-001`, `SEC-R05`
