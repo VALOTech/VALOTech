@@ -28,7 +28,7 @@ An entry is filed the moment the choice surfaces, not when it is answered. Nothi
 - **Recommendation:** **A**. It makes the emergency lever `env.example` and `CRED-001` document real, adds tamper rejection before a database round-trip, and gives `SESSION_SECRET` — a required credential — an actual consumer rather than leaving it orphaned. **B** is simpler but orphans a required credential and turns a documented security lever into a false statement, which is the defect this entry was opened on.
 - **Decision owner:** user
 - **Blocks:** — none —
-- **Revises:** AUTH-002/T1 — the session cookie ships the bare-token safe default; a resolution to **A** signs the token with `SESSION_SECRET`
+- **Revises:** AUTH-002/T1, AUTH-002/T3 — the cookie ships the bare-token safe default and the gate resolves it by lookup alone; a resolution to **A** signs the token with `SESSION_SECRET` on issue and verifies the HMAC in the gate before the lookup
 - **Status:** OPEN. Safe default: the store validates by `token_hash` lookup and `SESSION_SECRET` is unused on the session path; `env.example` and `config` name the lever that works today — deleting the session rows — rather than claiming rotation signs sessions out, so no fail-open lever is documented while this waits.
 
 <a id="OPS-DEC-02"></a>

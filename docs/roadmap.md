@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_294 tasks in the plan, 73 closed, 221 outstanding._
+_294 tasks in the plan, 74 closed, 220 outstanding._
 
 ---
 
@@ -27,7 +27,7 @@ _46/48 closed (95%) · 2 outstanding — 0 buildable now · 0 waiting on the own
   - `[!] I18N-001/T4` — Eleven locales read as prose, sentence by sentence, by someone who speaks them  · _external_ · **Blocked by:** pending-external: a native reader for `es`, `pt`, `ru`, `tr`, `id`, `ms`, `tl`, `th`, `ar`, `ja` and `zt`. All eleven pass every mechanical class in…
 
 - **SITE-002** · Public and investor chapter split — 3/4 closed · depth 1
-  - `[!] SITE-002/T4` — The split is enforced by the server rather than by CSS  · _cross-wave-parked_ · **Blocked by:** AUTH-002/T3
+  - `[!] SITE-002/T4` — The split is enforced by the server rather than by CSS  · _cross-wave-parked_ · **Blocked by:** INV-002/T1 — the enforcement is that task's, and this row closes when the served page stops shipping the gated markup to a visitor.
 
 - **SITE-003** · Chapter sequence — 2/2 closed
 - **SITE-004** · The contact close — 2/2 closed
@@ -35,7 +35,7 @@ _46/48 closed (95%) · 2 outstanding — 0 buildable now · 0 waiting on the own
 
 _Who may read what, and what records that they did. Everything above reads through the gate this wave builds, so a shortcut here is a shortcut in every feature after it. Sign-out precedes invitation deliberately: a session that cannot be ended server-side is a defect that grows with every account created. The scene sits here too, one layer above the page it moves behind._
 
-_27/69 closed (39%) · 42 outstanding — 41 buildable now · 1 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_28/69 closed (40%) · 41 outstanding — 40 buildable now · 1 waiting on the owner · 0 external residue · 0 parked to a later wave._
 
 - **AUTH-001** · Sign-in — 4/5 closed · depth 2
   - `[ ] AUTH-001/T4` — The sign-in form, in twenty languages, keyboard-reachable, with an accessible name on every field
@@ -56,9 +56,8 @@ _27/69 closed (39%) · 42 outstanding — 41 buildable now · 1 waiting on the o
   - `[ ] SEC-002/T5` — The admin view: newest first, filterable by actor, subject and action, with no edit or delete control
   - `[!] SEC-002/T4` — Only changed fields are recorded, and no personal data reaches the trail  · _pending-decision_ · **Blocked by:** pending-decision: SEC-DEC-01 — whether a changed field records its name or an allow-listed value is the trail's personal-data policy, and it is the u…
 
-- **AUTH-002** · Session and role gate — 1/4 closed · depth 3
+- **AUTH-002** · Session and role gate — 2/4 closed · depth 3
   - `[ ] AUTH-002/T2` — Server-side invalidation, so a stolen cookie dies on sign-out
-  - `[ ] AUTH-002/T3` — Role gate at the query, not the template; a helper that cannot be forgotten
   - `[ ] AUTH-002/T4` — Isolation test: an investor request for another investor's deck returns nothing, not a redirect
 
 - **AUTH-003** · Invitation and password reset — 0/7 closed · depth 3
@@ -333,7 +332,7 @@ _0/56 closed (0%) · 56 outstanding — 56 buildable now · 0 waiting on the own
   - `[ ] INV-002/T4` — The dictionary splits, and the gated catalogue is sent only to an entitled reader
   - `[ ] INV-002/T5` — The parity gate counts both catalogues
   - `[ ] INV-002/T6` — The invitation block, in twenty locales, carrying no fragment of what it invites to
-  - `[!] INV-002/T1` — The gated components are not called for a reader who may not see them  · _in-graph_ · **Blocked by:** AUTH-002/T3
+  - `[!] INV-002/T1` — The gated components are not called for a reader who may not see them  · _in-graph_ · **Blocked by:** SITE-005/T1 — the gateway is still the static file, so there is no server response to withhold the gated chapters from; the gate they would be withhe…
 
 - **INV-003** · Portfolio progress — 0/5 closed · depth 10
   - `[ ] INV-003/T1` — Six rows, a constrained product and a closed four-word stage vocabulary

@@ -51,7 +51,7 @@ PRD: `SITE-002` · Decision: [decisions-log.md#SITE-DEC-01](decisions-log.md#SIT
 - [x] SITE-002/T3 — The navigation names the gated pair only to a signed-in reader
   Evidence: assets/site.css:.nav-gated
 - [!] SITE-002/T4 — The split is enforced by the server rather than by CSS
-  Blocked by: AUTH-002/T3
+  Blocked by: INV-002/T1 — the enforcement is that task's, and this row closes when the served page stops shipping the gated markup to a visitor.
 
 ## SITE-003 · Chapter sequence
 Design: [docs/designs/site/site-003-chapter-sequence.md](designs/site/site-003-chapter-sequence.md) · PRD: `SITE-003`
@@ -221,7 +221,8 @@ Design: [docs/designs/auth/auth-002-session-and-role-gate.md](designs/auth/auth-
 - [x] AUTH-002/T1 — Session cookie: httpOnly, SameSite=Lax, Secure, rotated on sign-in
   Evidence: apps/web/src/auth/session.ts — issue() writes a fresh sessions row storing sha256 of a 32-byte CSPRNG token (never the token) and returns the cookie: `__Host-valotech` outside development and `valotech` in it, HttpOnly, SameSite=Lax, Secure outside development, Path=/, Max-Age from SESSION_TTL_SECONDS; a fresh row per call is the rotation that keeps a planted cookie from becoming a session. Verified against PostgreSQL 17.11 (row token_hash equals sha256 of the cookie and not the raw token); apps/web/src/auth/session.test.ts pins the production __Host- cookie's Secure and Path attributes, which the route suite under development cannot reach. The bare-token vs signed cookie is docs/decisions-log.md#AUTH-DEC-02.
 - [ ] AUTH-002/T2 — Server-side invalidation, so a stolen cookie dies on sign-out
-- [ ] AUTH-002/T3 — Role gate at the query, not the template; a helper that cannot be forgotten
+- [x] AUTH-002/T3 — Role gate at the query, not the template; a helper that cannot be forgotten
+  Evidence: apps/web/src/auth/gate.ts:resolveSession — one `UPDATE sessions ... FROM accounts ... RETURNING` turns a cookie into an `Actor` (id and role) and slides `last_seen_at` and `expires_at` in the same statement, so the predicate that refuses an expired session or a suspended account is the predicate that withholds the slide and no ordering mistake can resurrect a session; apps/web/src/auth/gate.ts:requireInvestor and apps/web/src/auth/gate.ts:requireAdmin answer that actor or the response the caller returns — 303 to the form with no reader, 404 and never 403 for a signed-in investor at an admin surface, both `no-store`. Verified against PostgreSQL 17.11 by apps/web/src/auth/gate.test.ts: 21 tests, skipping cleanly with no `DATABASE_URL` and running with one, and mutation-proved eleven of eleven — the expiry predicate dropped, the active-account predicate dropped, the admin check dropped, 403 for 404, `no-store` dropped, the slide stopped, the raw token compared instead of its hash, the cookie name ignored, 307 for 303, the sign-in path changed, and every reader refused.
 - [ ] AUTH-002/T4 — Isolation test: an investor request for another investor's deck returns nothing, not a redirect
 
 ## AUTH-003 · Invitation and password reset
@@ -277,7 +278,7 @@ PRD: `INV-001`
 PRD: `INV-002`, `SEC-R01`
 
 - [!] INV-002/T1 — The gated components are not called for a reader who may not see them
-  Blocked by: AUTH-002/T3
+  Blocked by: SITE-005/T1 — the gateway is still the static file, so there is no server response to withhold the gated chapters from; the gate they would be withheld by stands.
 - [ ] INV-002/T2 — A test requests the page with no cookie and proves a gated sentence is absent from the body
 - [ ] INV-002/T3 — The nav's gated links are not rendered rather than hidden
 - [ ] INV-002/T4 — The dictionary splits, and the gated catalogue is sent only to an entitled reader

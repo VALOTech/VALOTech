@@ -122,6 +122,15 @@ function present(source: Source, name: string): string | undefined {
   return trimmed === '' ? undefined : trimmed;
 }
 
+/**
+ * PostgreSQL's `int4` ceiling. Several of these values reach the database as
+ * an integer -- a session TTL becomes `make_interval(secs => ...)`, cast to
+ * int4 -- so a value the parser accepts but the column cannot hold turns a
+ * successful sign-in into a 500 on every read that follows. Bounding it here
+ * keeps the failure at startup, where the docstring above promises it.
+ */
+const INT4_MAX = 2147483647;
+
 function parsePositiveInt(
   value: string,
   name: string,
@@ -131,7 +140,15 @@ function parsePositiveInt(
     problems.push(`${name} must be a positive integer`);
     return undefined;
   }
-  return Number(value);
+
+  const parsed = Number(value);
+
+  if (parsed > INT4_MAX) {
+    problems.push(`${name} must be at most ${INT4_MAX}`);
+    return undefined;
+  }
+
+  return parsed;
 }
 
 function optionalPositiveInt(

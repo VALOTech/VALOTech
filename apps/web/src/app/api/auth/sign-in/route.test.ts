@@ -215,6 +215,11 @@ describe.skipIf(!HAS_DATABASE)('POST /api/auth/sign-in', () => {
       direction: 'up',
       count: Infinity,
       log: () => {},
+      // Test files run in parallel and every database-backed one applies the
+      // pending migrations, so two of them reach the migrator's advisory lock
+      // at once. The default mode fails the loser; waiting for the lock makes
+      // the second run find nothing pending, which is the answer both wanted.
+      advisoryLockMode: 'wait',
     });
 
     // One hash for every seeded account: they share a password, and Argon2id is

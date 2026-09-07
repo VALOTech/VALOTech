@@ -117,6 +117,10 @@ describe('loadConfig', () => {
       ).toThrow(/DB_SSLMODE/);
     });
 
+    it('rejects a numeric option above the database integer ceiling, before it can 500 a query', () => {
+      expect(() => loadConfig(validEnv({ SESSION_TTL_SECONDS: '3000000000' }))).toThrow(/SESSION_TTL_SECONDS must be at most/);
+    });
+
     it('rejects a non-integer numeric option', () => {
       expect(() => loadConfig(validEnv({ PORT: 'nope' }))).toThrow(/PORT/);
     });

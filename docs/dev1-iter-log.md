@@ -21,6 +21,13 @@ than noticed.
 
 ---
 
+## 2026-09-07 · AUTH-002/T3 (1 task) · iter 12
+STATUS: green · TIER: C · OUTCOME: CLOSED
+REASON: —
+WHAT CHANGED: the role gate (apps/web/src/auth/gate.ts). resolveSession hashes the cookie's token and, in one UPDATE ... FROM accounts ... RETURNING, admits a session only while its account is active and its expiry is future and slides last_seen_at and expires_at in the same statement -- the predicate that admits is the predicate that authorises the write, so no ordering can resurrect an expired row. requireInvestor (investor or admin) and requireAdmin (admin only, a signed-in investor gets 404 not 403 so the console's existence is not confirmed, a signed-out reader 303 to the form) return an Actor or the Response, and the Actor is the type every future repository read must take (DATA-R05 as a signature). critical-impl built it, followed ADMIN-002's written 404 rule over my brief's redirect, fixed a real parallel-migration race (advisory-lock 'wait' in both DB suites), and mutation-proved 11/11.
+  deep-review measured nine findings and cleared the core (parameterised SQL, the cookie parser across 18 headers, the slide race-free against DELETE, the DB failure propagating). Fixed: SESSION_TTL_SECONDS above int4-max passed config then 500'd every gated read via make_interval -- config now bounds positive ints at the ceiling, so it fails at startup as its own docstring promises (F3); requireInvestor's unreachable third-role arm returned a sign-in loop -- now 404 (F7); AUTH-DEC-02's Revises gains T3, the runbook's suspend lever deletes the sessions too (an in-flight resolve reads state from its snapshot), and AUTH-002 §2/§3 are rewritten to the shipped shape -- no middleware, the not-found must be the framework's own or a route handler's empty-body 404 is distinguishable from an unmounted path (F1/F4/F5/F6/F8). 185 tests, make check green.
+NEXT: deferred with homes -- the page translator that maps the gate's answer to redirect()/notFound() is the consumer's (INV-002/ADMIN-002), documented in §3 (F2); the DATA-R05 'does not compile' enforcement lands mechanically with the first reads (AUTH-002/T4), the type is the discipline until then; a DB-failure test is owed once getDb takes an injectable handle (F9). Frontier: AUTH-002/T2 (server-side sign-out invalidation, the stolen-cookie lever) with AUTH-004; then AUTH-002/T4 (deck isolation) once a deck read exists, and AUTH-001/T4 (the twenty-locale sign-in form).
+
 ## 2026-09-07 · AUTH-002/T1 + AUTH-001/T2,T3,T5 · iter 11
 STATUS: green · TIER: C · OUTCOME: CLOSED
 REASON: —
