@@ -21,6 +21,12 @@ than noticed.
 
 ---
 
+## 2026-09-07 · SEC-002/T5 (1 task) · iter 21
+STATUS: green · TIER: S · OUTCOME: CLOSED
+REASON: —
+WHAT CHANGED: the audit trail's read side, now that the admin shell exists to hang it on (SEC-002/T5). apps/web/src/audit/read.ts:recentAudit reads the trail newest first — the identity id descending, the order things happened without trusting a clock — narrowed by any of actor, subject and action. apps/web/src/app/admin/audit/page.tsx renders it under the admin segment's inherited role check (ADMIN-002) as a read-only table with a filter form and no edit or delete control, because the trail is append-only in the database and a control that does not exist cannot be reached by a bug. This completes the audit feature's visible half: publish and withdraw write their rows (iter 19), and an admin can now read them. Verified against PostgreSQL 17.11: audit suite 10 tests (recentAudit's newest-first mutation-proved), full app suite 295 green; measured against a next build then next start artifact — an admin GET answered 200 and listed the trail, an investor GET answered 404 through the inherited gate, and filtering to one action dropped the other's row. make check green, 101 closed.
+NEXT: SEC-002 is 3/5 — T2 (the deploy REVOKE) is pending-external, T4 (the changed-field allow-list) pending SEC-DEC-01. AUTH-002/T4 (the deck-isolation test) is now buildable since forReader exists — an investor request for another investor's granted deck returns nothing. The large W1 frontiers remain ADMIN-001 (account management, which wires the account audit callers and unblocks AUTH-003/T7) and the CMS-006 remainder (T3 grants, T4 route, T6 audience-change); the i18n-blocked UI waits on I18N-DEC-02.
+
 ## 2026-09-07 · CMS-006/T1,T2,T5 + CMS-001/T6 (4 tasks) · iter 20
 STATUS: green · TIER: C · OUTCOME: CLOSED
 REASON: —
@@ -153,9 +159,3 @@ STATUS: green · TIER: S · OUTCOME: CLOSED
 REASON: —
 WHAT CHANGED: the three owner decisions answered — AWS (`INFRA-DEC-03`/`INFRA-DEC-05` loop-settled to ECS Fargate + RDS), SMTP against the company mailbox (`MAIL-DEC-01`), the ecosystem's own consent posture (`OPS-DEC-01`). `OPS-001`, both `MAIL` designs and `LEGAL-GLOBAL-002` rewritten around the answers, no longer pending-decision. `SITE-006` added (legal pages + banner). Six `[!]` rows unblocked. Two new gates — `check-doc-paths` (5 dangling citations found) and `check-env-catalogue` (found the 3000/3100 port collision with VALO Ads and 4 vars missing from env.example). CI now runs `make check` split by ref. README rewritten to be true on both branches.
 NEXT: framework and go-live prep complete; the register is empty and every gate is green. The 248 open tasks are application code for `/dev1 valotech` to work from W0, which is a cold-start loop and does not depend on this window. Six items wait on the owner in `docs/operator-checklist.md`, none blocking.
-
-## 2026-09-07 · design wave · iter 1
-STATUS: green · TIER: S · OUTCOME: CLOSED
-REASON: —
-WHAT CHANGED: thirty-six designs written in dependency order, so every one of the fifty PRD codes now has one. `DATA-001` rewritten around a single content model. The ledger grew from 112 to 283 rows, every one of them derived from a design's own §7 by `scripts/sync-tasks-from-designs.py` rather than copied by hand. `docs/roadmap.md` is now generated from the graph, in five waves.
-NEXT: W0 is active and has twenty-two buildable tasks. `INFRA-001/T3` is the top of the queue: the make targets for the stack and the three migration commands. Three decisions wait on the owner and none of them blocks W0.

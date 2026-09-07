@@ -24,6 +24,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { closeDb, getDb } from '../db/index';
 import type { AuditAction } from '../db/types';
+import { recentAudit } from './read';
 import { recordAudit } from './record';
 
 const DATABASE_URL = (process.env.DATABASE_URL ?? '').trim();
@@ -230,6 +231,40 @@ describe.skipIf(!HAS_DATABASE)('SEC-002 audit log', () => {
 
       expect(row).toBeDefined();
       expect(row!.at.getFullYear()).toBeGreaterThan(2020);
+    });
+  });
+
+  describe('recentAudit reads the trail for the admin view (T5)', () => {
+    async function record(actorId: string, action: AuditAction, subjectId: string): Promise<void> {
+      await getDb()
+        .transaction()
+        .execute((trx) => recordAudit(trx, { actorId, action, subjectType: 'account', subjectId }));
+    }
+
+    it('returns rows newest first and narrows by actor, action and subject', async () => {
+      // A unique actor isolates this test's rows from every other suite's in the
+      // shared trail, so the assertions do not depend on what else has run.
+      const actor = randomUUID();
+      const subjectA = randomUUID();
+      const subjectB = randomUUID();
+      await record(actor, 'account.create', subjectA);
+      await record(actor, 'account.suspend', subjectA);
+      await record(actor, 'mail.send', subjectB);
+
+      // Newest first is the identity descending, which is insertion order
+      // reversed and does not trust the clock.
+      expect((await recentAudit({ actorId: actor }, 100)).map((row) => row.action)).toEqual([
+        'mail.send',
+        'account.suspend',
+        'account.create',
+      ]);
+      expect((await recentAudit({ actorId: actor, action: 'account.suspend' }, 100)).map((r) => r.action)).toEqual([
+        'account.suspend',
+      ]);
+      expect((await recentAudit({ actorId: actor, subjectId: subjectB }, 100)).map((r) => r.action)).toEqual([
+        'mail.send',
+      ]);
+      expect(await recentAudit({ actorId: actor }, 2)).toHaveLength(2);
     });
   });
 });
