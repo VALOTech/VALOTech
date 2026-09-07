@@ -150,7 +150,13 @@ def main():
                 continue
             head = lr._direct_part(t.blocker)
             for named in TASK_CODE_RE.findall(head):
-                if named not in all_task_codes:
+                if named == t.code:
+                    problems.append(
+                        "R6 %s is blocked by itself — a task that waits on itself "
+                        "never unblocks, and the roadmap will offer it as ready "
+                        "forever" % t.code
+                    )
+                elif named not in all_task_codes:
                     problems.append(
                         "R6 %s is blocked by %s, which is not a task in the ledger"
                         % (t.code, named)
