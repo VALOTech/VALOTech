@@ -92,6 +92,16 @@ SEA-priority `en zh zt vi th id ms tl` + global `hi es ar fr bn pt ru ur de ja t
 python3 .claude/skills/translate-english-to-native-locales/scripts/check_glossary.py <file> glossary-vi.json
 ```
 
+## First run
+
+The application lives in [`apps/web`](apps/web) and needs Node 24 (`.nvmrc`) and Docker. From a fresh clone, one command brings it up:
+
+```bash
+make setup
+```
+
+It creates `.env` from `env.example` (never over an existing one), installs the `apps/web` dependencies, starts PostgreSQL on 5434, waits for it, and applies every migration — each step idempotent, so a re-run finishes a half-set-up clone rather than starting a second one. It then names the one thing it cannot do for you: set `SESSION_SECRET` in `.env` (generate one with [`credentials/credential-input.html`](credentials/credential-input.html)), because the application refuses to start without it (`CRED-001`). Then `cd apps/web && npm run dev`. `make doctor` says where the work stands.
+
 ## Local preview
 
 ```bash

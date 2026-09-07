@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_293 tasks in the plan, 65 closed, 228 outstanding._
+_293 tasks in the plan, 66 closed, 227 outstanding._
 
 ---
 
@@ -16,11 +16,9 @@ _293 tasks in the plan, 65 closed, 228 outstanding._
 
 _What nothing else stands on. The page that already serves and its cross-cutting layers are here because nothing depends on them; the local stack, the schema and credential handling are here because everything does. This wave is finished when a developer brings the stack up with one command and a migration has been applied and rolled back — not written, run, because a rollback nobody has executed is not a rollback._
 
-_43/47 closed (91%) · 4 outstanding — 2 buildable now · 0 waiting on the owner · 1 external residue · 1 parked to a later wave._
+_44/47 closed (93%) · 3 outstanding — 1 buildable now · 0 waiting on the owner · 1 external residue · 1 parked to a later wave._
 
-- **INFRA-001** · Local development stack — 4/5 closed · depth 0
-  - `[ ] INFRA-001/T5` — A first-run path that works from a fresh clone with no prior state
-
+- **INFRA-001** · Local development stack — 5/5 closed
 - **SITE-001** · The gateway page — 8/8 closed
 - **A11Y-001** · Accessibility baseline — 5/5 closed
 - **CRED-001** · Credential handling — 5/5 closed

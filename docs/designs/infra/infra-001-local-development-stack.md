@@ -78,6 +78,7 @@ the first person to discover it will discover it as a crash.
 
 | Command | What it does |
 |---|---|
+| `make setup` | First run from a fresh clone: `.env`, dependencies, the stack and the schema, each step idempotent |
 | `make infra-up` | PostgreSQL on 5434, with a named volume |
 | `make infra-down` | Stops it, keeps the data |
 | `make infra-reset` | Stops it and deletes the data — the only destructive one, and it says so |

@@ -130,6 +130,10 @@ uninstall-hooks: ## Stop using the repository's hooks
 
 # --- Local stack ----------------------------------------------------------
 
+.PHONY: setup
+setup: ## First run from a fresh clone: .env, deps, stack, schema (idempotent)
+	@bash scripts/setup.sh
+
 .PHONY: infra-up
 infra-up: ## Start PostgreSQL on 5434
 	@docker compose up -d

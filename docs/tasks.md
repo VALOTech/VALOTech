@@ -427,7 +427,8 @@ PRD: `INFRA-001`
   Evidence: `make migrate`, `make migrate-down`, `make migrate-roundtrip`, `make infra-up`, `make infra-down`, `make infra-reset` — the connecting targets print the target before they act; verified end to end.
 - [x] INFRA-001/T4 — `make migrate-roundtrip` applies, rolls back and re-applies against a throwaway database
   Evidence: apps/web/scripts/migrate-roundtrip.mjs — `make migrate-roundtrip` creates a scratch database beside the target, runs up then down then up on it, and drops it; verified the developer's own database is left untouched (DATA-R06).
-- [ ] INFRA-001/T5 — A first-run path that works from a fresh clone with no prior state
+- [x] INFRA-001/T5 — A first-run path that works from a fresh clone with no prior state
+  Evidence: scripts/setup.sh (run by `make setup`) takes a checkout with no `.env`, no node_modules and no database to an up-and-migrated stack: it creates `.env` from env.example without clobbering one, installs apps/web dependencies, starts PostgreSQL, waits for it to report healthy, and applies every migration — each step idempotent. Verified end to end against a fresh state (twelve tables applied) and re-run clean (`No migrations to run!`); it names `SESSION_SECRET` as the owner's to set (CRED-001) rather than inventing one.
 
 ## CRED-001 · Credential handling
 PRD: `CRED-001`, `SEC-R05`

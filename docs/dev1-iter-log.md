@@ -21,6 +21,12 @@ than noticed.
 
 ---
 
+## 2026-09-07 · INFRA-001/T5 (1 task) · iter 8
+STATUS: green · TIER: S · OUTCOME: CLOSED
+REASON: —
+WHAT CHANGED: the first-run path (INFRA-001/T5). scripts/setup.sh, run by a new `make setup`, takes a fresh clone — no .env, no node_modules, no database — to an up-and-migrated stack: it creates .env from env.example without clobbering one, installs apps/web dependencies, starts PostgreSQL, waits for it to report healthy, and applies every migration, each step idempotent. The two required secrets are named as the owner's to set (CRED-001), not invented. Verified end to end against a genuinely fresh state (twelve tables applied) and re-run clean (No migrations to run!). README gains a First run section and INFRA-001 §3 lists the command.
+NEXT: W0 is 93% closed (44/47). Its one remaining buildable task is DATA-001/T3, the sessions table — but the schema is coupled to AUTH-002's session-token scheme and the two designs disagree: DATA-001 §3 says id is a uuid and the cookie is a hash of it, while AUTH-002 §3 says the cookie is a random token and the row stores that token's hash, with the id never in the cookie. The workable shape is the AUTH-002 one (a token_hash the cookie's token hashes to), so the next iter builds DATA-001/T3 by reconciling DATA-001 §3 to it — a Critical schema task via critical-impl + deep-review. I18N-001/T4 (eleven native readers) is external residue and SITE-002/T4 is parked to W1. W1 (AUTH-001 sign-in) is the descent after.
+
 ## 2026-09-07 · CRED-001/T1-T5 + INFRA-001/T2 (6 tasks) · iter 7
 STATUS: green · TIER: S · OUTCOME: CLOSED
 REASON: —
