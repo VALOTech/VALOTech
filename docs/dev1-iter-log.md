@@ -21,6 +21,14 @@ than noticed.
 
 ---
 
+## 2026-09-07 · CMS-006/T1,T2,T5 + CMS-001/T6 (4 tasks) · iter 20
+STATUS: green · TIER: C · OUTCOME: CLOSED
+REASON: —
+WHAT CHANGED: the content access predicate — the design calls it the single most dangerous in the repository, the one that fails invisibly — built by critical-impl and hardened through deep-review. apps/web/src/content/access.ts:visibleTo turns a reader into the one WHERE fragment every content query composes: a visitor sees published public items, an investor public and investor content plus granted items they hold a grant for (a correlated EXISTS, never a join), an admin everything; the published check is inside the predicate, so a draft is an item with no audience. apps/web/src/content/read.ts:forReader and forAuthor are separate functions so admin-sees-all cannot leak into a reader path, and scripts/check-content-access.py refuses content-table SQL outside the module, wired into make check.
+  deep-review found no live leak but four latent defects, each fixed and mutation-proved: visibleTo granted by fall-through to any non-admin role — the one site in the tree that admitted an unknown role rather than refusing it — now names investor and makes a future role a compile error and fail-closed (F1, P1); the gate covered only content_items while content_revisions and content_locales hold the body — now the four content tables, matched case-insensitively since PostgreSQL folds identifiers, scanning all of apps/web (F2, F3); and forReader's join trusted two invariants the schema does not enforce, a pointer to another item's or an unpublished revision — now bound to the item and to published (F4). F3 also corrected a measurably-false sentence in T5's Evidence. Verified against PostgreSQL 17.11: read.test.ts 20 tests, full app suite 294 green and deterministic, make check green — 100 closed.
+  Separately, the pre-existing flaky sign-in rehash test (an Argon2 encoding occasionally containing the two-character password vector, about 2 in 15 runs) is fixed with a long distinctive vector and its regenerated old-cost fixture, committed apart as test(AUTH-001).
+NEXT: CMS-006/T3 (grant write and revoke, and the admin surface), T4 (the route's 404, id-shape validation, and narrowing the reader's revision to drop author_id — F5 and F6, recorded in the CMS-006 design §6), and T6 (audience-change audit, short public cache). CMS-007's search must join the published pointer, not compose the predicate alone, to hide a draft from its author (recorded in CMS-007 §6). ADMIN-001 remains the other high-leverage W1 frontier; the module's write path is gated by CMS-002/CMS-004's routes.
+
 ## 2026-09-07 · CMS-001/T5 (1 task) · iter 19
 STATUS: green · TIER: S · OUTCOME: CLOSED
 REASON: —
@@ -151,9 +159,3 @@ STATUS: green · TIER: S · OUTCOME: CLOSED
 REASON: —
 WHAT CHANGED: thirty-six designs written in dependency order, so every one of the fifty PRD codes now has one. `DATA-001` rewritten around a single content model. The ledger grew from 112 to 283 rows, every one of them derived from a design's own §7 by `scripts/sync-tasks-from-designs.py` rather than copied by hand. `docs/roadmap.md` is now generated from the graph, in five waves.
 NEXT: W0 is active and has twenty-two buildable tasks. `INFRA-001/T3` is the top of the queue: the make targets for the stack and the three migration commands. Three decisions wait on the owner and none of them blocks W0.
-
-## 2026-09-07 · bootstrap · iter 0
-STATUS: green · TIER: S · OUTCOME: CLOSED
-REASON: —
-WHAT CHANGED: the loop itself — `.claude/commands/dev1.md`, the two Critical-tier agents, `scripts/sync.sh`, the roadmap machinery (`lib_roadmap.py`, `generate-roadmap.py`, `validate-roadmap.py`, `docs/roadmap-policy.yaml`), and six gates that did not exist: brand-kit parity, evidence citation, deferral maturity, identifier allocation, comment hygiene and the cp1252 stream guard.
-NEXT: the ledger carries twenty-five feature codes with no design. `validate-roadmap.py` R2 names every one of them, and until they exist the roadmap cannot order the work they describe.

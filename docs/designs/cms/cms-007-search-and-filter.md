@@ -124,6 +124,13 @@ generated column and its index.
   relevance score, because in a room of updates the newest match is nearly
   always the wanted one and a relevance order that puts a 2024 note first reads
   as wrong.
+- **The predicate alone does not hide a draft from its author.** `visibleTo`
+  answers an admin `TRUE`, unpublished items included, because the author
+  surfaces rely on it; `forReader` excludes a draft by joining the published
+  pointer, not by a term of the predicate. So `CMS-007/T4` — a draft is not
+  findable, including by its author — is not met by composing the predicate
+  alone: the search query must also join the published pointer, as `forReader`
+  does.
 
 ## 7. Task list
 

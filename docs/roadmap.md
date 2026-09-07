@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_294 tasks in the plan, 96 closed, 198 outstanding._
+_294 tasks in the plan, 100 closed, 194 outstanding._
 
 ---
 
@@ -35,7 +35,7 @@ _46/48 closed (95%) · 2 outstanding — 0 buildable now · 0 waiting on the own
 
 _Who may read what, and what records that they did. Everything above reads through the gate this wave builds, so a shortcut here is a shortcut in every feature after it. Sign-out precedes invitation deliberately: a session that cannot be ended server-side is a defect that grows with every account created. The scene sits here too, one layer above the page it moves behind._
 
-_50/69 closed (72%) · 19 outstanding — 15 buildable now · 3 waiting on the owner · 1 external residue · 0 parked to a later wave._
+_51/69 closed (73%) · 18 outstanding — 14 buildable now · 3 waiting on the owner · 1 external residue · 0 parked to a later wave._
 
 - **AUTH-001** · Sign-in — 4/5 closed · depth 2
   - `[!] AUTH-001/T4` — The sign-in form, in twenty languages, keyboard-reachable, with an accessible name on every field  · _pending-decision_ · **Blocked by:** pending-decision: I18N-DEC-02 — the form must render in the reader's locale across twenty, and the application has no i18n framework yet; which one i…
@@ -69,9 +69,7 @@ _50/69 closed (72%) · 19 outstanding — 15 buildable now · 3 waiting on the o
   - `[~] AUTH-004/T4` — Every authenticated response is `no-store`, verified by pressing the back button  · **Note:** The mechanism ships and is header-verified; the acceptance the row names — pressing Back — is owed, so this is in-progress rather than closed. apps/w…
   - `[!] AUTH-004/T2` — The session list shows this account's live sessions and marks the current one  · _pending-decision_ · **Blocked by:** pending-decision: I18N-DEC-02 — the list is a localised page and the application has no i18n framework yet; which one it uses is the owner's to settl…
 
-- **CMS-001** · Content model and revisions — 5/6 closed · depth 4
-  - `[ ] CMS-001/T6` — Every read function takes the reader; none exists that does not
-
+- **CMS-001** · Content model and revisions — 6/6 closed
 - **SCENE-004** · Annotation chips — 3/3 closed
 - **SEC-001** · Security baseline — 0/5 closed · depth 4
   - `[~] SEC-001/T3` — Every route parses its input with a schema, and the handler sees only the parsed value  · **Note:** secret scanning runs on every push and pull request — gitleaks over full history, the binary pinned to release 8.30.0 rather than the published actio…
@@ -84,7 +82,7 @@ _50/69 closed (72%) · 19 outstanding — 15 buildable now · 3 waiting on the o
 
 _The machinery every kind of writing shares — the editor, the media, the locale states, the audience rule, publishing, search — plus the account, configuration and logging surfaces an operator needs before anything is published. Building it once is the whole reason a report, an update and a deck are three navigations over one system rather than three systems._
 
-_0/62 closed (0%) · 62 outstanding — 62 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_3/62 closed (4%) · 59 outstanding — 59 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
 
 - **ADMIN-001** · Account management — 0/7 closed · depth 5
   - `[ ] ADMIN-001/T1` — The list, sortable by last sign-in, with role and state
@@ -120,12 +118,9 @@ _0/62 closed (0%) · 62 outstanding — 62 buildable now · 0 waiting on the own
   - `[ ] CMS-005/T5` — Serving falls back to the authored language and says so to the reader
   - `[ ] CMS-005/T6` — A new revision starts with no locale rows, and the grid shows it
 
-- **CMS-006** · Audience and access — 0/6 closed · depth 5
-  - `[ ] CMS-006/T1` — One predicate builder from a reader, with the published check inside it
-  - `[ ] CMS-006/T2` — Reader and author read paths as separate functions, so admin-sees-all cannot leak into a shared one
+- **CMS-006** · Audience and access — 3/6 closed · depth 5
   - `[ ] CMS-006/T3` — The grant subquery, and the admin surface that writes and revokes grants
   - `[ ] CMS-006/T4` — A refusal is a `404`, and it is the same `404` for an item that does not exist
-  - `[ ] CMS-006/T5` — A CI gate refuses SQL naming `content_items` outside the repository module
   - `[ ] CMS-006/T6` — Narrowing an audience is audited, and public content carries a short cache lifetime
 
 - **OPS-002** · Logging and monitoring — 0/6 closed · depth 5

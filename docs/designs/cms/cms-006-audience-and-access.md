@@ -82,8 +82,10 @@ Three properties are load-bearing:
 
 The repository layer exposes no raw table access. Content is reachable only
 through functions that take a `Reader` and compose `visibleTo` themselves. A gate
-in CI refuses any SQL string in the tree naming `content_items` outside that one
-module — because the rule "always filter" is exactly the kind that holds for a
+in CI refuses any SQL string in the tree naming a content table — the item and
+the `content_revisions`, `content_locales` and `content_grants` that hold or gate
+its body — outside that one module, case-insensitively because PostgreSQL folds
+an unquoted identifier. Because the rule "always filter" is exactly the kind that holds for a
 year and then does not, in a route written under time pressure at the end of a
 day.
 
@@ -133,6 +135,19 @@ its first sentence.
   migration or an admin report that names the table. Those live in named files
   the gate exempts by path, and each exemption is a line somebody has to write
   and justify — which is the intended friction.
+- **What a reader receives is narrowed at the route.** `forReader` returns the
+  whole revision row, `author_id` included — a staff identifier an anonymous
+  reader does not need. Nothing serialises it yet; the route `CMS-006/T4` adds
+  is where a response shape is fixed, so the revision a reader sees is narrowed
+  to its id, blocks and published time there, before a caller depends on the
+  wider one.
+- **A malformed identifier is the route's to refuse.** `forReader` takes a uuid,
+  and a non-uuid raises `22P02`, so `CMS-006/T4` validates the id's shape — a
+  garbage path answers the same `404` as a missing one, not a `500` — and never
+  echoes the database message, which repeats the supplied value (`DATA-R02`). A
+  slug-addressed read, which §6 above assumes, resolves to an id inside the
+  module and composes the predicate, or it is the existence oracle the `404`
+  posture closes.
 
 ## 7. Task list
 
