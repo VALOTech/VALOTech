@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_294 tasks in the plan, 91 closed, 203 outstanding._
+_294 tasks in the plan, 95 closed, 199 outstanding._
 
 ---
 
@@ -35,7 +35,7 @@ _46/48 closed (95%) · 2 outstanding — 0 buildable now · 0 waiting on the own
 
 _Who may read what, and what records that they did. Everything above reads through the gate this wave builds, so a shortcut here is a shortcut in every feature after it. Sign-out precedes invitation deliberately: a session that cannot be ended server-side is a defect that grows with every account created. The scene sits here too, one layer above the page it moves behind._
 
-_45/69 closed (65%) · 24 outstanding — 20 buildable now · 3 waiting on the owner · 1 external residue · 0 parked to a later wave._
+_49/69 closed (71%) · 20 outstanding — 16 buildable now · 3 waiting on the owner · 1 external residue · 0 parked to a later wave._
 
 - **AUTH-001** · Sign-in — 4/5 closed · depth 2
   - `[!] AUTH-001/T4` — The sign-in form, in twenty languages, keyboard-reachable, with an accessible name on every field  · _pending-decision_ · **Blocked by:** pending-decision: I18N-DEC-02 — the form must render in the reader's locale across twenty, and the application has no i18n framework yet; which one i…
@@ -69,11 +69,7 @@ _45/69 closed (65%) · 24 outstanding — 20 buildable now · 3 waiting on the o
   - `[~] AUTH-004/T4` — Every authenticated response is `no-store`, verified by pressing the back button  · **Note:** The mechanism ships and is header-verified; the acceptance the row names — pressing Back — is owed, so this is in-progress rather than closed. apps/w…
   - `[!] AUTH-004/T2` — The session list shows this account's live sessions and marks the current one  · _pending-decision_ · **Blocked by:** pending-decision: I18N-DEC-02 — the list is a localised page and the application has no i18n framework yet; which one it uses is the owner's to settl…
 
-- **CMS-001** · Content model and revisions — 0/6 closed · depth 4
-  - `[ ] CMS-001/T1` — Items, revisions, and a published pointer that is the only thing a reader query consults
-  - `[ ] CMS-001/T2` — The closed block vocabulary and its validator, rejecting an unknown block on write
-  - `[ ] CMS-001/T3` — Marks as offsets over plain text, so a paragraph stays one translatable string
-  - `[ ] CMS-001/T4` — `saveDraft` replaces the open draft rather than accumulating a revision per save
+- **CMS-001** · Content model and revisions — 4/6 closed · depth 4
   - `[ ] CMS-001/T5` — `publish` and `withdraw` as pointer moves, with the previous revision intact
   - `[ ] CMS-001/T6` — Every read function takes the reader; none exists that does not
 

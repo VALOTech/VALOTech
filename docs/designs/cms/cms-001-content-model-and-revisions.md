@@ -76,7 +76,8 @@ write, not skipped at the read: a renderer that skips what it does not understan
 publishes a document with a hole in it and reports success (`CMS-R04`).
 
 Marks are `{start, end, type}` over the paragraph's text, where type is `strong`,
-`em`, `code` or `link`. Storing offsets rather than nested markup is what makes a
+`em`, `code` or `link`; a `link` mark also carries its target, because a link with
+no target cannot render, while the other types carry nothing but their span. Storing offsets rather than nested markup is what makes a
 paragraph translatable as a string and renderable without an HTML parser, and it
 is what keeps a form from being an injection surface.
 

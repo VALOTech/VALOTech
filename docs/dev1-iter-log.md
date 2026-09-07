@@ -21,6 +21,12 @@ than noticed.
 
 ---
 
+## 2026-09-07 · CMS-001/T1,T2,T3,T4 (4 tasks) · iter 18
+STATUS: green · TIER: S · OUTCOME: CLOSED
+REASON: —
+WHAT CHANGED: the content model every report, update and deck is written in (apps/web/src/content/). blocks.ts is the closed block vocabulary and its validator: seven shapes, validated on write so an unknown block is refused rather than skipped at the read (CMS-R04), an image without alt text refused (A11Y-R02), and marks carried as {start,end,type} offsets over plain text — never embedded markup — so a paragraph stays one translatable string and is not an injection surface (T2, T3). items.ts:createItem makes an item with a null published pointer (the pointer is the state; no is_published column to disagree), and items.ts:saveDraft validates then, under an item-row lock, replaces the open draft rather than accumulating one per save — the one-open-draft invariant made to hold under concurrency, the iter-16 delete-then-insert lesson applied again (T1, T4). Verified against PostgreSQL 17.11: 19 content tests, blocks round-trip through jsonb as the array they were, the database refuses a report with no period and a kind on a non-update; full app suite 270 green across 3 runs. Mutation-proved: the validator accepting an unknown block, and saveDraft losing the item lock, each redden a test. The design's mark contract gained the link target it always needed (§1.9).
+NEXT: CMS-001/T5 (publish and withdraw as pointer moves) is the next — it is the first real caller of recordAudit (content.publish/content.withdraw in the same transaction as the pointer move, SEC-R04), and CMS-001/T6 (the reader-scoped reads forReader/forAuthor) pairs with CMS-006's audience predicate. Those two close CMS-001 and unblock CMS-002 (the editor) and the INV/DECK authoring surfaces. ADMIN-001 (account management) remains the other high-leverage W1 frontier, unblocking AUTH-003/T7 and the account audit callers.
+
 ## 2026-09-07 · ADMIN-002/T1,T4,T5 (3 tasks) · iter 17
 STATUS: green · TIER: S · OUTCOME: CLOSED
 REASON: —

@@ -1,0 +1,170 @@
+/**
+ * The content model (`CMS-001`): the block validator in isolation, and the
+ * item/revision writes against a real PostgreSQL.
+ *
+ * The validator tests are pure and always run. The write tests need a database
+ * — `DATABASE_URL` names a development target — and prove the two properties the
+ * schema cannot: that a draft's body round-trips through `jsonb` as the array it
+ * was, and that two saves racing for one item leave one open draft rather than
+ * two (the item-row lock).
+ */
+
+import { randomUUID } from 'node:crypto';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+import { sql } from 'kysely';
+import { runner } from 'node-pg-migrate';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+
+import { closeDb, getDb } from '../db/index';
+import { type Block, BlockValidationError, validateBlocks } from './blocks';
+import { createItem, saveDraft } from './items';
+
+const DATABASE_URL = (process.env.DATABASE_URL ?? '').trim();
+const HAS_DATABASE = DATABASE_URL !== '';
+const MIGRATIONS_DIR = join(dirname(fileURLToPath(import.meta.url)), '..', '..', 'migrations');
+
+process.env.APP_ENV = 'development';
+process.env.APP_ORIGIN = 'http://localhost:3100';
+process.env.SESSION_SECRET = 's'.repeat(40);
+
+const VALID: Block[] = [
+  { type: 'heading', level: 2, text: 'A heading' },
+  {
+    type: 'paragraph',
+    text: 'hello world',
+    marks: [
+      { start: 0, end: 5, type: 'strong' },
+      { start: 6, end: 11, type: 'link', href: 'https://valotech.org' },
+    ],
+  },
+  { type: 'list', ordered: true, items: ['one', 'two'] },
+  { type: 'quote', text: 'a quote', attribution: null },
+  { type: 'image', mediaId: randomUUID(), alt: 'a labelled picture', caption: null },
+  { type: 'figure', mediaId: randomUUID(), caption: 'a chart', data: ['10', '20'] },
+  { type: 'divider' },
+];
+
+describe('validateBlocks', () => {
+  it('returns every block of a valid document, typed', () => {
+    expect(validateBlocks(VALID)).toEqual(VALID);
+  });
+
+  it.each([
+    ['a value that is not an array', 'nope'],
+    ['an unknown block type', [{ type: 'marquee', text: 'x' }]],
+    ['a heading at level 1 (the title is not a block)', [{ type: 'heading', level: 1, text: 'x' }]],
+    ['an image with empty alt text', [{ type: 'image', mediaId: 'm', alt: '', caption: null }]],
+    ['an image with whitespace-only alt text', [{ type: 'image', mediaId: 'm', alt: '   ', caption: null }]],
+    ['a figure whose data is not an array', [{ type: 'figure', mediaId: 'm', caption: null, data: 'x' }]],
+    ['a mark reaching past the text', [{ type: 'paragraph', text: 'hi', marks: [{ start: 0, end: 5, type: 'em' }] }]],
+    ['a mark whose start is not before its end', [{ type: 'paragraph', text: 'hi', marks: [{ start: 2, end: 1, type: 'em' }] }]],
+    ['an unknown mark type', [{ type: 'paragraph', text: 'hi', marks: [{ start: 0, end: 1, type: 'blink' }] }]],
+    ['a link mark with no href', [{ type: 'paragraph', text: 'hi', marks: [{ start: 0, end: 1, type: 'link' }] }]],
+    ['a non-link mark carrying an href', [{ type: 'paragraph', text: 'hi', marks: [{ start: 0, end: 1, type: 'em', href: 'x' }] }]],
+  ])('rejects %s', (_case, value) => {
+    expect(() => validateBlocks(value)).toThrow(BlockValidationError);
+  });
+});
+
+describe.skipIf(!HAS_DATABASE)('CMS-001 content model', () => {
+  let authorId: string;
+
+  beforeAll(async () => {
+    await runner({
+      databaseUrl: DATABASE_URL,
+      dir: MIGRATIONS_DIR,
+      migrationsTable: 'pgmigrations',
+      direction: 'up',
+      count: Infinity,
+      log: () => {},
+      advisoryLockMode: 'wait',
+    });
+    await getDb().deleteFrom('accounts').where('email', '=', 'cms-author@example.test').execute();
+    const author = await getDb()
+      .insertInto('accounts')
+      .values({ email: 'cms-author@example.test', name: 'Author', role: 'admin', state: 'active' })
+      .returning('id')
+      .executeTakeFirstOrThrow();
+    authorId = author.id;
+  }, 120_000);
+
+  afterAll(async () => {
+    await getDb().deleteFrom('accounts').where('id', '=', authorId).execute();
+    await closeDb();
+  });
+
+  async function revisionsOf(itemId: string) {
+    return getDb().selectFrom('content_revisions').selectAll().where('item_id', '=', itemId).execute();
+  }
+
+  describe('createItem', () => {
+    it('creates an item with no published revision, so a reader query finds nothing yet', async () => {
+      const item = await createItem({ type: 'update', slug: `u-${randomUUID()}`, title: 'An update', kind: 'progress' });
+
+      expect(item.current_revision_id).toBeNull();
+      expect(item.audience).toBe('investor');
+    });
+
+    it('refuses a report with no period, in the database', async () => {
+      await expect(
+        createItem({ type: 'report', slug: `r-${randomUUID()}`, title: 'A report' }),
+      ).rejects.toThrow();
+    });
+
+    it('refuses a kind on an item that is not an update', async () => {
+      await expect(
+        createItem({ type: 'report', slug: `r-${randomUUID()}`, title: 'A report', period: '2026-Q1', kind: 'progress' }),
+      ).rejects.toThrow();
+    });
+  });
+
+  describe('saveDraft', () => {
+    it('stores a draft whose blocks round-trip through jsonb as the array they were', async () => {
+      const item = await createItem({ type: 'update', slug: `u-${randomUUID()}`, title: 'Draft round-trip', kind: 'announcement' });
+
+      const revision = await saveDraft(item.id, VALID, authorId);
+
+      expect(revision.published_at).toBeNull();
+      // Read back independently: pg parses jsonb to a JS value, so the array
+      // stored is the array that comes back, not a string of it.
+      const [stored] = await revisionsOf(item.id);
+      expect(stored?.blocks).toEqual(VALID);
+    });
+
+    it('replaces the open draft rather than accumulating a revision per save', async () => {
+      const item = await createItem({ type: 'update', slug: `u-${randomUUID()}`, title: 'Replace draft', kind: 'progress' });
+
+      const first = await saveDraft(item.id, [{ type: 'divider' }], authorId);
+      const second = await saveDraft(item.id, [{ type: 'heading', level: 2, text: 'Changed' }], authorId);
+
+      const rows = await revisionsOf(item.id);
+      expect(rows).toHaveLength(1);
+      expect(second.id).toBe(first.id);
+      expect(rows[0]?.blocks).toEqual([{ type: 'heading', level: 2, text: 'Changed' }]);
+    });
+
+    it('refuses an invalid document, writing no revision', async () => {
+      const item = await createItem({ type: 'update', slug: `u-${randomUUID()}`, title: 'Invalid draft', kind: 'progress' });
+
+      await expect(saveDraft(item.id, [{ type: 'marquee' }], authorId)).rejects.toThrow(BlockValidationError);
+      expect(await revisionsOf(item.id)).toHaveLength(0);
+    });
+
+    it('leaves one open draft when two saves race for one item', async () => {
+      const item = await createItem({ type: 'update', slug: `u-${randomUUID()}`, title: 'Racing draft', kind: 'progress' });
+      // Warm two connections so both saves are genuinely in flight, the way the
+      // invitation race is proved: without the item-row lock each would miss the
+      // other's insert and the item would hold two open drafts.
+      await Promise.all([sql`select 1`.execute(getDb()), sql`select 1`.execute(getDb())]);
+
+      await Promise.all([
+        saveDraft(item.id, [{ type: 'divider' }], authorId),
+        saveDraft(item.id, [{ type: 'heading', level: 3, text: 'B' }], authorId),
+      ]);
+
+      expect(await revisionsOf(item.id)).toHaveLength(1);
+    });
+  });
+});
