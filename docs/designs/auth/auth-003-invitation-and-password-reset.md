@@ -116,9 +116,9 @@ one place those two features can contradict each other.
 surface an admin invites from and where the on-screen link appears; it deletes
 an account's outstanding invitations when it suspends or deletes the account,
 in the same transaction, so a token issued before cannot outlive that access.
-**`MAIL-DEC-01`** decides the carrier; until it is answered the send path is
-built against a port with no adapter behind it, and the on-screen link is the
-whole delivery mechanism.
+**`MAIL-DEC-01`** settled the carrier as SMTP; the send path is built against
+the `Mailer` port `MAIL-001/T1` provides, and until that port has an adapter the
+on-screen link `inviteAccount` returns is the whole delivery mechanism.
 
 ## 5. Cross-cutting compliance
 
@@ -141,6 +141,13 @@ whole delivery mechanism.
 - **No second factor.** The room holds company reporting, not money, and every
   account is a named person the admin knows. A second factor is the right answer
   once the room holds anything an attacker can convert; file it then.
+- **A reset for an account still invited.** One outstanding token per account
+  spans both kinds, so a reset would delete a pending invitation and, until the
+  reset mail lands (`AUTH-003/T3`), replace it with a token nobody receives — an
+  unauthenticated denial of an invited person's only way in. `AUTH-003/T5` ships
+  the fail-closed default that a reset acts only on an `active` account, so an
+  invited account's invitation stands; whether the two token kinds are separated
+  in the schema is [`AUTH-DEC-04`](../../decisions-log.md#AUTH-DEC-04).
 
 ## 7. Task list
 

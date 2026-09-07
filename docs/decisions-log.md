@@ -18,7 +18,7 @@ An entry is filed the moment the choice surfaces, not when it is answered. Nothi
 - **Recommendation:** **B**. Only **B** can express the portfolio history `INV-003` rests on and the undo context `CFG-001` reads, and it keeps `DATA-R02` mechanical: the allow-list is a fixed table checked at the one insert site (`SEC-002/T3`), so a field the list does not name cannot reach the trail. **A** is simpler but would force `INV-003` to grow the portfolio-history table the schema was deliberately built without. The cost of **B** is that the allow-list must be complete before the first audited write — which is why it is settled now, not discovered when `account.create` first records a row into a seven-year table.
 - **Decision owner:** user
 - **Blocks:** SEC-002/T4
-- **Status:** OPEN. Safe default: no audit writer exists yet — `SEC-002/T3` is unbuilt and `grep -rn audit apps/web/src` finds only the types and the drift guard — so nothing is written into `before`/`after` until this settles; the trail cannot hold a personal value it has no code to write.
+- **Status:** OPEN. Safe default: `apps/web/src/audit/record.ts:recordAudit` writes `before: null` and `after: null` on every audited write — the trail records that a privileged act happened and by whom, and holds no changed field until this settles. So the seven-year trail cannot hold a personal value it has no code to write, and the allow-list can be added at the one insert site when it lands.
 
 <a id="AUTH-DEC-02"></a>
 ### `AUTH-DEC-02` — Is the session cookie signed with `SESSION_SECRET` — OPEN
@@ -51,6 +51,17 @@ An entry is filed the moment the choice surfaces, not when it is answered. Nothi
 - **Decision owner:** user
 - **Blocks:** AUTH-001/T4, AUTH-004/T2
 - **Status:** OPEN. Safe default: the application ships no localised UI until this lands. `AUTH-001/T4` and `AUTH-004/T2` wait rather than shipping English-only pages that would violate `I18N-R01` silently; the routes and the gate they sit on are already built and unaffected — a person can sign in and sign out without either page existing.
+
+<a id="AUTH-DEC-04"></a>
+### `AUTH-DEC-04` — Does a reset request invalidate a pending invitation, or are the two token kinds independent — OPEN
+
+- **Decision:** Invitation and reset share one `invitations` table and one "one outstanding token per account" rule (`AUTH-003/T6`), so issuing a reset for an account deletes its outstanding invitation. For an account still `invited` — one that holds only its seven-day invitation link and no password — a reset request would therefore destroy the only way that person can get in, and until `AUTH-003/T3` mails a reset link it replaces it with a token nobody is told; anyone who knows an invited address could do this, unauthenticated. Should the two token kinds stay one-outstanding-together, or become independent so a reset never touches an invitation?
+- **Options:** **A** Keep one mechanism and one outstanding token, and make a reset act only on an account that is already `active`, so a reset request against an `invited` account is a no-op and its invitation stands — the safe default shipped here. No schema change; the residual is that an active account which was somehow re-invited would still lose that invitation to its next reset. **B** Separate the kinds — a `kind` column (`invitation` | `reset`) on `invitations` and a one-outstanding index per `(account_id, kind)`, so a reset only ever deletes a prior reset and an invitation only a prior invitation. Fully independent, at the cost of a migration and the two mechanisms the design deliberately avoided.
+- **Recommendation:** **A**. A reset is meaningless for an account with no password, so refusing it there costs nothing and closes the denial-of-access with no schema change; the residual **B** would address — an active account losing an invitation to a reset — is not reachable by any flow that exists, because no flow re-invites an active account. Reopen for **B** if such a flow is ever built.
+- **Decision owner:** user
+- **Blocks:** — none —
+- **Revises:** AUTH-003/T5 — `requestReset` ships the safe default (it conditions its delete and insert on `state = 'active'`, so an invited account's invitation is never destroyed); a resolution to **B** separates the token kinds in the schema instead
+- **Status:** OPEN. Safe default: `requestReset` conditions its delete and its insert on `state = 'active'`, so a reset against an invited or suspended account writes nothing and leaves the invitation intact — fail-closed, and anti-enumeration-safe because the condition is a SQL predicate keyed by the address that matches nothing for a non-active account exactly as it matches nothing for a non-existent one.
 
 ---
 

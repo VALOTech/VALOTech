@@ -20,6 +20,7 @@
  * so no address can reach a log — correct, not a stub.
  */
 
+import { MAX_EMAIL_LENGTH, normaliseAddress } from '../../../../auth/address';
 import { hashPassword, needsRehash, verifyPassword } from '../../../../auth/password';
 import { getRateLimiter } from '../../../../auth/rate-limit';
 import { issue, serializeCookie } from '../../../../auth/session';
@@ -43,19 +44,6 @@ const INVALID_REQUEST = JSON.stringify({ error: 'invalid_request' });
 const INVALID = JSON.stringify({ error: 'invalid' });
 const TOO_MANY_ATTEMPTS = JSON.stringify({ error: 'too_many_attempts' });
 const CROSS_ORIGIN = JSON.stringify({ error: 'cross_origin' });
-
-/**
- * RFC 5321's maximum for a forward path, less the angle brackets. The bound is
- * here rather than left open because the address becomes a rate-limit key held
- * in memory for a window, and an unbounded key is an unbounded allocation an
- * anonymous caller chooses the size of.
- *
- * The password carries no matching bound. Argon2 absorbs it into a fixed state
- * before the memory-hard passes, so length costs nothing measurable, and a
- * ceiling here that `AUTH-003` did not also apply would let an invitation set a
- * password that could never be used to sign in.
- */
-const MAX_EMAIL_LENGTH = 254;
 
 /**
  * The rate-limit key for a request with no usable forwarded address. Behind
@@ -84,12 +72,13 @@ interface Credentials {
 /**
  * The credentials a well-formed body carries, or `null` when it carries none.
  *
- * The address is normalised once and used for both the query and the counter.
- * `accounts.email` is `citext`, so the database already ignores case; doing it
- * here as well is what keeps `A@x.test` and `a@x.test` — and the same address
- * with a space in front — counting against one key rather than minting a new
- * one per spelling, which would be a limit an attacker steps around by
- * shifting a character.
+ * The address is normalised once, by the one function every surface that takes
+ * an address calls, and the normalised value is used for both the query and the
+ * rate-limit counter. It is bounded at `MAX_EMAIL_LENGTH`; the password beside
+ * it is not, because Argon2 absorbs it into a fixed state before the
+ * memory-hard passes, so length costs nothing measurable — and a ceiling here
+ * that `AUTH-003` did not also apply would let an invitation set a password
+ * that could never be used to sign in.
  */
 async function readCredentials(request: Request): Promise<Credentials | null> {
   let body: unknown;
@@ -113,7 +102,7 @@ async function readCredentials(request: Request): Promise<Credentials | null> {
     return null;
   }
 
-  const normalised = email.trim().toLowerCase();
+  const normalised = normaliseAddress(email);
 
   if (normalised.length === 0 || normalised.length > MAX_EMAIL_LENGTH) {
     return null;
