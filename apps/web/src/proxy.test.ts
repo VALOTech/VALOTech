@@ -1,19 +1,22 @@
 /**
- * `Cache-Control: no-store` on every authenticated response (`AUTH-004/T4`).
+ * The security baseline on every response (`SEC-001/T1`, `SEC-001/T2`) and
+ * `Cache-Control: no-store` on the authenticated ones (`AUTH-004/T4`).
  *
- * Two things can go wrong and only one of them is visible. The header can be
- * absent from a response that needed it — which is the leak, and which nothing
- * in the application notices, because a cacheable room renders exactly like an
- * uncacheable one until somebody presses the back button. The header can also
- * be present on a response that did not need it, which costs a signed-out
- * reader a cache entry and nothing else. So the assertions below are weighted
- * accordingly: the presence case is checked against every shape of cookie a
- * request can carry, and the absence case is checked once.
+ * Every property here fails silently, which is what the assertions are shaped
+ * around. A missing `Content-Security-Policy` renders identically to a present
+ * one until somebody injects a script; a missing `Cache-Control` renders
+ * identically until somebody presses the back button; and a nonce that is
+ * constant across responses looks exactly like a nonce that is not. So each
+ * header is asserted by its exact value rather than its presence — a policy
+ * with a directive quietly dropped is still a policy — and the two dimensions
+ * that could exempt a response, the session cookie and the path, are crossed
+ * against every one of them.
  *
- * What this file cannot check is Next's own routing: whether the matcher makes
- * the proxy run at all for a given path. The pattern's intent is pinned here as
- * a regular expression, and the routing itself is exercised against a running
- * server — `docs/runbooks/auth-004-sign-out.md` records that run.
+ * What this file cannot check is Next's own behaviour: whether the matcher runs
+ * the proxy for a given path, and whether the render stamps the nonce onto the
+ * tags it emits. The matcher's intent is pinned below as a regular expression,
+ * and both are exercised against a running server — `docs/runbooks/auth-004-sign-out.md`
+ * records the `no-store` run.
  */
 
 import { NextRequest } from 'next/server';
@@ -31,6 +34,32 @@ process.env.SESSION_SECRET = 's'.repeat(40);
 
 const NO_STORE = 'no-store';
 
+/**
+ * The policy with its nonce source removed — the contract as written, which the
+ * implementation may add exactly one nonce to and nothing else.
+ */
+const POLICY_WITHOUT_NONCE =
+  "default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; " +
+  "frame-ancestors 'none'; base-uri 'none'; form-action 'self'";
+
+/**
+ * The headers whose value never varies. Written out a second time on purpose:
+ * a value the implementation and the test both read from one constant is a
+ * value neither of them checks.
+ */
+const CONSTANT_HEADERS: ReadonlyArray<readonly [string, string]> = [
+  ['Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload'],
+  ['X-Content-Type-Options', 'nosniff'],
+  ['Referrer-Policy', 'strict-origin-when-cross-origin'],
+  ['Permissions-Policy', 'camera=(), microphone=(), geolocation=(), browsing-topics=(), interest-cohort=()'],
+];
+
+/** The two request shapes every response-level property is crossed against. */
+const SESSION_STATES: ReadonlyArray<readonly [string, string | null]> = [
+  ['a request presenting a session', `${sessionCookieName()}=a-token`],
+  ['a request presenting none', null],
+];
+
 function requestWith(cookie: string | null, path = '/account/sessions'): NextRequest {
   const headers = new Headers();
 
@@ -39,6 +68,19 @@ function requestWith(cookie: string | null, path = '/account/sessions'): NextReq
   }
 
   return new NextRequest(`http://localhost:3100${path}`, { headers });
+}
+
+function policyOf(cookie: string | null = null, path?: string): string {
+  const header = proxy(requestWith(cookie, path)).headers.get('Content-Security-Policy');
+
+  expect(header).not.toBeNull();
+
+  return header ?? '';
+}
+
+/** The nonce source the policy carries, or null when it carries none. */
+function nonceIn(policy: string): string | null {
+  return /'nonce-([^']+)'/.exec(policy)?.[1] ?? null;
 }
 
 /**
@@ -55,6 +97,75 @@ function matches(path: string): boolean {
 
   return new RegExp(`^${pattern ?? ''}$`).test(path);
 }
+
+describe('the security baseline', () => {
+  describe.each(CONSTANT_HEADERS)('%s', (name, value) => {
+    it.each(SESSION_STATES)(`is ${value} on %s`, (_state, cookie) => {
+      expect(proxy(requestWith(cookie)).headers.get(name)).toBe(value);
+    });
+  });
+
+  it.each(SESSION_STATES)('sets the policy contract on %s', (_state, cookie) => {
+    expect(policyOf(cookie).replace(/ 'nonce-[^']+'/, '')).toBe(POLICY_WITHOUT_NONCE);
+  });
+
+  it('admits no inline or eval source, whatever else the policy grows', () => {
+    // The property SEC-001/T2 is: either keyword makes every other directive
+    // decorative, and both are the shape this class of defect always takes —
+    // added once to make one page work, and never removed.
+    const policy = policyOf();
+
+    expect(policy).not.toContain('unsafe-inline');
+    expect(policy).not.toContain('unsafe-eval');
+  });
+
+  it.each(SESSION_STATES)('carries a nonce source on %s', (_state, cookie) => {
+    expect(nonceIn(policyOf(cookie))).not.toBeNull();
+  });
+
+  it('mints a fresh nonce per response, so a read one is worthless', () => {
+    const nonces = new Set(Array.from({ length: 8 }, () => nonceIn(policyOf())));
+
+    expect(nonces.size).toBe(8);
+    expect(nonces.has(null)).toBe(false);
+  });
+
+  it('mints one Next will accept, in the base64 the grammar admits', () => {
+    // Next extracts the nonce from the policy with its own pattern and silently
+    // renders without one when the value does not match. The page then serves a
+    // policy whose nonce nothing in the HTML carries, and every script is
+    // refused — no error anywhere but the browser console.
+    expect(nonceIn(policyOf())).toMatch(/^[A-Za-z0-9+/_-]+={0,2}$/);
+  });
+
+  it('hands the policy to the render as well as to the browser', () => {
+    // Half the mechanism. Next reads the nonce off the request it renders, so a
+    // response-only policy would leave its own inline tags unmarked and blocked
+    // by the header sent beside them.
+    const response = proxy(requestWith(null));
+    const overridden = response.headers.get('x-middleware-override-headers') ?? '';
+
+    expect(overridden.split(',').map((name) => name.trim())).toContain(
+      'content-security-policy',
+    );
+    expect(response.headers.get('x-middleware-request-content-security-policy')).toBe(
+      response.headers.get('Content-Security-Policy'),
+    );
+  });
+
+  it.each(['/', '/room', '/room/2026-q3', '/account/sessions', '/api/auth/sign-out'])(
+    'sets every header on %s, so no route is exempt',
+    (path) => {
+      const response = proxy(requestWith(null, path));
+
+      for (const [name, value] of CONSTANT_HEADERS) {
+        expect(response.headers.get(name)).toBe(value);
+      }
+
+      expect(policyOf(null, path).replace(/ 'nonce-[^']+'/, '')).toBe(POLICY_WITHOUT_NONCE);
+    },
+  );
+});
 
 describe('the proxy', () => {
   it('marks a response unstorable when the request presented a session', () => {

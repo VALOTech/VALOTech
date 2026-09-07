@@ -69,6 +69,15 @@ item leaves this file when its signal is true — not when it feels handled.
 - **Done when:** each locale has been read end to end by a speaker and its corrections applied.
 - **Until then:** the locales are served. They are correct as far as anything mechanical can tell, and that is the whole of the claim being made.
 
+<a id="HSTS-PRELOAD"></a>
+### Decide whether `valotech.org` is submitted to the HSTS preload list
+
+- **What:** every response carries `Strict-Transport-Security: max-age=63072000; includeSubDomains; preload` (`SEC-001/T1`). The token states that the domain is *eligible*; it does not enrol it. Enrolment is a submission at hstspreload.org, and once a browser release ships the list, that browser refuses plain HTTP for `valotech.org` **and every host under it** — including a subdomain that has never been given a certificate. Removal is a second submission whose effect arrives with a later browser release, months out.
+- **Who:** the owner. It is a commitment about the company's domain and the slowest thing in this repository to undo.
+- **Done when:** every host under `valotech.org` terminates TLS and the domain has been submitted and accepted — or the owner decides against enrolling, and the `preload` token is dropped from the header in `apps/web/src/proxy.ts`.
+- **Until then:** nothing is preloaded, because nothing submits the domain but a person. The application is not deployed (`AWS-ACCOUNT` above), so the header is currently served only over plain HTTP to a local machine, where a browser ignores it entirely. Once the application is served over TLS, a browser that has visited will hold the policy for the `max-age`; unwinding that reaches each browser only when it next arrives over HTTPS and reads a `max-age=0`.
+- **`includeSubDomains` binds before `preload`, and without it.** The subdomain pin is the `includeSubDomains` token, not the list, and it takes effect the moment `OPS-001` first serves the apex over HTTPS: a browser that reads the header there refuses plain HTTP to *every* host under `valotech.org` for the `max-age`, whether or not the domain is ever submitted. So the inventory of subdomains that must terminate TLS has to be complete before the first HTTPS response — a `OPS-001/T5` post-deploy check — not before the preload submission.
+
 <a id="ECOSYSTEM-PORT-SYNC"></a>
 ### Carry this repository's port row into the sibling copies of the ecosystem map
 

@@ -39,16 +39,41 @@ browser rather than assumed from the header being present.
 
 | Header | Value | What it stops |
 |---|---|---|
-| `Content-Security-Policy` | `default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'` | Injected script, and the page being framed by somebody else's |
+| `Content-Security-Policy` | `default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self' 'nonce-<per request>'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'` | Injected script, and the page being framed by somebody else's |
 | `Strict-Transport-Security` | `max-age=63072000; includeSubDomains; preload` | A first request over plain HTTP after the first visit |
 | `X-Content-Type-Options` | `nosniff` | An uploaded image being interpreted as script |
 | `Referrer-Policy` | `strict-origin-when-cross-origin` | An investor-room URL leaking to an external site |
-| `Permissions-Policy` | `camera=(), microphone=(), geolocation=(), interest-cohort=()` | Capabilities this product never uses |
+| `Permissions-Policy` | `camera=(), microphone=(), geolocation=(), browsing-topics=(), interest-cohort=()` | Capabilities this product never uses |
 
-**The CSP has no `unsafe-inline`.** The gateway's scene is external files
-already, so the cost is one nonce for the locale bootstrap rather than a rewrite.
-An `unsafe-inline` added to make one page work removes the protection from every
-page, which is the shape this class of defect always takes.
+**The CSP has no `unsafe-inline`, and the nonce is what refusing it costs.**
+Next serialises every rendered page into inline `<script>` tags, so a
+`script-src` admitting neither a nonce nor `'unsafe-inline'` blocks them and the
+page paints without hydrating. The nonce is minted per request in the proxy and
+set on the request as well as the response, because the render is what stamps it
+onto the tags Next emits — which is also why every route renders on demand
+rather than at build time ([`SEC-DEC-02`](../../decisions-log.md#SEC-DEC-02)): a
+prerendered route is served with a policy whose nonce nothing in its HTML
+carries. An `unsafe-inline` added to make one page work removes the protection
+from every page, which is the shape this class of defect always takes.
+
+The `preload` token states that the domain is eligible for the HSTS preload
+list; it does not put it there. Submission is a human step whose undo is
+measured in browser releases, so it waits for every host under the domain to
+terminate TLS (`operator-checklist.md#HSTS-PRELOAD`).
+
+`Permissions-Policy` denies both `browsing-topics` and `interest-cohort`: they
+are the current and the retired names for interest-based ad targeting, and a
+browser acts on whichever it implements, so denying only the retired one would
+leave the live capability enabled.
+
+**"Every response" is every document.** The build's own immutable assets under
+`_next/static` and `_next/image` are outside the middleware's matcher and carry
+none of these headers. That is deliberate: a Content-Security-Policy on a
+content-addressed script governs nothing, and marking a bundle unstorable would
+make every reader re-download it while protecting nothing. The one header that
+would still bind on them is `nosniff`, and its threat — an uploaded file
+interpreted as script — belongs to media `CMS-003` serves, not to these
+known-type build artefacts.
 
 ### Transport and cookies
 
@@ -97,10 +122,13 @@ verified against the upstream release rather than written from memory.
 ## 4. Integration
 
 **`AUTH-002`** owns the cookie; this design owns everything around it.
-**`CMS-003`** owns upload validation and cites the rule here. **`OPS-001`**
-terminates TLS and must not strip these headers at the edge — a proxy that adds
-its own `X-Frame-Options` and drops the CSP is the usual way this baseline is
-lost after it was verified.
+**`CMS-003`** owns upload validation and cites the rule here; if it ever serves
+uploaded media through `/_next/image`, that path is outside this middleware's
+matcher and carries no `nosniff`, so `CMS-003`'s own response must set the header
+its threat model needs rather than inherit it here. **`OPS-001`** terminates TLS
+and must not strip these headers at the edge — a proxy that adds its own
+`X-Frame-Options` and drops the CSP is the usual way this baseline is lost after
+it was verified.
 
 ## 5. Cross-cutting compliance
 
@@ -121,6 +149,28 @@ lost after it was verified.
   verified in a browser before every push (§17), and an endpoint that collects
   reports is a surface that accepts unauthenticated writes. Reopen if the app
   ever loads a third-party script, at which point the trade reverses.
+- **The nonce has two silent failure modes, and both pass every gate.** Next
+  reads the nonce out of the request's `script-src` with a match that is
+  case-sensitive on both the directive name and the `'nonce-'` prefix, and
+  returns nothing — no log, no warning — on a mismatch. So reformatting the
+  header, lower-casing a directive, or tidying its spacing would make the whole
+  policy inert while every test that only reads the header string stays green;
+  the guard against it is that a page is driven in a browser, where the blocked
+  scripts show. And `style-src 'self'` admits no inline style only because the
+  production build emits none: enabling `experimental.inlineCss`, or importing
+  `next/image` (which sets a `style=` attribute), would ship an inline style the
+  policy blocks, because Next hands React a *string* nonce and a hoisted
+  `<style>` never receives one. Both are verified-clean today and would fail in a
+  browser, not in a gate.
+- **The root error page is Next's, not this one, when reached by URL.**
+  `global-error.tsx` styles the catastrophic-error page from an external module
+  and offers a plain link out, and a real root-layout crash renders it
+  dynamically and nonced. But Next prerenders the internal `/_global-error`
+  route with its own built-in body, which carries inline style and no nonce, so
+  a direct request to that URL is CSP-degraded and cacheable
+  ([`SEC-DEC-02`](../../decisions-log.md#SEC-DEC-02)). The trivial root layout
+  makes the crash path itself nearly unreachable; the residue is `OPS-001`'s to
+  keep out of a CDN.
 
 ## 7. Task list
 

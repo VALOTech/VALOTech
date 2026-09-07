@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_294 tasks in the plan, 103 closed, 191 outstanding._
+_294 tasks in the plan, 105 closed, 189 outstanding._
 
 ---
 
@@ -35,7 +35,7 @@ _46/48 closed (95%) · 2 outstanding — 0 buildable now · 0 waiting on the own
 
 _Who may read what, and what records that they did. Everything above reads through the gate this wave builds, so a shortcut here is a shortcut in every feature after it. Sign-out precedes invitation deliberately: a session that cannot be ended server-side is a defect that grows with every account created. The scene sits here too, one layer above the page it moves behind._
 
-_53/69 closed (76%) · 16 outstanding — 12 buildable now · 3 waiting on the owner · 1 external residue · 0 parked to a later wave._
+_55/69 closed (79%) · 14 outstanding — 10 buildable now · 3 waiting on the owner · 1 external residue · 0 parked to a later wave._
 
 - **AUTH-001** · Sign-in — 4/5 closed · depth 2
   - `[!] AUTH-001/T4` — The sign-in form, in twenty languages, keyboard-reachable, with an accessible name on every field  · _pending-decision_ · **Blocked by:** pending-decision: I18N-DEC-02 — the form must render in the reader's locale across twenty, and the application has no i18n framework yet; which one i…
@@ -68,10 +68,8 @@ _53/69 closed (76%) · 16 outstanding — 12 buildable now · 3 waiting on the o
 
 - **CMS-001** · Content model and revisions — 6/6 closed
 - **SCENE-004** · Annotation chips — 3/3 closed
-- **SEC-001** · Security baseline — 0/5 closed · depth 4
+- **SEC-001** · Security baseline — 2/5 closed · depth 4
   - `[~] SEC-001/T3` — Every route parses its input with a schema, and the handler sees only the parsed value  · **Note:** secret scanning runs on every push and pull request — gitleaks over full history, the binary pinned to release 8.30.0 rather than the published actio…
-  - `[ ] SEC-001/T1` — One middleware sets every header on every response, with no route exempt
-  - `[ ] SEC-001/T2` — The CSP carries no `unsafe-inline`, and the page is verified in a browser under it
   - `[ ] SEC-001/T4` — Rate limits on sign-in, reset and invitation, per account and per address, refusing identically
   - `[ ] SEC-001/T5` — `gitleaks`, dependency audit and type check in CI, with every action pinned to a verified SHA
 
