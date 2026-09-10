@@ -164,6 +164,7 @@ const SELECTABLE_SAMPLES: { readonly [T in keyof Database]: Selectable<Database[
     password_hash: null,
     state: 'invited',
     last_sign_in: null,
+    read_tracking_objected: false,
     created_at: AT,
     updated_at: AT,
   },

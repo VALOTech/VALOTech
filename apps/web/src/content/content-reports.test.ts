@@ -303,5 +303,14 @@ describe.skipIf(!HAS_DATABASE)('a report against a period (RPT-001/T1, RPT-002/T
       await getDb().deleteFrom('accounts').where('id', '=', account).execute();
       expect(await readsFor(account)).toHaveLength(0);
     });
+
+    it('records nothing for an account that objected to read-tracking (LEGAL-GLOBAL-001/T3)', async () => {
+      const account = await reader();
+      const report = await aReport();
+      await getDb().updateTable('accounts').set({ read_tracking_objected: true }).where('id', '=', account).execute();
+
+      await markReportRead(account, report);
+      expect(await readsFor(account)).toHaveLength(0);
+    });
   });
 });

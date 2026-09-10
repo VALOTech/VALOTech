@@ -26,6 +26,13 @@ CREATE TABLE accounts (
   -- updated_at; that column tracks changes to the account's defining
   -- attributes, not every write the row takes.
   last_sign_in  timestamptz,
+  -- The read-tracking objection (LEGAL-GLOBAL-001/T3): when true, deck and report
+  -- reads stop being recorded for this account and its existing read rows are
+  -- deleted. It is a right a person may exercise, the act is audited, and this is
+  -- the flag the record functions check before writing. Like last_sign_in it is a
+  -- behavioural column, left out of the updated_at trigger's WHEN below so
+  -- exercising the objection does not restamp the account.
+  read_tracking_objected boolean NOT NULL DEFAULT false,
   created_at    timestamptz NOT NULL DEFAULT now(),
   updated_at    timestamptz NOT NULL DEFAULT now()
 );

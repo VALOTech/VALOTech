@@ -59,6 +59,7 @@ export const AUDIT_ACTIONS = [
   'account.delete',
   'account.role_change',
   'account.reinstate',
+  'account.object_read_tracking',
   'grant.add',
   'grant.remove',
   'content.publish',
@@ -139,6 +140,9 @@ export interface AccountsTable {
   password_hash: string | null;
   state: Generated<AccountState>;
   last_sign_in: Date | null;
+  // The read-tracking objection (`LEGAL-GLOBAL-001/T3`): `Generated` because the
+  // database defaults it to `false`, so an insert may omit it.
+  read_tracking_objected: Generated<boolean>;
   created_at: Generated<Date>;
   updated_at: Generated<Date>;
 }
@@ -362,6 +366,7 @@ export const SCHEMA: Readonly<Record<keyof Database, TableSpec>> = {
       { name: 'password_hash', type: 'text', notNull: false, hasDefault: false, unique: false },
       { name: 'state', type: 'text', notNull: true, hasDefault: true, unique: false },
       { name: 'last_sign_in', type: 'timestamptz', notNull: false, hasDefault: false, unique: false },
+      { name: 'read_tracking_objected', type: 'boolean', notNull: true, hasDefault: true, unique: false },
       { name: 'created_at', type: 'timestamptz', notNull: true, hasDefault: true, unique: false },
       { name: 'updated_at', type: 'timestamptz', notNull: true, hasDefault: true, unique: false },
     ],

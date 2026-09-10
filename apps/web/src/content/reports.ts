@@ -102,10 +102,24 @@ export async function currentReport(reader: Actor | null): Promise<ContentItem |
  * writes it and a re-open changes nothing — there is one read state, not a visit
  * count, and no last-opened time to keep. The read time is the database's. The
  * caller records this once the reader has been served the report; the row is
- * deleted with the account (`DATA-002`).
+ * deleted with the account (`DATA-002`), and an account that has objected to
+ * read-tracking is not recorded at all (`LEGAL-GLOBAL-001/T3`).
  */
 export async function markReportRead(accountId: string, itemId: string): Promise<void> {
-  await getDb()
+  const db = getDb();
+
+  // Honour a read-tracking objection: the account asked not to be tracked, so
+  // there is nothing to record (`LEGAL-GLOBAL-001/T3`, `DATA-R03`).
+  const account = await db
+    .selectFrom('accounts')
+    .select('read_tracking_objected')
+    .where('id', '=', accountId)
+    .executeTakeFirst();
+  if (account?.read_tracking_objected) {
+    return;
+  }
+
+  await db
     .insertInto('report_reads')
     .values({ account_id: accountId, item_id: itemId })
     .onConflict((oc) => oc.columns(['account_id', 'item_id']).doNothing())

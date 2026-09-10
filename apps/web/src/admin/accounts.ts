@@ -1,11 +1,11 @@
 /**
  * What an admin does to somebody else's account (`ADMIN-001`): the list of who
- * can sign in, the four acts that change one — suspend, role change, reinstate,
- * erase — and a read of everything held about one, for a data-portability
- * request (`LEGAL-GLOBAL-001/T2`).
+ * can sign in, the five acts that change one — suspend, role change, reinstate,
+ * erase, and honour a read-tracking objection — and a read of everything held
+ * about one, for a data-portability request (`LEGAL-GLOBAL-001/T2`).
  *
- * The list is a plain read and carries none of what follows. Each of the four
- * is one act carrying several writes, and the design is that the writes are one
+ * The list is a plain read and carries none of what follows. Each act is one
+ * carrying several writes, and the design is that the writes are one
  * transaction. A suspension that changed the state and failed to end
  * the sessions would leave a suspended person signed in for the rest of the
  * day; a role change that changed the role and failed to end the sessions would
@@ -355,6 +355,48 @@ export async function eraseAccount(accountId: string, actorId: string): Promise<
       await recordAudit(trx, {
         actorId,
         action: 'account.delete',
+        subjectType: 'account',
+        subjectId: accountId,
+      });
+
+      return true;
+    });
+}
+
+/**
+ * Honour a person's objection to read-tracking (`LEGAL-GLOBAL-001/T3`, `DATA-R03`).
+ *
+ * Setting the flag stops the record functions writing new reads for this account,
+ * and this deletes the reads already kept — a right exercised, so the flag, the
+ * deletes and the audit row are one transaction (`SEC-R04`). The room keeps
+ * working: unread marking degrades to everything looking new, which is the cost
+ * the person chose. Returns whether it changed anything — `false` when the account
+ * had already objected or holds no id, in which case nothing is written or
+ * deleted. The narrowed `UPDATE` is the check, as in the acts above: a second
+ * objection matches nothing and the trail carries one act, not two.
+ */
+export async function objectToReadTracking(accountId: string, actorId: string): Promise<boolean> {
+  return getDb()
+    .transaction()
+    .execute(async (trx) => {
+      const objected = await trx
+        .updateTable('accounts')
+        .set({ read_tracking_objected: true })
+        .where('id', '=', accountId)
+        .where('read_tracking_objected', '=', false)
+        .returning('id')
+        .executeTakeFirst();
+
+      if (objected === undefined) {
+        return false;
+      }
+
+      await trx.deleteFrom('deck_reads').where('account_id', '=', accountId).execute();
+      await trx.deleteFrom('report_reads').where('account_id', '=', accountId).execute();
+
+      await recordAudit(trx, {
+        actorId,
+        action: 'account.object_read_tracking',
         subjectType: 'account',
         subjectId: accountId,
       });

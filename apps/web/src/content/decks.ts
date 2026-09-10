@@ -118,10 +118,24 @@ export async function deckRevisionFor(deckId: string, reader: Actor | null): Pro
  * has confirmed the reader may see the deck and resolved which version they were
  * shown. The timestamps are the database's, never the caller's, so the record is
  * truthful about when without trusting whoever wrote it. The row is deleted with
- * the account (`DATA-002`).
+ * the account (`DATA-002`), and an account that has objected to read-tracking is
+ * not recorded at all (`LEGAL-GLOBAL-001/T3`).
  */
 export async function recordDeckRead(accountId: string, deckId: string, version: number): Promise<void> {
-  await getDb()
+  const db = getDb();
+
+  // Honour a read-tracking objection: the account asked not to be tracked, so
+  // there is nothing to record (`LEGAL-GLOBAL-001/T3`, `DATA-R03`).
+  const account = await db
+    .selectFrom('accounts')
+    .select('read_tracking_objected')
+    .where('id', '=', accountId)
+    .executeTakeFirst();
+  if (account?.read_tracking_objected) {
+    return;
+  }
+
+  await db
     .insertInto('deck_reads')
     .values({ account_id: accountId, deck_id: deckId, version })
     .onConflict((oc) => oc.columns(['account_id', 'deck_id', 'version']).doUpdateSet({ last_opened_at: sql`now()` }))

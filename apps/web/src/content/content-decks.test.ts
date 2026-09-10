@@ -298,5 +298,14 @@ describe.skipIf(!HAS_DATABASE)('a deck publication version (DECK-002/T1)', () =>
       await getDb().deleteFrom('accounts').where('id', '=', reader.id).execute();
       expect(await readsFor(reader.id, deck)).toHaveLength(0);
     });
+
+    it('records nothing for an account that objected to read-tracking (LEGAL-GLOBAL-001/T3)', async () => {
+      const deck = await aDeck();
+      const reader = await investor(`obj-${randomUUID()}@example.test`);
+      await getDb().updateTable('accounts').set({ read_tracking_objected: true }).where('id', '=', reader.id).execute();
+
+      await recordDeckRead(reader.id, deck, 1);
+      expect(await readsFor(reader.id, deck)).toHaveLength(0);
+    });
   });
 });

@@ -57,6 +57,7 @@ import {
   eraseAccount,
   exportPersonData,
   listAccounts,
+  objectToReadTracking,
   reinstateAccount,
   suspendAccount,
 } from './accounts';
@@ -954,6 +955,58 @@ describe.skipIf(!HAS_DATABASE)('ADMIN-001 account mutations', () => {
       expect(outA?.decksRead).toHaveLength(0);
       expect(outB?.decksGranted).toHaveLength(0);
       expect(outB?.decksRead).toHaveLength(1);
+    });
+  });
+
+  describe('objectToReadTracking (LEGAL-GLOBAL-001/T3)', () => {
+    async function readTrackingObjected(accountId: string): Promise<boolean> {
+      const row = await getDb()
+        .selectFrom('accounts')
+        .select('read_tracking_objected')
+        .where('id', '=', accountId)
+        .executeTakeFirstOrThrow();
+      return row.read_tracking_objected;
+    }
+
+    async function deckReadCount(accountId: string): Promise<number> {
+      return (await getDb().selectFrom('deck_reads').select('account_id').where('account_id', '=', accountId).execute())
+        .length;
+    }
+
+    it('sets the flag, deletes the existing reads, and records the act', async () => {
+      const person = await newAccount('active');
+      const actor = await newAccount('active', 'admin');
+      const deck = await createItem({ type: 'deck', slug: `d-${randomUUID()}`, title: 'D', audience: 'granted' });
+      const report = await createItem({ type: 'report', slug: `r-${randomUUID()}`, title: 'Q1', period: '2026-Q1' });
+      await recordDeckRead(person, deck.id, 1);
+      await markReportRead(person, report.id);
+
+      expect(await objectToReadTracking(person, actor)).toBe(true);
+
+      expect(await readTrackingObjected(person)).toBe(true);
+      expect(await deckReadCount(person)).toBe(0);
+      const reports = await getDb().selectFrom('report_reads').select('account_id').where('account_id', '=', person).execute();
+      expect(reports).toHaveLength(0);
+      const audits = await getDb().selectFrom('audit').select('action').where('subject_id', '=', person).execute();
+      expect(audits.map((a) => a.action)).toContain('account.object_read_tracking');
+    });
+
+    it('is a no-op the second time, and for an id no account holds', async () => {
+      const person = await newAccount('active');
+      const actor = await newAccount('active', 'admin');
+      expect(await objectToReadTracking(person, actor)).toBe(true);
+      expect(await objectToReadTracking(person, actor)).toBe(false);
+      expect(await objectToReadTracking(randomUUID(), actor)).toBe(false);
+    });
+
+    it('stops a new read being recorded once set', async () => {
+      const person = await newAccount('active');
+      const actor = await newAccount('active', 'admin');
+      const deck = await createItem({ type: 'deck', slug: `d-${randomUUID()}`, title: 'D', audience: 'granted' });
+      await objectToReadTracking(person, actor);
+
+      await recordDeckRead(person, deck.id, 1);
+      expect(await deckReadCount(person)).toBe(0);
     });
   });
 });
