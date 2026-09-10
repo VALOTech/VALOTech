@@ -26,6 +26,10 @@ import { getDb } from '../db/index';
  * published since. Returns whether a grant was created — `false` when one already
  * existed, in which case nothing is written and nothing is recorded, so
  * re-pinning an existing grant is not this function's job (`DECK-004`).
+ *
+ * A grant to a suspended account throws rather than returns (`DECK-004/T3`): it
+ * is a refusal, not a no-op, so an admin is told the grant did not take. A grant
+ * to an invited account is allowed.
  */
 export async function addGrant(
   itemId: string,
@@ -36,6 +40,23 @@ export async function addGrant(
   return getDb()
     .transaction()
     .execute(async (trx) => {
+      // A grant to a suspended account is refused, with the reason (`DECK-004/T3`):
+      // a grant that silently does nothing is one an admin believes is working.
+      // An invited account is allowed — access begins when they accept. The
+      // account row is locked so a suspension racing this grant is serialised
+      // against it: either it runs first and this refuses, or this runs first and
+      // the suspension revokes what it granted. A non-existent id is left to the
+      // insert's foreign key, as before.
+      const account = await trx
+        .selectFrom('accounts')
+        .select('state')
+        .where('id', '=', accountId)
+        .forUpdate()
+        .executeTakeFirst();
+      if (account?.state === 'suspended') {
+        throw new Error('cannot grant access to a suspended account');
+      }
+
       const created = await trx
         .insertInto('content_grants')
         .values({ item_id: itemId, account_id: accountId, granted_by: grantedBy, pinned_version: pinnedVersion })

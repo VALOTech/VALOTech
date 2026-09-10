@@ -216,4 +216,24 @@ describe.skipIf(!HAS_DATABASE)('a deck publication version (DECK-002/T1)', () =>
       expect((await deckRevisionFor(deck, { id: authorId, role: 'admin' }))?.version).toBe(1);
     });
   });
+
+  describe('speaker context (DECK-001/T5)', () => {
+    it('strips a heading speaker context from the read path, leaving the rest intact', async () => {
+      const deck = await aDeck();
+      const withContext: Block[] = [
+        { type: 'heading', level: 2, text: 'Section', context: 'what the presenter says' },
+        { type: 'paragraph', text: 'on the page', marks: [] },
+      ];
+      const revision = await saveDraft(deck, withContext, authorId);
+      await publish(deck, revision.id, authorId);
+      const reader = await investor(`ctx-${randomUUID()}@example.test`);
+      await addGrant(deck, reader.id, authorId);
+
+      const view = await deckRevisionFor(deck, reader);
+      const blocks = view?.revision.blocks as { type: string; level: number; text: string; context?: string }[];
+      // The heading is served without its context; the paragraph is untouched.
+      expect(blocks[0]).toEqual({ type: 'heading', level: 2, text: 'Section' });
+      expect(blocks[1]).toEqual({ type: 'paragraph', text: 'on the page', marks: [] });
+    });
+  });
 });

@@ -320,11 +320,13 @@ PRD: `INV-003`
 ## DECK-001 · Deck authoring
 PRD: `DECK-001`
 
-- [ ] DECK-001/T1 — Sections derived from level-2 headings, with the block array the single source
+- [x] DECK-001/T1 — Sections derived from level-2 headings, with the block array the single source
+  Evidence: apps/web/src/content/sections.ts:deriveSections partitions a deck's blocks at each level-2 heading, the block array the single source. Proven by apps/web/src/content/sections.test.ts — the sections concatenate back to the input, a level-3 heading stays within its section, and a run before the first heading forms one leading section. Mutation-proved: splitting at level 3 rather than level 2 is killed.
 - [ ] DECK-001/T2 — An overview of section cards in order, showing heading, first line and what each carries
 - [ ] DECK-001/T3 — Reordering by drag and by keyboard, writing back to the block array
 - [ ] DECK-001/T4 — Section, word and figure counts in the overview
-- [ ] DECK-001/T5 — Speaker context per section, stripped in the investor read path and proven by a test
+- [x] DECK-001/T5 — Speaker context per section, stripped in the investor read path and proven by a test
+  Evidence: apps/web/src/content/blocks.ts carries an optional speaker context on a heading, and apps/web/src/content/blocks.ts:withoutSpeakerContext removes it; apps/web/src/content/decks.ts:deckRevisionFor strips it from the reading view so no reading surface serves it. Proven against PostgreSQL 17 by apps/web/src/content/content-decks.test.ts — the investor read returns the heading without its context, the paragraph intact — and as a unit by apps/web/src/content/sections.test.ts. Mutation-proved: removing the strip from the read path is killed.
 
 ## DECK-002 · Deck versioning and publishing
 PRD: `DECK-002`
@@ -351,9 +353,11 @@ PRD: `DECK-003`
 ## DECK-004 · Deck access grants
 PRD: `DECK-004`
 
-- [ ] DECK-004/T1 — Grant and revoke, audited, with the pinned version optional
+- [x] DECK-004/T1 — Grant and revoke, audited, with the pinned version optional
+  Evidence: apps/web/src/content/grants.ts:addGrant and apps/web/src/content/grants.ts:removeGrant each record an audit row in the same transaction as the write (SEC-R04), the pinned version optional (DECK-002/T2). Proven against PostgreSQL 17 by apps/web/src/content/content-grants.test.ts — one audit row per act, an idempotent re-grant records nothing, and a revoke of a grant that does not exist records nothing. Mutation-proved: recording the wrong audit action on a grant is killed.
 - [ ] DECK-004/T2 — The confirmation states in words what the person will be able to read, including the version
-- [ ] DECK-004/T3 — A grant to a suspended account is refused with the reason; to an invited one it is allowed
+- [x] DECK-004/T3 — A grant to a suspended account is refused with the reason; to an invited one it is allowed
+  Evidence: apps/web/src/content/grants.ts:addGrant locks the account row and refuses a grant to a suspended account with the reason, while an invited or active account is allowed. Proven against PostgreSQL 17 by apps/web/src/content/content-grants.test.ts — the suspended grant throws and writes neither the grant nor an audit row, and the invited and active grants succeed. Mutation-proved: inverting the suspended check is killed.
 - [ ] DECK-004/T4 — The from-the-deck view, showing pin, granter, date and when last opened
 - [ ] DECK-004/T5 — The from-the-account view, listing every deck a person may read
 - [ ] DECK-004/T6 — Bulk grant with the names shown before it commits, and no bulk revoke

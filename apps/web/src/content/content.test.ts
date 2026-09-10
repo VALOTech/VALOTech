@@ -54,10 +54,16 @@ describe('validateBlocks', () => {
     expect(validateBlocks(VALID)).toEqual(VALID);
   });
 
+  it('admits a heading carrying speaker context, and keeps it (DECK-001/T5)', () => {
+    const withContext: Block[] = [{ type: 'heading', level: 2, text: 'A heading', context: 'say this aloud' }];
+    expect(validateBlocks(withContext)).toEqual(withContext);
+  });
+
   it.each([
     ['a value that is not an array', 'nope'],
     ['an unknown block type', [{ type: 'marquee', text: 'x' }]],
     ['a heading at level 1 (the title is not a block)', [{ type: 'heading', level: 1, text: 'x' }]],
+    ['a heading whose speaker context is not a string', [{ type: 'heading', level: 2, text: 'x', context: 5 }]],
     ['an image with empty alt text', [{ type: 'image', mediaId: 'm', alt: '', caption: null }]],
     ['an image with whitespace-only alt text', [{ type: 'image', mediaId: 'm', alt: '   ', caption: null }]],
     ['a figure whose data is not an array', [{ type: 'figure', mediaId: 'm', caption: null, data: 'x' }]],

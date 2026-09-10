@@ -19,6 +19,8 @@
  * cannot render; the other mark types carry nothing but their span.
  */
 
+import type { JsonValue } from '../db/types';
+
 export const MARK_TYPES = ['strong', 'em', 'code', 'link'] as const;
 export type MarkType = (typeof MARK_TYPES)[number];
 
@@ -42,7 +44,7 @@ export const BLOCK_TYPES = [
 export type BlockType = (typeof BLOCK_TYPES)[number];
 
 export type Block =
-  | { type: 'heading'; level: 2 | 3; text: string }
+  | { type: 'heading'; level: 2 | 3; text: string; context?: string }
   | { type: 'paragraph'; text: string; marks: Mark[] }
   | { type: 'list'; ordered: boolean; items: string[] }
   | { type: 'quote'; text: string; attribution: string | null }
@@ -121,7 +123,14 @@ function validateBlock(raw: unknown, i: number): Block {
       if (block.level !== 2 && block.level !== 3) {
         fail(where, 'heading level must be 2 or 3 (level 1 is the item title)');
       }
-      return { type, level: block.level, text };
+      // Speaker context (DECK-001/T5): what the presenter says that is not on the
+      // page. Optional, and a string when present; it is stored on the heading and
+      // stripped from the investor read (`withoutSpeakerContext`), never served.
+      if (block.context === undefined) {
+        return { type, level: block.level, text };
+      }
+      const context = asString(block.context, `${where}.context`);
+      return { type, level: block.level, text, context };
     }
     case 'paragraph': {
       const text = asString(block.text, `${where}.text`);
@@ -177,4 +186,30 @@ export function validateBlocks(value: unknown): Block[] {
     fail('blocks', 'is not an array');
   }
   return value.map((raw, i) => validateBlock(raw, i));
+}
+
+/**
+ * The blocks with speaker context removed from every heading (`DECK-001/T5`).
+ *
+ * Speaker context is written on a heading and kept for the overview and the
+ * presenter; it is never served to an investor. The deck read strips it here — in
+ * the repository function rather than in a template — so a reading surface cannot
+ * serve it by forgetting to leave it out (`CMS-R03`'s discipline applied to a
+ * field rather than to a row). It operates on the stored `jsonb` value, which is
+ * the shape `validateBlocks` admitted on write, and removes only a heading's
+ * `context`; every other block is returned unchanged. A value that is not an
+ * array — which the column never holds — is returned as it came.
+ */
+export function withoutSpeakerContext(blocks: JsonValue): JsonValue {
+  if (!Array.isArray(blocks)) {
+    return blocks;
+  }
+  return blocks.map((block) => {
+    if (typeof block !== 'object' || Array.isArray(block) || block.type !== 'heading') {
+      return block;
+    }
+    const stripped = { ...block };
+    delete stripped.context;
+    return stripped;
+  });
 }

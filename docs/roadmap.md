@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_295 tasks in the plan, 156 closed, 139 outstanding._
+_295 tasks in the plan, 160 closed, 135 outstanding._
 
 ---
 
@@ -116,14 +116,12 @@ _42/63 closed (66%) · 21 outstanding — 18 buildable now · 3 waiting on the o
 
 _The three content types, and the compliance posture that governs what is held about the people reading them. Updates come before decks, and not only because they are the simpler shape of the same problem: they are what the room is for. An investor signs in to find out what has happened since they last looked._
 
-_9/59 closed (15%) · 50 outstanding — 50 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_11/59 closed (18%) · 48 outstanding — 48 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
 
-- **DECK-001** · Deck authoring — 0/5 closed · depth 7
-  - `[ ] DECK-001/T1` — Sections derived from level-2 headings, with the block array the single source
+- **DECK-001** · Deck authoring — 2/5 closed · depth 7
   - `[ ] DECK-001/T2` — An overview of section cards in order, showing heading, first line and what each carries
   - `[ ] DECK-001/T3` — Reordering by drag and by keyboard, writing back to the block array
   - `[ ] DECK-001/T4` — Section, word and figure counts in the overview
-  - `[ ] DECK-001/T5` — Speaker context per section, stripped in the investor read path and proven by a test
 
 - **LEGAL-SG-001** · PDPA posture — 0/6 closed · depth 7
   - `[ ] LEGAL-SG-001/T1` — The privacy notice: what is held, why, how long, who to write to, in twenty locales
@@ -192,7 +190,7 @@ _9/59 closed (15%) · 50 outstanding — 50 buildable now · 0 waiting on the ow
 
 _The reading surfaces, the room they sit in, and the gateway served by the application — which is what finally makes the gate on the two hidden chapters real rather than a stylesheet. This wave ends with the product complete and still unpublished; what publishes it is outside the waves, waiting on the owner._
 
-_0/56 closed (0%) · 56 outstanding — 56 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_2/56 closed (3%) · 54 outstanding — 54 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
 
 - **DECK-003** · Deck reading — 0/5 closed · depth 9
   - `[ ] DECK-003/T1` — One column with sections in order, the version and date on the page
@@ -201,10 +199,8 @@ _0/56 closed (0%) · 56 outstanding — 56 buildable now · 0 waiting on the own
   - `[ ] DECK-003/T4` — The change notice for an unpinned reader whose version moved
   - `[ ] DECK-003/T5` — The print stylesheet shared with `RPT-003` where the rules are the same
 
-- **DECK-004** · Deck access grants — 0/6 closed · depth 9
-  - `[ ] DECK-004/T1` — Grant and revoke, audited, with the pinned version optional
+- **DECK-004** · Deck access grants — 2/6 closed · depth 9
   - `[ ] DECK-004/T2` — The confirmation states in words what the person will be able to read, including the version
-  - `[ ] DECK-004/T3` — A grant to a suspended account is refused with the reason; to an invited one it is allowed
   - `[ ] DECK-004/T4` — The from-the-deck view, showing pin, granter, date and when last opened
   - `[ ] DECK-004/T5` — The from-the-account view, listing every deck a person may read
   - `[ ] DECK-004/T6` — Bulk grant with the names shown before it commits, and no bulk revoke

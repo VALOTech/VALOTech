@@ -11,12 +11,19 @@
  * A pin keeps resolving after a withdrawal (`DECK-002/T6`): withdrawing moves the
  * item's pointer but never deletes the revision or clears its version, so the
  * revision the pin names is still there to be read.
+ *
+ * What it returns is the reading view, so a heading's speaker context is stripped
+ * from the blocks before they leave here (`DECK-001/T5`): the context is what the
+ * presenter says and the investor never reads, and stripping it in this function
+ * rather than in a template is what keeps a reading surface from serving it by
+ * forgetting to.
  */
 
 import type { Actor } from '../auth/gate';
 import { getDb } from '../db/index';
 
 import { visibleTo } from './access';
+import { withoutSpeakerContext } from './blocks';
 import type { ContentItem, ContentRevision } from './items';
 
 /** A deck, the revision a reader sees, and that revision's published version. */
@@ -89,5 +96,8 @@ export async function deckRevisionFor(deckId: string, reader: Actor | null): Pro
   }
 
   const { version, ...revision } = row;
-  return { item, revision, version };
+  // The reading view is the investor's document, so speaker context is stripped
+  // here (`DECK-001/T5`) and no reading surface can serve it by omission. The
+  // overview and the presenter print read the revision directly, keeping it.
+  return { item, revision: { ...revision, blocks: withoutSpeakerContext(revision.blocks) }, version };
 }
