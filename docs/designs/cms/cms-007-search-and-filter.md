@@ -56,7 +56,15 @@ actually wants.
     SELECT ... FROM content_items i
       JOIN content_revisions r ON r.id = i.current_revision_id
      WHERE <CMS-006 predicate for reader>
-       AND r.search @@ websearch_to_tsquery('simple', $q)
+       AND r.search @@ to_tsquery('simple', $terms)
+
+`to_tsquery` over terms suffixed `:*` rather than `websearch_to_tsquery`, because
+the matching is prefix-based (below) and `websearch_to_tsquery` matches whole
+lexemes only. `$terms` is the reader's query split on whitespace, each term
+stripped to letters and digits and suffixed `:*`, joined with `&`, so only a
+valid query — never the raw input — reaches `to_tsquery`: an input carrying its
+own `&` or `:` cannot become a syntax error or a query the reader did not mean,
+and a query with no word in it matches nothing rather than everything.
 
 **The predicate is first and it is the same function `CMS-006` exports.** Not a
 copy, not a similar clause — the same one, so a change to the access rule reaches

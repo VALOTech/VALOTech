@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_295 tasks in the plan, 144 closed, 151 outstanding._
+_295 tasks in the plan, 147 closed, 148 outstanding._
 
 ---
 
@@ -73,7 +73,7 @@ _59/69 closed (85%) · 10 outstanding — 6 buildable now · 3 waiting on the ow
 
 _The machinery every kind of writing shares — the editor, the media, the locale states, the audience rule, publishing, search — plus the account, configuration and logging surfaces an operator needs before anything is published. Building it once is the whole reason a report, an update and a deck are three navigations over one system rather than three systems._
 
-_39/63 closed (61%) · 24 outstanding — 22 buildable now · 2 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_42/63 closed (66%) · 21 outstanding — 19 buildable now · 2 waiting on the owner · 0 external residue · 0 parked to a later wave._
 
 - **ADMIN-001** · Account management — 5/8 closed · depth 5
   - `[ ] ADMIN-001/T2` — The person page: identity, access, sessions, actions
@@ -106,11 +106,8 @@ _39/63 closed (61%) · 24 outstanding — 22 buildable now · 2 waiting on the o
   - `[ ] CMS-004/T4` — The confirmation names what is replaced and how many locales will fall back
   - `[ ] CMS-004/T6` — A public item's cache is purged on publish and on withdraw
 
-- **CMS-007** · Search and filter in the room — 0/6 closed · depth 6
-  - `[ ] CMS-007/T1` — A generated `tsvector` over flattened block text, so the index cannot drift from the content
-  - `[ ] CMS-007/T2` — The search query composes `CMS-006`'s predicate as its first clause, and lives in the repository module
+- **CMS-007** · Search and filter in the room — 3/6 closed · depth 6
   - `[ ] CMS-007/T3` — Kind, product, period and type filters, composing into one statement
-  - `[ ] CMS-007/T4` — Only the published revision is findable; a draft is not, including by its author
   - `[ ] CMS-007/T5` — The empty state names what narrowed the result and offers to widen it
   - `[ ] CMS-007/T6` — The field is labelled, keyboard-operable, and announces its result count
 

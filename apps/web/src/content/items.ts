@@ -27,7 +27,10 @@ import type {
 import { validateBlocks } from './blocks';
 
 export type ContentItem = Selectable<ContentItemsTable>;
-export type ContentRevision = Selectable<ContentRevisionsTable>;
+// `search` is a database-internal full-text index (`CMS-007`): part of the table
+// for the schema gate and matched in raw SQL by the search query, but never a
+// value a caller reads, so the revision a caller holds omits it.
+export type ContentRevision = Omit<Selectable<ContentRevisionsTable>, 'search'>;
 
 /** A new content item. `audience` defaults to `investor` in the database. */
 export interface NewItem {

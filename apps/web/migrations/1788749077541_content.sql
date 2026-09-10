@@ -40,6 +40,29 @@ CREATE INDEX content_items_audience_published_idx
   ON content_items (audience)
   WHERE current_revision_id IS NOT NULL;
 
+-- The searchable text of a block array, flattened to one string: headings,
+-- paragraph and quote text, list items, captions and alternative text. It names
+-- the text-bearing fields rather than every string, so a media id or a mark
+-- type never enters the index (CMS-007). It is IMMUTABLE because the generated
+-- column below calls it, and returns text rather than a tsvector because the
+-- configuration that tokenises it -- 'simple', not a per-language stemmer for a
+-- corpus in twenty languages -- is the index's choice, made at the call site.
+CREATE FUNCTION blocks_text(blocks jsonb) RETURNS text
+  LANGUAGE sql IMMUTABLE PARALLEL SAFE AS $$
+  SELECT string_agg(piece, ' ')
+  FROM jsonb_array_elements(coalesce(blocks, '[]'::jsonb)) AS block
+  CROSS JOIN LATERAL (
+    SELECT block->>'text'
+    UNION ALL SELECT block->>'caption'
+    UNION ALL SELECT block->>'alt'
+    UNION ALL SELECT string_agg(item, ' ')
+              FROM jsonb_array_elements_text(
+                CASE WHEN jsonb_typeof(block->'items') = 'array' THEN block->'items' ELSE '[]'::jsonb END
+              ) AS item
+  ) AS pieces(piece)
+  WHERE piece IS NOT NULL AND piece <> '';
+$$;
+
 -- A revision is never updated once it has been published: an edit writes a new
 -- row and publishing moves content_items.current_revision_id, so withdrawing is
 -- moving the pointer back and what an investor read last month is still here to
@@ -56,7 +79,8 @@ CREATE TABLE content_revisions (
   blocks       jsonb NOT NULL,
   author_id    uuid REFERENCES accounts(id) ON DELETE SET NULL,
   created_at   timestamptz NOT NULL DEFAULT now(),
-  published_at timestamptz
+  published_at timestamptz,
+  search       tsvector GENERATED ALWAYS AS (to_tsvector('simple', blocks_text(blocks))) STORED
 );
 
 -- Once published_at is set, the content is frozen: an edit to a published
@@ -84,6 +108,10 @@ CREATE TRIGGER content_revisions_immutable_once_published
 -- deleted, both reach rows by item_id, which the referencing side of the
 -- foreign key does not index on its own.
 CREATE INDEX content_revisions_item_id_idx ON content_revisions (item_id);
+
+-- The full-text index CMS-007's search probes: GIN over the generated tsvector,
+-- so it is maintained by the database from the column it cannot drift from.
+CREATE INDEX content_revisions_search_idx ON content_revisions USING gin (search);
 
 -- The other half of the circular reference, with no ON DELETE: a published
 -- revision cannot be deleted out from under the item that points at it. The
@@ -135,8 +163,10 @@ CREATE TABLE content_grants (
 
 -- set_updated_at() stays: it is created by the accounts migration and shared
 -- with every table that carries an updated_at, so dropping it here would break
--- a table this migration does not own. refuse_published_revision_edit() is this
--- migration's own, and goes with it.
+-- a table this migration does not own. refuse_published_revision_edit() and
+-- blocks_text() are this migration's own and go with it -- blocks_text after
+-- content_revisions, whose generated column holds a dependency the drop would
+-- otherwise refuse.
 --
 -- The circular constraint has to go before content_revisions does. It is
 -- content_items that holds it, so PostgreSQL refuses to drop the table it
@@ -148,5 +178,6 @@ ALTER TABLE content_items DROP CONSTRAINT content_items_current_revision_fk;
 DROP TRIGGER content_revisions_immutable_once_published ON content_revisions;
 DROP FUNCTION refuse_published_revision_edit();
 DROP TABLE content_revisions;
+DROP FUNCTION blocks_text(jsonb);
 DROP TRIGGER content_items_set_updated_at ON content_items;
 DROP TABLE content_items;
