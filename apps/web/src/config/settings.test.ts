@@ -8,6 +8,7 @@
  * restate.
  */
 
+import { randomUUID } from 'node:crypto';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -15,7 +16,15 @@ import { runner } from 'node-pg-migrate';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
 import { closeDb, getDb } from '../db/index';
-import { Settings, SETTINGS, isSecretShaped, type SettingKey } from './settings';
+import {
+  changeSetting,
+  isSecretShaped,
+  revertSetting,
+  Settings,
+  SETTINGS,
+  validateSetting,
+  type SettingKey,
+} from './settings';
 
 const DATABASE_URL = (process.env.DATABASE_URL ?? '').trim();
 const HAS_DATABASE = DATABASE_URL !== '';
@@ -57,6 +66,44 @@ describe('the registry and the secret-guard (CFG-001/T1, T6)', () => {
     // a credential is never a runtime setting, and asking for one is the error.
     const settings = new Settings();
     await expect(settings.get('smtp.password' as SettingKey)).rejects.toThrow(/secret-shaped/);
+  });
+});
+
+describe('validation against type and bounds (CFG-001/T2)', () => {
+  it('accepts a value within the range and normalises an integer to store', () => {
+    expect(validateSetting('session.max_age_days', '45')).toEqual({ ok: true, stored: '45' });
+    expect(validateSetting('mail.enabled', 'false')).toEqual({ ok: true, stored: 'false' });
+    expect(validateSetting('room.banner', 'Closed for the weekend')).toEqual({
+      ok: true,
+      stored: 'Closed for the weekend',
+    });
+  });
+
+  it('refuses an out-of-range integer with the range rather than clamping it', () => {
+    const tooLow = validateSetting('session.max_age_days', '0');
+    const tooHigh = validateSetting('session.max_age_days', '91');
+    // The range is in the refusal, because a clamp would disagree with what the
+    // caller typed and what the screen then shows.
+    expect(tooLow).toEqual({
+      ok: false,
+      reason: 'session.max_age_days is a whole number between 1 and 90',
+    });
+    expect(tooHigh).toEqual({
+      ok: false,
+      reason: 'session.max_age_days is a whole number between 1 and 90',
+    });
+    expect(validateSetting('signin.rate_per_hour', '0').ok).toBe(false);
+    expect(validateSetting('session.max_age_days', '1').ok).toBe(true);
+    expect(validateSetting('session.max_age_days', '90').ok).toBe(true);
+  });
+
+  it('refuses a non-integer, a non-boolean, and an over-long text', () => {
+    expect(validateSetting('session.max_age_days', 'ten').ok).toBe(false);
+    expect(validateSetting('session.max_age_days', '').ok).toBe(false);
+    expect(validateSetting('session.max_age_days', '4.5').ok).toBe(false);
+    expect(validateSetting('mail.enabled', 'maybe').ok).toBe(false);
+    expect(validateSetting('room.banner', 'x'.repeat(281)).ok).toBe(false);
+    expect(validateSetting('room.banner', 'x'.repeat(280)).ok).toBe(true);
   });
 });
 
@@ -137,5 +184,127 @@ describe.skipIf(!HAS_DATABASE)('the cached accessor (CFG-001/T5)', () => {
 
     clock += 5000;
     expect(await settings.get('room.banner')).toBe('second');
+  });
+
+  describe('changing and reverting (CFG-001/T3, T4)', () => {
+    // The `config` keys are cleared by the parent `beforeEach`; the `audit` table
+    // is append-only (a trigger refuses DELETE), so an act count is scoped to the
+    // test's own actor rather than cleared between tests.
+    const readRow = (key: string) =>
+      getDb()
+        .selectFrom('config')
+        .select(['value', 'previous_value', 'changed_by'])
+        .where('key', '=', key)
+        .executeTakeFirst();
+
+    const changesBy = (actor: string) =>
+      getDb()
+        .selectFrom('audit')
+        .select(['subject_type', 'subject_id'])
+        .where('action', '=', 'config.change')
+        .where('actor_id', '=', actor)
+        .execute();
+
+    // `config.changed_by` is a foreign key to `accounts(id)`, so the actor of a
+    // change is a real account — a bare random uuid violates it. A fresh account
+    // per test also makes the append-only audit countable by that actor.
+    const anAdmin = async (): Promise<string> => {
+      const row = await getDb()
+        .insertInto('accounts')
+        .values({
+          email: `${randomUUID()}@config.test`,
+          name: 'Config Admin',
+          role: 'admin',
+          state: 'active',
+        })
+        .returning('id')
+        .executeTakeFirstOrThrow();
+      return row.id;
+    };
+
+    it('writes the value, captures the default as previous, and audits the act', async () => {
+      const actor = await anAdmin();
+
+      expect((await changeSetting('session.max_age_days', '45', actor)).ok).toBe(true);
+
+      const row = await readRow('session.max_age_days');
+      expect(row?.value).toBe('45');
+      // The previous value is the declared default, so reverting the first change
+      // restores it rather than a null.
+      expect(row?.previous_value).toBe('30');
+      expect(row?.changed_by).toBe(actor);
+
+      const changes = await changesBy(actor);
+      expect(changes).toHaveLength(1);
+      // The key and values are in the config row; the audit holds the act, with
+      // subject_id null because the key is not a uuid and before/after awaiting
+      // SEC-DEC-01.
+      expect(changes[0]).toEqual({ subject_type: 'config', subject_id: null });
+    });
+
+    it('captures the prior stored value as previous on a second change', async () => {
+      const actor = await anAdmin();
+
+      await changeSetting('session.max_age_days', '45', actor);
+      await changeSetting('session.max_age_days', '60', actor);
+
+      const row = await readRow('session.max_age_days');
+      expect(row?.value).toBe('60');
+      expect(row?.previous_value).toBe('45');
+    });
+
+    it('writes nothing and records nothing when the value is refused', async () => {
+      const actor = await anAdmin();
+
+      expect((await changeSetting('session.max_age_days', '91', actor)).ok).toBe(false);
+
+      expect(await readRow('session.max_age_days')).toBeUndefined();
+      expect(await changesBy(actor)).toHaveLength(0);
+    });
+
+    it('rolls the change and its audit back together when the write cannot complete', async () => {
+      // An unparseable actor fails the write inside the transaction, so the row
+      // and any audit roll back together — the atomicity the task names.
+      await expect(changeSetting('room.banner', 'Hello', 'not-a-uuid')).rejects.toThrow(
+        /invalid input syntax for type uuid/,
+      );
+
+      expect(await readRow('room.banner')).toBeUndefined();
+    });
+
+    it('reverts by swapping current and previous, and reverting twice returns to the start', async () => {
+      const actor = await anAdmin();
+
+      await changeSetting('room.banner', 'First', actor);
+      await changeSetting('room.banner', 'Second', actor);
+
+      expect(await revertSetting('room.banner', actor)).toBe(true);
+      expect((await readRow('room.banner'))?.value).toBe('First');
+
+      expect(await revertSetting('room.banner', actor)).toBe(true);
+      expect((await readRow('room.banner'))?.value).toBe('Second');
+
+      // Two changes and two reverts, each one config.change — a revert is a change
+      // back, not a separate action.
+      expect(await changesBy(actor)).toHaveLength(4);
+    });
+
+    it('reverts a first change back to the declared default', async () => {
+      const actor = await anAdmin();
+
+      await changeSetting('session.max_age_days', '7', actor);
+      expect(await revertSetting('session.max_age_days', actor)).toBe(true);
+
+      expect((await readRow('session.max_age_days'))?.value).toBe('30');
+    });
+
+    it('is a no-op for a key that has never changed, writing nothing', async () => {
+      const actor = await anAdmin();
+
+      expect(await revertSetting('room.banner', actor)).toBe(false);
+
+      expect(await readRow('room.banner')).toBeUndefined();
+      expect(await changesBy(actor)).toHaveLength(0);
+    });
   });
 });

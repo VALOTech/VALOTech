@@ -24,6 +24,9 @@
 
 import { performance } from 'node:perf_hooks';
 
+import { sql } from 'kysely';
+
+import { recordAudit } from '../audit/record';
 import { getDb } from '../db/index';
 
 type SettingType = 'text' | 'int' | 'bool';
@@ -31,6 +34,11 @@ type SettingType = 'text' | 'int' | 'bool';
 interface SettingSpec {
   readonly type: SettingType;
   readonly fallback: string | number | boolean;
+  /** For an `int` key: the inclusive range a change is validated against (`CFG-001/T2`). */
+  readonly min?: number;
+  readonly max?: number;
+  /** For a `text` key: the longest value a change accepts. */
+  readonly maxLength?: number;
 }
 
 /**
@@ -40,11 +48,11 @@ interface SettingSpec {
  * `string | number | boolean`.
  */
 export const SETTINGS = {
-  'room.banner': { type: 'text', fallback: '' },
-  'room.signin_message': { type: 'text', fallback: '' },
+  'room.banner': { type: 'text', fallback: '', maxLength: 280 },
+  'room.signin_message': { type: 'text', fallback: '', maxLength: 280 },
   'mail.enabled': { type: 'bool', fallback: true },
-  'session.max_age_days': { type: 'int', fallback: 30 },
-  'signin.rate_per_hour': { type: 'int', fallback: 10 },
+  'session.max_age_days': { type: 'int', fallback: 30, min: 1, max: 90 },
+  'signin.rate_per_hour': { type: 'int', fallback: 10, min: 1, max: 1000 },
 } as const satisfies Record<string, SettingSpec>;
 
 export type SettingKey = keyof typeof SETTINGS;
@@ -137,4 +145,164 @@ export function getSettings(): Settings {
     shared = new Settings();
   }
   return shared;
+}
+
+/** A change: accepted with the value as it will be stored, or refused with a reason. */
+export type ChangeResult =
+  | { readonly ok: true; readonly stored: string }
+  | { readonly ok: false; readonly reason: string };
+
+/**
+ * Validate a raw value against the key's declared type and bounds (`CFG-001/T2`).
+ *
+ * An out-of-range value is refused with the range rather than accepted and
+ * clamped: a setting silently clamped to its bound disagrees with what the
+ * caller typed and what the screen then shows, and that disagreement surfaces
+ * later as a bug report about a value nobody set. A `bool` parses back from the
+ * two words it is stored as, an `int` must be whole and within its range, and a
+ * `text` value is bounded in length. The returned `stored` is the normalised
+ * string the row will hold, so an integer is stored without whatever formatting
+ * the caller sent.
+ */
+export function validateSetting<K extends SettingKey>(key: K, raw: string): ChangeResult {
+  const spec = SETTINGS[key];
+
+  if (spec.type === 'bool') {
+    return raw === 'true' || raw === 'false'
+      ? { ok: true, stored: raw }
+      : { ok: false, reason: `${key} is true or false` };
+  }
+
+  if (spec.type === 'int') {
+    const parsed = Number(raw);
+    if (raw.trim() === '' || !Number.isInteger(parsed)) {
+      return { ok: false, reason: `${key} is a whole number` };
+    }
+    const min = spec.min ?? Number.MIN_SAFE_INTEGER;
+    const max = spec.max ?? Number.MAX_SAFE_INTEGER;
+    return parsed >= min && parsed <= max
+      ? { ok: true, stored: String(parsed) }
+      : { ok: false, reason: `${key} is a whole number between ${min} and ${max}` };
+  }
+
+  const max = spec.maxLength ?? Number.MAX_SAFE_INTEGER;
+  return raw.length <= max
+    ? { ok: true, stored: raw }
+    : { ok: false, reason: `${key} is at most ${max} characters` };
+}
+
+/**
+ * Change one setting, validating it first and recording the act (`CFG-001/T3`).
+ *
+ * A refused value comes back for the caller to show; it is never thrown and
+ * never clamped. An accepted change is one transaction: the previous value is
+ * captured from the current row — or the declared default when no row exists
+ * yet, so reverting the first change restores the default rather than null — the
+ * new value is written, and `config.change` is audited (`SEC-R04`). The audit's
+ * field values wait on `SEC-DEC-01` (`before`/`after` are null until `SEC-002/T4`,
+ * and the key is a string the uuid `subject_id` cannot hold); the config row
+ * itself carries the key, both values, who and when, which is what a revert and
+ * the console read. A secret-shaped key is refused before any write, the same
+ * backstop the read path applies (`SEC-R05`).
+ */
+export async function changeSetting<K extends SettingKey>(
+  key: K,
+  raw: string,
+  actorId: string,
+): Promise<ChangeResult> {
+  if (isSecretShaped(key)) {
+    return { ok: false, reason: 'a secret-shaped key is never a runtime setting' };
+  }
+
+  const validated = validateSetting(key, raw);
+  if (!validated.ok) {
+    return validated;
+  }
+
+  await getDb()
+    .transaction()
+    .execute(async (trx) => {
+      const current = await trx
+        .selectFrom('config')
+        .select('value')
+        .where('key', '=', key)
+        .forUpdate()
+        .executeTakeFirst();
+
+      const previous = current?.value ?? String(SETTINGS[key].fallback);
+
+      await trx
+        .insertInto('config')
+        .values({ key, value: validated.stored, previous_value: previous, changed_by: actorId })
+        .onConflict((oc) =>
+          oc.column('key').doUpdateSet({
+            value: validated.stored,
+            previous_value: previous,
+            changed_by: actorId,
+            changed_at: sql`now()`,
+          }),
+        )
+        .execute();
+
+      await recordAudit(trx, {
+        actorId,
+        action: 'config.change',
+        subjectType: 'config',
+        subjectId: null,
+      });
+    });
+
+  return validated;
+}
+
+/**
+ * Revert a setting to its previous value, in one action (`CFG-001/T4`).
+ *
+ * Reverting is itself a change: it swaps the current and previous values, so
+ * reverting twice returns to where it started and the trail carries both moves.
+ * The row is read and written under a lock so two reverts cannot read the same
+ * pair and both apply it. Returns whether anything was reverted — `false` when
+ * the key holds no previous value, in which case nothing is written and nothing
+ * is recorded, the no-op for a key that has never changed. It too is audited as
+ * a `config.change` (`SEC-R04`); there is no separate revert action, because a
+ * revert is a change back.
+ */
+export async function revertSetting<K extends SettingKey>(
+  key: K,
+  actorId: string,
+): Promise<boolean> {
+  return getDb()
+    .transaction()
+    .execute(async (trx) => {
+      const row = await trx
+        .selectFrom('config')
+        .select(['value', 'previous_value'])
+        .where('key', '=', key)
+        .forUpdate()
+        .executeTakeFirst();
+
+      if (row === undefined || row.previous_value === null) {
+        return false;
+      }
+
+      await trx
+        .updateTable('config')
+        .set({
+          value: row.previous_value,
+          previous_value: row.value,
+          changed_by: actorId,
+          changed_at: sql`now()`,
+        })
+        .where('key', '=', key)
+        .execute();
+
+      await recordAudit(trx, {
+        actorId,
+        action: 'config.change',
+        subjectType: 'config',
+        subjectId: null,
+      });
+
+      return true;
+    });
 }

@@ -61,10 +61,11 @@ deploy.
 
     PUT /admin/config/<key>   { value }
 
-Validated against the key's own type and bounds — `session.max_age_days` is an
-integer between 1 and 90, and a value outside that is refused with the range
-rather than accepted and clamped. Silent clamping is how a setting comes to
-disagree with what the screen says.
+Validated against the key's own type and bounds — `session.max_age_days` an
+integer between 1 and 90, `signin.rate_per_hour` between 1 and 1000, and the two
+text lines at most 280 characters — and a value outside its range is refused with
+the range rather than accepted and clamped. Silent clamping is how a setting
+comes to disagree with what the screen says.
 
 In one transaction: write `previous_value` from the current one, write the new
 value, audit `config.change` with both (`SEC-R04`).
