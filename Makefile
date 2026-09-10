@@ -179,6 +179,11 @@ migrate-roundtrip: ## Prove the down-migration runs, against a throwaway databas
 	@test -n "$(DATABASE_URL)" || { echo "migrate-roundtrip: DATABASE_URL is not set"; exit 1; }
 	@cd apps/web && npm run migrate:roundtrip
 
+.PHONY: retention
+retention: ## Delete rows past their retention window (DATA-002/T4); the schedule is OPS-001's
+	@test -n "$(DATABASE_URL)" || { echo "retention: DATABASE_URL is not set"; exit 1; }
+	@cd apps/web && npm run retention
+
 # --- Backups --------------------------------------------------------------
 
 .PHONY: backup

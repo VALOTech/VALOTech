@@ -10,7 +10,8 @@
     "test": "vitest run",
     "migrate:up": "node-pg-migrate up --migrations-dir migrations --migrations-table pgmigrations",
     "migrate:down": "node-pg-migrate down 1 --migrations-dir migrations --migrations-table pgmigrations",
-    "migrate:roundtrip": "node scripts/migrate-roundtrip.mjs"
+    "migrate:roundtrip": "node scripts/migrate-roundtrip.mjs",
+    "retention": "node scripts/retention-sweep.mjs"
   },
   "dependencies": {
     "@node-rs/argon2": "^2.0.2",

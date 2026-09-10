@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_295 tasks in the plan, 125 closed, 170 outstanding._
+_295 tasks in the plan, 127 closed, 168 outstanding._
 
 ---
 
@@ -73,7 +73,7 @@ _59/69 closed (85%) · 10 outstanding — 6 buildable now · 3 waiting on the ow
 
 _The machinery every kind of writing shares — the editor, the media, the locale states, the audience rule, publishing, search — plus the account, configuration and logging surfaces an operator needs before anything is published. Building it once is the whole reason a report, an update and a deck are three navigations over one system rather than three systems._
 
-_20/63 closed (31%) · 43 outstanding — 43 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_22/63 closed (34%) · 41 outstanding — 39 buildable now · 2 waiting on the owner · 0 external residue · 0 parked to a later wave._
 
 - **ADMIN-001** · Account management — 4/8 closed · depth 5
   - `[ ] ADMIN-001/T1` — The list, sortable by last sign-in, with role and state
@@ -88,12 +88,12 @@ _20/63 closed (31%) · 43 outstanding — 43 buildable now · 0 waiting on the o
 
 - **CMS-003** · Media library — 0/7 closed · depth 5
   - `[ ] CMS-003/T1` — Upload sniffs the type from the bytes, and refuses anything outside the accepted set
-  - `[ ] CMS-003/T2` — Raster images are re-encoded, so EXIF and its location do not survive
-  - `[ ] CMS-003/T3` — SVG is parsed and stripped to shape and text, or refused
   - `[ ] CMS-003/T4` — Storage keyed by content hash, so a duplicate upload is one row
   - `[ ] CMS-003/T5` — Serving joins through references and composes the audience predicate, answering `404` on no match
   - `[ ] CMS-003/T6` — Cache headers follow the audience; nothing gated is cacheable
   - `[ ] CMS-003/T7` — Deletion is refused while a reference exists, and is audited when it is not
+  - `[!] CMS-003/T2` — Raster images are re-encoded, so EXIF and its location do not survive  · _pending-decision_ · **Blocked by:** pending-decision: CMS-DEC-03 — re-encoding needs an image library, and which one is a new dependency the owner chooses; the safe default refuses rast…
+  - `[!] CMS-003/T3` — SVG is parsed and stripped to shape and text, or refused  · _pending-decision_ · **Blocked by:** pending-decision: CMS-DEC-03 — sanitising SVG needs a library, or the design's refuse-outright fallback; the choice is the owner's, and the safe defa…
 
 - **CMS-005** · Locale variants and translation state — 0/6 closed · depth 5
   - `[ ] CMS-005/T1` — Locale rows per revision, with a state a query filters on rather than infers
@@ -107,9 +107,7 @@ _20/63 closed (31%) · 43 outstanding — 43 buildable now · 0 waiting on the o
   - `[ ] CMS-006/T4` — A refusal is a `404`, and it is the same `404` for an item that does not exist
   - `[ ] CMS-006/T6` — Narrowing an audience is audited, and public content carries a short cache lifetime
 
-- **OPS-002** · Logging and monitoring — 5/6 closed · depth 5
-  - `[ ] OPS-002/T6` — Three alerts, each with its action written beside it
-
+- **OPS-002** · Logging and monitoring — 6/6 closed
 - **CMS-002** · Authoring surface — 0/7 closed · depth 6
   - `[ ] CMS-002/T1` — A block list the author operates by keyboard, with each block's type visible
   - `[ ] CMS-002/T2` — The seven block types, each with the fields its schema requires
@@ -135,9 +133,7 @@ _20/63 closed (31%) · 43 outstanding — 43 buildable now · 0 waiting on the o
   - `[ ] CMS-007/T5` — The empty state names what narrowed the result and offers to widen it
   - `[ ] CMS-007/T6` — The field is labelled, keyboard-operable, and announces its result count
 
-- **DATA-002** · Erasure and retention — 4/5 closed · depth 6
-  - `[ ] DATA-002/T4` — Scheduled deletion enforcing each retention window
-
+- **DATA-002** · Erasure and retention — 5/5 closed
 ## W3 — What is written
 
 _The three content types, and the compliance posture that governs what is held about the people reading them. Updates come before decks, and not only because they are the simpler shape of the same problem: they are what the room is for. An investor signs in to find out what has happened since they last looked._
