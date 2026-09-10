@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_295 tasks in the plan, 142 closed, 153 outstanding._
+_295 tasks in the plan, 144 closed, 151 outstanding._
 
 ---
 
@@ -73,7 +73,7 @@ _59/69 closed (85%) · 10 outstanding — 6 buildable now · 3 waiting on the ow
 
 _The machinery every kind of writing shares — the editor, the media, the locale states, the audience rule, publishing, search — plus the account, configuration and logging surfaces an operator needs before anything is published. Building it once is the whole reason a report, an update and a deck are three navigations over one system rather than three systems._
 
-_37/63 closed (58%) · 26 outstanding — 24 buildable now · 2 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_39/63 closed (61%) · 24 outstanding — 22 buildable now · 2 waiting on the owner · 0 external residue · 0 parked to a later wave._
 
 - **ADMIN-001** · Account management — 5/8 closed · depth 5
   - `[ ] ADMIN-001/T2` — The person page: identity, access, sessions, actions
@@ -90,10 +90,7 @@ _37/63 closed (58%) · 26 outstanding — 24 buildable now · 2 waiting on the o
   - `[ ] CMS-005/T4` — The review screen shows source beside translation, editable, marked one locale at a time
   - `[ ] CMS-005/T6` — A new revision starts with no locale rows, and the grid shows it
 
-- **CMS-006** · Audience and access — 4/6 closed · depth 5
-  - `[ ] CMS-006/T4` — A refusal is a `404`, and it is the same `404` for an item that does not exist
-  - `[ ] CMS-006/T6` — Narrowing an audience is audited, and public content carries a short cache lifetime
-
+- **CMS-006** · Audience and access — 6/6 closed
 - **OPS-002** · Logging and monitoring — 6/6 closed
 - **CMS-002** · Authoring surface — 1/7 closed · depth 6
   - `[~] CMS-002/T1` — A block list the author operates by keyboard, with each block's type visible  · **Note:** Built. apps/web/src/app/admin/content/[id]/edit/editor.tsx renders the blocks as a list of focusable rows; each row shows its written type (apps/web/…

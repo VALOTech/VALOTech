@@ -19,6 +19,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { closeDb, getDb } from '../db/index';
 import type { AuditAction } from '../db/types';
+import { changeAudience } from './audience';
 import { type Block, BlockValidationError, validateBlocks } from './blocks';
 import { createItem, saveDraft } from './items';
 import { publish, withdraw } from './publish';
@@ -257,6 +258,43 @@ describe.skipIf(!HAS_DATABASE)('CMS-001 content model', () => {
       const item = await createItem({ type: 'update', slug: `u-${randomUUID()}`, title: 'Nothing to withdraw', kind: 'progress' });
 
       await expect(withdraw(item.id, authorId)).rejects.toThrow();
+    });
+  });
+
+  describe('changeAudience (CMS-006/T6)', () => {
+    async function audienceChanges(itemId: string): Promise<number> {
+      const rows = await getDb()
+        .selectFrom('audit')
+        .select('id')
+        .where('subject_id', '=', itemId)
+        .where('action', '=', 'content.audience_change')
+        .execute();
+      return rows.length;
+    }
+
+    it('changes the audience and records the act once', async () => {
+      const item = await createItem({ type: 'update', slug: `u-${randomUUID()}`, title: 'Narrow', kind: 'progress' });
+      expect(item.audience).toBe('investor'); // the database default
+
+      const changed = await changeAudience(item.id, 'public', authorId);
+
+      expect(changed.audience).toBe('public');
+      expect(await audienceChanges(item.id)).toBe(1);
+    });
+
+    it('records nothing and writes nothing when the audience is unchanged', async () => {
+      const item = await createItem({
+        type: 'update',
+        slug: `u-${randomUUID()}`,
+        title: 'No change',
+        kind: 'progress',
+        audience: 'investor',
+      });
+
+      const unchanged = await changeAudience(item.id, 'investor', authorId);
+
+      expect(unchanged.audience).toBe('investor');
+      expect(await audienceChanges(item.id)).toBe(0);
     });
   });
 });
