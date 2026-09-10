@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_295 tasks in the plan, 152 closed, 143 outstanding._
+_295 tasks in the plan, 153 closed, 142 outstanding._
 
 ---
 
@@ -116,7 +116,7 @@ _42/63 closed (66%) · 21 outstanding — 18 buildable now · 3 waiting on the o
 
 _The three content types, and the compliance posture that governs what is held about the people reading them. Updates come before decks, and not only because they are the simpler shape of the same problem: they are what the room is for. An investor signs in to find out what has happened since they last looked._
 
-_5/59 closed (8%) · 54 outstanding — 54 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_6/59 closed (10%) · 53 outstanding — 53 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
 
 - **DECK-001** · Deck authoring — 0/5 closed · depth 7
   - `[ ] DECK-001/T1` — Sections derived from level-2 headings, with the block array the single source
@@ -133,8 +133,7 @@ _5/59 closed (8%) · 54 outstanding — 54 buildable now · 0 waiting on the own
   - `[ ] LEGAL-SG-001/T5` — A breach runbook with the assessment steps and both notification paths
   - `[ ] LEGAL-SG-001/T6` — The backup window disclosed in the notice rather than omitted
 
-- **MAIL-001** · Investor mail — 0/8 closed · depth 7
-  - `[ ] MAIL-001/T1` — The `Mailer` port, and the composer that renders the exact bytes the send will use
+- **MAIL-001** · Investor mail — 1/8 closed · depth 7
   - `[ ] MAIL-001/T2` — Recipients are a confirmed list of names, never a criterion re-evaluated at send time
   - `[ ] MAIL-001/T3` — Suspended and unsubscribed accounts are excluded and shown as excluded, with the reason
   - `[ ] MAIL-001/T4` — The send requires the recipient count to be typed, and re-resolves every recipient first
