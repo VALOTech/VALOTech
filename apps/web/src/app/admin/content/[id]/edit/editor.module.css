@@ -1,0 +1,213 @@
+/* The authoring surface (CMS-002). It sits inside the admin console, which is a
+   light, plain staff surface (ADMIN-002), so the editor matches it rather than
+   the investor room — and its contrast is measured against this light ground
+   (A11Y-R03). Meaning is never carried by colour alone: the save state is a
+   sentence, and a block's type is its written name, not a shape. */
+
+.editor {
+  --edit-ink: #1a1a2e;
+  --edit-line: #d8d8e0;
+  --edit-accent: #2b3a8c;
+  --edit-dirty-bg: #fde68a;
+  --edit-dirty-ink: #713f12;
+  --edit-error-bg: #fde2e1;
+  --edit-error-ink: #7f1d1d;
+  --edit-muted: #52525b;
+
+  color: var(--edit-ink);
+  max-width: 48rem;
+}
+
+.statusLine {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  margin: 0 0 1rem;
+  padding: 0.45rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  border: 1px solid var(--edit-line);
+  background: #fff;
+}
+
+.dirty {
+  background: var(--edit-dirty-bg);
+  color: var(--edit-dirty-ink);
+  border-color: var(--edit-dirty-ink);
+}
+
+.clean {
+  color: var(--edit-muted);
+}
+
+.error {
+  margin: 0 0 1rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  background: var(--edit-error-bg);
+  color: var(--edit-error-ink);
+  border: 1px solid var(--edit-error-ink);
+  font-size: 0.9rem;
+}
+
+.restoreBanner {
+  margin: 0 0 1rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid var(--edit-accent);
+  background: #eef1fb;
+  font-size: 0.9rem;
+}
+
+.restoreBanner p {
+  margin: 0 0 0.5rem;
+}
+
+.blocks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.block {
+  border: 1px solid var(--edit-line);
+  border-radius: 8px;
+  padding: 0.75rem;
+  margin: 0 0 0.6rem;
+  background: #fff;
+}
+
+/* The block row is the keyboard hub: it is focusable, and the arrow, Enter and
+   Backspace keys act on it. The focus ring is its own, distinct from a field's,
+   so an author always sees which block the block-level keys will act on. */
+.block:focus-visible {
+  outline: 3px solid var(--edit-accent);
+  outline-offset: 2px;
+}
+
+.blockHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.blockType {
+  font-weight: 700;
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--edit-accent);
+}
+
+.blockControls {
+  display: flex;
+  gap: 0.3rem;
+}
+
+.field {
+  display: block;
+  margin: 0.4rem 0;
+}
+
+.fieldLabel {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--edit-muted);
+  margin-bottom: 0.15rem;
+}
+
+.input,
+.textarea,
+.select {
+  width: 100%;
+  font: inherit;
+  color: var(--edit-ink);
+  padding: 0.35rem 0.5rem;
+  border: 1px solid var(--edit-line);
+  border-radius: 6px;
+  background: #fff;
+}
+
+.select {
+  width: auto;
+}
+
+.textarea {
+  min-height: 4rem;
+  resize: vertical;
+}
+
+.input:focus-visible,
+.textarea:focus-visible,
+.select:focus-visible,
+.button:focus-visible {
+  outline: 2px solid var(--edit-accent);
+  outline-offset: 1px;
+}
+
+.itemRow {
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 0.3rem;
+}
+
+.itemRow .input {
+  flex: 1 1 auto;
+}
+
+.toolbar {
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--edit-line);
+}
+
+.toolbar summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.menu {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin: 1rem 0;
+}
+
+.button {
+  font: inherit;
+  font-size: 0.85rem;
+  padding: 0.35rem 0.7rem;
+  border: 1px solid var(--edit-accent);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--edit-accent);
+  cursor: pointer;
+}
+
+.button:hover {
+  background: #eef1fb;
+}
+
+.primary {
+  background: var(--edit-accent);
+  color: #fff;
+}
+
+.primary:hover {
+  background: #22307a;
+}
+
+.empty {
+  color: var(--edit-muted);
+  font-style: italic;
+  margin: 0.5rem 0 1rem;
+}

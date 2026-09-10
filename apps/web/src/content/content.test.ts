@@ -68,6 +68,21 @@ describe('validateBlocks', () => {
   ])('rejects %s', (_case, value) => {
     expect(() => validateBlocks(value)).toThrow(BlockValidationError);
   });
+
+  it('names the block index and the field in the message it throws (CMS-002/T7)', () => {
+    // The index and the field together are what make a refusal actionable
+    // rather than "invalid document"; the editor and the save route both rely
+    // on this shape.
+    expect(() => validateBlocks([{ type: 'image', mediaId: 'm', alt: '', caption: null }])).toThrow(
+      /^blocks\[0\]: an image requires non-empty alt text/,
+    );
+    // The index is the faulty block's real position, not always the first.
+    expect(() =>
+      validateBlocks([{ type: 'divider' }, { type: 'image', mediaId: 'm', alt: '', caption: null }]),
+    ).toThrow(/^blocks\[1\]:/);
+    // A fault inside a block is named down to the field.
+    expect(() => validateBlocks([{ type: 'heading', level: 2, text: 5 }])).toThrow(/^blocks\[0\]\.text:/);
+  });
 });
 
 describe.skipIf(!HAS_DATABASE)('CMS-001 content model', () => {

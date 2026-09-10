@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_295 tasks in the plan, 141 closed, 154 outstanding._
+_295 tasks in the plan, 142 closed, 153 outstanding._
 
 ---
 
@@ -73,7 +73,7 @@ _59/69 closed (85%) · 10 outstanding — 6 buildable now · 3 waiting on the ow
 
 _The machinery every kind of writing shares — the editor, the media, the locale states, the audience rule, publishing, search — plus the account, configuration and logging surfaces an operator needs before anything is published. Building it once is the whole reason a report, an update and a deck are three navigations over one system rather than three systems._
 
-_36/63 closed (57%) · 27 outstanding — 25 buildable now · 2 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_37/63 closed (58%) · 26 outstanding — 24 buildable now · 2 waiting on the owner · 0 external residue · 0 parked to a later wave._
 
 - **ADMIN-001** · Account management — 5/8 closed · depth 5
   - `[ ] ADMIN-001/T2` — The person page: identity, access, sessions, actions
@@ -95,14 +95,13 @@ _36/63 closed (57%) · 27 outstanding — 25 buildable now · 2 waiting on the o
   - `[ ] CMS-006/T6` — Narrowing an audience is audited, and public content carries a short cache lifetime
 
 - **OPS-002** · Logging and monitoring — 6/6 closed
-- **CMS-002** · Authoring surface — 0/7 closed · depth 6
-  - `[ ] CMS-002/T1` — A block list the author operates by keyboard, with each block's type visible
-  - `[ ] CMS-002/T2` — The seven block types, each with the fields its schema requires
+- **CMS-002** · Authoring surface — 1/7 closed · depth 6
+  - `[~] CMS-002/T1` — A block list the author operates by keyboard, with each block's type visible  · **Note:** Built. apps/web/src/app/admin/content/[id]/edit/editor.tsx renders the blocks as a list of focusable rows; each row shows its written type (apps/web/…
+  - `[~] CMS-002/T2` — The seven block types, each with the fields its schema requires  · **Note:** Built. apps/web/src/app/admin/content/[id]/edit/block-fields.tsx:BlockFields edits each of the seven types with the fields its schema demands (headin…
+  - `[~] CMS-002/T6` — Explicit save, a visible unsaved state, and a local copy offered back after a closed tab  · **Note:** Built. apps/web/src/app/admin/content/[id]/edit/editor.tsx saves explicitly on a control and on Ctrl/Cmd-S (POST to the route below), states the unsa…
   - `[ ] CMS-002/T3` — An image block cannot be saved without alternative text
   - `[ ] CMS-002/T4` — Marks by selection, stored as offsets, with the editor's model the block array and not the DOM
   - `[ ] CMS-002/T5` — Paste imports plain text plus recognised structure and nothing else
-  - `[ ] CMS-002/T6` — Explicit save, a visible unsaved state, and a local copy offered back after a closed tab
-  - `[ ] CMS-002/T7` — One schema module validates in the browser and on the server, and the server's error names the block and the field
 
 - **CMS-004** · Preview, publish and withdraw — 2/6 closed · depth 6
   - `[ ] CMS-004/T1` — Preview renders through the reader's own components and evaluates the audience rule as the chosen role
