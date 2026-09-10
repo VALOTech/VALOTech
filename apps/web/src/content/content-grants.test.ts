@@ -22,7 +22,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import type { AccountState } from '../db/types';
 import { closeDb, getDb } from '../db/index';
 
-import { addGrant, removeGrant } from './grants';
+import { addGrant, grantsForAccount, removeGrant } from './grants';
 import { createItem } from './items';
 
 const RAW_DATABASE_URL = (process.env.DATABASE_URL ?? '').trim();
@@ -178,6 +178,28 @@ describe.skipIf(!HAS_DATABASE)('deck access grants (DECK-004)', () => {
       const active = await account('active');
 
       expect(await addGrant(deck, active, grantorId)).toBe(true);
+    });
+  });
+
+  describe('the grants an account holds (LEGAL-GLOBAL-001/T2, DECK-004/T5)', () => {
+    it('lists the account grants with the pin, and nothing for another account', async () => {
+      const deckA = await aDeck();
+      const deckB = await aDeck();
+      const grantee = await account('active');
+      const other = await account('active');
+      await addGrant(deckA, grantee, grantorId, 2);
+      await addGrant(deckB, grantee, grantorId); // unpinned
+      await addGrant(deckA, other, grantorId); // a different account's grant
+
+      const grants = await grantsForAccount(grantee);
+      expect(grants).toHaveLength(2);
+      expect(grants.find((g) => g.itemId === deckA)?.pinnedVersion).toBe(2);
+      expect(grants.find((g) => g.itemId === deckB)?.pinnedVersion).toBeNull();
+    });
+
+    it('returns nothing for an account with no grants', async () => {
+      const grantee = await account('active');
+      expect(await grantsForAccount(grantee)).toEqual([]);
     });
   });
 });

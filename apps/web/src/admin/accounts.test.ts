@@ -46,11 +46,16 @@ import {
   SuspendedAccountError,
 } from '../auth/invitation';
 import { issue } from '../auth/session';
+import { recordDeckRead } from '../content/decks';
+import { addGrant } from '../content/grants';
+import { createItem } from '../content/items';
+import { markReportRead } from '../content/reports';
 import { closeDb, getDb } from '../db/index';
 import type { AccountRole, AccountState } from '../db/types';
 import {
   changeRole,
   eraseAccount,
+  exportPersonData,
   listAccounts,
   reinstateAccount,
   suspendAccount,
@@ -901,6 +906,54 @@ describe.skipIf(!HAS_DATABASE)('ADMIN-001 account mutations', () => {
 
       expect(await accountExists(theirs)).toBe(true);
       expect(await rowExists(theirToken)).toBe(true);
+    });
+  });
+
+  describe('exportPersonData (LEGAL-GLOBAL-001/T2)', () => {
+    it('is null for an id no account holds', async () => {
+      expect(await exportPersonData(randomUUID())).toBeNull();
+    });
+
+    it('gathers the fields, grants, reads and mail, and never the password hash', async () => {
+      const person = await newAccount('active');
+      const grantor = await newAccount('active', 'admin');
+      const deck = await createItem({ type: 'deck', slug: `d-${randomUUID()}`, title: 'A deck', audience: 'granted' });
+      const report = await createItem({ type: 'report', slug: `r-${randomUUID()}`, title: 'Q1', period: '2026-Q1' });
+      await addGrant(deck.id, person, grantor, 3);
+      await recordDeckRead(person, deck.id, 3);
+      await markReportRead(person, report.id);
+      await getDb()
+        .insertInto('mail_log')
+        .values({ account_id: person, subject: 'An invitation to the room', kind: 'transactional', state: 'queued' })
+        .execute();
+
+      const out = await exportPersonData(person);
+      expect(out).not.toBeNull();
+      expect(out?.account.email).toContain(SUITE_DOMAIN);
+      expect(out?.account).not.toHaveProperty('password_hash');
+      expect(out?.decksGranted).toHaveLength(1);
+      expect(out?.decksGranted[0]?.pinnedVersion).toBe(3);
+      expect(out?.decksRead).toHaveLength(1);
+      expect(out?.decksRead[0]?.version).toBe(3);
+      expect(out?.reportsRead).toHaveLength(1);
+      expect(out?.reportsRead[0]?.reportId).toBe(report.id);
+      expect(out?.mail).toEqual([{ subject: 'An invitation to the room', at: expect.any(Date) }]);
+    });
+
+    it('scopes to the one account and not another person', async () => {
+      const a = await newAccount('active');
+      const b = await newAccount('active');
+      const grantor = await newAccount('active', 'admin');
+      const deck = await createItem({ type: 'deck', slug: `d-${randomUUID()}`, title: 'A deck', audience: 'granted' });
+      await addGrant(deck.id, a, grantor);
+      await recordDeckRead(b, deck.id, 1);
+
+      const outA = await exportPersonData(a);
+      const outB = await exportPersonData(b);
+      expect(outA?.decksGranted).toHaveLength(1);
+      expect(outA?.decksRead).toHaveLength(0);
+      expect(outB?.decksGranted).toHaveLength(0);
+      expect(outB?.decksRead).toHaveLength(1);
     });
   });
 });

@@ -522,7 +522,8 @@ PRD: `LEGAL-SG-001`
 PRD: `LEGAL-GLOBAL-001`
 
 - [ ] LEGAL-GLOBAL-001/T1 — The notice carries the additional GDPR statements, in twenty locales
-- [ ] LEGAL-GLOBAL-001/T2 — An admin-generated JSON export of everything held about one person
+- [x] LEGAL-GLOBAL-001/T2 — An admin-generated JSON export of everything held about one person
+  Evidence: apps/web/src/admin/accounts.ts:exportPersonData gathers the five things the system holds about a person — the account's own fields (never the password hash), the decks granted, which deck versions and reports were opened and when, and the mail subjects and dates — each scoped to the one account (DATA-R05). The grants come from apps/web/src/content/grants.ts:grantsForAccount, which reads the grant table behind the audience predicate's boundary; the rest are this person's own rows. It is an admin action producing a file, with no self-service route and no link mailed (DATA-R01, DATA-R02). Proven against PostgreSQL 17 by apps/web/src/admin/accounts.test.ts and apps/web/src/content/content-grants.test.ts — the fields, grants, reads and mail gathered with no password hash, scoped to one account and not another, and null for an id no account holds. Mutation-proved: grantsForAccount dropping the pin, and the export widening its account scope, are each killed.
 - [ ] LEGAL-GLOBAL-001/T3 — An objection flag that stops read-tracking and deletes the existing rows
 - [ ] LEGAL-GLOBAL-001/T4 — The breach runbook uses the 72-hour clock for everyone
 - [ ] LEGAL-GLOBAL-001/T5 — A one-page record of processing, and a written statement of what is deliberately not claimed

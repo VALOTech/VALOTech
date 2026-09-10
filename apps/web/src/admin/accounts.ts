@@ -1,7 +1,8 @@
 /**
  * What an admin does to somebody else's account (`ADMIN-001`): the list of who
- * can sign in, and the four acts that change one — suspend, role change,
- * reinstate, erase.
+ * can sign in, the four acts that change one — suspend, role change, reinstate,
+ * erase — and a read of everything held about one, for a data-portability
+ * request (`LEGAL-GLOBAL-001/T2`).
  *
  * The list is a plain read and carries none of what follows. Each of the four
  * is one act carrying several writes, and the design is that the writes are one
@@ -53,6 +54,7 @@ import type { Transaction } from 'kysely';
 
 import { recordAudit } from '../audit/record';
 import { invalidateAllForAccountIn } from '../auth/session';
+import { type AccountGrant, grantsForAccount } from '../content/grants';
 import { getDb } from '../db/index';
 import type { AccountRole, AccountState, Database } from '../db/types';
 
@@ -359,4 +361,94 @@ export async function eraseAccount(accountId: string, actorId: string): Promise<
 
       return true;
     });
+}
+
+/** Everything held about one person, as a machine-readable record (`LEGAL-GLOBAL-001/T2`). */
+export interface PersonExport {
+  readonly account: {
+    readonly email: string;
+    readonly name: string;
+    readonly role: AccountRole;
+    readonly state: AccountState;
+    readonly lastSignIn: Date | null;
+  };
+  readonly decksGranted: readonly AccountGrant[];
+  readonly decksRead: readonly {
+    readonly deckId: string;
+    readonly version: number;
+    readonly firstOpenedAt: Date;
+    readonly lastOpenedAt: Date;
+  }[];
+  readonly reportsRead: readonly { readonly reportId: string; readonly readAt: Date }[];
+  readonly mail: readonly { readonly subject: string; readonly at: Date }[];
+}
+
+/**
+ * Everything held about one person, gathered for a data-portability request
+ * (`LEGAL-GLOBAL-001/T2`, `DATA-R01`). An admin generates it and sends the file;
+ * there is no self-service route and no link mailed to the person, because a link
+ * to a person's whole record is a credential in an inbox (`DATA-R02`).
+ *
+ * It reads the five things the system holds about a person: the account's own
+ * fields — never the password hash — the decks they were granted, which deck
+ * versions and which reports they opened and when, and the subjects and dates of
+ * the mail they were sent. The grants read is delegated to `content/grants`,
+ * because the grant table lives behind the audience predicate's module boundary;
+ * the rest are this person's own rows, each scoped by `account_id` (`DATA-R05`).
+ * It answers `null` for an id no account holds.
+ */
+export async function exportPersonData(accountId: string): Promise<PersonExport | null> {
+  const db = getDb();
+
+  const account = await db
+    .selectFrom('accounts')
+    .select(['email', 'name', 'role', 'state', 'last_sign_in'])
+    .where('id', '=', accountId)
+    .executeTakeFirst();
+  if (account === undefined) {
+    return null;
+  }
+
+  const decksGranted = await grantsForAccount(accountId);
+
+  const deckRead = await db
+    .selectFrom('deck_reads')
+    .select(['deck_id', 'version', 'first_opened_at', 'last_opened_at'])
+    .where('account_id', '=', accountId)
+    .orderBy('deck_id')
+    .orderBy('version')
+    .execute();
+
+  const reportRead = await db
+    .selectFrom('report_reads')
+    .select(['item_id', 'read_at'])
+    .where('account_id', '=', accountId)
+    .orderBy('item_id')
+    .execute();
+
+  const mail = await db
+    .selectFrom('mail_log')
+    .select(['subject', 'at'])
+    .where('account_id', '=', accountId)
+    .orderBy('at')
+    .execute();
+
+  return {
+    account: {
+      email: account.email,
+      name: account.name,
+      role: account.role,
+      state: account.state,
+      lastSignIn: account.last_sign_in,
+    },
+    decksGranted,
+    decksRead: deckRead.map((row) => ({
+      deckId: row.deck_id,
+      version: row.version,
+      firstOpenedAt: row.first_opened_at,
+      lastOpenedAt: row.last_opened_at,
+    })),
+    reportsRead: reportRead.map((row) => ({ reportId: row.item_id, readAt: row.read_at })),
+    mail: mail.map((row) => ({ subject: row.subject, at: row.at })),
+  };
 }

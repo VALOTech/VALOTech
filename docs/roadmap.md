@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_295 tasks in the plan, 166 closed, 129 outstanding._
+_295 tasks in the plan, 167 closed, 128 outstanding._
 
 ---
 
@@ -116,7 +116,7 @@ _42/63 closed (66%) · 21 outstanding — 18 buildable now · 3 waiting on the o
 
 _The three content types, and the compliance posture that governs what is held about the people reading them. Updates come before decks, and not only because they are the simpler shape of the same problem: they are what the room is for. An investor signs in to find out what has happened since they last looked._
 
-_17/59 closed (28%) · 42 outstanding — 42 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_18/59 closed (30%) · 41 outstanding — 41 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
 
 - **DECK-001** · Deck authoring — 2/5 closed · depth 7
   - `[ ] DECK-001/T2` — An overview of section cards in order, showing heading, first line and what each carries
@@ -156,9 +156,8 @@ _17/59 closed (28%) · 42 outstanding — 42 buildable now · 0 waiting on the o
   - `[ ] DECK-002/T3` — An unpinned reader is told once when the version changed, with what changed by section
   - `[ ] DECK-002/T5` — The publish confirmation names every investor who will see the new version
 
-- **LEGAL-GLOBAL-001** · GDPR posture for EU investors — 0/5 closed · depth 8
+- **LEGAL-GLOBAL-001** · GDPR posture for EU investors — 1/5 closed · depth 8
   - `[ ] LEGAL-GLOBAL-001/T1` — The notice carries the additional GDPR statements, in twenty locales
-  - `[ ] LEGAL-GLOBAL-001/T2` — An admin-generated JSON export of everything held about one person
   - `[ ] LEGAL-GLOBAL-001/T3` — An objection flag that stops read-tracking and deletes the existing rows
   - `[ ] LEGAL-GLOBAL-001/T4` — The breach runbook uses the 72-hour clock for everyone
   - `[ ] LEGAL-GLOBAL-001/T5` — A one-page record of processing, and a written statement of what is deliberately not claimed

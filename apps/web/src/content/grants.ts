@@ -3,8 +3,10 @@
  *
  * A grant is the row `visibleTo`'s `granted` branch reads: an account with one
  * for an item may read it, and no other investor can. This is the write side of
- * that — an admin surface (`DECK-004`) calls these; the read side is the
- * predicate. The grant is idempotent, because its key is `(item_id, account_id)`
+ * that — an admin surface (`DECK-004`) calls these; the read side for a reader is
+ * the predicate. `grantsForAccount` is the other read — which decks one account
+ * holds, for an admin export and the from-the-account view — asking about the
+ * grants rather than through them. The grant is idempotent, because its key is `(item_id, account_id)`
  * and granting twice is the same state as granting once; a second grant is a
  * no-op and records nothing, so the trail carries acts and not re-assertions.
  *
@@ -18,6 +20,37 @@
 
 import { recordAudit } from '../audit/record';
 import { getDb } from '../db/index';
+
+/** One grant held by an account: which item, when it was granted, and any pinned version. */
+export interface AccountGrant {
+  readonly itemId: string;
+  readonly grantedAt: Date;
+  readonly pinnedVersion: number | null;
+}
+
+/**
+ * Every grant an account holds, oldest first (`LEGAL-GLOBAL-001/T2`, `DECK-004/T5`).
+ *
+ * It reads `content_grants`, the table the audience predicate owns, so it lives in
+ * this module rather than in the admin surface that composes it (`CMS-R03`'s access
+ * boundary is a module boundary). It is scoped to the one account (`DATA-R05`) — an
+ * admin export of a person and the from-the-account view of who may read what both
+ * ask the same question of one account's rows.
+ */
+export async function grantsForAccount(accountId: string): Promise<AccountGrant[]> {
+  const rows = await getDb()
+    .selectFrom('content_grants')
+    .select(['item_id', 'granted_at', 'pinned_version'])
+    .where('account_id', '=', accountId)
+    .orderBy('granted_at')
+    .execute();
+
+  return rows.map((row) => ({
+    itemId: row.item_id,
+    grantedAt: row.granted_at,
+    pinnedVersion: row.pinned_version,
+  }));
+}
 
 /**
  * Grant `accountId` access to `itemId`, optionally pinned to a deck version
