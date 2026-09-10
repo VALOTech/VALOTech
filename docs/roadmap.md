@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_295 tasks in the plan, 127 closed, 168 outstanding._
+_295 tasks in the plan, 130 closed, 165 outstanding._
 
 ---
 
@@ -73,7 +73,7 @@ _59/69 closed (85%) · 10 outstanding — 6 buildable now · 3 waiting on the ow
 
 _The machinery every kind of writing shares — the editor, the media, the locale states, the audience rule, publishing, search — plus the account, configuration and logging surfaces an operator needs before anything is published. Building it once is the whole reason a report, an update and a deck are three navigations over one system rather than three systems._
 
-_22/63 closed (34%) · 41 outstanding — 39 buildable now · 2 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_25/63 closed (39%) · 38 outstanding — 36 buildable now · 2 waiting on the owner · 0 external residue · 0 parked to a later wave._
 
 - **ADMIN-001** · Account management — 4/8 closed · depth 5
   - `[ ] ADMIN-001/T1` — The list, sortable by last sign-in, with role and state
@@ -95,12 +95,9 @@ _22/63 closed (34%) · 41 outstanding — 39 buildable now · 2 waiting on the o
   - `[!] CMS-003/T2` — Raster images are re-encoded, so EXIF and its location do not survive  · _pending-decision_ · **Blocked by:** pending-decision: CMS-DEC-03 — re-encoding needs an image library, and which one is a new dependency the owner chooses; the safe default refuses rast…
   - `[!] CMS-003/T3` — SVG is parsed and stripped to shape and text, or refused  · _pending-decision_ · **Blocked by:** pending-decision: CMS-DEC-03 — sanitising SVG needs a library, or the design's refuse-outright fallback; the choice is the owner's, and the safe defa…
 
-- **CMS-005** · Locale variants and translation state — 0/6 closed · depth 5
-  - `[ ] CMS-005/T1` — Locale rows per revision, with a state a query filters on rather than infers
-  - `[ ] CMS-005/T2` — A `machine` row is never reachable by any reader path
+- **CMS-005** · Locale variants and translation state — 3/6 closed · depth 5
   - `[ ] CMS-005/T3` — Drafting translates block text and reassembles marks by span, never by offset arithmetic
   - `[ ] CMS-005/T4` — The review screen shows source beside translation, editable, marked one locale at a time
-  - `[ ] CMS-005/T5` — Serving falls back to the authored language and says so to the reader
   - `[ ] CMS-005/T6` — A new revision starts with no locale rows, and the grid shows it
 
 - **CMS-006** · Audience and access — 4/6 closed · depth 5

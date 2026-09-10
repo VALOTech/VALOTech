@@ -572,11 +572,14 @@ Design: [docs/designs/cms/cms-004-preview-publish-and-withdraw.md](designs/cms/c
 ## CMS-005 · Locale variants and translation state
 Design: [docs/designs/cms/cms-005-locale-variants-and-translation-state.md](designs/cms/cms-005-locale-variants-and-translation-state.md) · PRD: `CMS-005`
 
-- [ ] CMS-005/T1 — Locale rows per revision, with a state a query filters on rather than infers
-- [ ] CMS-005/T2 — A `machine` row is never reachable by any reader path
+- [x] CMS-005/T1 — Locale rows per revision, with a state a query filters on rather than infers
+  Evidence: the locale rows are content_locales (DATA-001), one per (revision, locale) carrying the translated blocks and a state of machine or reviewed — a column (apps/web/src/db/types.ts:ContentLocaleState, the CHECK the migration declares), never an inference from a null reviewed_at. apps/web/src/content/locales.ts:localeFor is the read that turns that column into behaviour: it filters state = 'reviewed', so "servable" is a predicate the query expresses rather than a rule each caller must remember. Proven against PostgreSQL 17.11 by apps/web/src/content/locales.test.ts: a reviewed row is served for the reader's language. Mutation-proved: removing the state filter reddens a named test, because a machine row would then be served.
+- [x] CMS-005/T2 — A `machine` row is never reachable by any reader path
+  Evidence: apps/web/src/content/locales.ts:localeFor — the one reader path for a localed revision — filters state = 'reviewed', so a machine draft is served to nobody (CMS-R05): it is absent from the candidates the query returns, and a requested locale with only a machine row falls through to the authored English exactly as one with no row at all does. Proven against PostgreSQL 17.11 by apps/web/src/content/locales.test.ts: a revision whose German is a machine row serves English to a reader requesting German, not the machine text. Mutation-proved: removing the state filter serves the machine row and reddens that test.
 - [ ] CMS-005/T3 — Drafting translates block text and reassembles marks by span, never by offset arithmetic
 - [ ] CMS-005/T4 — The review screen shows source beside translation, editable, marked one locale at a time
-- [ ] CMS-005/T5 — Serving falls back to the authored language and says so to the reader
+- [x] CMS-005/T5 — Serving falls back to the authored language and says so to the reader
+  Evidence: apps/web/src/content/locales.ts:localeFor returns the reviewed translation for the reader's locale — the exact locale, then the language without its region (fr-CA takes a reviewed fr), never a script apart (zt never falls back to zh, because a reader who cannot read one script cannot read it served as the other's fallback) — and when none is reviewed it returns the revision's own blocks, the authored English, with fellBack true so the reading view can tell the reader they are reading English because their language is not yet ready (I18N-R04, I18N-DEC-01). Proven against PostgreSQL 17.11 by apps/web/src/content/locales.test.ts: a language with no reviewed row falls back to English and reports it, a region is dropped to match the language, and Traditional Chinese does not take Simplified as its fallback. Mutation-proved: removing the region-strip, and suppressing the fallback flag, each redden a named test.
 - [ ] CMS-005/T6 — A new revision starts with no locale rows, and the grid shows it
 
 ## CMS-006 · Audience and access
