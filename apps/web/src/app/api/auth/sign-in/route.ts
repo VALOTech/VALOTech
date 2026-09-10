@@ -26,6 +26,7 @@ import { getRateLimiter } from '../../../../auth/rate-limit';
 import { issue, serializeCookie } from '../../../../auth/session';
 import { getConfig } from '../../../../config/index';
 import { getDb } from '../../../../db/index';
+import { withRequestId } from '../../../../ops/request-context';
 
 const JSON_HEADERS: Readonly<Record<string, string>> = {
   'Content-Type': 'application/json',
@@ -139,7 +140,7 @@ function clientAddress(request: Request): string {
   return address;
 }
 
-export async function POST(request: Request): Promise<Response> {
+export const POST = withRequestId(async (request: Request): Promise<Response> => {
   // A route handler, unlike a Server Action, gets no automatic origin check,
   // and `Request.json()` parses the `text/plain` body a cross-site form can
   // post with no CORS preflight. An `Origin` that is present and not ours is a
@@ -213,4 +214,4 @@ export async function POST(request: Request): Promise<Response> {
     status: 204,
     headers: { 'Set-Cookie': serializeCookie(cookie) },
   });
-}
+});

@@ -29,8 +29,9 @@ import { accountForToken, presentedToken } from '../../../../../auth/gate';
 import { invalidateAllForAccountIn } from '../../../../../auth/session';
 import { signedOut } from '../../../../../auth/sign-out';
 import { getDb } from '../../../../../db/index';
+import { withRequestId } from '../../../../../ops/request-context';
 
-export async function POST(request: Request): Promise<Response> {
+export const POST = withRequestId(async (request: Request): Promise<Response> => {
   const actor = await accountForToken(presentedToken(request.headers));
 
   if (actor !== null) {
@@ -53,4 +54,4 @@ export async function POST(request: Request): Promise<Response> {
   }
 
   return signedOut();
-}
+});

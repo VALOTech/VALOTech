@@ -138,6 +138,24 @@ describe('the security baseline', () => {
     expect(nonceIn(policyOf())).toMatch(/^[A-Za-z0-9+/_-]+={0,2}$/);
   });
 
+  it('mints a request id, on the response and the request it renders (OPS-002/T2)', () => {
+    const response = proxy(requestWith(null));
+    const id = response.headers.get('x-request-id');
+
+    expect(id).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/);
+    // The handler opens its request context from the id on the request it is
+    // handed, so a line logged in the request and the id returned to the reader
+    // are the one the edge minted — the render-side header carries the response's.
+    expect(response.headers.get('x-middleware-request-x-request-id')).toBe(id);
+  });
+
+  it('mints a fresh request id per response, so two requests never share one', () => {
+    const ids = new Set(Array.from({ length: 8 }, () => proxy(requestWith(null)).headers.get('x-request-id')));
+
+    expect(ids.size).toBe(8);
+    expect(ids.has(null)).toBe(false);
+  });
+
   it('hands the policy to the render as well as to the browser', () => {
     // Half the mechanism. Next reads the nonce off the request it renders, so a
     // response-only policy would leave its own inline tags unmarked and blocked

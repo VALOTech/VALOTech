@@ -27,6 +27,7 @@
  */
 
 import { getConfig } from '../config/index';
+import { currentRequestId } from './request-context';
 
 /**
  * Every event a line may carry. An entry is added here in the commit that adds
@@ -70,21 +71,6 @@ const REDACTED = '[redacted]';
 
 function scrub(value: string): string {
   return value.replace(ADDRESS, REDACTED).replace(LONG_SECRET, REDACTED);
-}
-
-/**
- * The edge-generated request id that ties every line of one request together.
- *
- * Deferred: OPS-002/T2 — generate it at the edge and carry it through, so this
- * returns the id of the request in flight rather than null.
- * Why: `proxy.ts` does not mint one yet, and a Next proxy cannot share an
- *   AsyncLocalStorage with the handler it runs before, so the carrying is its
- *   own mechanism rather than a line here.
- * Unblocks when: OPS-002/T2.
- * Next action: read the id the edge set on the request and return it.
- */
-function currentRequestId(): string | null {
-  return null;
 }
 
 function scrubFields(fields: LogFields): {

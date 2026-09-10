@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_295 tasks in the plan, 123 closed, 172 outstanding._
+_295 tasks in the plan, 125 closed, 170 outstanding._
 
 ---
 
@@ -73,13 +73,12 @@ _59/69 closed (85%) · 10 outstanding — 6 buildable now · 3 waiting on the ow
 
 _The machinery every kind of writing shares — the editor, the media, the locale states, the audience rule, publishing, search — plus the account, configuration and logging surfaces an operator needs before anything is published. Building it once is the whole reason a report, an update and a deck are three navigations over one system rather than three systems._
 
-_18/63 closed (28%) · 45 outstanding — 45 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_20/63 closed (31%) · 43 outstanding — 43 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
 
-- **ADMIN-001** · Account management — 3/8 closed · depth 5
+- **ADMIN-001** · Account management — 4/8 closed · depth 5
   - `[ ] ADMIN-001/T1` — The list, sortable by last sign-in, with role and state
   - `[ ] ADMIN-001/T2` — The person page: identity, access, sessions, actions
   - `[ ] ADMIN-001/T4` — Deletion is a real delete; the confirmation lists what goes and what remains, and takes the typed name
-  - `[ ] ADMIN-001/T5` — Deleting the last admin, or yourself, is refused
   - `[ ] ADMIN-001/T6` — Creation issues an invitation; no admin ever sets another person's password
 
 - **CFG-001** · Runtime configuration — 3/6 closed · depth 5
@@ -108,8 +107,7 @@ _18/63 closed (28%) · 45 outstanding — 45 buildable now · 0 waiting on the o
   - `[ ] CMS-006/T4` — A refusal is a `404`, and it is the same `404` for an item that does not exist
   - `[ ] CMS-006/T6` — Narrowing an audience is audited, and public content carries a short cache lifetime
 
-- **OPS-002** · Logging and monitoring — 4/6 closed · depth 5
-  - `[ ] OPS-002/T2` — A request id generated at the edge and carried through every line of that request
+- **OPS-002** · Logging and monitoring — 5/6 closed · depth 5
   - `[ ] OPS-002/T6` — Three alerts, each with its action written beside it
 
 - **CMS-002** · Authoring surface — 0/7 closed · depth 6

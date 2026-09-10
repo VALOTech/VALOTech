@@ -39,6 +39,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 import { presentedToken } from './auth/gate';
+import { newRequestId, REQUEST_ID_HEADER } from './ops/request-context';
 
 /**
  * The headers whose value is the same for every response.
@@ -96,6 +97,13 @@ function contentSecurityPolicy(nonce: string): string {
 export function proxy(request: NextRequest): NextResponse {
   const policy = contentSecurityPolicy(createNonce());
 
+  // The request id is minted here, at the edge, because this is the one place
+  // every request passes through: a line logged anywhere in the request that
+  // follows reads it from the context the handler opens (`OPS-002/T2`). It goes
+  // on the request so the handler can open that context from it, and on the
+  // response so the reader and the logs downstream can name the same request.
+  const requestId = newRequestId();
+
   // Next reads the nonce off the *request*'s policy and stamps it onto the tags
   // it emits, so the header has to be visible to the render and not only to the
   // browser. The render is what applies it, which is why every route renders per
@@ -103,10 +111,12 @@ export function proxy(request: NextRequest): NextResponse {
   // scripts are refused by the very policy sent with it.
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set('Content-Security-Policy', policy);
+  requestHeaders.set(REQUEST_ID_HEADER, requestId);
 
   const response = NextResponse.next({ request: { headers: requestHeaders } });
 
   response.headers.set('Content-Security-Policy', policy);
+  response.headers.set(REQUEST_ID_HEADER, requestId);
 
   for (const [name, value] of SECURITY_HEADERS) {
     response.headers.set(name, value);

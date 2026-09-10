@@ -32,8 +32,9 @@
 import { presentedToken } from '../../../../auth/gate';
 import { invalidateSession } from '../../../../auth/session';
 import { signedOut } from '../../../../auth/sign-out';
+import { withRequestId } from '../../../../ops/request-context';
 
-export async function POST(request: Request): Promise<Response> {
+export const POST = withRequestId(async (request: Request): Promise<Response> => {
   const token = presentedToken(request.headers);
 
   // No cookie, or one whose row is already gone, redirects like any other
@@ -45,4 +46,4 @@ export async function POST(request: Request): Promise<Response> {
   }
 
   return signedOut();
-}
+});

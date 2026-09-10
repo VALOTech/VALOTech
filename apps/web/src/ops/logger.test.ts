@@ -18,6 +18,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import * as configModule from '../config/index';
 import { handlePoolError } from '../db/index';
 import { log, LOG_EVENTS, type LogLevel } from './logger';
+import { runWithRequestId } from './request-context';
 
 process.env.APP_ENV = 'development';
 process.env.APP_ORIGIN = 'http://localhost:3100';
@@ -66,6 +67,14 @@ describe('OPS-002/T1 the line', () => {
     });
     // A newline terminates each line, so a reader splits the stream on it.
     expect(written.join('')).toBe(`${JSON.stringify(emitted[0])}\n`);
+  });
+
+  it('carries the request id of the context it was logged in', () => {
+    // Outside a request the id is null (the test above); inside one it is the
+    // edge's id, carried to the line without the call site passing it (OPS-002/T2).
+    runWithRequestId('req-xyz', () => log.info(EVENT, 'within a request'));
+
+    expect(lines()[0]?.request_id).toBe('req-xyz');
   });
 
   it('stamps the time in UTC', () => {
