@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_295 tasks in the plan, 164 closed, 131 outstanding._
+_295 tasks in the plan, 166 closed, 129 outstanding._
 
 ---
 
@@ -116,7 +116,7 @@ _42/63 closed (66%) · 21 outstanding — 18 buildable now · 3 waiting on the o
 
 _The three content types, and the compliance posture that governs what is held about the people reading them. Updates come before decks, and not only because they are the simpler shape of the same problem: they are what the room is for. An investor signs in to find out what has happened since they last looked._
 
-_15/59 closed (25%) · 44 outstanding — 44 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_17/59 closed (28%) · 42 outstanding — 42 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
 
 - **DECK-001** · Deck authoring — 2/5 closed · depth 7
   - `[ ] DECK-001/T2` — An overview of section cards in order, showing heading, first line and what each carries
@@ -175,12 +175,10 @@ _15/59 closed (25%) · 44 outstanding — 44 buildable now · 0 waiting on the o
   - `[ ] POST-002/T5` — Narrowing states what it cannot recall; widening states what becomes public
   - `[ ] POST-002/T6` — Unread marking from the per-account read state, and a paging control rather than infinite scroll
 
-- **RPT-002** · Report periods and archive — 1/6 closed · depth 8
+- **RPT-002** · Report periods and archive — 3/6 closed · depth 8
   - `[ ] RPT-002/T2` — Publishing into a taken period fails with the report that holds it and the two real choices
   - `[ ] RPT-002/T3` — The archive lists by period, groups by year, and shows a period with no report as a gap
-  - `[ ] RPT-002/T4` — The room's current report is the most recent period the reader may read, not the most recent publication
   - `[ ] RPT-002/T5` — Withdrawal states that the period becomes a gap and which report becomes current
-  - `[ ] RPT-002/T6` — A per-account read state, used only in the list, and deleted with the account
 
 ## W4 — The room
 

@@ -28,7 +28,7 @@ import { closeDb, getDb } from '../db/index';
 import { type Block } from './blocks';
 import { createItem, saveDraft } from './items';
 import { publish, withdraw } from './publish';
-import { DEFAULT_REPORT_STRUCTURE, prefillStructureFor } from './reports';
+import { DEFAULT_REPORT_STRUCTURE, markReportRead, prefillStructureFor } from './reports';
 
 const RAW_DATABASE_URL = (process.env.DATABASE_URL ?? '').trim();
 const HAS_DATABASE = RAW_DATABASE_URL !== '';
@@ -233,6 +233,75 @@ describe.skipIf(!HAS_DATABASE)('a report against a period (RPT-001/T1, RPT-002/T
       // 8000-Q2 is the greatest period below 8000-Q3 but is unpublished, so the
       // prefill takes the published 8000-Q1 rather than the draft.
       expect(await prefillStructureFor('8000-Q3', admin())).toEqual([{ type: 'heading', level: 2, text: 'Published' }]);
+    });
+  });
+
+  describe('the read state (RPT-002/T6)', () => {
+    const OLD = new Date('2020-01-01T00:00:00.000Z');
+
+    async function reader(): Promise<string> {
+      const row = await getDb()
+        .insertInto('accounts')
+        .values({ email: `rd-${randomUUID()}@example.test`, name: 'Reader', role: 'investor', state: 'active' })
+        .returning('id')
+        .executeTakeFirstOrThrow();
+      return row.id;
+    }
+
+    async function aReport(): Promise<string> {
+      const item = await createItem({ type: 'report', slug: `r-${randomUUID()}`, title: 'r', period: aPeriod() });
+      return item.id;
+    }
+
+    async function readsFor(accountId: string) {
+      return getDb().selectFrom('report_reads').selectAll().where('account_id', '=', accountId).execute();
+    }
+
+    it('records a report as read, once, with a read time', async () => {
+      const account = await reader();
+      const report = await aReport();
+      await markReportRead(account, report);
+
+      const rows = await readsFor(account);
+      expect(rows).toHaveLength(1);
+      expect(rows[0]?.item_id).toBe(report);
+      expect(rows[0]?.read_at).toBeInstanceOf(Date);
+    });
+
+    it('is idempotent: a re-read keeps the first read time', async () => {
+      const account = await reader();
+      const report = await aReport();
+      await markReportRead(account, report);
+      await getDb()
+        .updateTable('report_reads')
+        .set({ read_at: OLD })
+        .where('account_id', '=', account)
+        .where('item_id', '=', report)
+        .execute();
+      await markReportRead(account, report);
+
+      const rows = await readsFor(account);
+      expect(rows).toHaveLength(1);
+      expect(rows[0]?.read_at).toEqual(OLD);
+    });
+
+    it('keeps a distinct row per report', async () => {
+      const account = await reader();
+      const a = await aReport();
+      const b = await aReport();
+      await markReportRead(account, a);
+      await markReportRead(account, b);
+
+      expect(await readsFor(account)).toHaveLength(2);
+    });
+
+    it('deletes the read state with the account (DATA-002)', async () => {
+      const account = await reader();
+      const report = await aReport();
+      await markReportRead(account, report);
+
+      await getDb().deleteFrom('accounts').where('id', '=', account).execute();
+      expect(await readsFor(account)).toHaveLength(0);
     });
   });
 });

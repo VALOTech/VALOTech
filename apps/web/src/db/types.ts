@@ -222,6 +222,15 @@ export interface DeckReadsTable {
   last_opened_at: Generated<Date>;
 }
 
+// One row per account per report (`RPT-002/T6`): whether the account has opened
+// the report, and when it first did. It answers "have I read this" in the archive
+// and nothing else. Deleted with the account (`DATA-002`).
+export interface ReportReadsTable {
+  account_id: string;
+  item_id: string;
+  read_at: Generated<Date>;
+}
+
 // `actor_id` is a plain string and not a reference to an account, because the
 // column is a bare uuid in the database too: the row outlives the account it
 // names, and keeping the id is what lets the trail stay truthful after an
@@ -296,6 +305,7 @@ export interface Database {
   content_locales: ContentLocalesTable;
   content_grants: ContentGrantsTable;
   deck_reads: DeckReadsTable;
+  report_reads: ReportReadsTable;
   audit: AuditTable;
   config: ConfigTable;
   mail_log: MailLogTable;
@@ -450,6 +460,16 @@ export const SCHEMA: Readonly<Record<keyof Database, TableSpec>> = {
       { name: 'last_opened_at', type: 'timestamptz', notNull: true, hasDefault: true, unique: false },
     ],
     primaryKey: ['account_id', 'deck_id', 'version'],
+    checks: {},
+  },
+  report_reads: {
+    migration: '_report_reads.sql',
+    columns: [
+      { name: 'account_id', type: 'uuid', notNull: true, hasDefault: false, unique: false },
+      { name: 'item_id', type: 'uuid', notNull: true, hasDefault: false, unique: false },
+      { name: 'read_at', type: 'timestamptz', notNull: true, hasDefault: true, unique: false },
+    ],
+    primaryKey: ['account_id', 'item_id'],
     checks: {},
   },
   audit: {
