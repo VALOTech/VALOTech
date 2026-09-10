@@ -70,6 +70,7 @@ export interface Config {
   readonly mail: MailConfig;
   readonly backup: BackupConfig;
   readonly auth: { readonly maxAttempts: number; readonly windowSeconds: number };
+  readonly build: { readonly version: string };
 }
 
 /**
@@ -91,6 +92,7 @@ export const DECLARED_VARIABLES = [
   'BACKUP_KEY',
   'AUTH_MAX_ATTEMPTS',
   'AUTH_WINDOW_SECONDS',
+  'BUILD_VERSION',
 ] as const;
 
 /** At least this many characters of session secret; the generator emits 43. */
@@ -281,6 +283,12 @@ export function loadConfig(source: Source = process.env): Config {
   const maxAttempts = optionalPositiveInt(source, 'AUTH_MAX_ATTEMPTS', 5, problems);
   const windowSeconds = optionalPositiveInt(source, 'AUTH_WINDOW_SECONDS', 900, problems);
 
+  // The build's identity, stamped by the deploy (OPS-001) and surfaced by
+  // `/health` so a report about behaviour can be tied to what was running.
+  // Absent — a local run, an unstamped image — it is 'unknown' rather than a
+  // guess, because a wrong version is worse than an admitted missing one.
+  const buildVersion = present(source, 'BUILD_VERSION') ?? 'unknown';
+
   if (problems.length > 0) {
     throw new ConfigError(problems);
   }
@@ -292,6 +300,7 @@ export function loadConfig(source: Source = process.env): Config {
     mail,
     backup,
     auth: { maxAttempts, windowSeconds },
+    build: { version: buildVersion },
   };
 
   return deepFreeze(config);

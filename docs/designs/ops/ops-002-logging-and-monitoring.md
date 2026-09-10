@@ -88,7 +88,10 @@ one thing that destroys alerting, which is an alert nobody acts on.
 connection to a database that has stopped answering reports healthy, which is the
 failure mode this endpoint exists to catch. It carries the build's version so a
 report about behaviour can be tied to what was running (§10.8.1 rule 4 in the
-sibling repositories, and the same trap here).
+sibling repositories, and the same trap here). `version` is `BUILD_VERSION` from
+the environment — the deploy (`OPS-001`) stamps it with the image's identity, a
+git SHA or a tag — and it is `unknown` when unset rather than a value guessed
+from elsewhere, because a wrong version is worse than an admitted missing one.
 
 It exposes nothing else. No row counts, no configuration, no environment.
 

@@ -33,9 +33,12 @@ import { getConfig } from '../config/index';
  * the code which emits it, so a reader can count `db.pool_error` lines without
  * first discovering that the string exists.
  */
-export const LOG_EVENTS = ['db.pool_error'] as const;
+export const LOG_EVENTS = ['db.pool_error', 'log.scrubbed'] as const;
 
 export type LogEvent = (typeof LOG_EVENTS)[number];
+
+/** The event a scrubber hit raises, so a caller logging a secret is the alert. */
+const SCRUBBED_EVENT: LogEvent = 'log.scrubbed';
 
 /**
  * `error` — something failed that should not and a person saw it; `warn` —
@@ -84,14 +87,26 @@ function currentRequestId(): string | null {
   return null;
 }
 
-function scrubFields(fields: LogFields): Record<string, string | number | boolean | null> {
+function scrubFields(fields: LogFields): {
+  out: Record<string, string | number | boolean | null>;
+  masked: string[];
+} {
   const out: Record<string, string | number | boolean | null> = {};
+  const masked: string[] = [];
 
   for (const [key, value] of Object.entries(fields)) {
-    out[key] = typeof value === 'string' ? scrub(value) : value;
+    if (typeof value !== 'string') {
+      out[key] = value;
+      continue;
+    }
+    const cleaned = scrub(value);
+    out[key] = cleaned;
+    if (cleaned !== value) {
+      masked.push(key);
+    }
   }
 
-  return out;
+  return { out, masked };
 }
 
 function emit(level: LogLevel, event: LogEvent, msg: string, fields: LogFields): void {
@@ -101,16 +116,35 @@ function emit(level: LogLevel, event: LogEvent, msg: string, fields: LogFields):
     return;
   }
 
-  const line = {
-    ts: new Date().toISOString(),
-    level,
-    event,
-    request_id: currentRequestId(),
-    msg: scrub(msg),
-    ...scrubFields(fields),
-  };
+  const cleanedMsg = scrub(msg);
+  const { out, masked } = scrubFields(fields);
+  if (cleanedMsg !== msg) {
+    masked.unshift('msg');
+  }
 
-  process.stdout.write(`${JSON.stringify(line)}\n`);
+  process.stdout.write(
+    `${JSON.stringify({
+      ts: new Date().toISOString(),
+      level,
+      event,
+      request_id: currentRequestId(),
+      msg: cleanedMsg,
+      ...out,
+    })}\n`,
+  );
+
+  // A scrubber hit is itself an alert (`OPS-002/T4`): it means a caller tried to
+  // log something it should not, and the fix is that caller — named here by its
+  // event — not the scrubber. The alert is itself a line, so it carries only the
+  // offending event and the masked field names, never a value; and a
+  // `log.scrubbed` line never raises its own alert, so a hit costs exactly one
+  // extra line rather than an unbounded cascade.
+  if (masked.length > 0 && event !== SCRUBBED_EVENT) {
+    emit('error', SCRUBBED_EVENT, 'a log line carried data the scrubber masked; fix the caller', {
+      source_event: event,
+      masked_fields: masked.join(','),
+    });
+  }
 }
 
 /**

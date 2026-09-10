@@ -141,6 +141,52 @@ describe('OPS-002/T3 what never reaches a line', () => {
   });
 });
 
+describe('OPS-002/T4 a scrubber hit is itself an alert', () => {
+  it('raises one log.scrubbed alert naming the source event and the masked field', () => {
+    log.info(EVENT, 'a clean message', { email: 'amy@example.test' });
+
+    const emitted = lines();
+    expect(emitted).toHaveLength(2);
+    // The original line, with the value masked.
+    expect(emitted[0]).toMatchObject({ level: 'info', event: EVENT, email: '[redacted]' });
+    // The alert it raised: error level, naming the event that leaked and the
+    // field, so the fix is the caller rather than the scrubber — and carrying no
+    // value, only the field name.
+    expect(emitted[1]).toMatchObject({
+      level: 'error',
+      event: 'log.scrubbed',
+      source_event: EVENT,
+      masked_fields: 'email',
+    });
+    expect(JSON.stringify(emitted[1])).not.toContain('amy@example.test');
+  });
+
+  it('names the message when the leak is in it', () => {
+    log.warn(EVENT, 'mailing amy@example.test now', {});
+
+    const alert = lines()[1];
+    expect(alert?.event).toBe('log.scrubbed');
+    expect(alert?.masked_fields).toBe('msg');
+  });
+
+  it('raises no alert for a line with nothing to mask', () => {
+    log.info(EVENT, 'all clear', { count: 1 });
+
+    expect(lines()).toHaveLength(1);
+  });
+
+  it('does not cascade: a leak is exactly two lines, never a third', () => {
+    // The log.scrubbed line carries only an event name and field names, so it
+    // has nothing to mask; and even if it did, the guard stops a third line.
+    log.info(EVENT, 'to amy@example.test', { token: 'B'.repeat(43) });
+
+    const emitted = lines();
+    expect(emitted).toHaveLength(2);
+    expect(emitted[1]?.event).toBe('log.scrubbed');
+    expect(emitted[1]?.masked_fields).toBe('msg,token');
+  });
+});
+
 describe('OPS-002/T1 the first emitter: a failed idle database client', () => {
   it('logs db.pool_error at error level and exits', () => {
     const exit = vi.spyOn(process, 'exit').mockImplementation(() => undefined as never);

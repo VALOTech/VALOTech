@@ -55,6 +55,11 @@ describe('loadConfig', () => {
     expect(config.session.ttlSeconds).toBe(43200);
     expect(config.auth.maxAttempts).toBe(5);
     expect(config.auth.windowSeconds).toBe(900);
+    expect(config.build.version).toBe('unknown');
+  });
+
+  it('reads BUILD_VERSION, the build identity /health reports', () => {
+    expect(loadConfig(validEnv({ BUILD_VERSION: 'a1b2c3d' })).build.version).toBe('a1b2c3d');
   });
 
   describe('a required variable that is absent stops the load, naming it (CRED-001/T2)', () => {
