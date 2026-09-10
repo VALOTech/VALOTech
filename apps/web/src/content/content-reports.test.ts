@@ -1,13 +1,17 @@
 /**
- * One published report per period (`RPT-002/T1`, `CMS-R01`).
+ * A report's period: its shape at creation (`RPT-001/T1`) and one published
+ * report per period (`RPT-002/T1`, `CMS-R01`).
  *
- * "The Q3 report" must name one document, and the design makes that true in the
- * database rather than in a convention that holds until two admins work the same
- * afternoon: a partial unique index over `(type, period)` for published reports.
- * The property is a claim about what the database refuses, so it runs against a
- * real PostgreSQL — and against a database of its own, created fresh, because the
- * index is folded into a shipped migration (`DATA-R07`) that node-pg-migrate will
- * not re-apply to the shared development database.
+ * A period is a report's identity, so it is fixed at creation and shaped like
+ * `YYYY-Qn` or `YYYY-MM` — a malformed one is a document nobody can ask for by
+ * name, and the database refuses it rather than trusting the caller. And "the Q3
+ * report" must name one document, made true by a partial unique index over
+ * `(type, period)` for published reports rather than by a convention that holds
+ * until two admins work the same afternoon. Both are claims about what the
+ * database refuses, so they run against a real PostgreSQL — and against a database
+ * of their own, created fresh, because the check and the index are folded into a
+ * shipped migration (`DATA-R07`) node-pg-migrate will not re-apply to the shared
+ * development database.
  */
 
 import { randomUUID } from 'node:crypto';
@@ -56,12 +60,14 @@ async function recreateIsolatedDatabase(): Promise<void> {
   }
 }
 
-describe.skipIf(!HAS_DATABASE)('one published report per period (RPT-002/T1)', () => {
+describe.skipIf(!HAS_DATABASE)('a report against a period (RPT-001/T1, RPT-002/T1)', () => {
   let authorId = '';
 
-  // Unique per call, so the constraint is exercised against this suite's own
-  // reports and never a period a fixture elsewhere happens to publish.
-  const aPeriod = (): string => `p-${randomUUID()}`;
+  // A distinct, well-formed period per call: a far-future year keeps each one
+  // unique so two tests never collide on a period, and the shape passes the
+  // format check the suite also exercises. The quarter is fixed; the year varies.
+  let periodSeq = 0;
+  const aPeriod = (): string => `${4001 + periodSeq++}-Q1`;
 
   async function publishReport(period: string, text = 'a report'): Promise<string> {
     const item = await createItem({ type: 'report', slug: `r-${randomUUID()}`, title: period, period });
@@ -141,5 +147,42 @@ describe.skipIf(!HAS_DATABASE)('one published report per period (RPT-002/T1)', (
     const nextRev = await saveDraft(next.id, [{ type: 'divider' }], authorId);
     const published = await publish(next.id, nextRev.id, authorId);
     expect(published.current_revision_id).toBe(nextRev.id);
+  });
+
+  it('creates a report against a well-formed quarterly period, and stores it (RPT-001/T1)', async () => {
+    const period = aPeriod();
+    const report = await createItem({ type: 'report', slug: `r-${randomUUID()}`, title: 'a quarter', period });
+    expect(report.period).toBe(period);
+  });
+
+  it('accepts a monthly period (RPT-001/T1)', async () => {
+    const report = await createItem({ type: 'report', slug: `r-${randomUUID()}`, title: 'a month', period: '2026-03' });
+    expect(report.period).toBe('2026-03');
+  });
+
+  it.each([
+    ['a quarter past four', '2026-Q5'],
+    ['a thirteenth month', '2026-13'],
+    ['a zeroth month', '2026-00'],
+    ['a one-digit month', '2026-7'],
+    ['free text', 'third quarter'],
+  ])('refuses a malformed period — %s (RPT-001/T1)', async (_case, period) => {
+    await expect(
+      createItem({ type: 'report', slug: `r-${randomUUID()}`, title: 'malformed', period }),
+    ).rejects.toThrow(/content_items_period_format/);
+  });
+
+  it('fixes the period at creation: publishing a revision does not change it (RPT-001/T1)', async () => {
+    const period = aPeriod();
+    const report = await createItem({ type: 'report', slug: `r-${randomUUID()}`, title: 'fixed', period });
+    const revision = await saveDraft(report.id, [{ type: 'heading', level: 2, text: 'q' }], authorId);
+    await publish(report.id, revision.id, authorId);
+
+    const after = await getDb()
+      .selectFrom('content_items')
+      .select('period')
+      .where('id', '=', report.id)
+      .executeTakeFirstOrThrow();
+    expect(after.period).toBe(period);
   });
 });

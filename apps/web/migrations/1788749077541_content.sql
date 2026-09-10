@@ -12,7 +12,10 @@
 -- period -- so the vocabulary is not the only thing the database enforces. The
 -- period check is what lets RPT-002's "one published report per period" hold in
 -- the database rather than in a convention: a null period is not distinct from
--- another null in a unique index, so a report without one would defeat it.
+-- another null in a unique index, so a report without one would defeat it. A
+-- third check fixes the period's shape -- YYYY-Qn or YYYY-MM (RPT-001) -- because
+-- the period is a report's identity, and a malformed one is a document no
+-- investor can ask for by name.
 CREATE TABLE content_items (
   id                  uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   type                text NOT NULL CHECK (type IN ('report', 'update', 'deck')),
@@ -25,7 +28,8 @@ CREATE TABLE content_items (
   created_at          timestamptz NOT NULL DEFAULT now(),
   updated_at          timestamptz NOT NULL DEFAULT now(),
   CONSTRAINT content_items_kind_for_update CHECK (type = 'update' OR kind IS NULL),
-  CONSTRAINT content_items_period_for_report CHECK (type <> 'report' OR period IS NOT NULL)
+  CONSTRAINT content_items_period_for_report CHECK (type <> 'report' OR period IS NOT NULL),
+  CONSTRAINT content_items_period_format CHECK (period IS NULL OR period ~ '^[0-9]{4}-(Q[1-4]|(0[1-9]|1[0-2]))$')
 );
 
 CREATE TRIGGER content_items_set_updated_at
