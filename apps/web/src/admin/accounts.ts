@@ -250,3 +250,66 @@ export async function reinstateAccount(accountId: string, actorId: string): Prom
       return true;
     });
 }
+
+/**
+ * Erase an account: the row is deleted, and the foreign keys carry the deletion
+ * outward exactly as the manifest declares (`DATA-002`). What is about the person
+ * goes with them — the sessions they hold, the invitation they were sent, the
+ * mail they received, the decks they were granted — and what they did on the
+ * company's behalf stays behind with a null actor: a revision they authored, a
+ * translation they reviewed, a grant they made for somebody else, a file they
+ * uploaded, the board they last touched. The split is the manifest's, and a gate
+ * holds the schema to it; this function is what sets it in motion.
+ *
+ * Returns whether a row was erased — `false` for an id no account holds, and
+ * `false` when the act is refused before anything is written.
+ *
+ * The guard matters more here than anywhere, because erasure is final and has no
+ * inverse (`ADMIN-DEC-01`): an admin may not erase their own account, and no
+ * single act may leave the room with no admin who can sign in. A suspension that
+ * stranded the room could be undone from the database; an erasure could not be
+ * undone at all. Both refusals return the `false` a no-op returns, before any
+ * write.
+ *
+ * No session is ended by hand, unlike a suspension's: deleting the accounts row
+ * cascades to `sessions`, so the person is signed out by the statement that
+ * erases them. The `account.delete` audit row outlives the account it names —
+ * `actor_id` and `subject_id` are bare uuids, not foreign keys, so the record of
+ * who erased whom survives its own subject (`SEC-002`, `DATA-R03`) — and it is
+ * written in the same transaction as the delete, so the two are one act.
+ */
+export async function eraseAccount(accountId: string, actorId: string): Promise<boolean> {
+  return getDb()
+    .transaction()
+    .execute(async (trx) => {
+      // Safe default for ADMIN-DEC-01, before anything is written, and weightier
+      // than suspension's because there is no way back: an admin may not erase
+      // their own access, and no single act may leave the room with no admin who
+      // can sign in. Both return the same `false` a no-op returns.
+      if (actorId === accountId) {
+        return false;
+      }
+      if (await isLastActiveAdmin(trx, accountId)) {
+        return false;
+      }
+
+      const erased = await trx
+        .deleteFrom('accounts')
+        .where('id', '=', accountId)
+        .returning('id')
+        .executeTakeFirst();
+
+      if (erased === undefined) {
+        return false;
+      }
+
+      await recordAudit(trx, {
+        actorId,
+        action: 'account.delete',
+        subjectType: 'account',
+        subjectId: accountId,
+      });
+
+      return true;
+    });
+}

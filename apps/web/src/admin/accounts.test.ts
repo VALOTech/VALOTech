@@ -48,7 +48,7 @@ import {
 import { issue } from '../auth/session';
 import { closeDb, getDb } from '../db/index';
 import type { AccountRole, AccountState } from '../db/types';
-import { changeRole, reinstateAccount, suspendAccount } from './accounts';
+import { changeRole, eraseAccount, reinstateAccount, suspendAccount } from './accounts';
 
 const RAW_DATABASE_URL = (process.env.DATABASE_URL ?? '').trim();
 const HAS_DATABASE = RAW_DATABASE_URL !== '';
@@ -213,6 +213,16 @@ async function activeAdminCount(): Promise<number> {
  */
 async function warmConnections(count: number): Promise<void> {
   await Promise.all(Array.from({ length: count }, () => sql`select 1`.execute(getDb())));
+}
+
+async function accountExists(accountId: string): Promise<boolean> {
+  const row = await getDb()
+    .selectFrom('accounts')
+    .select('id')
+    .where('id', '=', accountId)
+    .executeTakeFirst();
+
+  return row !== undefined;
 }
 
 describe.skipIf(!HAS_DATABASE)('ADMIN-001 account mutations', () => {
@@ -643,6 +653,106 @@ describe.skipIf(!HAS_DATABASE)('ADMIN-001 account mutations', () => {
 
       expect(await stateOf(theirs)).toBe('suspended');
       expect(await auditFor(theirs)).toHaveLength(0);
+    });
+  });
+
+  describe('eraseAccount (T2)', () => {
+    it('deletes the account, signs it out, and records one act that outlives it', async () => {
+      const actor = randomUUID();
+      const id = await newAccount('active');
+      await issue(id);
+      const token = (await issue(id)).value;
+      await issueToken(id, INVITATION_TTL_SECONDS);
+
+      expect(await sessionCount(id)).toBe(2);
+
+      expect(await eraseAccount(id, actor)).toBe(true);
+
+      // The row is gone, and the cascade reached what is about the person: the
+      // sessions it held and the invitation it was sent. The content side of the
+      // cascade — a revision's author nulled, the revision kept — is DATA-002/T5,
+      // proven in the content module where a content table may be named.
+      expect(await accountExists(id)).toBe(false);
+      expect(await sessionCount(id)).toBe(0);
+      expect(await rowExists(token)).toBe(false);
+      expect(await invitationCount(id, true)).toBe(0);
+
+      // The audit row survives its own subject: actor_id and subject_id are bare
+      // uuids, not foreign keys, so the record of who erased whom is not itself
+      // cascaded away.
+      const trail = await auditFor(id);
+      expect(trail).toHaveLength(1);
+      expect(trail[0]?.action).toBe('account.delete');
+      expect(trail[0]?.actor_id).toBe(actor);
+      expect(trail[0]?.subject_type).toBe('account');
+    });
+
+    it('refuses an admin erasing their own account, writing nothing', async () => {
+      const admin = await newAccount('active', 'admin');
+      // A second active admin, so the refusal can only be the self guard: the
+      // subject is not the last admin.
+      await newAccount('active', 'admin');
+
+      expect(await eraseAccount(admin, admin)).toBe(false);
+
+      expect(await accountExists(admin)).toBe(true);
+      expect(await auditFor(admin)).toHaveLength(0);
+    });
+
+    it('refuses erasing the last admin who can sign in, writing nothing', async () => {
+      const admin = await newAccount('active', 'admin');
+
+      // The only admin who can act, and erasure has no inverse: stranding the
+      // room this way could not be undone even from the database.
+      expect(await eraseAccount(admin, randomUUID())).toBe(false);
+
+      expect(await accountExists(admin)).toBe(true);
+      expect(await auditFor(admin)).toHaveLength(0);
+    });
+
+    it('erases an admin while another active admin remains', async () => {
+      const staying = await newAccount('active', 'admin');
+      const going = await newAccount('active', 'admin');
+
+      expect(await eraseAccount(going, randomUUID())).toBe(true);
+
+      expect(await accountExists(going)).toBe(false);
+      expect(await accountExists(staying)).toBe(true);
+    });
+
+    it('answers false for an id no account holds, writing nothing', async () => {
+      const absent = randomUUID();
+
+      expect(await eraseAccount(absent, randomUUID())).toBe(false);
+      expect(await auditFor(absent)).toHaveLength(0);
+    });
+
+    it('rolls the deletion back when the audit cannot be written', async () => {
+      const id = await newAccount('active');
+      const token = (await issue(id)).value;
+
+      // The audit insert is the last write and refuses this actor id, so the
+      // delete has already run when the failure arrives. What the assertions read
+      // is whether the transaction took the delete back — which it can only do if
+      // the delete and the audit were one transaction.
+      await expect(eraseAccount(id, UNPARSEABLE_ACTOR)).rejects.toThrow(
+        /invalid input syntax for type uuid/,
+      );
+
+      expect(await accountExists(id)).toBe(true);
+      expect(await rowExists(token)).toBe(true);
+      expect(await auditFor(id)).toHaveLength(0);
+    });
+
+    it('touches no other account', async () => {
+      const mine = await newAccount('active');
+      const theirs = await newAccount('active');
+      const theirToken = (await issue(theirs)).value;
+
+      await eraseAccount(mine, randomUUID());
+
+      expect(await accountExists(theirs)).toBe(true);
+      expect(await rowExists(theirToken)).toBe(true);
     });
   });
 });

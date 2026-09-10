@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_295 tasks in the plan, 121 closed, 174 outstanding._
+_295 tasks in the plan, 123 closed, 172 outstanding._
 
 ---
 
@@ -73,7 +73,7 @@ _59/69 closed (85%) · 10 outstanding — 6 buildable now · 3 waiting on the ow
 
 _The machinery every kind of writing shares — the editor, the media, the locale states, the audience rule, publishing, search — plus the account, configuration and logging surfaces an operator needs before anything is published. Building it once is the whole reason a report, an update and a deck are three navigations over one system rather than three systems._
 
-_16/63 closed (25%) · 47 outstanding — 47 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_18/63 closed (28%) · 45 outstanding — 45 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
 
 - **ADMIN-001** · Account management — 3/8 closed · depth 5
   - `[ ] ADMIN-001/T1` — The list, sortable by last sign-in, with role and state
@@ -137,10 +137,8 @@ _16/63 closed (25%) · 47 outstanding — 47 buildable now · 0 waiting on the o
   - `[ ] CMS-007/T5` — The empty state names what narrowed the result and offers to widen it
   - `[ ] CMS-007/T6` — The field is labelled, keyboard-operable, and announces its result count
 
-- **DATA-002** · Erasure and retention — 2/5 closed · depth 6
-  - `[ ] DATA-002/T2` — One erasure function driven by the manifest, with the schema's `on delete` matching it
+- **DATA-002** · Erasure and retention — 4/5 closed · depth 6
   - `[ ] DATA-002/T4` — Scheduled deletion enforcing each retention window
-  - `[ ] DATA-002/T5` — Content authored by an erased account survives with a null author
 
 ## W3 — What is written
 
