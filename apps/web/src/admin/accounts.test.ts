@@ -48,7 +48,13 @@ import {
 import { issue } from '../auth/session';
 import { closeDb, getDb } from '../db/index';
 import type { AccountRole, AccountState } from '../db/types';
-import { changeRole, eraseAccount, reinstateAccount, suspendAccount } from './accounts';
+import {
+  changeRole,
+  eraseAccount,
+  listAccounts,
+  reinstateAccount,
+  suspendAccount,
+} from './accounts';
 
 const RAW_DATABASE_URL = (process.env.DATABASE_URL ?? '').trim();
 const HAS_DATABASE = RAW_DATABASE_URL !== '';
@@ -225,6 +231,49 @@ async function accountExists(accountId: string): Promise<boolean> {
   return row !== undefined;
 }
 
+/** The row's own clocks, which the list never shows but the trigger maintains. */
+async function timestampsOf(accountId: string): Promise<{ created_at: Date; updated_at: Date }> {
+  const row = await getDb()
+    .selectFrom('accounts')
+    .select(['created_at', 'updated_at'])
+    .where('id', '=', accountId)
+    .executeTakeFirstOrThrow();
+
+  return { created_at: row.created_at, updated_at: row.updated_at };
+}
+
+/**
+ * One account with the columns the list orders on pinned: the address, which
+ * breaks a tie, and the moment it last signed in. `newAccount` mints a random
+ * address on purpose, which is what every other test here wants and what an
+ * order test cannot have.
+ */
+async function listedAccount(
+  email: string,
+  lastSignIn: Date | null,
+  state: AccountState = 'active',
+  role: AccountRole = 'investor',
+): Promise<string> {
+  const account = await getDb()
+    .insertInto('accounts')
+    .values({
+      email: `${email}${SUITE_DOMAIN}`,
+      name: `Investor ${email}`,
+      role,
+      state,
+      last_sign_in: lastSignIn,
+    })
+    .returning('id')
+    .executeTakeFirstOrThrow();
+
+  return account.id;
+}
+
+/** The addresses `listAccounts` answers with, in the order it answers them. */
+async function listedAddresses(): Promise<string[]> {
+  return (await listAccounts()).map((account) => account.email);
+}
+
 describe.skipIf(!HAS_DATABASE)('ADMIN-001 account mutations', () => {
   beforeAll(async () => {
     await recreateIsolatedDatabase();
@@ -251,6 +300,105 @@ describe.skipIf(!HAS_DATABASE)('ADMIN-001 account mutations', () => {
     // drop here, and the pool must be closed or the worker's event loop never
     // drains.
     await closeDb();
+  });
+
+  describe('listAccounts (T1)', () => {
+    it('answers an empty list rather than raising when nobody has been invited yet', async () => {
+      expect(await listAccounts()).toEqual([]);
+    });
+
+    it('carries the five things the list shows, and nothing else about the person', async () => {
+      const id = await listedAccount('solo', new Date('2026-03-04T05:06:07.000Z'), 'suspended', 'admin');
+
+      const accounts = await listAccounts();
+
+      expect(accounts).toHaveLength(1);
+      // The whole row, key for key: a password hash or a created_at reaching an
+      // admin surface would be the read widening past what DATA-R01 admits, and
+      // an assertion on named fields alone would not notice.
+      expect(accounts[0]).toEqual({
+        id,
+        email: `solo${SUITE_DOMAIN}`,
+        name: 'Investor solo',
+        role: 'admin',
+        state: 'suspended',
+        last_sign_in: new Date('2026-03-04T05:06:07.000Z'),
+      });
+    });
+
+    it('puts whoever has never signed in first, then the stalest, so the top of the list is the question', async () => {
+      // Inserted newest-first, so an order that merely echoed insertion would
+      // come back exactly reversed from the one asserted.
+      await listedAccount('recent', new Date('2026-06-01T00:00:00.000Z'));
+      await listedAccount('stale', new Date('2025-01-15T00:00:00.000Z'));
+      await listedAccount('never', null);
+
+      expect(await listedAddresses()).toEqual([
+        `never${SUITE_DOMAIN}`,
+        `stale${SUITE_DOMAIN}`,
+        `recent${SUITE_DOMAIN}`,
+      ]);
+    });
+
+    it('breaks a tie on the address, so the accounts that never signed in hold one order', async () => {
+      // Every account that has never signed in shares a timestamp, so without a
+      // second key their order is whatever the plan happened to produce — and a
+      // list that reshuffles between two renders looks wrong while being right.
+      await listedAccount('c-never', null);
+      await listedAccount('a-never', null);
+      await listedAccount('b-never', null);
+
+      expect(await listedAddresses()).toEqual([
+        `a-never${SUITE_DOMAIN}`,
+        `b-never${SUITE_DOMAIN}`,
+        `c-never${SUITE_DOMAIN}`,
+      ]);
+    });
+
+    it('lists every account whatever its state or role, because the stale one is the point', async () => {
+      await listedAccount('invited-person', null, 'invited');
+      await listedAccount('suspended-person', new Date('2025-05-05T00:00:00.000Z'), 'suspended');
+      await listedAccount('active-admin', new Date('2026-05-05T00:00:00.000Z'), 'active', 'admin');
+
+      const accounts = await listAccounts();
+
+      expect(accounts.map((account) => account.state)).toEqual(['invited', 'suspended', 'active']);
+      expect(accounts.map((account) => account.role)).toEqual(['investor', 'investor', 'admin']);
+    });
+  });
+
+  describe("updated_at tracks an account's attributes, not its sign-ins (`DATA-R07` fold)", () => {
+    it('leaves updated_at alone on a sign-in write, and moves it on an attribute change', async () => {
+      const id = await newAccount('active');
+      const fresh = await timestampsOf(id);
+      // At creation the two clocks agree: nothing has changed the row since insert.
+      expect(fresh.updated_at.getTime()).toBe(fresh.created_at.getTime());
+
+      // A sign-in writes last_sign_in, which the trigger's WHEN excludes, so
+      // updated_at must not move. The pg_sleep advances the clock first, so a
+      // WHEN that wrongly included last_sign_in, or was absent, would jump
+      // updated_at a full 50ms — which the exact equality below catches, rather
+      // than hinging on sub-millisecond round-trip timing.
+      await sql`select pg_sleep(0.05)`.execute(getDb());
+      await getDb()
+        .updateTable('accounts')
+        .set({ last_sign_in: sql<Date>`now()` })
+        .where('id', '=', id)
+        .execute();
+
+      expect((await timestampsOf(id)).updated_at.getTime()).toBe(fresh.updated_at.getTime());
+
+      // A change to a defining attribute does move it. pg_sleep advances the
+      // clock past the insert, so the later timestamp is unambiguous at the
+      // millisecond resolution getTime reads rather than resting on round-trip
+      // timing.
+      await sql`select pg_sleep(0.05)`.execute(getDb());
+      await getDb().updateTable('accounts').set({ name: 'Renamed' }).where('id', '=', id).execute();
+
+      expect((await timestampsOf(id)).updated_at.getTime()).toBeGreaterThan(
+        fresh.updated_at.getTime(),
+      );
+    });
   });
 
   describe('suspendAccount (T3)', () => {

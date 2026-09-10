@@ -111,7 +111,8 @@ action. **`DATA-002`** is the erasure design this implements the admin half of.
 
 ## 5. Cross-cutting compliance
 
-- **`DATA-R01`** — a name, an address, a role, a state. Nothing else.
+- **`DATA-R01`** — a name, an address, a role, a state, and when they last
+  signed in — the one behavioural column, and §6 says why. Nothing else.
 - **`DATA-R02`** — no personal data in the audit or in a log.
 - **`DATA-R03`** — deletion is a delete, and the confirmation says what
   survives.

@@ -20,6 +20,8 @@
  * so no address can reach a log — correct, not a stub.
  */
 
+import { sql } from 'kysely';
+
 import { MAX_EMAIL_LENGTH, normaliseAddress } from '../../../../auth/address';
 import { hashPassword, needsRehash, verifyPassword } from '../../../../auth/password';
 import { getRateLimiter } from '../../../../auth/rate-limit';
@@ -207,6 +209,24 @@ export const POST = withRequestId(async (request: Request): Promise<Response> =>
       .where('id', '=', account.id)
       .execute();
   }
+
+  // The one behavioural fact the account record keeps (`ADMIN-001`), and the
+  // only place it is written: this is the single path that ended in a sign-in,
+  // and a column that moved on a refused attempt would report an attacker as
+  // the person. The clock is the database's, the one `created_at` already
+  // takes, so two accounts cannot be ordered by two machines disagreeing.
+  //
+  // Before the session, not after it, so the outcome that would mislead cannot
+  // happen: a session issued while last_sign_in still reads null or stale, which
+  // would list an account holding a live session as one that never signed in.
+  // The two writes are not one transaction, so the reverse can occur — the stamp
+  // lands and `issue` then fails — but that is only a timestamp slightly ahead of
+  // a sign-in the person retries, which costs nothing.
+  await getDb()
+    .updateTable('accounts')
+    .set({ last_sign_in: sql<Date>`now()` })
+    .where('id', '=', account.id)
+    .execute();
 
   const cookie = await issue(account.id);
 

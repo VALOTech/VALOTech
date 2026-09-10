@@ -163,6 +163,7 @@ const SELECTABLE_SAMPLES: { readonly [T in keyof Database]: Selectable<Database[
     role: 'investor',
     password_hash: null,
     state: 'invited',
+    last_sign_in: null,
     created_at: AT,
     updated_at: AT,
   },
@@ -278,11 +279,15 @@ const SELECTABLE_SAMPLES: { readonly [T in keyof Database]: Selectable<Database[
  * compile here.
  */
 const INSERTABLE_SAMPLES: { readonly [T in keyof Database]: Insertable<Database[T]> } = {
+  // The row an invitation creates: no password yet, and never signed in. Both
+  // are null because the acts that write them have not happened, not because
+  // the database fills them.
   accounts: {
     email: 'invited@example.com',
     name: 'An Invitation',
     role: 'investor',
     password_hash: null,
+    last_sign_in: null,
   },
   // The row a sign-in writes: an account, the hash of the token that went
   // into the cookie, and when it stops working. The database fills the rest, and

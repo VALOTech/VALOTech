@@ -138,6 +138,7 @@ export interface AccountsTable {
   role: AccountRole;
   password_hash: string | null;
   state: Generated<AccountState>;
+  last_sign_in: Date | null;
   created_at: Generated<Date>;
   updated_at: Generated<Date>;
 }
@@ -325,6 +326,7 @@ export const SCHEMA: Readonly<Record<keyof Database, TableSpec>> = {
       { name: 'role', type: 'text', notNull: true, hasDefault: false, unique: false },
       { name: 'password_hash', type: 'text', notNull: false, hasDefault: false, unique: false },
       { name: 'state', type: 'text', notNull: true, hasDefault: true, unique: false },
+      { name: 'last_sign_in', type: 'timestamptz', notNull: false, hasDefault: false, unique: false },
       { name: 'created_at', type: 'timestamptz', notNull: true, hasDefault: true, unique: false },
       { name: 'updated_at', type: 'timestamptz', notNull: true, hasDefault: true, unique: false },
     ],

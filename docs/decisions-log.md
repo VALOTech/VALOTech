@@ -74,6 +74,17 @@ An entry is filed the moment the choice surfaces, not when it is answered. Nothi
 - **Revises:** ADMIN-001/T3, ADMIN-001/T7 — both ship the safe default: they refuse before mutating when the subject is the actor, or the last admin who can sign in, counted `active` rather than by role alone — a suspended admin cannot sign in to undo anything, and reinstating one is itself an admin act, so counting the role would let a room with one active and one suspended admin be stranded. The count is race-safe under a `SELECT … WHERE role = 'admin' AND state = 'active' ORDER BY id FOR UPDATE` taken inside the transaction; a resolution to **B** relaxes the self rule.
 - **Status:** OPEN. Safe default: `suspendAccount` and `changeRole` refuse when the subject is the last active admin or is the actor, returning the same `false` a no-op returns, so no single act can leave the room with no admin who can sign in or let an admin act on their own access — fail-closed, since the alternative is a one-click unrecoverable lockout behind an ordinary control.
 
+<a id="ADMIN-DEC-02"></a>
+### `ADMIN-DEC-02` — Is the account list sortable by a control, or served already sorted by last sign-in — OPEN
+
+- **Decision:** `ADMIN-001` §3 says the list is "sortable by last sign-in, because that column is what makes a stale account visible." The list ships served in that order — stalest first, the never-signed-in above them (`ADMIN-001/T1`). Does "sortable" ask for a control the admin re-sorts with, or is a fixed order by last sign-in — which puts exactly what the column is for at the top — what the word asks for here?
+- **Options:** **A** The served order, as shipped — the design names one sort key and one reason, the fixed order serves that reason directly, and with six to fifty accounts (§6) the whole list is one screen; a control would re-sort a list that already answers its one question · **B** A column-header control that re-sorts — the plain reading of "sortable," and once there is one it plausibly sorts the other columns too, at the cost of client interactivity on a server-rendered page and sort keys the design names no reason for.
+- **Recommendation:** **A**. The design gives the column one purpose — making a stale account visible — and the served order delivers it with the stalest account above the fold; a re-sort control over a list already ordered by its one stated key adds a mechanism without adding an answer, and §1.10 cautions against building it with no second sort reason named. **B** is the literal reading of the word, which is why this is filed rather than decided silently: a re-sort would be a `searchParams` sort the existing `/admin` pages already shape, with no schema or API change.
+- **Decision owner:** user
+- **Blocks:** — none —
+- **Revises:** ADMIN-001/T1 — the list ships the fixed served order; a resolution to **B** adds a re-sort control to the page
+- **Status:** OPEN. Safe default: the list is served `last_sign_in asc nulls first`, tie-broken by address, so the stalest and never-signed-in accounts are at the top and the design's stated reason for the column is met without a control — not fail-open in any sense, and superseded by a `searchParams` sort with no migration if **B** is chosen.
+
 <a id="CMS-DEC-03"></a>
 ### `CMS-DEC-03` — Which library re-encodes an uploaded image, and whether SVG is sanitised or refused — OPEN
 

@@ -1,13 +1,15 @@
 /**
- * The two mutations an admin makes to somebody else's account (`ADMIN-001`):
- * suspending it, and changing its role.
+ * What an admin does to somebody else's account (`ADMIN-001`): the list of who
+ * can sign in, and the four acts that change one — suspend, role change,
+ * reinstate, erase.
  *
- * Each is one act carrying several writes, and the design is that the writes
- * are one transaction. A suspension that changed the state and failed to end
+ * The list is a plain read and carries none of what follows. Each of the four
+ * is one act carrying several writes, and the design is that the writes are one
+ * transaction. A suspension that changed the state and failed to end
  * the sessions would leave a suspended person signed in for the rest of the
  * day; a role change that changed the role and failed to end the sessions would
- * leave a privilege change that has not happened yet; and either without its
- * audit row is a privileged write that nothing recorded (`SEC-R04`).
+ * leave a privilege change that has not happened yet; and any of them without
+ * its audit row is a privileged write that nothing recorded (`SEC-R04`).
  * `invalidateAllForAccountIn` and `recordAudit` both take a transaction rather
  * than the pool, so a write that fell out of it would not compile.
  *
@@ -26,15 +28,16 @@
  * anything, which is also `false` for an id no account holds — in both cases
  * the answer to the caller is that nothing was written.
  *
- * **Neither act may strand the room or turn on the actor** (`ADMIN-DEC-01`). An
- * admin cannot suspend or demote their own account, and no single act may leave
- * the room with no admin who can sign in; both are refused before anything is
- * written, returning the same `false` a no-op returns. The guard is fail-closed
- * rather than advisory because a suspension is a one-way door in code — nothing
- * restores `active` yet — and no bootstrap creates a first admin, so a room with
- * no active admin is recoverable only from the database.
+ * **No act may strand the room or turn on the actor** (`ADMIN-DEC-01`). An
+ * admin cannot suspend, demote, or erase their own account, and no single act
+ * may leave the room with no admin who can sign in; both are refused before
+ * anything is written, returning the same `false` a no-op returns. The guard is
+ * fail-closed rather than advisory because a room with no admin who can sign in
+ * cannot recover itself — reinstating a suspended admin is an admin act, and no
+ * bootstrap creates a first admin — so a stranded room is recoverable only from
+ * the database.
  *
- * The account row is locked by the update before either operation touches
+ * The account row is locked by the update before suspension touches
  * `invitations`, which is the order the invitation path takes too, so an invite
  * and a suspension racing for one account serialise rather than deadlock.
  *
@@ -51,15 +54,59 @@ import type { Transaction } from 'kysely';
 import { recordAudit } from '../audit/record';
 import { invalidateAllForAccountIn } from '../auth/session';
 import { getDb } from '../db/index';
-import type { AccountRole, Database } from '../db/types';
+import type { AccountRole, AccountState, Database } from '../db/types';
+
+/** One person on the account list, and everything the list says about them. */
+export interface AccountListRow {
+  readonly id: string;
+  readonly email: string;
+  readonly name: string;
+  readonly role: AccountRole;
+  readonly state: AccountState;
+  /** `null` when the person has never signed in. */
+  readonly last_sign_in: Date | null;
+}
+
+/**
+ * Every account, stalest first.
+ *
+ * The order is the point of the list rather than a presentation choice
+ * (`ADMIN-001` §3): last sign-in is what makes a stale account visible — an
+ * investor who has not signed in for a year is either somebody who lost
+ * interest or an account nobody remembered to close — so the list arrives
+ * already asking that question, and an admin who came to answer it reads the
+ * top of the page rather than sorting first.
+ *
+ * `nulls first`, stated rather than left to PostgreSQL's default, which puts
+ * nulls last under `asc`. Never having signed in is the strongest form of the
+ * signal the column exists for, not the absence of one, so it belongs at the
+ * top; the `state` column beside it is what separates an invitation nobody
+ * accepted from a person who stopped coming.
+ *
+ * The address breaks the tie, because it is the one column the schema makes
+ * unique: without a total order two accounts sharing a timestamp — every
+ * account that has never signed in shares one — could swap places between
+ * renders, which is a list that looks wrong while being right.
+ *
+ * It reads no more than the list shows (`DATA-R01`). The password hash and the
+ * row's own timestamps stay in the database.
+ */
+export async function listAccounts(): Promise<AccountListRow[]> {
+  return getDb()
+    .selectFrom('accounts')
+    .select(['id', 'email', 'name', 'role', 'state', 'last_sign_in'])
+    .orderBy('last_sign_in', (order) => order.asc().nullsFirst())
+    .orderBy('email')
+    .execute();
+}
 
 /**
  * Whether `subjectId` is the only admin who can sign in — the safe default for
  * [`ADMIN-DEC-01`](../../docs/decisions-log.md#ADMIN-DEC-01). An act that would
- * leave no such admin is refused by its caller, because `suspendAccount` is a
- * one-way door in code — nothing sets a `suspended` account back to `active`
- * yet — and there is no bootstrap that creates a first admin, so a room with no
- * admin who can act is recoverable only from the database.
+ * leave no such admin is refused by its caller, because a room with no admin who
+ * can act cannot recover itself — reinstating a suspended admin is an admin act,
+ * and there is no bootstrap that creates a first admin — so it is recoverable
+ * only from the database.
  *
  * Active, not merely `admin`: a suspended admin cannot sign in, and reinstating
  * one is itself an admin act, so the count the room depends on is admins who can

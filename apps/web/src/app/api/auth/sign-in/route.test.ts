@@ -28,6 +28,7 @@ import { dirname, join } from 'node:path';
 import { performance } from 'node:perf_hooks';
 import { fileURLToPath } from 'node:url';
 
+import { sql } from 'kysely';
 import { runner } from 'node-pg-migrate';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
@@ -174,6 +175,38 @@ async function accountId(email: string): Promise<string> {
     .executeTakeFirstOrThrow();
 
   return account.id;
+}
+
+async function lastSignIn(email: string): Promise<Date | null> {
+  const account = await getDb()
+    .selectFrom('accounts')
+    .select('last_sign_in')
+    .where('email', '=', email)
+    .executeTakeFirstOrThrow();
+
+  return account.last_sign_in;
+}
+
+async function setLastSignIn(email: string, at: Date | null): Promise<void> {
+  await getDb().updateTable('accounts').set({ last_sign_in: at }).where('email', '=', email).execute();
+}
+
+/**
+ * The database's clock, which is the one the stamp is taken from. The bounds
+ * either side of a sign-in are read from it rather than from `Date.now()`, so a
+ * container whose clock has drifted from the host's fails nothing here — the
+ * assertion is about which statement wrote the value, not about whose clock is
+ * right.
+ */
+async function databaseNow(): Promise<Date> {
+  const { rows } = await sql<{ now: Date }>`select now()`.execute(getDb());
+  const [first] = rows;
+
+  if (first === undefined) {
+    throw new Error('select now() returned no row');
+  }
+
+  return first.now;
 }
 
 async function elapsedMs(attempt: () => Promise<Response>): Promise<number> {
@@ -358,6 +391,47 @@ describe.skipIf(!HAS_DATABASE)('POST /api/auth/sign-in', () => {
       expect(account.password_hash).toMatch(CURRENT_HEAD);
       expect(account.password_hash).not.toBe(AT_THE_OLD_COST);
       expect(account.password_hash).not.toContain(VECTOR_PASSWORD);
+    });
+  });
+
+  describe('the record of when somebody last signed in', () => {
+    it('stamps last_sign_in from the database clock on the path that succeeded', async () => {
+      // Cleared first, so the assertion is about this request rather than about
+      // a stamp an earlier test left: a route that had stopped writing the
+      // column would answer 204 and leave a null behind.
+      await setLastSignIn(ACTIVE, null);
+
+      const before = await databaseNow();
+      const response = await signIn(ACTIVE, PASSWORD);
+      const after = await databaseNow();
+
+      expect(response.status).toBe(204);
+
+      const stamped = await lastSignIn(ACTIVE);
+
+      expect(stamped).not.toBeNull();
+      // Inside the request, both ends: a stamp taken from the process's clock
+      // rather than the database's would sit outside these bounds the moment
+      // the two disagree, and one taken at some other time would too.
+      expect(stamped?.getTime()).toBeGreaterThanOrEqual(before.getTime());
+      expect(stamped?.getTime()).toBeLessThanOrEqual(after.getTime());
+    });
+
+    it.each([
+      ['a wrong password', ACTIVE, WRONG_PASSWORD],
+      ['a suspended account and the right password', SUSPENDED, PASSWORD],
+      ['an invited account that has no password yet', INVITED, PASSWORD],
+    ])('leaves it exactly as it was after %s', async (_case, email, password) => {
+      // A refused attempt is not a sign-in. A column that moved here would name
+      // whoever was guessing as the person who was last in the room, which is
+      // the opposite of what an admin reads the list for.
+      const untouched = new Date('2020-02-29T12:00:00.000Z');
+      await setLastSignIn(email, untouched);
+
+      const response = await signIn(email, password);
+
+      expect(response.status).toBe(401);
+      expect(await lastSignIn(email)).toEqual(untouched);
     });
   });
 

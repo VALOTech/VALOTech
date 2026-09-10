@@ -17,6 +17,15 @@ CREATE TABLE accounts (
   role          text NOT NULL CHECK (role IN ('investor', 'admin')),
   password_hash text,
   state         text NOT NULL DEFAULT 'invited' CHECK (state IN ('invited', 'active', 'suspended')),
+  -- Null means the person has never signed in, which is a state an invited
+  -- account holds and a stale one earns. It is the record's one behavioural
+  -- column, kept because the stale-account problem has no other signal, and it
+  -- goes when the row goes. Stored rather than read from a session, because a
+  -- sign-out deletes the session and the fact has to survive it. It is absent
+  -- from the updated_at trigger's WHEN below, so a sign-in does not restamp
+  -- updated_at; that column tracks changes to the account's defining
+  -- attributes, not every write the row takes.
+  last_sign_in  timestamptz,
   created_at    timestamptz NOT NULL DEFAULT now(),
   updated_at    timestamptz NOT NULL DEFAULT now()
 );
@@ -32,9 +41,19 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+-- The trigger fires only when one of the account's defining attributes changes:
+-- address, name, role or state. So updated_at tracks changes to the account and
+-- not every write it receives. A sign-in writes last_sign_in and a rehash
+-- writes password_hash; both are writes the row takes on its own behalf, so the
+-- WHEN leaves them out and neither restamps updated_at.
 CREATE TRIGGER accounts_set_updated_at
   BEFORE UPDATE ON accounts
-  FOR EACH ROW EXECUTE FUNCTION set_updated_at();
+  FOR EACH ROW
+  WHEN (OLD.email IS DISTINCT FROM NEW.email
+     OR OLD.name IS DISTINCT FROM NEW.name
+     OR OLD.role IS DISTINCT FROM NEW.role
+     OR OLD.state IS DISTINCT FROM NEW.state)
+  EXECUTE FUNCTION set_updated_at();
 
 -- Down Migration
 

@@ -40,12 +40,13 @@ by writing to that contact.
 |---|---|---|
 | Name, e-mail address | To give a named person access to company reporting | Consent, given by accepting an invitation the person asked for or agreed to receive |
 | Role, state | To decide what they may read | Same |
-| Last sign-in, session records | To let the person and an admin see and end sessions | Legitimate interests — security of the account |
+| Last sign-in, session records | To let the person and an admin see and end sessions, and to let an admin find an account nobody is using any more | Legitimate interests — security of the account, and closing access that is no longer needed |
 | What they opened, and when | To show them what is unread; for a deck, to record which version they were shown | Legitimate interests, stated in the notice |
 
-The last row is the one that must be disclosed rather than assumed, because it is
-behavioural and people do not expect it. Its purpose is narrow and it is written
-down: it is not aggregated, not reported to an admin as analytics, and not kept
+The last two rows are behavioural, so they are disclosed rather than assumed:
+last sign-in, whose narrow purpose — letting an admin find an account nobody is
+using — is stated above and nowhere exceeded, and what they opened, which is
+theirs alone, not aggregated, not reported to an admin as analytics, and not kept
 after the account goes.
 
 ### The notice

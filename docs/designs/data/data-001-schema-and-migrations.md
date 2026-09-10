@@ -56,6 +56,7 @@ is a compile error rather than a leak (`DATA-R05`).
 | `role` | `text` not null | `investor` or `admin`, checked by a constraint rather than trusted |
 | `password_hash` | `text` | null until an invitation is accepted |
 | `state` | `text` not null | `invited`, `active`, `suspended` |
+| `last_sign_in` | `timestamptz` | null until the person first signs in; the one behavioural column (`ADMIN-001` §6) |
 | `created_at`, `updated_at` | `timestamptz` not null | UTC, always |
 
 **`sessions`** — server-side, so a sign-out ends a session rather than asking the
@@ -185,7 +186,7 @@ error.
 ## 4. Integration
 
 `INFRA-001` is where these migrations are applied and where the round trip that
-proves them is run. `AUTH-001` reads `accounts` and writes `password_hash`;
+proves them is run. `AUTH-001` reads `accounts` and writes `password_hash` and `last_sign_in`;
 `AUTH-002` reads and writes `sessions`. `CMS-001` is the code shape over
 `content_items`, `content_revisions` and `content_locales`; `CMS-006` is the one
 place `audience` and `content_grants` are read. `SEC-002` owns the `audit`
@@ -200,8 +201,11 @@ archive to satisfy a staff member's erasure request.
 
 ## 5. Cross-cutting compliance
 
-- **`DATA-R01`** — the schema holds a name, an address, a role and a state. There
-  is no column for anything else, so there is nothing to collect by accident.
+- **`DATA-R01`** — the schema holds a name, an address, a role, a state, and one
+  behavioural timestamp: when the person last signed in, kept for the
+  stale-account question `ADMIN-001` §6 states and disclosed in `LEGAL-SG-001`
+  §3. There is no column for anything else, so there is nothing to collect by
+  accident.
 - **`DATA-R03`** — erasure is `delete from accounts`, and every dependent row goes
   with it by cascade. The audit trail keeps ids, actions and timestamps.
 - **`DATA-R05`** — no repository function exists that does not take the reader's

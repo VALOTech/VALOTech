@@ -39,7 +39,7 @@ Every table, and what it holds about a person:
 
 | Table | Personal data | On erasure |
 |---|---|---|
-| `accounts` | name, address | **deleted** — the row itself |
+| `accounts` | name, address, last sign-in | **deleted** — the row itself |
 | `sessions` | last-seen time | cascade |
 | `invitations` | — (account id, token hash) | cascade |
 | `content_grants` | which decks (`account_id`); `granted_by` the granter | cascade; `granted_by` **set null** |

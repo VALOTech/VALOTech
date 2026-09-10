@@ -1,0 +1,29 @@
+/* The account list (ADMIN-001/T1): a read-only table of six to fifty people,
+   plain for the same reason the audit view is — it is scanned for one row. */
+
+.accounts {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  margin-top: 1rem;
+}
+
+.accounts th,
+.accounts td {
+  text-align: left;
+  padding: 0.4rem 0.6rem;
+  border-bottom: 1px solid #e4e4ea;
+  vertical-align: top;
+}
+
+.accounts th {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* The timestamps line up digit under digit, so a column scanned for the oldest
+   one is read by eye rather than character by character. */
+.when {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
