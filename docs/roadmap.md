@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_295 tasks in the plan, 136 closed, 159 outstanding._
+_295 tasks in the plan, 139 closed, 156 outstanding._
 
 ---
 
@@ -73,7 +73,7 @@ _59/69 closed (85%) · 10 outstanding — 6 buildable now · 3 waiting on the ow
 
 _The machinery every kind of writing shares — the editor, the media, the locale states, the audience rule, publishing, search — plus the account, configuration and logging surfaces an operator needs before anything is published. Building it once is the whole reason a report, an update and a deck are three navigations over one system rather than three systems._
 
-_31/63 closed (49%) · 32 outstanding — 30 buildable now · 2 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_34/63 closed (53%) · 29 outstanding — 27 buildable now · 2 waiting on the owner · 0 external residue · 0 parked to a later wave._
 
 - **ADMIN-001** · Account management — 5/8 closed · depth 5
   - `[ ] ADMIN-001/T2` — The person page: identity, access, sessions, actions
@@ -81,12 +81,9 @@ _31/63 closed (49%) · 32 outstanding — 30 buildable now · 2 waiting on the o
   - `[ ] ADMIN-001/T6` — Creation issues an invitation; no admin ever sets another person's password
 
 - **CFG-001** · Runtime configuration — 6/6 closed
-- **CMS-003** · Media library — 0/7 closed · depth 5
-  - `[ ] CMS-003/T1` — Upload sniffs the type from the bytes, and refuses anything outside the accepted set
-  - `[ ] CMS-003/T4` — Storage keyed by content hash, so a duplicate upload is one row
+- **CMS-003** · Media library — 3/7 closed · depth 5
   - `[ ] CMS-003/T5` — Serving joins through references and composes the audience predicate, answering `404` on no match
   - `[ ] CMS-003/T6` — Cache headers follow the audience; nothing gated is cacheable
-  - `[ ] CMS-003/T7` — Deletion is refused while a reference exists, and is audited when it is not
   - `[!] CMS-003/T2` — Raster images are re-encoded, so EXIF and its location do not survive  · _pending-decision_ · **Blocked by:** pending-decision: CMS-DEC-03 — re-encoding needs an image library, and which one is a new dependency the owner chooses; the safe default refuses rast…
   - `[!] CMS-003/T3` — SVG is parsed and stripped to shape and text, or refused  · _pending-decision_ · **Blocked by:** pending-decision: CMS-DEC-03 — sanitising SVG needs a library, or the design's refuse-outright fallback; the choice is the owner's, and the safe defa…
 
