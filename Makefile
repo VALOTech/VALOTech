@@ -33,7 +33,7 @@ serve: ## Serve the gateway locally with no-store headers, on $(PORT)
 # --- Gates ----------------------------------------------------------------
 
 .PHONY: check
-check: check-site check-content-access check-decisions check-designs check-tasks check-roadmap check-identifiers check-log check-refs ## Run every gate this repository has
+check: check-site check-content-access check-erasure check-decisions check-designs check-tasks check-roadmap check-identifiers check-log check-refs ## Run every gate this repository has
 
 .PHONY: check-site
 check-site: check-copy check-brand check-comments check-stream-guard ## Only the gates that guard what main publishes
@@ -49,6 +49,10 @@ check-brand: ## The brand kit still publishes the stylesheet's own values
 .PHONY: check-content-access
 check-content-access: ## Only the content module names content_items, so every read composes the predicate
 	@$(PYTHON) scripts/check-content-access.py
+
+.PHONY: check-erasure
+check-erasure: ## The erasure manifest names every table and matches every accounts on-delete in the schema
+	@$(PYTHON) scripts/check-erasure-manifest.py
 
 .PHONY: check-decisions
 check-decisions: ## The decision register holds its contract
