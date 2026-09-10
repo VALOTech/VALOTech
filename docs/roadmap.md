@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_295 tasks in the plan, 130 closed, 165 outstanding._
+_295 tasks in the plan, 132 closed, 163 outstanding._
 
 ---
 
@@ -73,7 +73,7 @@ _59/69 closed (85%) · 10 outstanding — 6 buildable now · 3 waiting on the ow
 
 _The machinery every kind of writing shares — the editor, the media, the locale states, the audience rule, publishing, search — plus the account, configuration and logging surfaces an operator needs before anything is published. Building it once is the whole reason a report, an update and a deck are three navigations over one system rather than three systems._
 
-_25/63 closed (39%) · 38 outstanding — 36 buildable now · 2 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_27/63 closed (42%) · 36 outstanding — 34 buildable now · 2 waiting on the owner · 0 external residue · 0 parked to a later wave._
 
 - **ADMIN-001** · Account management — 4/8 closed · depth 5
   - `[ ] ADMIN-001/T1` — The list, sortable by last sign-in, with role and state
@@ -114,12 +114,10 @@ _25/63 closed (39%) · 38 outstanding — 36 buildable now · 2 waiting on the o
   - `[ ] CMS-002/T6` — Explicit save, a visible unsaved state, and a local copy offered back after a closed tab
   - `[ ] CMS-002/T7` — One schema module validates in the browser and on the server, and the server's error names the block and the field
 
-- **CMS-004** · Preview, publish and withdraw — 0/6 closed · depth 6
+- **CMS-004** · Preview, publish and withdraw — 2/6 closed · depth 6
   - `[ ] CMS-004/T1` — Preview renders through the reader's own components and evaluates the audience rule as the chosen role
   - `[ ] CMS-004/T2` — Preview is admin-only, with no token and no shareable link
-  - `[ ] CMS-004/T3` — Publish validates, moves the pointer and audits, in one transaction, taking an explicit revision
   - `[ ] CMS-004/T4` — The confirmation names what is replaced and how many locales will fall back
-  - `[ ] CMS-004/T5` — Withdraw returns to the previous published revision, or states plainly that nothing will be visible
   - `[ ] CMS-004/T6` — A public item's cache is purged on publish and on withdraw
 
 - **CMS-007** · Search and filter in the room — 0/6 closed · depth 6
