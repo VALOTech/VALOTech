@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_295 tasks in the plan, 151 closed, 144 outstanding._
+_295 tasks in the plan, 152 closed, 143 outstanding._
 
 ---
 
@@ -116,7 +116,7 @@ _42/63 closed (66%) · 21 outstanding — 18 buildable now · 3 waiting on the o
 
 _The three content types, and the compliance posture that governs what is held about the people reading them. Updates come before decks, and not only because they are the simpler shape of the same problem: they are what the room is for. An investor signs in to find out what has happened since they last looked._
 
-_4/59 closed (6%) · 55 outstanding — 55 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_5/59 closed (8%) · 54 outstanding — 54 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
 
 - **DECK-001** · Deck authoring — 0/5 closed · depth 7
   - `[ ] DECK-001/T1` — Sections derived from level-2 headings, with the block array the single source
@@ -185,8 +185,7 @@ _4/59 closed (6%) · 55 outstanding — 55 buildable now · 0 waiting on the own
   - `[ ] POST-002/T5` — Narrowing states what it cannot recall; widening states what becomes public
   - `[ ] POST-002/T6` — Unread marking from the per-account read state, and a paging control rather than infinite scroll
 
-- **RPT-002** · Report periods and archive — 0/6 closed · depth 8
-  - `[ ] RPT-002/T1` — A partial unique index gives one published report per period, and drafts are exempt
+- **RPT-002** · Report periods and archive — 1/6 closed · depth 8
   - `[ ] RPT-002/T2` — Publishing into a taken period fails with the report that holds it and the two real choices
   - `[ ] RPT-002/T3` — The archive lists by period, groups by year, and shows a period with no report as a gap
   - `[ ] RPT-002/T4` — The room's current report is the most recent period the reader may read, not the most recent publication

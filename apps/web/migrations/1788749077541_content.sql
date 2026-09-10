@@ -40,6 +40,17 @@ CREATE INDEX content_items_audience_published_idx
   ON content_items (audience)
   WHERE current_revision_id IS NOT NULL;
 
+-- One published report per period (RPT-002): "the Q3 report" must name one
+-- document, made true in the database rather than in a convention that holds
+-- until two admins work the same afternoon. Partial on current_revision_id, so a
+-- draft replacement for a live period is legitimate and does not collide with the
+-- one that is published; on the item and not the revision, so a corrected report
+-- is a new revision of the same item (CMS-R01) rather than a second item, and
+-- withdrawing the published one frees the period at once.
+CREATE UNIQUE INDEX one_published_report_per_period
+  ON content_items (type, period)
+  WHERE type = 'report' AND current_revision_id IS NOT NULL;
+
 -- The searchable text of a block array, flattened to one string: headings,
 -- paragraph and quote text, list items, captions and alternative text. It names
 -- the text-bearing fields rather than every string, so a media id or a mark
