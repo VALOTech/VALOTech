@@ -58,10 +58,15 @@ CREATE UNIQUE INDEX one_published_report_per_period
 -- column below calls it, and returns text rather than a tsvector because the
 -- configuration that tokenises it -- 'simple', not a per-language stemmer for a
 -- corpus in twenty languages -- is the index's choice, made at the call site.
+-- A value that is not a JSON array yields no text rather than an error: a
+-- generated column runs on every write, so it must not throw on a body some
+-- other path stored in a shape validateBlocks would have refused.
 CREATE FUNCTION blocks_text(blocks jsonb) RETURNS text
   LANGUAGE sql IMMUTABLE PARALLEL SAFE AS $$
   SELECT string_agg(piece, ' ')
-  FROM jsonb_array_elements(coalesce(blocks, '[]'::jsonb)) AS block
+  FROM jsonb_array_elements(
+    CASE WHEN jsonb_typeof(blocks) = 'array' THEN blocks ELSE '[]'::jsonb END
+  ) AS block
   CROSS JOIN LATERAL (
     SELECT block->>'text'
     UNION ALL SELECT block->>'caption'
@@ -84,6 +89,12 @@ $$;
 -- cascading, because a published report is the company's document and
 -- cascading it would delete an investor's archive to satisfy a staff member's
 -- erasure request.
+--
+-- version is a deck's publication number (DECK-002): a monotonic integer per
+-- deck assigned when a deck revision is first published, null for a draft and
+-- for a report or an update, and never reused -- a withdrawn version leaves a
+-- hole, so the version a grantee was shown keeps resolving for as long as anyone
+-- might ask (CMS-R01).
 CREATE TABLE content_revisions (
   id           uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   item_id      uuid NOT NULL REFERENCES content_items(id) ON DELETE CASCADE,
@@ -91,6 +102,7 @@ CREATE TABLE content_revisions (
   author_id    uuid REFERENCES accounts(id) ON DELETE SET NULL,
   created_at   timestamptz NOT NULL DEFAULT now(),
   published_at timestamptz,
+  version      integer,
   search       tsvector GENERATED ALWAYS AS (to_tsvector('simple', blocks_text(blocks))) STORED
 );
 

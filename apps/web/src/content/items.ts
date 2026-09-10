@@ -27,10 +27,12 @@ import type {
 import { validateBlocks } from './blocks';
 
 export type ContentItem = Selectable<ContentItemsTable>;
-// `search` is a database-internal full-text index (`CMS-007`): part of the table
-// for the schema gate and matched in raw SQL by the search query, but never a
-// value a caller reads, so the revision a caller holds omits it.
-export type ContentRevision = Omit<Selectable<ContentRevisionsTable>, 'search'>;
+// `search` is a database-internal full-text index (`CMS-007`), matched in raw
+// SQL by the search query; `version` is a deck's publication number (`DECK-002`)
+// that `publish` sets and only a deck read consults. Both are on the table for
+// the schema gate but are not values a general caller holds, so the revision a
+// caller reads omits them until a reader that needs `version` (`DECK-003`) adds it.
+export type ContentRevision = Omit<Selectable<ContentRevisionsTable>, 'search' | 'version'>;
 
 /** A new content item. `audience` defaults to `investor` in the database. */
 export interface NewItem {

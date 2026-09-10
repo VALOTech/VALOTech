@@ -21,19 +21,59 @@ import { type Transaction, sql } from 'kysely';
 
 import { recordAudit } from '../audit/record';
 import { getDb } from '../db/index';
-import type { Database } from '../db/types';
+import type { ContentType, Database } from '../db/types';
 
 import { validateBlocks } from './blocks';
 import type { ContentItem } from './items';
 
-/** The item's id and pointer, locked so two publications of it cannot interleave. */
+/** The item's id, pointer and type, locked so two publications of it cannot interleave. */
 async function lockItem(trx: Transaction<Database>, itemId: string) {
   return trx
     .selectFrom('content_items')
-    .select(['id', 'current_revision_id'])
+    .select(['id', 'current_revision_id', 'type'])
     .where('id', '=', itemId)
     .forUpdate()
     .executeTakeFirstOrThrow();
+}
+
+/**
+ * The version a deck revision takes at publication (`DECK-002/T1`): the deck's
+ * highest version so far plus one, assigned only to a deck and only the first
+ * time a revision is published. A re-publish keeps the version it was shown
+ * under, so "the version they read" keeps resolving (`CMS-R01`); a report or an
+ * update takes none, so the column stays null and no non-deck publish reads it.
+ * The item-row lock `lockItem` holds serialises two publications of one deck, so
+ * the maximum is read under it and two revisions cannot take the same number.
+ * A withdrawal never clears a version, so a withdrawn one leaves a hole rather
+ * than being reused.
+ */
+async function versionForPublish(
+  trx: Transaction<Database>,
+  itemId: string,
+  revisionId: string,
+  type: ContentType,
+): Promise<{ version: number } | Record<string, never>> {
+  if (type !== 'deck') {
+    return {};
+  }
+
+  const revision = await trx
+    .selectFrom('content_revisions')
+    .select('version')
+    .where('id', '=', revisionId)
+    .executeTakeFirstOrThrow();
+
+  if (revision.version !== null) {
+    return {};
+  }
+
+  const { next } = await trx
+    .selectFrom('content_revisions')
+    .select(sql<number>`coalesce(max(version), 0) + 1`.as('next'))
+    .where('item_id', '=', itemId)
+    .executeTakeFirstOrThrow();
+
+  return { version: next };
 }
 
 /**
@@ -46,7 +86,7 @@ export async function publish(itemId: string, revisionId: string, actorId: strin
   return getDb()
     .transaction()
     .execute(async (trx) => {
-      await lockItem(trx, itemId);
+      const locked = await lockItem(trx, itemId);
 
       const revision = await trx
         .selectFrom('content_revisions')
@@ -61,9 +101,11 @@ export async function publish(itemId: string, revisionId: string, actorId: strin
 
       validateBlocks(revision.blocks);
 
+      const versionSet = await versionForPublish(trx, itemId, revisionId, locked.type);
+
       await trx
         .updateTable('content_revisions')
-        .set({ published_at: sql`now()` })
+        .set({ published_at: sql`now()`, ...versionSet })
         .where('id', '=', revisionId)
         .execute();
 

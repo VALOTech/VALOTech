@@ -17,6 +17,7 @@ import { randomUUID } from 'node:crypto';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { sql } from 'kysely';
 import { runner } from 'node-pg-migrate';
 import { Pool } from 'pg';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
@@ -177,6 +178,19 @@ describe.skipIf(!HAS_DATABASE)('search over published content (CMS-007/T1, T2, T
     it('does not index a mark href or a figure data cell — only the named text fields', async () => {
       expect(idsOf(await search('romeohref', admin))).not.toContain(id.fields);
       expect(idsOf(await search('romeodata', admin))).not.toContain(id.fields);
+    });
+
+    it('tolerates a non-array blocks value on the write rather than erroring it (a generated column must not throw)', async () => {
+      const item = await createItem({ type: 'update', slug: `nonarray-${randomUUID()}`, title: 'nonarray', kind: 'progress' });
+      // A body in a shape validateBlocks would refuse, written directly: the
+      // generated search column computes over it and stores an empty vector
+      // rather than failing the insert with "cannot extract elements from an object".
+      await expect(
+        getDb()
+          .insertInto('content_revisions')
+          .values({ item_id: item.id, blocks: sql`'{"lang":"en"}'::jsonb` })
+          .execute(),
+      ).resolves.toBeDefined();
     });
   });
 

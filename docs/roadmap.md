@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_295 tasks in the plan, 153 closed, 142 outstanding._
+_295 tasks in the plan, 154 closed, 141 outstanding._
 
 ---
 
@@ -116,7 +116,7 @@ _42/63 closed (66%) · 21 outstanding — 18 buildable now · 3 waiting on the o
 
 _The three content types, and the compliance posture that governs what is held about the people reading them. Updates come before decks, and not only because they are the simpler shape of the same problem: they are what the room is for. An investor signs in to find out what has happened since they last looked._
 
-_6/59 closed (10%) · 53 outstanding — 53 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_7/59 closed (11%) · 52 outstanding — 52 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
 
 - **DECK-001** · Deck authoring — 0/5 closed · depth 7
   - `[ ] DECK-001/T1` — Sections derived from level-2 headings, with the block array the single source
@@ -157,8 +157,7 @@ _6/59 closed (10%) · 53 outstanding — 53 buildable now · 0 waiting on the ow
   - `[ ] RPT-001/T4` — The progress board's current values are shown beside the section that narrates them
   - `[ ] RPT-001/T5` — Making a report public states in words what that means
 
-- **DECK-002** · Deck versioning and publishing — 0/6 closed · depth 8
-  - `[ ] DECK-002/T1` — A monotonic version assigned at publication, never reused, holes kept
+- **DECK-002** · Deck versioning and publishing — 1/6 closed · depth 8
   - `[ ] DECK-002/T2` — An optional pinned version on a grant; unpinned readers get the current one
   - `[ ] DECK-002/T3` — An unpinned reader is told once when the version changed, with what changed by section
   - `[ ] DECK-002/T4` — A read record per account per version, deleted with the account

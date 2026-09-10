@@ -201,6 +201,7 @@ const SELECTABLE_SAMPLES: { readonly [T in keyof Database]: Selectable<Database[
     author_id: null,
     created_at: AT,
     published_at: null,
+    version: null,
     search: "'line':4 'one':6 'quarter':2",
   },
   content_locales: {

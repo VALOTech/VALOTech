@@ -180,6 +180,10 @@ export interface ContentRevisionsTable {
   author_id: string | null;
   created_at: Generated<Date>;
   published_at: Date | null;
+  // A deck's monotonic publication number (DECK-002), assigned at publish and
+  // null for a draft and for a report or an update. `Generated` because an
+  // insert leaves it out and publish sets it; only a deck's publish reads it.
+  version: Generated<number | null>;
   // A generated `tsvector` over the flattened block text (CMS-007). The database
   // fills it and refuses a supplied value, so it is `Generated`; no query selects
   // it as a value -- the search predicate matches it with `@@` in raw SQL.
@@ -388,6 +392,7 @@ export const SCHEMA: Readonly<Record<keyof Database, TableSpec>> = {
       { name: 'author_id', type: 'uuid', notNull: false, hasDefault: false, unique: false },
       { name: 'created_at', type: 'timestamptz', notNull: true, hasDefault: true, unique: false },
       { name: 'published_at', type: 'timestamptz', notNull: false, hasDefault: false, unique: false },
+      { name: 'version', type: 'integer', notNull: false, hasDefault: false, unique: false },
       { name: 'search', type: 'tsvector', notNull: false, hasDefault: false, unique: false },
     ],
     primaryKey: ['id'],
