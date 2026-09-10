@@ -19,15 +19,23 @@ The guard has to be a statement in the module body. Spliced into the docstring
 it is prose, and prose reconfigures nothing -- which is why the check reads the
 parsed tree rather than grepping for the word.
 
-So there are two rules. Presence: a module that can print a character cp1252
-cannot hold carries the guard in its body. Placement: the guard's opening
-statement never sits at column 0 inside the module docstring. A bulk pass once
-put it there across the ecosystem, splitting a sentence in half -- and where no
-later commit added the real one below the imports, the module runs unguarded
-while the presence rule stays silent, because a module carrying no non-ASCII
-literal of its own is never asked whether it is guarded. Column 0 is the whole
-discriminator: a block quoted in prose is indented, as the one above is, and an
-indented quotation is documentation.
+So there are two rules. Presence: a module that prints carries the guard in its
+body. Placement: the guard's opening statement never sits at column 0 inside the
+module docstring.
+
+Presence asks of every printing module rather than only of one holding non-ASCII
+text in its own source, because the characters that break a console usually arrive
+at run time from somewhere else -- a ledger row, a design title, a locale catalogue
+entry -- and a module whose own literals are all ASCII is the exact shape that
+escaped the narrower rule and shipped unguarded under a green run. The guard is one
+statement and a no-op wherever the stream already encodes UTF-8, so what it costs is
+a line and what it protects is the module's next print.
+
+Placement exists because a bulk pass once wrote the guard's text into docstrings
+across the ecosystem, splitting a sentence in half, and where no later commit added
+the real statement below the imports the module ran unguarded while reading as
+though it did not. Column 0 is the whole discriminator: a block quoted in prose is
+indented, as the one above is, and an indented quotation is documentation.
 
 Exit 0 when every script that needs the guard carries it in its body and none
 carries a copy in its docstring, 1 on any violation, 2 when the scripts
@@ -66,32 +74,51 @@ GUARD_SRC = (
 GUARD_HEAD = GUARD_SRC.splitlines()[0]
 
 
-def needs_guard(tree: ast.Module, doc: str) -> bool:
-    """True when the module both prints and carries a non-ASCII literal.
+def needs_guard(tree: ast.Module) -> bool:
+    """True when the module calls `print`.
 
-    The docstring is excluded deliberately: it is never written to a stream, so a
-    module whose only non-ASCII text is its own prose cannot fail this way.
+    Nothing narrower survives contact. A module whose own literals are all ASCII
+    still prints whatever it read from a file, and that is where the character a
+    cp1252 console cannot encode usually comes from. A module that never prints has
+    nothing to guard and is never asked.
     """
-    prints = any(isinstance(n, ast.Name) and n.id == "print" for n in ast.walk(tree))
-    non_ascii = any(
-        isinstance(n, ast.Constant)
-        and isinstance(n.value, str)
-        and n.value is not doc
-        and any(ord(c) > 127 for c in n.value)
-        for n in ast.walk(tree)
-    )
-    return prints and non_ascii
+    return any(isinstance(n, ast.Name) and n.id == "print" for n in ast.walk(tree))
+
+
+def reconfigures(node: ast.AST) -> bool:
+    """True when a real call to `.reconfigure` sits under node, above any `def`.
+
+    The walk stops at every `def` and `class`, because a guard inside a function
+    runs when that function is called, which is not the same promise as running at
+    import. It tests for an `ast.Call`, not for the word: the remedy this gate
+    prints, and every docstring quoting the guard, are string constants, and a rule
+    that read text would take them for the thing itself.
+    """
+    stack = [node]
+    while stack:
+        current = stack.pop()
+        if isinstance(current, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+            continue
+        if (
+            isinstance(current, ast.Call)
+            and isinstance(current.func, ast.Attribute)
+            and current.func.attr == "reconfigure"
+        ):
+            return True
+        stack.extend(ast.iter_child_nodes(current))
+    return False
 
 
 def has_guard(tree: ast.Module) -> bool:
-    """True when a top-level `if` reconfigures the streams.
+    """True when a module-body statement reconfigures a stream at import.
 
-    Only `tree.body` is walked. A guard inside a function runs when that function
-    is called, which is not the same promise as running at import.
+    Within a module-body statement the shape is free, because what matters is that
+    the call runs before anything prints. The estate writes it as an `if hasattr`
+    block, as a `for` over both streams, and as a bare call, and all three
+    reconfigure; a rule that admitted only the first would report two sound modules
+    as unguarded and teach its reader to work around it.
     """
-    return any(
-        isinstance(n, ast.If) and "reconfigure" in ast.unparse(n) for n in tree.body
-    )
+    return any(reconfigures(n) for n in tree.body)
 
 
 def spliced(doc: str) -> list[int]:
@@ -133,7 +160,7 @@ def unguarded(root: pathlib.Path) -> tuple[list[str], list[str], list[str]]:
             unparsable.append(f"{path.relative_to(root).as_posix()}: {err}")
             continue
         doc = ast.get_docstring(tree, clean=False) or ""
-        if needs_guard(tree, doc) and not has_guard(tree):
+        if needs_guard(tree) and not has_guard(tree):
             violations.append(path.relative_to(root).as_posix())
         lines = spliced(doc)
         if lines:
@@ -154,14 +181,17 @@ GUARD_QUOTED = "".join(f"    {line}\n" for line in GUARD_SRC.splitlines())
 SELFTEST_CASES = [
     ("prints a non-ASCII literal, no guard", 'print("a — b")\n', True, False),
     ("prints a non-ASCII literal, guarded", "import sys\n" + GUARD_SRC + 'print("a — b")\n', False, False),
-    ("prints, but every literal is ASCII", 'print("plain")\n', False, False),
+    ("prints only ASCII, and prints what it read from a file", 'print(open("f").read())\n', True, False),
     ("non-ASCII literal, never prints", 'X = "a — b"\n', False, False),
-    ("non-ASCII only in the docstring", '"""an em dash — here."""\nprint("plain")\n', False, False),
+    ("prints only ASCII, guarded", "import sys\n" + GUARD_SRC + 'print("plain")\n', False, False),
+    ("guarded by a loop over both streams", 'import sys\nfor stream in (sys.stdout, sys.stderr):\n    if hasattr(stream, "reconfigure"):\n        stream.reconfigure(encoding="utf-8", errors="replace")\nprint("plain")\n', False, False),
+    ("guarded by a bare module-level call", 'import sys\nsys.stdout.reconfigure(encoding="utf-8", errors="replace")\nprint("plain")\n', False, False),
+    ("the remedy printed as advice is a string, not a call", 'print("  sys.stdout.reconfigure(encoding=\\"utf-8\\")")\n', True, False),
     ("guard sits inside a function, so it does not run at import", 'import sys\ndef f():\n    ' + GUARD_SRC.replace("\n", "\n    ").rstrip() + '\nprint("a — b")\n', True, False),
     ("guard spliced into the docstring is prose", '"""' + GUARD_SRC + '"""\nprint("a — b")\n', True, True),
     ("non-ASCII reaches the stream through an f-string", 'v = 1\nprint(f"{v} · ok")\n', True, False),
     ("a live guard and a copy spliced into the docstring", '"""Prose.\n\n' + GUARD_SRC + '\nMore prose.\n"""\nimport sys\n' + GUARD_SRC + 'print("a — b")\n', False, True),
-    ("the guard exists only in the docstring, so nothing runs it", '"""Prose.\n\n' + GUARD_SRC + '\nMore prose.\n"""\nprint("plain")\n', False, True),
+    ("the guard exists only in the docstring, so nothing runs it", '"""Prose.\n\n' + GUARD_SRC + '\nMore prose.\n"""\nprint("plain")\n', True, True),
     ("the docstring quotes the guard indented, which is documentation", '"""Prose.\n\n' + GUARD_QUOTED + '\nMore prose.\n"""\nimport sys\n' + GUARD_SRC + 'print("a — b")\n', False, False),
 ]
 
