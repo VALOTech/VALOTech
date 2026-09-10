@@ -217,6 +217,7 @@ const SELECTABLE_SAMPLES: { readonly [T in keyof Database]: Selectable<Database[
     account_id: ID,
     granted_at: AT,
     granted_by: null,
+    pinned_version: null,
   },
   audit: {
     id: '1',

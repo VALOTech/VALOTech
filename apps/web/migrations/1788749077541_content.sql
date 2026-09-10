@@ -174,11 +174,17 @@ CREATE TABLE content_locales (
 -- granted_by is set null on erasure and account_id cascades: the first records
 -- an act an admin performed on the company's behalf, the second is a fact about
 -- the person being erased.
+--
+-- pinned_version is DECK-002's optional pin: null means the grantee reads the
+-- current published deck version, an integer names the deck version they read
+-- whatever has been published since -- for a deck sent into a diligence process,
+-- where the document under discussion must not move under the reader.
 CREATE TABLE content_grants (
   item_id    uuid NOT NULL REFERENCES content_items(id) ON DELETE CASCADE,
   account_id uuid NOT NULL REFERENCES accounts(id) ON DELETE CASCADE,
   granted_at timestamptz NOT NULL DEFAULT now(),
   granted_by uuid REFERENCES accounts(id) ON DELETE SET NULL,
+  pinned_version integer,
   PRIMARY KEY (item_id, account_id)
 );
 

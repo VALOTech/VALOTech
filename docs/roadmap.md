@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_295 tasks in the plan, 154 closed, 141 outstanding._
+_295 tasks in the plan, 156 closed, 139 outstanding._
 
 ---
 
@@ -116,7 +116,7 @@ _42/63 closed (66%) · 21 outstanding — 18 buildable now · 3 waiting on the o
 
 _The three content types, and the compliance posture that governs what is held about the people reading them. Updates come before decks, and not only because they are the simpler shape of the same problem: they are what the room is for. An investor signs in to find out what has happened since they last looked._
 
-_7/59 closed (11%) · 52 outstanding — 52 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_9/59 closed (15%) · 50 outstanding — 50 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
 
 - **DECK-001** · Deck authoring — 0/5 closed · depth 7
   - `[ ] DECK-001/T1` — Sections derived from level-2 headings, with the block array the single source
@@ -157,12 +157,10 @@ _7/59 closed (11%) · 52 outstanding — 52 buildable now · 0 waiting on the ow
   - `[ ] RPT-001/T4` — The progress board's current values are shown beside the section that narrates them
   - `[ ] RPT-001/T5` — Making a report public states in words what that means
 
-- **DECK-002** · Deck versioning and publishing — 1/6 closed · depth 8
-  - `[ ] DECK-002/T2` — An optional pinned version on a grant; unpinned readers get the current one
+- **DECK-002** · Deck versioning and publishing — 3/6 closed · depth 8
   - `[ ] DECK-002/T3` — An unpinned reader is told once when the version changed, with what changed by section
   - `[ ] DECK-002/T4` — A read record per account per version, deleted with the account
   - `[ ] DECK-002/T5` — The publish confirmation names every investor who will see the new version
-  - `[ ] DECK-002/T6` — Withdrawal does not break a pin to the withdrawn version
 
 - **LEGAL-GLOBAL-001** · GDPR posture for EU investors — 0/5 closed · depth 8
   - `[ ] LEGAL-GLOBAL-001/T1` — The notice carries the additional GDPR statements, in twenty locales

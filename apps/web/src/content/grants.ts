@@ -20,17 +20,25 @@ import { recordAudit } from '../audit/record';
 import { getDb } from '../db/index';
 
 /**
- * Grant `accountId` access to `itemId`. Returns whether a grant was created —
- * `false` when one already existed, in which case nothing is written and
- * nothing is recorded.
+ * Grant `accountId` access to `itemId`, optionally pinned to a deck version
+ * (`DECK-002/T2`) — `null`, the default, leaves the grantee on the current
+ * published version, while an integer holds them to that version whatever is
+ * published since. Returns whether a grant was created — `false` when one already
+ * existed, in which case nothing is written and nothing is recorded, so
+ * re-pinning an existing grant is not this function's job (`DECK-004`).
  */
-export async function addGrant(itemId: string, accountId: string, grantedBy: string): Promise<boolean> {
+export async function addGrant(
+  itemId: string,
+  accountId: string,
+  grantedBy: string,
+  pinnedVersion: number | null = null,
+): Promise<boolean> {
   return getDb()
     .transaction()
     .execute(async (trx) => {
       const created = await trx
         .insertInto('content_grants')
-        .values({ item_id: itemId, account_id: accountId, granted_by: grantedBy })
+        .values({ item_id: itemId, account_id: accountId, granted_by: grantedBy, pinned_version: pinnedVersion })
         .onConflict((oc) => oc.columns(['item_id', 'account_id']).doNothing())
         .returning('account_id')
         .executeTakeFirst();

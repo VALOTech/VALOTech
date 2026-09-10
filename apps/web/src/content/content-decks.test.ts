@@ -19,9 +19,12 @@ import { runner } from 'node-pg-migrate';
 import { Pool } from 'pg';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
+import type { Actor } from '../auth/gate';
 import { closeDb, getDb } from '../db/index';
 
 import type { Block } from './blocks';
+import { deckRevisionFor } from './decks';
+import { addGrant } from './grants';
 import { createItem, saveDraft } from './items';
 import { publish, withdraw } from './publish';
 
@@ -83,6 +86,15 @@ describe.skipIf(!HAS_DATABASE)('a deck publication version (DECK-002/T1)', () =>
       .where('id', '=', revisionId)
       .executeTakeFirstOrThrow();
     return row.version;
+  }
+
+  async function investor(email: string): Promise<Actor> {
+    const row = await getDb()
+      .insertInto('accounts')
+      .values({ email, name: email, role: 'investor', state: 'active' })
+      .returning(['id', 'role'])
+      .executeTakeFirstOrThrow();
+    return { id: row.id, role: row.role };
   }
 
   beforeAll(async () => {
@@ -150,5 +162,58 @@ describe.skipIf(!HAS_DATABASE)('a deck publication version (DECK-002/T1)', () =>
     const update = await createItem({ type: 'update', slug: `u-${randomUUID()}`, title: 'An update', kind: 'progress' });
     const revision = await publishRevision(update.id, 'news');
     expect(await versionOf(revision)).toBeNull();
+  });
+
+  describe('a pinned grant (DECK-002/T2, T6)', () => {
+    it('stores the pin on the grant, and null when unpinned', async () => {
+      const deck = await aDeck();
+      await publishRevision(deck, 'v1');
+      const pinned = await investor(`pin-${randomUUID()}@example.test`);
+      const unpinned = await investor(`nopin-${randomUUID()}@example.test`);
+      await addGrant(deck, pinned.id, authorId, 1);
+      await addGrant(deck, unpinned.id, authorId);
+
+      const rows = await getDb()
+        .selectFrom('content_grants')
+        .select(['account_id', 'pinned_version'])
+        .where('item_id', '=', deck)
+        .execute();
+      expect(rows.find((r) => r.account_id === pinned.id)?.pinned_version).toBe(1);
+      expect(rows.find((r) => r.account_id === unpinned.id)?.pinned_version).toBeNull();
+    });
+
+    it('serves a pinned grantee their version and an unpinned grantee the current one', async () => {
+      const deck = await aDeck();
+      await publishRevision(deck, 'v1'); // v1 current
+      const pinned = await investor(`pin-${randomUUID()}@example.test`);
+      const unpinned = await investor(`nopin-${randomUUID()}@example.test`);
+      await addGrant(deck, pinned.id, authorId, 1);
+      await addGrant(deck, unpinned.id, authorId);
+      await publishRevision(deck, 'v2'); // v2 current now
+
+      expect((await deckRevisionFor(deck, pinned))?.version).toBe(1);
+      expect((await deckRevisionFor(deck, unpinned))?.version).toBe(2);
+    });
+
+    it('keeps a pin resolving after the pinned version is withdrawn (T6)', async () => {
+      const deck = await aDeck();
+      await publishRevision(deck, 'v1');
+      await publishRevision(deck, 'v2'); // v2 current
+      const pinned = await investor(`pin-${randomUUID()}@example.test`);
+      await addGrant(deck, pinned.id, authorId, 2);
+
+      await withdraw(deck, authorId); // pointer back to v1; v2's revision survives
+
+      expect((await deckRevisionFor(deck, pinned))?.version).toBe(2);
+    });
+
+    it('refuses a non-grantee and serves an admin the current version', async () => {
+      const deck = await aDeck();
+      await publishRevision(deck, 'v1');
+      const stranger = await investor(`stranger-${randomUUID()}@example.test`);
+
+      expect(await deckRevisionFor(deck, stranger)).toBeNull();
+      expect((await deckRevisionFor(deck, { id: authorId, role: 'admin' }))?.version).toBe(1);
+    });
   });
 });

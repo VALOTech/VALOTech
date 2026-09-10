@@ -204,6 +204,10 @@ export interface ContentGrantsTable {
   account_id: string;
   granted_at: Generated<Date>;
   granted_by: string | null;
+  // DECK-002's optional pin: null (the default) means the grantee reads the
+  // current published version, an integer names a fixed deck version. `Generated`
+  // so an insert may omit it; a deck read resolves it (content/decks.ts).
+  pinned_version: Generated<number | null>;
 }
 
 // `actor_id` is a plain string and not a reference to an account, because the
@@ -418,6 +422,7 @@ export const SCHEMA: Readonly<Record<keyof Database, TableSpec>> = {
       { name: 'account_id', type: 'uuid', notNull: true, hasDefault: false, unique: false },
       { name: 'granted_at', type: 'timestamptz', notNull: true, hasDefault: true, unique: false },
       { name: 'granted_by', type: 'uuid', notNull: false, hasDefault: false, unique: false },
+      { name: 'pinned_version', type: 'integer', notNull: false, hasDefault: false, unique: false },
     ],
     primaryKey: ['item_id', 'account_id'],
     checks: {},
