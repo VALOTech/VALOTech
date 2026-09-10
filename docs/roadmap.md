@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_295 tasks in the plan, 116 closed, 179 outstanding._
+_295 tasks in the plan, 119 closed, 176 outstanding._
 
 ---
 
@@ -73,7 +73,7 @@ _59/69 closed (85%) · 10 outstanding — 6 buildable now · 3 waiting on the ow
 
 _The machinery every kind of writing shares — the editor, the media, the locale states, the audience rule, publishing, search — plus the account, configuration and logging surfaces an operator needs before anything is published. Building it once is the whole reason a report, an update and a deck are three navigations over one system rather than three systems._
 
-_11/63 closed (17%) · 52 outstanding — 52 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_14/63 closed (22%) · 49 outstanding — 49 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
 
 - **ADMIN-001** · Account management — 3/8 closed · depth 5
   - `[ ] ADMIN-001/T1` — The list, sortable by last sign-in, with role and state
@@ -82,13 +82,10 @@ _11/63 closed (17%) · 52 outstanding — 52 buildable now · 0 waiting on the o
   - `[ ] ADMIN-001/T5` — Deleting the last admin, or yourself, is refused
   - `[ ] ADMIN-001/T6` — Creation issues an invitation; no admin ever sets another person's password
 
-- **CFG-001** · Runtime configuration — 0/6 closed · depth 5
-  - `[ ] CFG-001/T1` — The table with a previous-value column, and defaults declared in code beside the keys
+- **CFG-001** · Runtime configuration — 3/6 closed · depth 5
   - `[ ] CFG-001/T2` — Change validates against the key's type and bounds, refusing rather than clamping
   - `[ ] CFG-001/T3` — Change and revert are one transaction each, audited with both values
   - `[ ] CFG-001/T4` — Revert is one action with no confirmation, and is itself recorded
-  - `[ ] CFG-001/T5` — One cached accessor with a short refresh; an empty table yields a working application
-  - `[ ] CFG-001/T6` — The accessor refuses a secret-shaped key
 
 - **CMS-003** · Media library — 0/7 closed · depth 5
   - `[ ] CMS-003/T1` — Upload sniffs the type from the bytes, and refuses anything outside the accepted set

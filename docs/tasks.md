@@ -398,12 +398,15 @@ PRD: `MAIL-002`, `DATA-R04`
 ## CFG-001 · Runtime configuration
 PRD: `CFG-001`
 
-- [ ] CFG-001/T1 — The table with a previous-value column, and defaults declared in code beside the keys
+- [x] CFG-001/T1 — The table with a previous-value column, and defaults declared in code beside the keys
+  Evidence: apps/web/src/config/settings.ts:SETTINGS is the registry — the five keys CFG-001 §3 names (room.banner, room.signin_message, mail.enabled, session.max_age_days, signin.rate_per_hour), each with its type and its default, declared in code beside the key rather than as seed rows. `as const satisfies` makes each default a literal, so a key reads back as its own type. The table — key, value, previous_value, changed_by, changed_at — already exists in apps/web/migrations/1788752441424_platform.sql, so this task is the defaults-in-code half: a database with no config rows produces a working application. Verified by apps/web/src/config/settings.test.ts — every key declares one of text, int or bool and a default — and by the accessor reading those defaults against a real PostgreSQL.
 - [ ] CFG-001/T2 — Change validates against the key's type and bounds, refusing rather than clamping
 - [ ] CFG-001/T3 — Change and revert are one transaction each, audited with both values
 - [ ] CFG-001/T4 — Revert is one action with no confirmation, and is itself recorded
-- [ ] CFG-001/T5 — One cached accessor with a short refresh; an empty table yields a working application
-- [ ] CFG-001/T6 — The accessor refuses a secret-shaped key
+- [x] CFG-001/T5 — One cached accessor with a short refresh; an empty table yields a working application
+  Evidence: apps/web/src/config/settings.ts:Settings reads a setting through a cache refreshed at most every five seconds, so a change takes effect within seconds without a database read on every request. apps/web/src/config/settings.ts:Settings returns a key's declared default when no row holds it, so an empty table is a working application; a stored value is parsed into the key's type (text, int or bool), and a corrupt integer falls back to the default rather than handing a caller a NaN. The clock is injected so a test crosses the refresh boundary without waiting it. Verified by apps/web/src/config/settings.test.ts against a real PostgreSQL: defaults on an empty table, a stored value parsed to its type, a corrupt integer defaulting, and the cache holding within the window then reloading after it — the default branch, the refresh condition, and the boolean parse each mutation-proved.
+- [x] CFG-001/T6 — The accessor refuses a secret-shaped key
+  Evidence: apps/web/src/config/settings.ts:Settings refuses a secret-shaped key before any read; apps/web/src/config/settings.ts:isSecretShaped matches the names a credential takes — secret, password, passphrase, token, credential, private, an api-key, a trailing key — so the config table cannot become a place a secret is kept even if one were added to the registry by mistake (SEC-R05). Credentials come from the environment instead (CRED-001). Verified by apps/web/src/config/settings.test.ts: the guard rejects a secret-shaped key with no database touched, the pattern recognises several credential names, and no registry key is secret-shaped — the guard and the pattern each mutation-proved.
 
 ## SEC-001 · Security baseline
 PRD: `SEC-001`
