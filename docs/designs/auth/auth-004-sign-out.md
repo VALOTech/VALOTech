@@ -61,9 +61,12 @@ person who thinks their password is known ends every session and then changes it
 Offering only "sign out here" tells them the problem is solved when it is not.
 
 An admin suspending or deleting an account invalidates that account's sessions in
-the same transaction (`ADMIN-001`), and writes `session.invalidate_all`
-(`SEC-R04`). Revocation that takes effect at the next natural expiry is not
-revocation.
+the same transaction (`ADMIN-001`); that act is audited as `account.suspend` or
+`account.delete` — the row whose whole content is ending access — so it carries
+no separate session row. `session.invalidate_all` is the audit of the standalone
+act instead: the person page's control to end every session, and this
+self-service path (`SEC-R04`). Revocation that takes effect at the next natural
+expiry is not revocation.
 
 ### Idempotence
 

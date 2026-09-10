@@ -48,8 +48,32 @@ import {
   type Invitation,
 } from './invitation';
 
-const DATABASE_URL = (process.env.DATABASE_URL ?? '').trim();
-const HAS_DATABASE = DATABASE_URL !== '';
+/**
+ * The name this file's connections carry at the server.
+ *
+ * The probe triggers below sit on `invitations`, and every other suite reaches
+ * that table without meaning to: `invitations.account_id` cascades, so any
+ * teardown that deletes an account runs a delete here too. A trigger that
+ * cannot tell whose statement fired it refuses that sibling's cascade and fails
+ * a suite that did nothing wrong, so each one asks whether the session running
+ * the statement is this file's before it does anything at all.
+ *
+ * The name travels in the connection string because that is the one channel
+ * every connection in a pool carries without being asked. Each worker is its
+ * own process with its own pool, so setting it here reaches exactly this file's
+ * connections; the configuration reads `DATABASE_URL` for its `postgres://`
+ * prefix and its `sslmode`, and passes the rest to the driver untouched.
+ */
+const PROBE = 'invitation-probe';
+
+const RAW_DATABASE_URL = (process.env.DATABASE_URL ?? '').trim();
+const HAS_DATABASE = RAW_DATABASE_URL !== '';
+
+const DATABASE_URL = `${RAW_DATABASE_URL}${RAW_DATABASE_URL.includes('?') ? '&' : '?'}application_name=${PROBE}`;
+
+if (HAS_DATABASE) {
+  process.env.DATABASE_URL = DATABASE_URL;
+}
 
 const MIGRATIONS_DIR = join(dirname(fileURLToPath(import.meta.url)), '..', '..', 'migrations');
 
@@ -177,96 +201,6 @@ async function warmConnections(count: number): Promise<void> {
 }
 
 /**
- * The two functions the refusal triggers below call, and no trigger yet.
- *
- * Creating a function locks nothing this database shares; creating a trigger
- * takes `ACCESS EXCLUSIVE` on `invitations`, and every other suite's teardown
- * deletes accounts, which needs a lock on `invitations` for the foreign key to
- * cascade through. PostgreSQL queues lock requests in order, so one exclusive
- * request waiting behind an open read holds up every request behind it — and a
- * suite in another file, doing nothing wrong, times out. That is why the
- * functions are made once here and each test toggles only the trigger: two
- * exclusive moments per window instead of six.
- */
-async function createRefusalFunctions(): Promise<void> {
-  await dropRefusalTriggers();
-  await sql`
-    create or replace function invitation_insert_refused() returns trigger as $$
-    begin raise exception 'insert refused'; end;
-    $$ language plpgsql`.execute(getDb());
-  await sql`
-    create or replace function invitation_statement_refused() returns trigger as $$
-    begin raise exception 'statement refused'; end;
-    $$ language plpgsql`.execute(getDb());
-  // Parks a writer between its delete and its insert, on a lock this suite
-  // holds, which is the only way to hold one transaction open at a chosen point
-  // and drive a second one past it.
-  await sql`
-    create or replace function invitation_insert_parked() returns trigger as $$
-    begin perform pg_advisory_xact_lock(${sql.lit(BARRIER)}); return null; end;
-    $$ language plpgsql`.execute(getDb());
-}
-
-async function dropRefusalTriggers(): Promise<void> {
-  await allowInsertsToInvitations();
-  await allowEveryStatement();
-  await unparkInserts();
-}
-
-async function dropRefusalFunctions(): Promise<void> {
-  await dropRefusalTriggers();
-  await sql`drop function if exists invitation_insert_refused()`.execute(getDb());
-  await sql`drop function if exists invitation_statement_refused()`.execute(getDb());
-  await sql`drop function if exists invitation_insert_parked()`.execute(getDb());
-}
-
-/**
- * Make every insert of a row into `invitations` raise, so a transaction that
- * has already written something has to roll that write back.
- *
- * The trigger is table-wide, which is safe only because this is the one file
- * that writes `invitations` — tests within a file run one at a time, so the
- * window it is installed for holds nothing else. A suite in another file that
- * wrote the table would run in parallel with this one and have its inserts
- * refused, and would need the trigger scoped to its own account by a `WHEN`
- * clause before it could share the database.
- */
-async function refuseInsertsToInvitations(): Promise<void> {
-  await sql`
-    create trigger invitation_insert_refused before insert on invitations
-    for each row execute function invitation_insert_refused()`.execute(getDb());
-}
-
-async function allowInsertsToInvitations(): Promise<void> {
-  await sql`drop trigger if exists invitation_insert_refused on invitations`.execute(getDb());
-}
-
-/**
- * Refuse one kind of statement against `invitations`, at statement level.
- *
- * The level is the instrument. A `FOR EACH ROW` trigger fires once per affected
- * row and so says nothing at all about a statement that affected none, which is
- * exactly the case `SEC-R03` turns on: a reset for an address no account holds
- * must still run the delete and the insert. `FOR EACH STATEMENT` fires once per
- * statement whatever it touched, so a refusal here is proof the statement was
- * executed — and its absence is proof it was not.
- *
- * The two operations are installed one at a time. A delete that raises stops
- * the transaction before the insert is reached, so a single trigger over both
- * could only ever report the first.
- */
-async function refuseStatement(operation: 'delete' | 'insert'): Promise<void> {
-  await sql`
-    create trigger invitation_statement_refused
-    before ${sql.raw(operation)} on invitations
-    for each statement execute function invitation_statement_refused()`.execute(getDb());
-}
-
-async function allowEveryStatement(): Promise<void> {
-  await sql`drop trigger if exists invitation_statement_refused on invitations`.execute(getDb());
-}
-
-/**
  * The advisory key this suite parks writers on, chosen far from anything
  * `hashtext` of an address would produce so the barrier and the address lock
  * cannot be the same lock.
@@ -277,14 +211,127 @@ const BARRIER = 990_099;
 const POLL_ATTEMPTS = 200;
 const POLL_MILLISECONDS = 25;
 
-async function parkInserts(): Promise<void> {
+/**
+ * What the probe triggers do to the statement they are looking at. One mode at
+ * a time, because each test wants exactly one of them and the refusals would
+ * otherwise mask each other: a delete that raises stops the transaction before
+ * its insert is reached, so a single armed state covering both could only ever
+ * report the first.
+ */
+type ProbeMode = 'off' | 'refuse-delete' | 'refuse-insert' | 'refuse-insert-row' | 'park-insert';
+
+/**
+ * The probes: one row that says what is armed, three functions that read it,
+ * and four triggers that stay on `invitations` for the whole file.
+ *
+ * Installed once and removed once. A `CREATE TRIGGER` takes `ACCESS EXCLUSIVE`
+ * on the table, and every other suite's teardown needs a lock on it for the
+ * foreign key to cascade through; PostgreSQL queues lock requests in order, so
+ * an exclusive request waiting behind an open read holds up everything behind
+ * it. Installing per test made that queue a dozen times a run — long enough for
+ * a request to time out, abort the test that asked for it, and leave the
+ * trigger behind for the next one. Arming is an `UPDATE` of a single row in a
+ * table nothing else touches, which takes no lock on `invitations` at all.
+ *
+ * Every function asks `invitation_probe_mode()` first, and that answers `off`
+ * for any session but this file's. A sibling's cascade therefore passes through
+ * untouched whatever is armed, which is the property that lets these exist at
+ * all while the database is shared.
+ */
+async function createProbes(): Promise<void> {
+  await dropProbes();
+
+  await sql`create table invitation_probe_switch (mode text not null)`.execute(getDb());
+  await sql`insert into invitation_probe_switch (mode) values ('off')`.execute(getDb());
+
+  // The application_name gate is checked before the switch is read, so a
+  // sibling's statement costs one GUC lookup and no table access.
   await sql`
-    create trigger invitation_insert_parked before insert on invitations
+    create or replace function invitation_probe_mode() returns text as $$
+    begin
+      if current_setting('application_name') <> ${sql.lit(PROBE)} then
+        return 'off';
+      end if;
+      return coalesce((select mode from invitation_probe_switch), 'off');
+    end;
+    $$ language plpgsql`.execute(getDb());
+
+  await sql`
+    create or replace function invitation_statement_refused() returns trigger as $$
+    declare armed text := invitation_probe_mode();
+    begin
+      if (tg_op = 'DELETE' and armed = 'refuse-delete')
+         or (tg_op = 'INSERT' and armed = 'refuse-insert') then
+        raise exception 'statement refused';
+      end if;
+      return null;
+    end;
+    $$ language plpgsql`.execute(getDb());
+
+  // A row-level BEFORE trigger returning null would skip the row, so the
+  // unarmed path returns NEW: an unarmed probe must be invisible, not a silent
+  // way to drop an insert nobody asked it to refuse.
+  await sql`
+    create or replace function invitation_insert_refused() returns trigger as $$
+    begin
+      if invitation_probe_mode() = 'refuse-insert-row' then
+        raise exception 'insert refused';
+      end if;
+      return new;
+    end;
+    $$ language plpgsql`.execute(getDb());
+
+  // Parks a writer between its delete and its insert, on a lock this suite
+  // holds, which is the only way to hold one transaction open at a chosen point
+  // and drive a second one past it.
+  await sql`
+    create or replace function invitation_insert_parked() returns trigger as $$
+    begin
+      if invitation_probe_mode() = 'park-insert' then
+        perform pg_advisory_xact_lock(${sql.lit(BARRIER)});
+      end if;
+      return null;
+    end;
+    $$ language plpgsql`.execute(getDb());
+
+  // A statement-level trigger fires once per statement whatever it touched,
+  // which is the instrument `SEC-R03` needs: a reset for an address no account
+  // holds must still run its delete and its insert, and a row-level trigger
+  // says nothing at all about a statement that affected no row.
+  await sql`
+    create trigger invitation_probe_delete_statement before delete on invitations
+    for each statement execute function invitation_statement_refused()`.execute(getDb());
+  await sql`
+    create trigger invitation_probe_insert_statement before insert on invitations
+    for each statement execute function invitation_statement_refused()`.execute(getDb());
+  await sql`
+    create trigger invitation_probe_insert_row before insert on invitations
+    for each row execute function invitation_insert_refused()`.execute(getDb());
+  await sql`
+    create trigger invitation_probe_insert_parked before insert on invitations
     for each statement execute function invitation_insert_parked()`.execute(getDb());
 }
 
-async function unparkInserts(): Promise<void> {
-  await sql`drop trigger if exists invitation_insert_parked on invitations`.execute(getDb());
+async function dropProbes(): Promise<void> {
+  for (const trigger of [
+    'invitation_probe_delete_statement',
+    'invitation_probe_insert_statement',
+    'invitation_probe_insert_row',
+    'invitation_probe_insert_parked',
+  ]) {
+    await sql`${sql.raw(`drop trigger if exists ${trigger} on invitations`)}`.execute(getDb());
+  }
+
+  await sql`drop function if exists invitation_statement_refused()`.execute(getDb());
+  await sql`drop function if exists invitation_insert_refused()`.execute(getDb());
+  await sql`drop function if exists invitation_insert_parked()`.execute(getDb());
+  await sql`drop function if exists invitation_probe_mode()`.execute(getDb());
+  await sql`drop table if exists invitation_probe_switch`.execute(getDb());
+}
+
+/** Point every probe at one behaviour, or at none. */
+async function arm(mode: ProbeMode): Promise<void> {
+  await sql`update invitation_probe_switch set mode = ${mode}`.execute(getDb());
 }
 
 /**
@@ -341,6 +388,11 @@ function holdLock(key: number | string): HeldLock {
  * pays for and a row lock only an existing account can take. `wait_event` names
  * which — `advisory` for the address lock, `transactionid` for a row somebody
  * else has locked.
+ *
+ * The view is the whole server's, so the narrowing to this file's connections
+ * is what makes the reading an answer about the request under test. Another
+ * worker waiting on its own lock would otherwise satisfy the assertion that a
+ * waiter exists, and the enumeration claim would pass on somebody else's wait.
  */
 async function advisoryWaiters(): Promise<string[]> {
   const seen = await sql<{ wait: string }>`
@@ -348,6 +400,7 @@ async function advisoryWaiters(): Promise<string[]> {
     from pg_stat_activity
     where datname = current_database()
       and pid <> pg_backend_pid()
+      and application_name = ${PROBE}
       and wait_event_type = 'Lock'
       and (query like '%advisory%' or query like '%invitations%')
   `.execute(getDb());
@@ -387,12 +440,26 @@ async function invitationsFor(email: string): Promise<Selectable<InvitationsTabl
 }
 
 /**
- * Every invitation row in the table. The claim a reset for an unknown address
- * has to support is that nothing was written *anywhere* — scoping the count to
- * an account would assume the answer, since the address has none.
+ * Every invitation row belonging to an account this suite seeded.
+ *
+ * The claim a reset for an unknown address has to support is that it wrote
+ * nothing — and the trap is scoping the count to *that address's* account,
+ * which has none, so the count would be zero however the code behaved. Scoping
+ * to the suite's own accounts avoids that and still catches what matters: the
+ * insert selects the account by address, so a mutant that lost its `where`
+ * would write a row for every account in the table, and four of them are here.
+ *
+ * The count cannot be the table's, because another worker writing its own
+ * invitations between the two readings would move a total this suite never
+ * touched, and the assertion would fail on a suite that did nothing wrong.
  */
 async function totalInvitations(): Promise<number> {
-  const rows = await getDb().selectFrom('invitations').select('id').execute();
+  const rows = await getDb()
+    .selectFrom('invitations')
+    .innerJoin('accounts', 'accounts.id', 'invitations.account_id')
+    .select('invitations.id')
+    .where('accounts.email', 'in', [...SEEDED, CREATED])
+    .execute();
 
   return rows.length;
 }
@@ -464,11 +531,11 @@ describe.skipIf(!HAS_DATABASE)('AUTH-003 invitation and reset tokens', () => {
       )
       .execute();
 
-    await createRefusalFunctions();
+    await createProbes();
   }, 120_000);
 
   afterAll(async () => {
-    await dropRefusalFunctions();
+    await dropProbes();
 
     // The invitations go with them: invitations.account_id is ON DELETE CASCADE.
     // The audit rows do not, and must not: the trail outlives the account it
@@ -664,12 +731,12 @@ describe.skipIf(!HAS_DATABASE)('AUTH-003 invitation and reset tokens', () => {
       // separately it holds nothing at all — the state where a person clicks a
       // link that was valid when it arrived and an admin has to be asked for
       // another.
-      await refuseInsertsToInvitations();
+      await arm('refuse-insert-row');
 
       try {
         await expect(issueToken(id, INVITATION_TTL_SECONDS)).rejects.toThrow();
       } finally {
-        await allowInsertsToInvitations();
+        await arm('off');
       }
 
       expect(await rowCount(id)).toBe(1);
@@ -884,14 +951,14 @@ describe.skipIf(!HAS_DATABASE)('AUTH-003 invitation and reset tokens', () => {
 
     it('writes the account and its invitation as one act, or neither', async () => {
       const inviterId = await accountId(INVITER);
-      await refuseInsertsToInvitations();
+      await arm('refuse-insert-row');
 
       try {
         await expect(
           inviteAccount({ email: CREATED, name: 'A Named Investor', role: 'investor' }, inviterId),
         ).rejects.toThrow();
       } finally {
-        await allowInsertsToInvitations();
+        await arm('off');
       }
 
       // The account must not survive its own invitation failing. It would be an
@@ -949,7 +1016,7 @@ describe.skipIf(!HAS_DATABASE)('AUTH-003 invitation and reset tokens', () => {
     });
 
     it('runs the delete for both addresses, whether or not it matches a row', async () => {
-      await refuseStatement('delete');
+      await arm('refuse-delete');
 
       try {
         // The trigger fires per statement rather than per row, so a refusal is
@@ -959,18 +1026,18 @@ describe.skipIf(!HAS_DATABASE)('AUTH-003 invitation and reset tokens', () => {
         await expect(requestReset(RESETTER)).rejects.toThrow(/statement refused/);
         await expect(requestReset(UNKNOWN)).rejects.toThrow(/statement refused/);
       } finally {
-        await allowEveryStatement();
+        await arm('off');
       }
     });
 
     it('runs the insert for both addresses, whether or not there is a row to write', async () => {
-      await refuseStatement('insert');
+      await arm('refuse-insert');
 
       try {
         await expect(requestReset(RESETTER)).rejects.toThrow(/statement refused/);
         await expect(requestReset(UNKNOWN)).rejects.toThrow(/statement refused/);
       } finally {
-        await allowEveryStatement();
+        await arm('off');
       }
     });
 
@@ -1010,7 +1077,7 @@ describe.skipIf(!HAS_DATABASE)('AUTH-003 invitation and reset tokens', () => {
       // holds and never for one it does not, which is the answer `SEC-R03`
       // forbids.
       await warmConnections(4);
-      await parkInserts();
+      await arm('park-insert');
       const barrier = holdLock(BARRIER);
       await barrier.ready;
 
@@ -1027,7 +1094,7 @@ describe.skipIf(!HAS_DATABASE)('AUTH-003 invitation and reset tokens', () => {
       } finally {
         barrier.release();
         await barrier.held;
-        await unparkInserts();
+        await arm('off');
       }
 
       expect(await invitationsFor(RESETTER)).toHaveLength(1);

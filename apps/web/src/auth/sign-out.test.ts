@@ -17,7 +17,7 @@
  * sessions and deletes them again.
  */
 
-import { createHash, randomBytes } from 'node:crypto';
+import { createHash, randomBytes, randomUUID } from 'node:crypto';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -25,6 +25,7 @@ import { sql } from 'kysely';
 import { runner } from 'node-pg-migrate';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
+import * as auditModule from '../audit/record';
 import { POST as SESSIONS_ALL } from '../app/api/account/sessions/all/route';
 import { POST as SIGN_OUT } from '../app/api/auth/sign-out/route';
 import { closeDb, getDb } from '../db/index';
@@ -132,6 +133,33 @@ async function clearSessions(email: string): Promise<string> {
 /** One fresh session for an account, and nothing a previous test left. */
 async function onlySessionFor(email: string): Promise<string> {
   return (await issue(await clearSessions(email))).value;
+}
+
+/**
+ * An active account of this suite's own, beyond the two it seeds. The audit
+ * test asserts a count, and the seeded accounts accumulate `session.invalidate_all`
+ * rows across the other tests here; a fresh id no other test touches makes the
+ * count this test's alone. The trail is append-only, so its row outlives the
+ * account when the test deletes it.
+ */
+async function freshActiveAccount(): Promise<string> {
+  const account = await getDb()
+    .insertInto('accounts')
+    .values({
+      email: `signout-${randomUUID()}@example.test`,
+      name: 'A Signed-in Investor',
+      role: 'investor',
+      state: 'active',
+    })
+    .returning('id')
+    .executeTakeFirstOrThrow();
+
+  return account.id;
+}
+
+/** Every audit row about one account, read back independently of the writer. */
+async function auditFor(accountId: string) {
+  return getDb().selectFrom('audit').selectAll().where('subject_id', '=', accountId).execute();
 }
 
 /** Everything after the name and value of a `Set-Cookie` header. */
@@ -307,6 +335,27 @@ describe.skipIf(!HAS_DATABASE)('AUTH-004 sign-out', () => {
       expect(await resolveSession(tablet)).toBeNull();
     });
 
+    it('records one session.invalidate_all, with the account as both actor and subject', async () => {
+      const id = await freshActiveAccount();
+      const token = (await issue(id)).value;
+
+      try {
+        await post(SESSIONS_ALL, token);
+
+        // Ending every session is a privileged act and is audited (`SEC-R04`),
+        // unlike an ordinary sign-out. The actor is the account itself: this is
+        // the self-service path, not an admin acting on somebody else.
+        const trail = await auditFor(id);
+        expect(trail).toHaveLength(1);
+        expect(trail[0]?.action).toBe('session.invalidate_all');
+        expect(trail[0]?.actor_id).toBe(id);
+        expect(trail[0]?.subject_id).toBe(id);
+        expect(trail[0]?.subject_type).toBe('account');
+      } finally {
+        await getDb().deleteFrom('accounts').where('id', '=', id).execute();
+      }
+    });
+
     it('ends no other account, however many sessions it holds', async () => {
       const mine = await onlySessionFor(READER);
       const theirs = await onlySessionFor(OTHER);
@@ -437,11 +486,11 @@ describe.skipIf(!HAS_DATABASE)('AUTH-004 sign-out', () => {
       expect(await rowExists(token)).toBe(true);
     });
 
-    it('POST /api/account/sessions/all fails safe: the session is neither dropped nor slid', async () => {
+    it('rolls the delete back when the audit cannot be written, leaving the session unslid', async () => {
       const id = await clearSessions(READER);
       const token = (await issue(id)).value;
       // Set the expiry where a slide would show: accountForToken leaves it, a
-      // sliding resolve would push it to now+TTL before the delete failed.
+      // sliding resolve would push it to now+TTL before the write failed.
       await getDb()
         .updateTable('sessions')
         .set({ expires_at: sql<Date>`now() + interval '10 minutes'` })
@@ -449,10 +498,14 @@ describe.skipIf(!HAS_DATABASE)('AUTH-004 sign-out', () => {
         .execute();
       const before = await expiresAt(token);
 
-      // accountForToken resolves (no slide), then the bulk delete raises. The row
-      // must be exactly as it was: present, and at its original expiry -- not
-      // extended by a resolve that slid before the delete failed (the F-tier bug).
-      const spy = vi.spyOn(sessionModule, 'invalidateAllForAccount').mockRejectedValue(new Error('delete refused'));
+      // accountForToken resolves (no slide); inside the transaction the delete
+      // runs and then the audit insert raises. SEC-R04's atomicity is the
+      // property under test: the delete must roll back with the audit, so the
+      // session is present and at its original expiry — not ended by an act the
+      // trail never recorded, and not slid.
+      const spy = vi
+        .spyOn(auditModule, 'recordAudit')
+        .mockRejectedValue(new Error('audit refused'));
       try {
         await expect(post(SESSIONS_ALL, token)).rejects.toThrow();
       } finally {

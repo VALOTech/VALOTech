@@ -46,14 +46,14 @@ nobody remembered to close.
 | Identity | Name, address, role, state, created, last sign-in |
 | Access | Every deck granted, with pin and last opened (`DECK-004`) |
 | Sessions | Live sessions, and a control to end them all (`AUTH-004`) |
-| Actions | Resend invitation, reset password, suspend, delete |
+| Actions | Resend invitation, reset password, suspend, reinstate, delete |
 
 ### The four states
 
 | State | Can sign in | Set by |
 |---|---|---|
 | `invited` | no | Creation |
-| `active` | yes | Accepting an invitation |
+| `active` | yes | Accepting an invitation, or an admin reinstating a suspended account |
 | `suspended` | no | An admin |
 | — | — | Deletion removes the row |
 
@@ -90,10 +90,10 @@ way an account comes to exist — there is no self-registration and no password
 set by an admin on somebody else's behalf. An admin who could set a password
 could sign in as that person, and the audit trail would say the person did it.
 
-Role is chosen at creation and can be changed. **Changing a role rotates the
-session** (`SEC-R02`) and is audited as `account.role_change`, because a
-privilege change that leaves the old session's claims in place is a privilege
-change that has not happened yet.
+Role is chosen at creation and can be changed. **Changing a role ends every
+session** (`SEC-R02` a fortiori — deletion is stronger than a re-issue) and is
+audited as `account.role_change`, because a privilege change that leaves the old
+session's claims in place is a privilege change that has not happened yet.
 
 ### What is not stored
 
@@ -141,4 +141,5 @@ action. **`DATA-002`** is the erasure design this implements the admin half of.
 - `ADMIN-001/T4` — Deletion is a real delete; the confirmation lists what goes and what remains, and takes the typed name
 - `ADMIN-001/T5` — Deleting the last admin, or yourself, is refused
 - `ADMIN-001/T6` — Creation issues an invitation; no admin ever sets another person's password
-- `ADMIN-001/T7` — A role change rotates the session and is audited
+- `ADMIN-001/T7` — A role change ends every session and is audited
+- `ADMIN-001/T8` — Reinstating a suspended account restores it to active and is audited

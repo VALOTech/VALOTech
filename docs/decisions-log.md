@@ -63,6 +63,17 @@ An entry is filed the moment the choice surfaces, not when it is answered. Nothi
 - **Revises:** AUTH-003/T5 — `requestReset` ships the safe default (it conditions its delete and insert on `state = 'active'`, so an invited account's invitation is never destroyed); a resolution to **B** separates the token kinds in the schema instead
 - **Status:** OPEN. Safe default: `requestReset` conditions its delete and its insert on `state = 'active'`, so a reset against an invited or suspended account writes nothing and leaves the invitation intact — fail-closed, and anti-enumeration-safe because the condition is a SQL predicate keyed by the address that matches nothing for a non-active account exactly as it matches nothing for a non-existent one.
 
+<a id="ADMIN-DEC-01"></a>
+### `ADMIN-DEC-01` — May an admin suspend or demote the last active admin, or themselves — OPEN
+
+- **Decision:** `suspendAccount` and `changeRole` (`ADMIN-001/T3`, `T7`) mutate an account's state and role. Suspending or demoting the last admin who can sign in leaves the room with no admin able to act, and `suspendAccount` is a one-way door in code — nothing sets `state` back to `active` — with no account-creation caller and no first-admin bootstrap, so a zero-admin state is recoverable only from the database. The delete guard (`ADMIN-001/T5`) is specified to refuse deleting the last admin and yourself; do suspend and role-change refuse the same, and may an admin suspend or demote themselves while another admin remains?
+- **Options:** **A** Suspend and role-change refuse the last active admin and refuse self, mirroring the delete guard — the fail-closed default shipped here. It makes the two unguarded one-click acts as safe as the guarded delete; the open edge is a self-suspend or self-demote while another admin remains, which A refuses and which is arguably legitimate. **B** Refuse only the last active admin, and allow acting on self while another admin exists — more permissive, at the cost of a second rule to keep right.
+- **Recommendation:** **A** for now. Refusing self unconditionally costs an admin nothing they cannot do by asking the other admin, and the room has two admins by design; the edge **B** opens is not worth a second predicate until a real workflow needs it. The reinstate act (`suspended → active`) and the first-admin bootstrap are owed regardless of A or B, and are filed as their own work rather than blocked on this.
+- **Decision owner:** user
+- **Blocks:** — none —
+- **Revises:** ADMIN-001/T3, ADMIN-001/T7 — both ship the safe default: they refuse before mutating when the subject is the actor, or the last admin who can sign in, counted `active` rather than by role alone — a suspended admin cannot sign in to undo anything, and reinstating one is itself an admin act, so counting the role would let a room with one active and one suspended admin be stranded. The count is race-safe under a `SELECT … WHERE role = 'admin' AND state = 'active' ORDER BY id FOR UPDATE` taken inside the transaction; a resolution to **B** relaxes the self rule.
+- **Status:** OPEN. Safe default: `suspendAccount` and `changeRole` refuse when the subject is the last active admin or is the actor, returning the same `false` a no-op returns, so no single act can leave the room with no admin who can sign in or let an admin act on their own access — fail-closed, since the alternative is a one-click unrecoverable lockout behind an ordinary control.
+
 ---
 
 ## Resolved decisions

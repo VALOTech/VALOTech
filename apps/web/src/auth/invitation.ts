@@ -150,7 +150,27 @@ async function issueTokenIn(
   // The lock the "never two live tokens" invariant depends on: it serialises
   // concurrent issues for this account so the delete below sees a committed
   // predecessor rather than racing it.
-  await trx.selectFrom('accounts').select('id').where('id', '=', accountId).forUpdate().execute();
+  //
+  // The state is part of the same statement rather than a check before it, and
+  // that placement is what closes the race. `ADMIN-001` deletes a suspended
+  // account's outstanding invitations so a link cannot re-open access that was
+  // just ended; a suspension committing between a separate check and this lock
+  // would let the new row land just after that delete. Here the lock and the
+  // predicate are one: an issue that arrives first blocks the suspension, which
+  // then deletes what it wrote, and an issue that arrives second waits on the
+  // suspension's row lock and re-evaluates this predicate against the row it
+  // committed — where it matches nothing.
+  const issuable = await trx
+    .selectFrom('accounts')
+    .select('id')
+    .where('id', '=', accountId)
+    .where('state', '<>', 'suspended')
+    .forUpdate()
+    .executeTakeFirst();
+
+  if (issuable === undefined) {
+    throw new SuspendedAccountError();
+  }
 
   await trx
     .deleteFrom('invitations')
@@ -252,6 +272,24 @@ export class EmailTakenError extends Error {
   constructor() {
     super('an account already holds that address');
     this.name = 'EmailTakenError';
+  }
+}
+
+/**
+ * Raised when a token is asked for a suspended account.
+ *
+ * Suspending an account ends its access and deletes the invitation it held
+ * (`ADMIN-001`), so issuing a fresh token would hand back the way in the
+ * suspension removed. `issueTokenIn` refuses it in the same statement that takes
+ * the account lock, so no re-issue can slip in just after a suspension. The same
+ * refusal catches an id no account holds — a case the callers never reach, since
+ * `inviteAccount` issues against the row it just created and a resend issues
+ * against one it read. The message names no address (`DATA-R02`).
+ */
+export class SuspendedAccountError extends Error {
+  constructor() {
+    super('cannot issue a token for a suspended account');
+    this.name = 'SuspendedAccountError';
   }
 }
 

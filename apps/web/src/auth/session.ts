@@ -17,8 +17,11 @@
 
 import { createHash, randomBytes } from 'node:crypto';
 
+import type { Transaction } from 'kysely';
+
 import { getConfig } from '../config/index';
 import { getDb } from '../db/index';
+import type { Database } from '../db/types';
 
 /** 256 bits from the system CSPRNG, which is what makes the token unguessable. */
 const TOKEN_BYTES = 32;
@@ -165,7 +168,18 @@ export async function invalidateSession(token: string): Promise<void> {
 }
 
 /**
- * Delete every session an account holds, on any device.
+ * Delete every session an account holds, on any device, inside the caller's
+ * transaction.
+ *
+ * The parameter is a `Transaction`, never the pool, and that is the atomicity
+ * `ADMIN-001` requires expressed as a type. A suspension or a role change
+ * changes the account and ends its sessions as one act: a state change that
+ * commits while this delete fails is a privilege change that has not happened,
+ * and a delete that commits while the state change fails signs somebody out for
+ * nothing. `Transaction<Database>` is not assignable from `Kysely<Database>`,
+ * so a caller holding the bare handle cannot reach this at all, and the
+ * discipline is checked by the compiler rather than remembered by whoever
+ * writes the next call site.
  *
  * It takes an account id and nothing about who asked, because two callers need
  * exactly this and for different reasons: a person ending every session because
@@ -178,6 +192,25 @@ export async function invalidateSession(token: string): Promise<void> {
  * this is a delete rather than a flag: the gate resolves a session by looking
  * the row up, and a row that is gone cannot be resolved by anything.
  */
+export async function invalidateAllForAccountIn(
+  trx: Transaction<Database>,
+  accountId: string,
+): Promise<void> {
+  await trx.deleteFrom('sessions').where('account_id', '=', accountId).execute();
+}
+
+/**
+ * Delete every session an account holds, in a transaction of its own, for the
+ * caller whose whole act this is.
+ *
+ * The account-wide predicate is written once, above, and this opens the
+ * transaction the other form demands. Two spellings of "every session this
+ * account holds" would be two chances to scope it wrongly, and the wrong one
+ * would be silent in whichever path nobody exercised: a delete that matched too
+ * little leaves a live session behind a revocation that reported success.
+ */
 export async function invalidateAllForAccount(accountId: string): Promise<void> {
-  await getDb().deleteFrom('sessions').where('account_id', '=', accountId).execute();
+  await getDb()
+    .transaction()
+    .execute((trx) => invalidateAllForAccountIn(trx, accountId));
 }
