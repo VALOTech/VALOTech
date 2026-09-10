@@ -2,10 +2,13 @@
  * The media library's store (`CMS-003`): what a file's type is, how it is stored
  * once and reused, and when it may be deleted.
  *
- * Three things live here, and the upload and serve routes (`CMS-003` §3) compose
+ * Four things live here, and the upload and serve routes (`CMS-003` §3) compose
  * them. The type is sniffed from the bytes, never the filename or the declared
  * content type, because both are the uploader's to write (`SEC-001`). Storage is
  * keyed by the bytes' own SHA-256, so the same file uploaded twice is one row.
+ * Serving answers who may read a file by the audience of what references it: the
+ * reader sees it when they uploaded it, or when an item they may read points at
+ * it, and that join composes `visibleTo` rather than restating an audience rule.
  * Deletion is refused while anything references the file, because `media_refs`
  * cascades from `media` — a file deleted out from under a published document
  * would take its references with it rather than be refused.
@@ -18,8 +21,11 @@
 
 import { createHash } from 'node:crypto';
 
+import type { Actor } from '../auth/gate';
 import { recordAudit } from '../audit/record';
 import { getDb } from '../db/index';
+
+import { visibleTo } from './access';
 
 /**
  * The types the library accepts, by what the bytes are and not what they are
@@ -131,6 +137,79 @@ export async function storeMedia(
     .executeTakeFirstOrThrow();
 
   return { id: existing.id, deduped: true };
+}
+
+/** The bytes of a uuid, as a serve reads it straight from the URL. */
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+/** The stored file a serve needs: its type, its bytes, and who uploaded it. */
+export interface ServableMedia {
+  readonly mime: string;
+  readonly bytes: Buffer;
+  readonly uploadedBy: string | null;
+}
+
+/**
+ * The file at `mediaId`, or `null` when none is there — including when `mediaId`
+ * is not a uuid at all (`CMS-003/T5`). The id reaches here straight from the URL
+ * and `media.id` is a uuid column: a value that is not one would make the
+ * comparison raise `invalid input syntax for type uuid` and answer `500`, where
+ * the contract is the `404` that tells a prober nothing (`CMS-003` §3). A shape
+ * that can never name a row is not found, so it is refused as not found here
+ * rather than surfacing as an error.
+ */
+export async function mediaForServing(mediaId: string): Promise<ServableMedia | null> {
+  if (!UUID.test(mediaId)) {
+    return null;
+  }
+
+  const row = await getDb()
+    .selectFrom('media')
+    .select(['mime', 'bytes', 'uploaded_by'])
+    .where('id', '=', mediaId)
+    .executeTakeFirst();
+
+  return row === undefined
+    ? null
+    : { mime: row.mime, bytes: row.bytes, uploadedBy: row.uploaded_by };
+}
+
+/**
+ * Whether an item this reader may read references the file (`CMS-003/T5`,
+ * `CMS-R06`) — and, asked with `reader` of `null`, whether a *public* published
+ * item does, which is the serve route's cache decision (`CMS-003/T6`).
+ *
+ * The audience is `visibleTo`'s, composed rather than copied, so a file inherits
+ * the audience of what uses it by the one predicate every content read shares.
+ * The link is a correlated `EXISTS` over `media_refs`, the shape `visibleTo`
+ * itself uses for a grant, so several references to one item do not multiply the
+ * row and turn a single match into a `DISTINCT` a caller has to remember.
+ *
+ * It lives in this module because the join reads `content_items`, which only the
+ * content library may name (`check-content-access.py`); the route composes this
+ * rather than holding a second copy of the audience rule the design exists to
+ * have exactly one of.
+ */
+export async function isReferencedByVisibleItem(
+  mediaId: string,
+  reader: Actor | null,
+): Promise<boolean> {
+  const referenced = await getDb()
+    .selectFrom('content_items')
+    .select((eb) => eb.lit(1).as('one'))
+    .where(visibleTo(reader))
+    .where((eb) =>
+      eb.exists(
+        eb
+          .selectFrom('media_refs')
+          .select((ref) => ref.lit(1).as('one'))
+          .whereRef('media_refs.item_id', '=', 'content_items.id')
+          .where('media_refs.media_id', '=', mediaId),
+      ),
+    )
+    .executeTakeFirst();
+
+  return referenced !== undefined;
 }
 
 /** The outcome of a delete: done, or refused with the items that still use it. */
