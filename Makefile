@@ -87,6 +87,7 @@ check-comments: ## No bare deferral marker and no history prose in a comment
 
 .PHONY: check-stream-guard
 check-stream-guard: ## Every printing script survives a cp1252 console
+	@$(PYTHON) scripts/check-stream-guard.py --selftest
 	@$(PYTHON) scripts/check-stream-guard.py
 
 .PHONY: check-refs
