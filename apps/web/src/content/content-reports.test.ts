@@ -22,10 +22,13 @@ import { runner } from 'node-pg-migrate';
 import { Pool } from 'pg';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
+import type { Actor } from '../auth/gate';
 import { closeDb, getDb } from '../db/index';
 
+import { type Block } from './blocks';
 import { createItem, saveDraft } from './items';
 import { publish, withdraw } from './publish';
+import { DEFAULT_REPORT_STRUCTURE, prefillStructureFor } from './reports';
 
 const RAW_DATABASE_URL = (process.env.DATABASE_URL ?? '').trim();
 const HAS_DATABASE = RAW_DATABASE_URL !== '';
@@ -74,6 +77,12 @@ describe.skipIf(!HAS_DATABASE)('a report against a period (RPT-001/T1, RPT-002/T
     const revision = await saveDraft(item.id, [{ type: 'heading', level: 2, text }], authorId);
     await publish(item.id, revision.id, authorId);
     return item.id;
+  }
+
+  async function publishReportWith(period: string, blocks: Block[]): Promise<void> {
+    const item = await createItem({ type: 'report', slug: `r-${randomUUID()}`, title: period, period });
+    const revision = await saveDraft(item.id, blocks, authorId);
+    await publish(item.id, revision.id, authorId);
   }
 
   beforeAll(async () => {
@@ -184,5 +193,46 @@ describe.skipIf(!HAS_DATABASE)('a report against a period (RPT-001/T1, RPT-002/T
       .where('id', '=', report.id)
       .executeTakeFirstOrThrow();
     expect(after.period).toBe(period);
+  });
+
+  describe('its opening structure (RPT-001/T2)', () => {
+    // authorId is set by the outer beforeAll, so the reader is read at call time.
+    const admin = (): Actor => ({ id: authorId, role: 'admin' });
+
+    it('opens a first report with the suggested structure', async () => {
+      // Nothing is published below this period, so there is nothing to carry.
+      expect(await prefillStructureFor('1000-Q1', admin())).toEqual(DEFAULT_REPORT_STRUCTURE);
+    });
+
+    it('carries the previous headings forward, dropping the text and taking the greatest period below', async () => {
+      await publishReportWith('5000-Q1', [{ type: 'heading', level: 2, text: 'Earlier' }]);
+      await publishReportWith('5000-Q2', [
+        { type: 'heading', level: 2, text: 'Recent overview' },
+        { type: 'paragraph', text: 'body that should not carry forward', marks: [] },
+        { type: 'heading', level: 2, text: 'Recent numbers' },
+        { type: 'figure', mediaId: randomUUID(), caption: null, data: ['10'] },
+      ]);
+
+      expect(await prefillStructureFor('5000-Q3', admin())).toEqual([
+        { type: 'heading', level: 2, text: 'Recent overview' },
+        { type: 'heading', level: 2, text: 'Recent numbers' },
+      ]);
+    });
+
+    it('skips a period with no report, carrying the last that exists', async () => {
+      await publishReportWith('6000-Q1', [{ type: 'heading', level: 2, text: 'Sixk' }]);
+      // Q2 is a gap; the prefill for Q3 reaches back to Q1 rather than opening blank.
+      expect(await prefillStructureFor('6000-Q3', admin())).toEqual([{ type: 'heading', level: 2, text: 'Sixk' }]);
+    });
+
+    it('carries forward only a published report, never a draft', async () => {
+      await publishReportWith('8000-Q1', [{ type: 'heading', level: 2, text: 'Published' }]);
+      const draft = await createItem({ type: 'report', slug: `r-${randomUUID()}`, title: 'draft', period: '8000-Q2' });
+      await saveDraft(draft.id, [{ type: 'heading', level: 2, text: 'Draft' }], authorId);
+
+      // 8000-Q2 is the greatest period below 8000-Q3 but is unpublished, so the
+      // prefill takes the published 8000-Q1 rather than the draft.
+      expect(await prefillStructureFor('8000-Q3', admin())).toEqual([{ type: 'heading', level: 2, text: 'Published' }]);
+    });
   });
 });

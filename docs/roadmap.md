@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_295 tasks in the plan, 162 closed, 133 outstanding._
+_295 tasks in the plan, 163 closed, 132 outstanding._
 
 ---
 
@@ -116,7 +116,7 @@ _42/63 closed (66%) · 21 outstanding — 18 buildable now · 3 waiting on the o
 
 _The three content types, and the compliance posture that governs what is held about the people reading them. Updates come before decks, and not only because they are the simpler shape of the same problem: they are what the room is for. An investor signs in to find out what has happened since they last looked._
 
-_13/59 closed (22%) · 46 outstanding — 46 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_14/59 closed (23%) · 45 outstanding — 45 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
 
 - **DECK-001** · Deck authoring — 2/5 closed · depth 7
   - `[ ] DECK-001/T2` — An overview of section cards in order, showing heading, first line and what each carries
@@ -148,8 +148,7 @@ _13/59 closed (22%) · 46 outstanding — 46 buildable now · 0 waiting on the o
   - `[ ] POST-001/T5` — A soft length marker that offers to move the text into the current draft report
   - `[ ] POST-001/T6` — The tagged product's current progress value is shown beside the composer
 
-- **RPT-001** · Investor report authoring — 2/5 closed · depth 7
-  - `[ ] RPT-001/T2` — A new report is prefilled with the previous period's structure and none of its text
+- **RPT-001** · Investor report authoring — 3/5 closed · depth 7
   - `[ ] RPT-001/T4` — The progress board's current values are shown beside the section that narrates them
   - `[ ] RPT-001/T5` — Making a report public states in words what that means
 
