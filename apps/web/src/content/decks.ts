@@ -17,7 +17,13 @@
  * presenter says and the investor never reads, and stripping it in this function
  * rather than in a template is what keeps a reading surface from serving it by
  * forgetting to.
+ *
+ * Once a reader has been shown a version, `recordDeckRead` writes which one and
+ * when (`DECK-002/T4`) — the record that answers, later and by somebody with a
+ * lawyer, what an investor was actually shown.
  */
+
+import { sql } from 'kysely';
 
 import type { Actor } from '../auth/gate';
 import { getDb } from '../db/index';
@@ -100,4 +106,24 @@ export async function deckRevisionFor(deckId: string, reader: Actor | null): Pro
   // here (`DECK-001/T5`) and no reading surface can serve it by omission. The
   // overview and the presenter print read the revision directly, keeping it.
   return { item, revision: { ...revision, blocks: withoutSpeakerContext(revision.blocks) }, version };
+}
+
+/**
+ * Record that an account opened a version of a deck (`DECK-002/T4`).
+ *
+ * One row per account per version: the first open sets both timestamps, and each
+ * later open moves `last_opened_at` to now while `first_opened_at` stays, so the
+ * row answers which version was shown and when it was first and last opened, and
+ * nothing more (`DECK-002` §6). The caller records this only once `deckRevisionFor`
+ * has confirmed the reader may see the deck and resolved which version they were
+ * shown. The timestamps are the database's, never the caller's, so the record is
+ * truthful about when without trusting whoever wrote it. The row is deleted with
+ * the account (`DATA-002`).
+ */
+export async function recordDeckRead(accountId: string, deckId: string, version: number): Promise<void> {
+  await getDb()
+    .insertInto('deck_reads')
+    .values({ account_id: accountId, deck_id: deckId, version })
+    .onConflict((oc) => oc.columns(['account_id', 'deck_id', 'version']).doUpdateSet({ last_opened_at: sql`now()` }))
+    .execute();
 }

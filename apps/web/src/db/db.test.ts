@@ -219,6 +219,13 @@ const SELECTABLE_SAMPLES: { readonly [T in keyof Database]: Selectable<Database[
     granted_by: null,
     pinned_version: null,
   },
+  deck_reads: {
+    account_id: ID,
+    deck_id: ID,
+    version: 1,
+    first_opened_at: AT,
+    last_opened_at: AT,
+  },
   audit: {
     id: '1',
     at: AT,
@@ -336,6 +343,11 @@ const INSERTABLE_SAMPLES: { readonly [T in keyof Database]: Insertable<Database[
     item_id: ID,
     account_id: ID,
     granted_by: null,
+  },
+  deck_reads: {
+    account_id: ID,
+    deck_id: ID,
+    version: 1,
   },
   audit: {
     actor_id: ID,

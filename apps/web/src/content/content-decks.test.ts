@@ -23,7 +23,7 @@ import type { Actor } from '../auth/gate';
 import { closeDb, getDb } from '../db/index';
 
 import type { Block } from './blocks';
-import { deckRevisionFor } from './decks';
+import { deckRevisionFor, recordDeckRead } from './decks';
 import { addGrant } from './grants';
 import { createItem, saveDraft } from './items';
 import { publish, withdraw } from './publish';
@@ -234,6 +234,69 @@ describe.skipIf(!HAS_DATABASE)('a deck publication version (DECK-002/T1)', () =>
       // The heading is served without its context; the paragraph is untouched.
       expect(blocks[0]).toEqual({ type: 'heading', level: 2, text: 'Section' });
       expect(blocks[1]).toEqual({ type: 'paragraph', text: 'on the page', marks: [] });
+    });
+  });
+
+  describe('the read record (DECK-002/T4)', () => {
+    const OLD = new Date('2020-01-01T00:00:00.000Z');
+
+    async function readsFor(accountId: string, deckId: string) {
+      return getDb()
+        .selectFrom('deck_reads')
+        .selectAll()
+        .where('account_id', '=', accountId)
+        .where('deck_id', '=', deckId)
+        .orderBy('version')
+        .execute();
+    }
+
+    it('records the version the reader was shown', async () => {
+      const deck = await aDeck();
+      const reader = await investor(`read-${randomUUID()}@example.test`);
+      await recordDeckRead(reader.id, deck, 2);
+
+      const rows = await readsFor(reader.id, deck);
+      expect(rows).toHaveLength(1);
+      expect(rows[0]?.version).toBe(2);
+    });
+
+    it('keeps a distinct row for each version of the same deck', async () => {
+      const deck = await aDeck();
+      const reader = await investor(`read-${randomUUID()}@example.test`);
+      await recordDeckRead(reader.id, deck, 1);
+      await recordDeckRead(reader.id, deck, 2);
+
+      expect((await readsFor(reader.id, deck)).map((row) => row.version)).toEqual([1, 2]);
+    });
+
+    it('keeps first_opened_at and advances last_opened_at on a re-open, in one row', async () => {
+      const deck = await aDeck();
+      const reader = await investor(`read-${randomUUID()}@example.test`);
+      await recordDeckRead(reader.id, deck, 1);
+      // Backdate both stamps so a re-open's now() is distinguishable from the first.
+      await getDb()
+        .updateTable('deck_reads')
+        .set({ first_opened_at: OLD, last_opened_at: OLD })
+        .where('account_id', '=', reader.id)
+        .where('deck_id', '=', deck)
+        .where('version', '=', 1)
+        .execute();
+      await recordDeckRead(reader.id, deck, 1);
+
+      const rows = await readsFor(reader.id, deck);
+      expect(rows).toHaveLength(1);
+      expect(rows[0]?.first_opened_at).toEqual(OLD);
+      const last = rows[0]?.last_opened_at ?? OLD;
+      expect(last.getTime()).toBeGreaterThan(OLD.getTime());
+    });
+
+    it('deletes the read record with the account (DATA-002)', async () => {
+      const deck = await aDeck();
+      const reader = await investor(`read-${randomUUID()}@example.test`);
+      await recordDeckRead(reader.id, deck, 1);
+
+      await getDb().deleteFrom('accounts').where('id', '=', reader.id).execute();
+      expect(await readsFor(reader.id, deck)).toHaveLength(0);
     });
   });
 });

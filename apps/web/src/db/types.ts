@@ -210,6 +210,18 @@ export interface ContentGrantsTable {
   pinned_version: Generated<number | null>;
 }
 
+// One row per account per version of a deck (`DECK-002/T4`). `version` is the
+// deck version the account was shown; the two timestamps are the database's, so
+// `first_opened_at` is set once on the insert and `last_opened_at` is moved to
+// `now()` on each re-open. Deleted with the account (`DATA-002`).
+export interface DeckReadsTable {
+  account_id: string;
+  deck_id: string;
+  version: number;
+  first_opened_at: Generated<Date>;
+  last_opened_at: Generated<Date>;
+}
+
 // `actor_id` is a plain string and not a reference to an account, because the
 // column is a bare uuid in the database too: the row outlives the account it
 // names, and keeping the id is what lets the trail stay truthful after an
@@ -283,6 +295,7 @@ export interface Database {
   content_revisions: ContentRevisionsTable;
   content_locales: ContentLocalesTable;
   content_grants: ContentGrantsTable;
+  deck_reads: DeckReadsTable;
   audit: AuditTable;
   config: ConfigTable;
   mail_log: MailLogTable;
@@ -425,6 +438,18 @@ export const SCHEMA: Readonly<Record<keyof Database, TableSpec>> = {
       { name: 'pinned_version', type: 'integer', notNull: false, hasDefault: false, unique: false },
     ],
     primaryKey: ['item_id', 'account_id'],
+    checks: {},
+  },
+  deck_reads: {
+    migration: '_deck_reads.sql',
+    columns: [
+      { name: 'account_id', type: 'uuid', notNull: true, hasDefault: false, unique: false },
+      { name: 'deck_id', type: 'uuid', notNull: true, hasDefault: false, unique: false },
+      { name: 'version', type: 'integer', notNull: true, hasDefault: false, unique: false },
+      { name: 'first_opened_at', type: 'timestamptz', notNull: true, hasDefault: true, unique: false },
+      { name: 'last_opened_at', type: 'timestamptz', notNull: true, hasDefault: true, unique: false },
+    ],
+    primaryKey: ['account_id', 'deck_id', 'version'],
     checks: {},
   },
   audit: {

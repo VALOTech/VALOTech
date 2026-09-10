@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_295 tasks in the plan, 163 closed, 132 outstanding._
+_295 tasks in the plan, 164 closed, 131 outstanding._
 
 ---
 
@@ -116,7 +116,7 @@ _42/63 closed (66%) · 21 outstanding — 18 buildable now · 3 waiting on the o
 
 _The three content types, and the compliance posture that governs what is held about the people reading them. Updates come before decks, and not only because they are the simpler shape of the same problem: they are what the room is for. An investor signs in to find out what has happened since they last looked._
 
-_14/59 closed (23%) · 45 outstanding — 45 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_15/59 closed (25%) · 44 outstanding — 44 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
 
 - **DECK-001** · Deck authoring — 2/5 closed · depth 7
   - `[ ] DECK-001/T2` — An overview of section cards in order, showing heading, first line and what each carries
@@ -152,9 +152,8 @@ _14/59 closed (23%) · 45 outstanding — 45 buildable now · 0 waiting on the o
   - `[ ] RPT-001/T4` — The progress board's current values are shown beside the section that narrates them
   - `[ ] RPT-001/T5` — Making a report public states in words what that means
 
-- **DECK-002** · Deck versioning and publishing — 3/6 closed · depth 8
+- **DECK-002** · Deck versioning and publishing — 4/6 closed · depth 8
   - `[ ] DECK-002/T3` — An unpinned reader is told once when the version changed, with what changed by section
-  - `[ ] DECK-002/T4` — A read record per account per version, deleted with the account
   - `[ ] DECK-002/T5` — The publish confirmation names every investor who will see the new version
 
 - **LEGAL-GLOBAL-001** · GDPR posture for EU investors — 0/5 closed · depth 8
