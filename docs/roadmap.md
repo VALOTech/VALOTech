@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_295 tasks in the plan, 111 closed, 184 outstanding._
+_295 tasks in the plan, 113 closed, 182 outstanding._
 
 ---
 
@@ -73,7 +73,7 @@ _59/69 closed (85%) · 10 outstanding — 6 buildable now · 3 waiting on the ow
 
 _The machinery every kind of writing shares — the editor, the media, the locale states, the audience rule, publishing, search — plus the account, configuration and logging surfaces an operator needs before anything is published. Building it once is the whole reason a report, an update and a deck are three navigations over one system rather than three systems._
 
-_6/63 closed (9%) · 57 outstanding — 57 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_8/63 closed (12%) · 55 outstanding — 55 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
 
 - **ADMIN-001** · Account management — 2/8 closed · depth 5
   - `[ ] ADMIN-001/T1` — The list, sortable by last sign-in, with role and state
@@ -112,10 +112,8 @@ _6/63 closed (9%) · 57 outstanding — 57 buildable now · 0 waiting on the own
   - `[ ] CMS-006/T4` — A refusal is a `404`, and it is the same `404` for an item that does not exist
   - `[ ] CMS-006/T6` — Narrowing an audience is audited, and public content carries a short cache lifetime
 
-- **OPS-002** · Logging and monitoring — 0/6 closed · depth 5
-  - `[ ] OPS-002/T1` — One JSON logger to stdout, with a closed event vocabulary and no `console.log` anywhere
+- **OPS-002** · Logging and monitoring — 2/6 closed · depth 5
   - `[ ] OPS-002/T2` — A request id generated at the edge and carried through every line of that request
-  - `[ ] OPS-002/T3` — Explicit fields, never serialised objects, plus a scrubber on the way out
   - `[ ] OPS-002/T4` — A scrubber hit raises an alert naming the event, so the caller is fixed rather than the scrubber
   - `[ ] OPS-002/T5` — `/health` runs a real query and reports the build version, and nothing else
   - `[ ] OPS-002/T6` — Three alerts, each with its action written beside it

@@ -12,20 +12,18 @@
  * production and documented nowhere (CRED-001, SEC-R05), and it is why the
  * string arrives here already validated and wrapped in a `Secret`.
  *
- * No handler is attached to the pool's `error` event, so an idle client that
- * fails takes the process down rather than being caught where nothing can
- * report it. That is deliberate: a caught error would have to be discarded, and
- * a discarded error on the path every authenticated read runs through is worse
- * than a restart the orchestrator performs and the health check notices.
- *
- * Deferred: OPS-002/T1 — attach a pool `error` listener that writes a
- * structured line and lets the process exit, once one logger exists to write
- * it. Until then an idle-client failure crashes loudly — correct, not a stub.
+ * A handler on the pool's `error` event logs one structured line and exits. An
+ * idle client that fails has no caller on the stack to return the error to, so
+ * it cannot be handled where it happens; a discarded error on the path every
+ * authenticated read runs through is worse than a restart the orchestrator
+ * performs and the health check notices, and an exit carrying a line (`OPS-002`)
+ * beats the silent crash an unhandled `error` event would otherwise be.
  */
 import { Kysely, PostgresDialect } from 'kysely';
 import { Pool } from 'pg';
 
 import { getConfig } from '../config/index';
+import { log } from '../ops/logger';
 import type { Database } from './types';
 
 /**
@@ -52,18 +50,32 @@ function ssl(sslmode: string): boolean {
 
 let db: Kysely<Database> | undefined;
 
+/**
+ * Log an idle-client failure and exit. Exported so a test can pin that a pool
+ * error both records a line and ends the process: the `error` event cannot be
+ * raised on a real pool from a unit test, and left to propagate uncaught it
+ * would end the test run rather than an assertion.
+ */
+export function handlePoolError(error: Error): void {
+  log.error('db.pool_error', 'an idle database client failed; the process will exit', {
+    message: error.message,
+  });
+  process.exit(1);
+}
+
 /** The application's database handle, connected on first use. */
 export function getDb(): Kysely<Database> {
   if (db === undefined) {
     const { db: settings } = getConfig();
 
+    const pool = new Pool({
+      connectionString: settings.url.value,
+      ssl: ssl(settings.sslmode),
+    });
+    pool.on('error', handlePoolError);
+
     db = new Kysely<Database>({
-      dialect: new PostgresDialect({
-        pool: new Pool({
-          connectionString: settings.url.value,
-          ssl: ssl(settings.sslmode),
-        }),
-      }),
+      dialect: new PostgresDialect({ pool }),
     });
   }
 
