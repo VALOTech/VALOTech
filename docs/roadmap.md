@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_295 tasks in the plan, 147 closed, 148 outstanding._
+_295 tasks in the plan, 151 closed, 144 outstanding._
 
 ---
 
@@ -73,7 +73,7 @@ _59/69 closed (85%) · 10 outstanding — 6 buildable now · 3 waiting on the ow
 
 _The machinery every kind of writing shares — the editor, the media, the locale states, the audience rule, publishing, search — plus the account, configuration and logging surfaces an operator needs before anything is published. Building it once is the whole reason a report, an update and a deck are three navigations over one system rather than three systems._
 
-_42/63 closed (66%) · 21 outstanding — 19 buildable now · 2 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_42/63 closed (66%) · 21 outstanding — 18 buildable now · 3 waiting on the owner · 0 external residue · 0 parked to a later wave._
 
 - **ADMIN-001** · Account management — 5/8 closed · depth 5
   - `[ ] ADMIN-001/T2` — The person page: identity, access, sessions, actions
@@ -86,9 +86,9 @@ _42/63 closed (66%) · 21 outstanding — 19 buildable now · 2 waiting on the o
   - `[!] CMS-003/T3` — SVG is parsed and stripped to shape and text, or refused  · _pending-decision_ · **Blocked by:** pending-decision: CMS-DEC-03 — sanitising SVG needs a library, or the design's refuse-outright fallback; the choice is the owner's, and the safe defa…
 
 - **CMS-005** · Locale variants and translation state — 3/6 closed · depth 5
-  - `[ ] CMS-005/T3` — Drafting translates block text and reassembles marks by span, never by offset arithmetic
   - `[ ] CMS-005/T4` — The review screen shows source beside translation, editable, marked one locale at a time
   - `[ ] CMS-005/T6` — A new revision starts with no locale rows, and the grid shows it
+  - `[!] CMS-005/T3` — Drafting translates block text and reassembles marks by span, never by offset arithmetic  · _pending-decision_ · **Blocked by:** pending-decision: CMS-DEC-04 — the mark reassembly by span needs a programmatic per-span translator, so which carrier drafts a locale (a self-hosted…
 
 - **CMS-006** · Audience and access — 6/6 closed
 - **OPS-002** · Logging and monitoring — 6/6 closed
@@ -116,7 +116,7 @@ _42/63 closed (66%) · 21 outstanding — 19 buildable now · 2 waiting on the o
 
 _The three content types, and the compliance posture that governs what is held about the people reading them. Updates come before decks, and not only because they are the simpler shape of the same problem: they are what the room is for. An investor signs in to find out what has happened since they last looked._
 
-_0/59 closed (0%) · 59 outstanding — 59 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_4/59 closed (6%) · 55 outstanding — 55 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
 
 - **DECK-001** · Deck authoring — 0/5 closed · depth 7
   - `[ ] DECK-001/T1` — Sections derived from level-2 headings, with the block array the single source
@@ -181,11 +181,7 @@ _0/59 closed (0%) · 59 outstanding — 59 buildable now · 0 waiting on the own
   - `[ ] MAIL-002/T5` — Two-year retention, and immediate removal with the account
   - `[ ] MAIL-002/T6` — The admin log, filtered by recipient and date, showing state and error
 
-- **POST-002** · Update publishing and audience — 0/6 closed · depth 8
-  - `[ ] POST-002/T1` — Audience on the item, with the predicate from `CMS-006` on every read
-  - `[ ] POST-002/T2` — The stream pages by keyset on `(published_at, id)`, never by offset
-  - `[ ] POST-002/T3` — Ordered by publication rather than creation
-  - `[ ] POST-002/T4` — The gateway's public news is the same query with an anonymous reader
+- **POST-002** · Update publishing and audience — 4/6 closed · depth 8
   - `[ ] POST-002/T5` — Narrowing states what it cannot recall; widening states what becomes public
   - `[ ] POST-002/T6` — Unread marking from the per-account read state, and a paging control rather than infinite scroll
 
