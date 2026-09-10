@@ -28,7 +28,7 @@ CREATE TABLE audit (
   id           bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   at           timestamptz NOT NULL DEFAULT now(),
   actor_id     uuid,
-  action       text NOT NULL CHECK (action IN ('account.create', 'account.suspend', 'account.delete', 'account.role_change', 'grant.add', 'grant.remove', 'content.publish', 'content.withdraw', 'content.audience_change', 'media.delete', 'config.change', 'mail.send', 'mail.unsubscribe', 'session.invalidate_all', 'portfolio.change')),
+  action       text NOT NULL CHECK (action IN ('account.create', 'account.suspend', 'account.delete', 'account.role_change', 'account.reinstate', 'grant.add', 'grant.remove', 'content.publish', 'content.withdraw', 'content.audience_change', 'media.delete', 'config.change', 'mail.send', 'mail.unsubscribe', 'session.invalidate_all', 'portfolio.change')),
   subject_type text,
   subject_id   uuid,
   before       jsonb,

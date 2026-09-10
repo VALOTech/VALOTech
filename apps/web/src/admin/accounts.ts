@@ -205,3 +205,48 @@ export async function changeRole(
       return true;
     });
 }
+
+/**
+ * Reinstate a suspended account: it can sign in again. Returns whether the
+ * account was reinstated — `false` when it was not suspended, in which case
+ * nothing is written and nothing is recorded.
+ *
+ * The inverse of `suspendAccount`, and deliberately simpler than it. No session
+ * is restored: suspension deleted them, and the person signs in afresh — a
+ * reinstatement grants the ability to sign in, not a live session. No outstanding
+ * invitation is restored either; a suspension deleted it, and if the account
+ * never had a password, a fresh invitation is the way back in, not this.
+ *
+ * It needs none of `suspendAccount`'s guard. Making an account active cannot
+ * strand the room — it only adds to the set of admins who can sign in — and a
+ * suspended account's holder cannot sign in to reinstate themselves, so the
+ * actor is always a different, active admin. Reinstating an account that is not
+ * suspended is the no-op the narrowed `UPDATE` makes it: the predicate matches
+ * nothing, so an `active` or `invited` account is left exactly as it was.
+ */
+export async function reinstateAccount(accountId: string, actorId: string): Promise<boolean> {
+  return getDb()
+    .transaction()
+    .execute(async (trx) => {
+      const reinstated = await trx
+        .updateTable('accounts')
+        .set({ state: 'active' })
+        .where('id', '=', accountId)
+        .where('state', '=', 'suspended')
+        .returning('id')
+        .executeTakeFirst();
+
+      if (reinstated === undefined) {
+        return false;
+      }
+
+      await recordAudit(trx, {
+        actorId,
+        action: 'account.reinstate',
+        subjectType: 'account',
+        subjectId: accountId,
+      });
+
+      return true;
+    });
+}

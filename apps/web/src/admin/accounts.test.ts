@@ -48,7 +48,7 @@ import {
 import { issue } from '../auth/session';
 import { closeDb, getDb } from '../db/index';
 import type { AccountRole, AccountState } from '../db/types';
-import { changeRole, suspendAccount } from './accounts';
+import { changeRole, reinstateAccount, suspendAccount } from './accounts';
 
 const RAW_DATABASE_URL = (process.env.DATABASE_URL ?? '').trim();
 const HAS_DATABASE = RAW_DATABASE_URL !== '';
@@ -586,6 +586,63 @@ describe.skipIf(!HAS_DATABASE)('ADMIN-001 account mutations', () => {
 
       expect(answers.filter(Boolean)).toHaveLength(1);
       expect(await activeAdminCount()).toBe(1);
+    });
+  });
+
+  describe('reinstateAccount (T8)', () => {
+    it('restores a suspended account to active and records one act', async () => {
+      const actor = randomUUID();
+      const id = await newAccount('suspended');
+
+      expect(await reinstateAccount(id, actor)).toBe(true);
+
+      expect(await stateOf(id)).toBe('active');
+
+      const trail = await auditFor(id);
+      expect(trail).toHaveLength(1);
+      expect(trail[0]?.action).toBe('account.reinstate');
+      expect(trail[0]?.actor_id).toBe(actor);
+      expect(trail[0]?.subject_type).toBe('account');
+    });
+
+    it.each<AccountState>(['active', 'invited'])(
+      'leaves an account that is %s alone, recording nothing',
+      async (state) => {
+        const id = await newAccount(state);
+
+        expect(await reinstateAccount(id, randomUUID())).toBe(false);
+
+        expect(await stateOf(id)).toBe(state);
+        expect(await auditFor(id)).toHaveLength(0);
+      },
+    );
+
+    it('answers false for an id no account holds, writing nothing', async () => {
+      const absent = randomUUID();
+
+      expect(await reinstateAccount(absent, randomUUID())).toBe(false);
+      expect(await auditFor(absent)).toHaveLength(0);
+    });
+
+    it('rolls the state back when the audit cannot be written', async () => {
+      const id = await newAccount('suspended');
+
+      await expect(reinstateAccount(id, UNPARSEABLE_ACTOR)).rejects.toThrow(
+        /invalid input syntax for type uuid/,
+      );
+
+      expect(await stateOf(id)).toBe('suspended');
+      expect(await auditFor(id)).toHaveLength(0);
+    });
+
+    it('touches no other account', async () => {
+      const mine = await newAccount('suspended');
+      const theirs = await newAccount('suspended');
+
+      await reinstateAccount(mine, randomUUID());
+
+      expect(await stateOf(theirs)).toBe('suspended');
+      expect(await auditFor(theirs)).toHaveLength(0);
     });
   });
 });

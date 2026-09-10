@@ -58,6 +58,7 @@ export const AUDIT_ACTIONS = [
   'account.suspend',
   'account.delete',
   'account.role_change',
+  'account.reinstate',
   'grant.add',
   'grant.remove',
   'content.publish',
