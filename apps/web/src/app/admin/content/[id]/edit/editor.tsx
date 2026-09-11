@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * The block editor (`CMS-002/T1`, `T2`, `T6`, `T7`).
+ * The block editor (`CMS-002/T1`, `T2`, `T3`, `T6`, `T7`).
  *
  * The model is the block array, never the DOM (`CMS-002` §3): state is an
  * ordered list of blocks, and the surface is that list rendered. The block row
@@ -22,7 +22,9 @@
  * is refused here with the block and field named, so the author does not reach
  * the server with something it will refuse — and the server validates again and
  * names the same fault, because a browser-side check is a convenience and never
- * a boundary.
+ * a boundary. A refusal moves focus to the offending block rather than leaving a
+ * banner to act on by eye, so a missing image alt is fixed where it is rather
+ * than hunted for (`T3`, `A11Y-R02`).
  */
 
 import { useEffect, useRef, useState } from 'react';
@@ -236,7 +238,17 @@ export function Editor({ itemId, initialBlocks }: { itemId: string; initialBlock
     try {
       blocks = validateBlocks(blocksOf(items));
     } catch (validation) {
-      setError(validation instanceof BlockValidationError ? validation.message : 'The document is not valid.');
+      if (validation instanceof BlockValidationError) {
+        setError(validation.message);
+        // Take the author to the refused block instead of leaving a banner to
+        // act on by eye; the focus effect moves to it on this render (`T3`).
+        const faulty = validation.blockIndex === null ? undefined : items[validation.blockIndex];
+        if (faulty !== undefined) {
+          focusKey.current = faulty.key;
+        }
+      } else {
+        setError('The document is not valid.');
+      }
       return;
     }
     setError(null);

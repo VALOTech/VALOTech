@@ -52,11 +52,21 @@ export type Block =
   | { type: 'figure'; mediaId: string; caption: string | null; data: string[] }
   | { type: 'divider' };
 
-/** Raised when a block array is not valid; the message names the first fault. */
+/**
+ * Raised when a block array is not valid; the message names the first fault as
+ * `blocks[i].field: why`. `blockIndex` is that `i` — the faulty block's position
+ * — lifted from the message so a refusal can point at the block rather than only
+ * describe it (`A11Y-R02`, `CMS-002/T3`); it is null only when the value is not a
+ * block array at all, which names no single block.
+ */
 export class BlockValidationError extends Error {
+  readonly blockIndex: number | null;
+
   constructor(message: string) {
     super(message);
     this.name = 'BlockValidationError';
+    const match = /^blocks\[(\d+)\]/.exec(message);
+    this.blockIndex = match === null ? null : Number(match[1]);
   }
 }
 

@@ -90,6 +90,23 @@ describe('validateBlocks', () => {
     // A fault inside a block is named down to the field.
     expect(() => validateBlocks([{ type: 'heading', level: 2, text: 5 }])).toThrow(/^blocks\[0\]\.text:/);
   });
+
+  it('carries the faulty block index, so a refusal can point at the block (CMS-002/T3)', () => {
+    const indexOf = (value: unknown): number | null => {
+      try {
+        validateBlocks(value);
+      } catch (error) {
+        if (error instanceof BlockValidationError) {
+          return error.blockIndex;
+        }
+        throw error;
+      }
+      throw new Error('expected a BlockValidationError, but the value validated');
+    };
+    expect(indexOf([{ type: 'image', mediaId: 'm', alt: '', caption: null }])).toBe(0);
+    expect(indexOf([{ type: 'divider' }, { type: 'image', mediaId: 'm', alt: '', caption: null }])).toBe(1);
+    expect(indexOf('nope')).toBeNull();
+  });
 });
 
 describe.skipIf(!HAS_DATABASE)('CMS-001 content model', () => {
