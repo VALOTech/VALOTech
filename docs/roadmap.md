@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_295 tasks in the plan, 175 closed, 120 outstanding._
+_295 tasks in the plan, 176 closed, 119 outstanding._
 
 ---
 
@@ -70,11 +70,9 @@ _61/69 closed (88%) · 8 outstanding — 4 buildable now · 3 waiting on the own
 
 _The machinery every kind of writing shares — the editor, the media, the locale states, the audience rule, publishing, search — plus the account, configuration and logging surfaces an operator needs before anything is published. Building it once is the whole reason a report, an update and a deck are three navigations over one system rather than three systems._
 
-_44/63 closed (69%) · 19 outstanding — 16 buildable now · 3 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_45/63 closed (71%) · 18 outstanding — 15 buildable now · 3 waiting on the owner · 0 external residue · 0 parked to a later wave._
 
-- **ADMIN-001** · Account management — 7/8 closed · depth 5
-  - `[ ] ADMIN-001/T6` — Creation issues an invitation; no admin ever sets another person's password
-
+- **ADMIN-001** · Account management — 8/8 closed
 - **CFG-001** · Runtime configuration — 6/6 closed
 - **CMS-003** · Media library — 5/7 closed · depth 5
   - `[!] CMS-003/T2` — Raster images are re-encoded, so EXIF and its location do not survive  · _pending-decision_ · **Blocked by:** pending-decision: CMS-DEC-03 — re-encoding needs an image library, and which one is a new dependency the owner chooses; the safe default refuses rast…

@@ -23,6 +23,8 @@ import styles from './accounts.module.css';
  *
  * The name is the way to the person's page (`ADMIN-001/T2`), which is where the
  * question this list raises — why has nobody signed in — is actually answered.
+ * Inviting a person (`ADMIN-001/T6`) is the link above the list, and an account
+ * begins no other way.
  */
 export default async function AccountsPage(): Promise<ReactElement> {
   const accounts = await listAccounts();
@@ -30,6 +32,10 @@ export default async function AccountsPage(): Promise<ReactElement> {
   return (
     <>
       <h1>Accounts</h1>
+
+      <p>
+        <a href="/admin/accounts/new">Invite a person</a>
+      </p>
 
       {accounts.length === 0 ? (
         <p>No accounts yet. An account comes to exist by being invited.</p>
