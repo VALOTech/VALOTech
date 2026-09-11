@@ -416,7 +416,8 @@ PRD: `MAIL-002`, `DATA-R04`
 - [ ] MAIL-002/T2 — An unsubscribe that works in one click without signing in, and a preference inside the room
 - [ ] MAIL-002/T3 — Transactional mail is never suppressed, enforced by the `kind` set at send time
 - [ ] MAIL-002/T4 — A manual `stop sending` control with its reason, and the send view naming the mailbox bounces arrive in
-- [ ] MAIL-002/T5 — Two-year retention, and immediate removal with the account
+- [x] MAIL-002/T5 — Two-year retention, and immediate removal with the account
+  Evidence: Closed by cross-reference (§1.10): both halves are built and tested by DATA-002/T4's retention sweep and by the schema. Two-year retention — apps/web/scripts/retention-sweep.mjs deletes mail_log rows whose age is past a MAIL_LOG_RETENTION of two years, passed as an interval parameter rather than interpolated; the schedule that runs it is OPS-001's, the way a backup's cron belongs to the deploy (the mechanism is the code, the schedule is the deployment). Immediate removal with the account — mail_log.account_id is declared ON DELETE CASCADE to accounts (apps/web/migrations/1788752441424_platform.sql), so deleting an account takes its mail_log rows with it, with no erasure-function branch needed. Verified live against PostgreSQL 17.11 by apps/web/src/db/retention-sweep.test.ts (4 passed): a mail-log row past two years is deleted and a recent one kept, and the suite records that deleting an account cascades to sessions, invitations and mail_log. A second purge path would be the redundancy §1.10 forbids. The two-year window is DATA-R03's data-minimization rather than a statute, and is argued in MAIL-002 §6.
 - [ ] MAIL-002/T6 — The admin log, filtered by recipient and date, showing state and error
 
 ## CFG-001 · Runtime configuration
