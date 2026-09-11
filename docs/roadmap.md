@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_295 tasks in the plan, 180 closed, 115 outstanding._
+_295 tasks in the plan, 181 closed, 114 outstanding._
 
 ---
 
@@ -168,7 +168,7 @@ _25/59 closed (42%) · 34 outstanding — 33 buildable now · 1 waiting on the o
 
 _The reading surfaces, the room they sit in, and the gateway served by the application — which is what finally makes the gate on the two hidden chapters real rather than a stylesheet. This wave ends with the product complete and still unpublished; what publishes it is outside the waves, waiting on the owner._
 
-_2/56 closed (3%) · 54 outstanding — 54 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_3/56 closed (5%) · 53 outstanding — 53 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
 
 - **DECK-003** · Deck reading — 0/5 closed · depth 9
   - `[ ] DECK-003/T1` — One column with sections in order, the version and date on the page
@@ -220,8 +220,7 @@ _2/56 closed (3%) · 54 outstanding — 54 buildable now · 0 waiting on the own
   - `[ ] INV-002/T6` — The invitation block, in twenty locales, carrying no fragment of what it invites to
   - `[!] INV-002/T1` — The gated components are not called for a reader who may not see them  · _in-graph_ · **Blocked by:** SITE-005/T1 — the gateway is still the static file, so there is no server response to withhold the gated chapters from; the gate they would be withhe…
 
-- **INV-003** · Portfolio progress — 0/5 closed · depth 10
-  - `[ ] INV-003/T1` — Six rows, a constrained product and a closed four-word stage vocabulary
+- **INV-003** · Portfolio progress — 1/5 closed · depth 10
   - `[ ] INV-003/T2` — Editing one product at a time, audited with the previous stage and headline
   - `[ ] INV-003/T3` — A changed stage offers a prefilled progress update, and can be declined
   - `[ ] INV-003/T4` — All six always render, including paused, with an absent row filled rather than dropped

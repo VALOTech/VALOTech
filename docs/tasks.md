@@ -315,7 +315,8 @@ PRD: `INV-002`, `SEC-R01`
 ## INV-003 · Portfolio progress
 PRD: `INV-003`
 
-- [ ] INV-003/T1 — Six rows, a constrained product and a closed four-word stage vocabulary
+- [x] INV-003/T1 — Six rows, a constrained product and a closed four-word stage vocabulary
+  Evidence: Closed by cross-reference (§1.10): the portfolio row and its constraints are built in apps/web/migrations/1788752441424_platform.sql — product is the PRIMARY KEY with a CHECK that it is one of the six (valo-ads, valo-pocket, shimmra, amavo, farola, verdiq), so the table holds at most six rows each naming a distinct product; stage CHECKs the closed four-word vocabulary (building, in private use, in market, paused); headline CHECKs at most 140 characters. The vocabularies live once in apps/web/src/db/types.ts as PORTFOLIO_PRODUCTS and PORTFOLIO_STAGES, carried into the schema descriptor the gate compares against the live database. Verified live against PostgreSQL 17.11 by apps/web/src/db/db.test.ts (81 passed): the portfolio table matches its descriptor, constraints included. "Six rows, forever" is this model — a product per row, no more — and always rendering six is the read's job (INV-003/T4 fills an absent row with building rather than dropping it), so no seed is needed and none is added. The editing, prompt, render and colour surfaces are INV-003/T2 through T5, on the INV-001 board this schema underlies.
 - [ ] INV-003/T2 — Editing one product at a time, audited with the previous stage and headline
 - [ ] INV-003/T3 — A changed stage offers a prefilled progress update, and can be declined
 - [ ] INV-003/T4 — All six always render, including paused, with an absent row filled rather than dropped
