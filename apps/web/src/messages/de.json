@@ -1,0 +1,12 @@
+{
+  "signIn": {
+    "title": "Investoren-Anmeldung",
+    "intro": "Geben Sie Ihre E-Mail-Adresse und Ihr Passwort ein, um den Investorenbereich zu öffnen.",
+    "email": "E-Mail-Adresse",
+    "password": "Passwort",
+    "submit": "Anmelden",
+    "error": "E-Mail-Adresse und Passwort stimmen nicht überein.",
+    "tooManyAttempts": "Zu viele Versuche. Warten Sie einen Moment und versuchen Sie es erneut.",
+    "unexpected": "Etwas ist schiefgelaufen. Versuchen Sie es in einem Moment erneut."
+  }
+}

@@ -1,5 +1,9 @@
+import { NextIntlClientProvider } from 'next-intl';
+import { getLocale, getMessages } from 'next-intl/server';
 import type { Metadata } from 'next';
 import type { ReactElement, ReactNode } from 'react';
+
+import { bcp47, DEFAULT_LOCALE, dir, isLocale } from '../i18n/locales';
 
 /**
  * Declared here so it reaches every route, including the ones added after this
@@ -20,10 +24,22 @@ export const metadata: Metadata = {
   description: 'The VALO Tech application.',
 };
 
-export default function RootLayout({ children }: { children: ReactNode }): ReactElement {
+export default async function RootLayout({ children }: { children: ReactNode }): Promise<ReactElement> {
+  // The locale the request resolved to (src/i18n/request.ts). `lang` and `dir`
+  // carry it to the browser so a screen reader reads the right language and the
+  // two right-to-left locales lay out correctly; the provider hands the same
+  // locale and its messages to every client component below.
+  const requested = await getLocale();
+  const locale = isLocale(requested) ? requested : DEFAULT_LOCALE;
+  const messages = await getMessages();
+
   return (
-    <html lang="en">
-      <body>{children}</body>
+    <html lang={bcp47(locale)} dir={dir(locale)}>
+      <body>
+        <NextIntlClientProvider locale={locale} messages={messages}>
+          {children}
+        </NextIntlClientProvider>
+      </body>
     </html>
   );
 }

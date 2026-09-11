@@ -1,0 +1,12 @@
+{
+  "signIn": {
+    "title": "Log masuk pelabur",
+    "intro": "Masukkan alamat e-mel dan kata laluan anda untuk membuka ruang pelabur.",
+    "email": "Alamat e-mel",
+    "password": "Kata laluan",
+    "submit": "Log masuk",
+    "error": "E-mel atau kata laluan tidak sepadan.",
+    "tooManyAttempts": "Terlalu banyak percubaan. Tunggu sebentar lalu cuba lagi.",
+    "unexpected": "Berlaku ralat. Cuba lagi dalam beberapa saat."
+  }
+}

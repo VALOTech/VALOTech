@@ -1,0 +1,12 @@
+{
+  "signIn": {
+    "title": "Pag-sign in ng investor",
+    "intro": "Ilagay ang inyong email address at password upang buksan ang investor room.",
+    "email": "Email address",
+    "password": "Password",
+    "submit": "Mag-sign in",
+    "error": "Hindi tugma ang email address at password.",
+    "tooManyAttempts": "Masyadong maraming pagsubok. Maghintay sandali at subukang muli.",
+    "unexpected": "May nangyaring mali. Subukang muli sa ilang sandali."
+  }
+}

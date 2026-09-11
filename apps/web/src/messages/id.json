@@ -1,0 +1,12 @@
+{
+  "signIn": {
+    "title": "Masuk investor",
+    "intro": "Masukkan alamat email dan kata sandi Anda untuk membuka ruang investor.",
+    "email": "Alamat email",
+    "password": "Kata sandi",
+    "submit": "Masuk",
+    "error": "Email atau kata sandi tidak cocok.",
+    "tooManyAttempts": "Terlalu banyak percobaan. Tunggu sebentar lalu coba lagi.",
+    "unexpected": "Terjadi kesalahan. Coba lagi dalam beberapa saat."
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "signIn": {
+    "title": "Đăng nhập nhà đầu tư",
+    "intro": "Nhập địa chỉ email và mật khẩu của bạn để vào phòng nhà đầu tư.",
+    "email": "Địa chỉ email",
+    "password": "Mật khẩu",
+    "submit": "Đăng nhập",
+    "error": "Email hoặc mật khẩu không khớp.",
+    "tooManyAttempts": "Bạn đã thử quá nhiều lần. Vui lòng đợi một lát rồi thử lại.",
+    "unexpected": "Đã có lỗi xảy ra. Vui lòng thử lại sau giây lát."
+  }
+}

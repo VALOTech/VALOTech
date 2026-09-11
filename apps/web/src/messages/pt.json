@@ -1,0 +1,12 @@
+{
+  "signIn": {
+    "title": "Acesso a investidores",
+    "intro": "Introduza o seu endereço de e-mail e a sua palavra-passe para abrir a sala de investidores.",
+    "email": "Endereço de e-mail",
+    "password": "Palavra-passe",
+    "submit": "Iniciar sessão",
+    "error": "O e-mail e a palavra-passe não coincidem.",
+    "tooManyAttempts": "Demasiadas tentativas. Aguarde um momento e tente novamente.",
+    "unexpected": "Ocorreu um erro. Tente novamente dentro de momentos."
+  }
+}

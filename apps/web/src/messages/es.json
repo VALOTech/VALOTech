@@ -1,0 +1,12 @@
+{
+  "signIn": {
+    "title": "Acceso para inversores",
+    "intro": "Introduzca su dirección de correo electrónico y su contraseña para abrir la sala de inversores.",
+    "email": "Dirección de correo electrónico",
+    "password": "Contraseña",
+    "submit": "Iniciar sesión",
+    "error": "El correo electrónico y la contraseña no coinciden.",
+    "tooManyAttempts": "Demasiados intentos. Espere un momento y vuelva a intentarlo.",
+    "unexpected": "Algo ha salido mal. Vuelva a intentarlo en un momento."
+  }
+}

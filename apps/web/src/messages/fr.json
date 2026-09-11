@@ -1,0 +1,12 @@
+{
+  "signIn": {
+    "title": "Connexion investisseurs",
+    "intro": "Saisissez votre adresse e-mail et votre mot de passe pour ouvrir l'espace investisseurs.",
+    "email": "Adresse e-mail",
+    "password": "Mot de passe",
+    "submit": "Se connecter",
+    "error": "L'adresse e-mail et le mot de passe ne correspondent pas.",
+    "tooManyAttempts": "Trop de tentatives. Patientez un moment, puis réessayez.",
+    "unexpected": "Une erreur s'est produite. Réessayez dans un instant."
+  }
+}

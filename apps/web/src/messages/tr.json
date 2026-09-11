@@ -1,0 +1,12 @@
+{
+  "signIn": {
+    "title": "Yatırımcı girişi",
+    "intro": "Yatırımcı odasını açmak için e-posta adresinizi ve parolanızı girin.",
+    "email": "E-posta adresi",
+    "password": "Parola",
+    "submit": "Giriş yap",
+    "error": "E-posta adresi veya parola eşleşmiyor.",
+    "tooManyAttempts": "Çok fazla deneme yapıldı. Lütfen biraz bekleyip tekrar deneyin.",
+    "unexpected": "Bir şeyler ters gitti. Lütfen birazdan tekrar deneyin."
+  }
+}

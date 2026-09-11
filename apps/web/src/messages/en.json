@@ -1,0 +1,12 @@
+{
+  "signIn": {
+    "title": "Investor sign-in",
+    "intro": "Enter your email address and password to open the investor room.",
+    "email": "Email address",
+    "password": "Password",
+    "submit": "Sign in",
+    "error": "That email address and password do not match.",
+    "tooManyAttempts": "Too many attempts. Wait a moment and try again.",
+    "unexpected": "Something went wrong. Try again in a moment."
+  }
+}
