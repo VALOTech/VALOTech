@@ -27,7 +27,7 @@ import { closeDb, getDb } from '../db/index';
 
 import { type Block } from './blocks';
 import { createItem, saveDraft } from './items';
-import { publish, withdraw } from './publish';
+import { PeriodTakenError, publish, withdraw } from './publish';
 import { DEFAULT_REPORT_STRUCTURE, markReportRead, prefillStructureFor } from './reports';
 
 const RAW_DATABASE_URL = (process.env.DATABASE_URL ?? '').trim();
@@ -106,17 +106,23 @@ describe.skipIf(!HAS_DATABASE)('a report against a period (RPT-001/T1, RPT-002/T
 
   afterAll(closeDb);
 
-  it('refuses a second published report for a period one already holds', async () => {
+  it('refuses a second published report, naming the one that holds the period (RPT-002/T1, T2)', async () => {
     const period = aPeriod();
-    await publishReport(period);
+    const held = await publishReport(period);
 
     const second = await createItem({ type: 'report', slug: `r-${randomUUID()}`, title: 'second', period });
     const secondRev = await saveDraft(second.id, [{ type: 'divider' }], authorId);
 
-    // Rejected by this index by name, not by an incidental error: without the
-    // partial unique index the pointer move would succeed and the period would
-    // hold two published reports.
-    await expect(publish(second.id, secondRev.id, authorId)).rejects.toThrow(/one_published_report_per_period/);
+    // The partial unique index is what refuses — without it the pointer move
+    // would succeed and the period would hold two published reports. The publish
+    // turns that violation into a PeriodTakenError naming the report that already
+    // holds the period, so the surface offers the two real choices (withdraw it,
+    // or give this one another period) rather than a raw constraint name.
+    const error = await publish(second.id, secondRev.id, authorId).catch((reason: unknown) => reason);
+    expect(error).toBeInstanceOf(PeriodTakenError);
+    expect((error as PeriodTakenError).period).toBe(period);
+    expect((error as PeriodTakenError).heldBy?.id).toBe(held);
+    expect((error as PeriodTakenError).heldBy?.title).toBe(period);
   });
 
   it('leaves a draft replacement for a live period legitimate — the index is partial on the pointer', async () => {

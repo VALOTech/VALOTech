@@ -18,6 +18,7 @@
  */
 
 import { type Transaction, sql } from 'kysely';
+import { DatabaseError } from 'pg';
 
 import { recordAudit } from '../audit/record';
 import { getDb } from '../db/index';
@@ -77,12 +78,73 @@ async function versionForPublish(
 }
 
 /**
+ * Raised when publishing a report into a period that already holds a published
+ * one (`RPT-002/T2`). The partial unique index `one_published_report_per_period`
+ * is the race-safe guard (`RPT-002/T1`); this carries what a reader of the error
+ * needs to offer the two real choices — withdraw the report named here, or give
+ * this one another period — rather than a raw constraint name.
+ */
+export class PeriodTakenError extends Error {
+  constructor(
+    readonly period: string,
+    readonly heldBy: { id: string; title: string } | null,
+  ) {
+    super(`period ${period} already holds a published report`);
+    this.name = 'PeriodTakenError';
+  }
+}
+
+/**
  * Publish a revision: stamp its `published_at`, move the item's pointer to it,
  * and record the act. The body is re-validated first — publish is the gate past
  * which a reader sees it, so it does not trust a stored row it never checked (a
  * direct write, or a validator tightened since the draft was saved).
+ *
+ * A report publish can fail on `one_published_report_per_period`; that violation
+ * becomes a `PeriodTakenError` naming the report that holds the period. The whole
+ * transaction has rolled back by then, so the period is read again outside it.
  */
 export async function publish(itemId: string, revisionId: string, actorId: string): Promise<ContentItem> {
+  try {
+    return await publishRevision(itemId, revisionId, actorId);
+  } catch (error) {
+    if (
+      error instanceof DatabaseError &&
+      error.code === '23505' &&
+      error.constraint === 'one_published_report_per_period'
+    ) {
+      throw await periodTaken(itemId);
+    }
+    throw error;
+  }
+}
+
+/**
+ * The report that already holds the period this item was published into, read
+ * after the failed transaction rolled back so the row being published — whose
+ * pointer move did not commit — is excluded rather than named as its own rival.
+ */
+async function periodTaken(itemId: string): Promise<PeriodTakenError> {
+  const item = await getDb()
+    .selectFrom('content_items')
+    .select('period')
+    .where('id', '=', itemId)
+    .executeTakeFirstOrThrow();
+  const heldBy =
+    item.period === null
+      ? undefined
+      : await getDb()
+          .selectFrom('content_items')
+          .select(['id', 'title'])
+          .where('type', '=', 'report')
+          .where('period', '=', item.period)
+          .where('current_revision_id', 'is not', null)
+          .where('id', '!=', itemId)
+          .executeTakeFirst();
+  return new PeriodTakenError(item.period ?? '', heldBy ?? null);
+}
+
+async function publishRevision(itemId: string, revisionId: string, actorId: string): Promise<ContentItem> {
   return getDb()
     .transaction()
     .execute(async (trx) => {

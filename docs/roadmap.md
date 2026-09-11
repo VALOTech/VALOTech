@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_295 tasks in the plan, 177 closed, 118 outstanding._
+_295 tasks in the plan, 178 closed, 117 outstanding._
 
 ---
 
@@ -108,7 +108,7 @@ _46/63 closed (73%) · 17 outstanding — 13 buildable now · 3 waiting on the o
 
 _The three content types, and the compliance posture that governs what is held about the people reading them. Updates come before decks, and not only because they are the simpler shape of the same problem: they are what the room is for. An investor signs in to find out what has happened since they last looked._
 
-_22/59 closed (37%) · 37 outstanding — 36 buildable now · 1 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_23/59 closed (38%) · 36 outstanding — 35 buildable now · 1 waiting on the owner · 0 external residue · 0 parked to a later wave._
 
 - **DECK-001** · Deck authoring — 2/5 closed · depth 7
   - `[ ] DECK-001/T2` — An overview of section cards in order, showing heading, first line and what each carries
@@ -162,8 +162,7 @@ _22/59 closed (37%) · 37 outstanding — 36 buildable now · 1 waiting on the o
   - `[ ] POST-002/T5` — Narrowing states what it cannot recall; widening states what becomes public
   - `[ ] POST-002/T6` — Unread marking from the per-account read state, and a paging control rather than infinite scroll
 
-- **RPT-002** · Report periods and archive — 3/6 closed · depth 8
-  - `[ ] RPT-002/T2` — Publishing into a taken period fails with the report that holds it and the two real choices
+- **RPT-002** · Report periods and archive — 4/6 closed · depth 8
   - `[ ] RPT-002/T3` — The archive lists by period, groups by year, and shows a period with no report as a gap
   - `[ ] RPT-002/T5` — Withdrawal states that the period becomes a gap and which report becomes current
 
