@@ -6,7 +6,11 @@
  * that — an admin surface (`DECK-004`) calls these; the read side for a reader is
  * the predicate. `grantsForAccount` is the other read — which decks one account
  * holds, for an admin export and the from-the-account view — asking about the
- * grants rather than through them. The grant is idempotent, because its key is `(item_id, account_id)`
+ * grants rather than through them. `erasureContentCounts` is the third, and the
+ * only one that looks past the grant: a delete confirmation has to say how much
+ * content an account takes with it and how much stays behind, and both halves of
+ * that answer live in tables this module is the one place to read (`ADMIN-001/T4`).
+ * The grant is idempotent, because its key is `(item_id, account_id)`
  * and granting twice is the same state as granting once; a second grant is a
  * no-op and records nothing, so the trail carries acts and not re-assertions.
  *
@@ -50,6 +54,58 @@ export async function grantsForAccount(accountId: string): Promise<AccountGrant[
     grantedAt: row.granted_at,
     pinnedVersion: row.pinned_version,
   }));
+}
+
+/** The content half of what an account's erasure removes and what it leaves. */
+export interface ErasureContentCounts {
+  /** Grants of access held by the account, removed with it. */
+  readonly grants: number;
+  /** Revisions the account authored, which survive with a null author. */
+  readonly authoredRevisions: number;
+}
+
+/**
+ * How much content an account's erasure removes, and how much it leaves behind
+ * (`ADMIN-001/T4`, `DATA-002`).
+ *
+ * The two counts sit on opposite sides of the erasure manifest's split. A grant is
+ * about the person — it is access they held — so it goes with them. A revision they
+ * wrote is the company's document, so it stays and only its author is forgotten
+ * (`DATA-002/T5`). The delete confirmation states both, because an admin should
+ * not be surprised afterwards by either half.
+ *
+ * Counts, not rows: what the confirmation needs is a number and a kind, and a
+ * preview naming the documents would be reading content to justify removing an
+ * account (`DATA-R01`).
+ *
+ * Every grant is counted rather than only the decks. Any item type can be
+ * audience-`granted`, so a row the delete removes that the preview did not count
+ * is exactly the surprise the confirmation exists to prevent — where
+ * `grantedDecksForAccount` narrows to decks because it is listing what somebody
+ * can open.
+ *
+ * It lives here because it names the two tables, as every read of them does
+ * (`CMS-006`), and it is scoped to the one account (`DATA-R05`).
+ */
+export async function erasureContentCounts(accountId: string): Promise<ErasureContentCounts> {
+  const db = getDb();
+
+  // `count(*)` is an `int8`, which the driver hands back as a string rather than
+  // rounding a value a JavaScript number cannot hold exactly.
+  const [granted, authored] = await Promise.all([
+    db
+      .selectFrom('content_grants')
+      .select((eb) => eb.fn.countAll<string>().as('rows'))
+      .where('account_id', '=', accountId)
+      .executeTakeFirstOrThrow(),
+    db
+      .selectFrom('content_revisions')
+      .select((eb) => eb.fn.countAll<string>().as('rows'))
+      .where('author_id', '=', accountId)
+      .executeTakeFirstOrThrow(),
+  ]);
+
+  return { grants: Number(granted.rows), authoredRevisions: Number(authored.rows) };
 }
 
 /**

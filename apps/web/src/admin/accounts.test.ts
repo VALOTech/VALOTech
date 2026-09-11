@@ -48,13 +48,14 @@ import {
 import { issue } from '../auth/session';
 import { recordDeckRead } from '../content/decks';
 import { addGrant } from '../content/grants';
-import { createItem } from '../content/items';
+import { createItem, saveDraft } from '../content/items';
 import { markReportRead } from '../content/reports';
 import { closeDb, getDb } from '../db/index';
 import type { AccountRole, AccountState } from '../db/types';
 import {
   changeRole,
   eraseAccount,
+  erasureCounts,
   exportPersonData,
   listAccounts,
   objectToReadTracking,
@@ -907,6 +908,130 @@ describe.skipIf(!HAS_DATABASE)('ADMIN-001 account mutations', () => {
 
       expect(await accountExists(theirs)).toBe(true);
       expect(await rowExists(theirToken)).toBe(true);
+    });
+  });
+
+  describe('erasureCounts (T4)', () => {
+    async function newReport(): Promise<string> {
+      const report = await createItem({
+        type: 'report',
+        slug: `r-${randomUUID()}`,
+        title: 'Q1',
+        period: '2026-Q1',
+      });
+
+      return report.id;
+    }
+
+    /** An item this account wrote a revision of, which its erasure would leave behind. */
+    async function newAuthoredItem(authorId: string): Promise<void> {
+      const item = await createItem({
+        type: 'update',
+        slug: `u-${randomUUID()}`,
+        title: 'An update',
+        kind: 'announcement',
+      });
+      await saveDraft(item.id, [], authorId);
+    }
+
+    it('counts what the delete would remove and what it would leave, by kind', async () => {
+      const person = await newAccount('active');
+      const granter = await newAccount('active', 'admin');
+
+      await issue(person);
+      await issue(person);
+      await issueToken(person, INVITATION_TTL_SECONDS);
+
+      // Three grants of three item types. Any type can be audience-`granted`, so a
+      // preview that counted only the decks would under-report what the delete
+      // takes — which is the surprise the confirmation exists to prevent.
+      const deck = await createItem({
+        type: 'deck',
+        slug: `d-${randomUUID()}`,
+        title: 'A deck',
+        audience: 'granted',
+      });
+      const grantedReport = await newReport();
+      const grantedUpdate = await createItem({
+        type: 'update',
+        slug: `u-${randomUUID()}`,
+        title: 'An update',
+        kind: 'announcement',
+        audience: 'granted',
+      });
+      await addGrant(deck.id, person, granter);
+      await addGrant(grantedReport, person, granter);
+      await addGrant(grantedUpdate.id, person, granter);
+
+      for (const version of [1, 2, 3, 4]) {
+        await recordDeckRead(person, deck.id, version);
+      }
+
+      for (let n = 0; n < 5; n += 1) {
+        await markReportRead(person, await newReport());
+      }
+
+      for (let n = 0; n < 6; n += 1) {
+        await newAuthoredItem(person);
+      }
+
+      // Six distinct numbers, and the whole object key for key. A read that
+      // counted the wrong table, the wrong column, or the same table twice cannot
+      // land on this by coincidence, and a kind added to the shape and not to the
+      // read fails here rather than rendering as `undefined`.
+      expect(await erasureCounts(person)).toEqual({
+        sessions: 2,
+        invitations: 1,
+        grants: 3,
+        deckReads: 4,
+        reportReads: 5,
+        authoredRevisions: 6,
+      });
+    });
+
+    it('counts one account only, and never what belongs to another person (`DATA-R05`)', async () => {
+      const mine = await newAccount('active');
+      const theirs = await newAccount('active');
+      const granter = await newAccount('active', 'admin');
+
+      const deck = await createItem({
+        type: 'deck',
+        slug: `d-${randomUUID()}`,
+        title: 'A deck',
+        audience: 'granted',
+      });
+      await issue(theirs);
+      await issueToken(theirs, INVITATION_TTL_SECONDS);
+      await addGrant(deck.id, theirs, granter);
+      await recordDeckRead(theirs, deck.id, 1);
+      await markReportRead(theirs, await newReport());
+      await newAuthoredItem(theirs);
+
+      expect(await erasureCounts(mine)).toEqual({
+        sessions: 0,
+        invitations: 0,
+        grants: 0,
+        deckReads: 0,
+        reportReads: 0,
+        authoredRevisions: 0,
+      });
+
+      // The rows exist, so the zeros above are a scope rather than an empty
+      // database — without this half, a read that answered nothing for everybody
+      // would pass.
+      expect(await erasureCounts(theirs)).toEqual({
+        sessions: 1,
+        invitations: 1,
+        grants: 1,
+        deckReads: 1,
+        reportReads: 1,
+        authoredRevisions: 1,
+      });
+
+      // The granter holds no grant of their own: the count is the access an
+      // account was given, not the access it handed out, and those are different
+      // columns of one table.
+      expect((await erasureCounts(granter)).grants).toBe(0);
     });
   });
 

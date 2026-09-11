@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import type { ReactElement } from 'react';
 
-import { personIdentity, type PersonIdentity } from '../../../../admin/accounts';
+import { erasureCounts, personIdentity, type PersonIdentity } from '../../../../admin/accounts';
 import { requireAdminPage } from '../../../../auth/page-guard';
 import { type LiveSession, liveSessionsForAccount } from '../../../../auth/session';
 import { type AccountDeckAccess, grantedDecksForAccount } from '../../../../content/decks';
@@ -22,10 +22,12 @@ import styles from './person.module.css';
  * live right now, and the control that ends them. **Actions** is what can be done
  * about any of it.
  *
- * Deleting an account is not here. It is `ADMIN-001/T4`, with the confirmation
- * that counts what goes and what remains before it takes the typed name, and a
- * delete control that arrived before that confirmation would be the one act on
- * this page with nothing to explain itself.
+ * Deleting is the last of those and the only one nothing undoes, so the page reads
+ * what it would cost before offering it (`ADMIN-001/T4`): the confirmation states
+ * how much goes and how much stays, and then asks for the name to be typed. The
+ * counts are read here, with the sections, rather than when the panel opens —
+ * a confirmation that fetched its own numbers could open before they arrived and
+ * would be a blank where the weight of the act belongs.
  *
  * Every timestamp is UTC and spelled out as one, because an admin comparing two
  * accounts needs one clock rather than their own. The `/admin` layout's role check
@@ -167,9 +169,10 @@ export default async function PersonPage({
     return notFound();
   }
 
-  const [decks, sessions] = await Promise.all([
+  const [decks, sessions, erasure] = await Promise.all([
     grantedDecksForAccount(person.id),
     liveSessionsForAccount(person.id),
+    erasureCounts(person.id),
   ]);
   const self = reader.id === person.id;
 
@@ -186,7 +189,13 @@ export default async function PersonPage({
 
       <section aria-labelledby="actions-heading">
         <h2 id="actions-heading">Actions</h2>
-        <PersonActions accountId={person.id} name={person.name} state={person.state} self={self} />
+        <PersonActions
+          accountId={person.id}
+          name={person.name}
+          state={person.state}
+          self={self}
+          erasure={erasure}
+        />
       </section>
     </>
   );

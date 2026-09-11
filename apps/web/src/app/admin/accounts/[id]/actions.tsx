@@ -14,8 +14,10 @@
  * Which controls appear follows the state, because a control that cannot work is
  * worse than none: an invitation is resent only to somebody who has not accepted,
  * a reset belongs to an account that has a password, and only a suspended account
- * is reinstated. The services refuse the same cases anyway (`ADMIN-001`), so this
- * is what an admin is offered and not what is enforced.
+ * is reinstated. Neither suspending nor deleting is offered on the reader's own
+ * page, for the same reason — both are refused for the actor's own account
+ * (`ADMIN-DEC-01`). The services refuse every one of those cases anyway
+ * (`ADMIN-001`), so this is what an admin is offered and not what is enforced.
  *
  * **Each sentence says exactly what happened**, including when what happened is
  * less than the control's name suggests. Nothing here reports success it cannot
@@ -28,10 +30,11 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import type { ReactElement } from 'react';
 
+import type { ErasureCounts } from '../../../../admin/accounts';
 import type { AccountState } from '../../../../db/types';
 import { DestructiveAction } from '../../destructive-action';
 
-import type { AccountAction, AccountActionAnswer } from './account-actions';
+import type { AccountAction, AccountActionAnswer, AccountDeleteAnswer } from './account-actions';
 import styles from './person.module.css';
 
 /** One act and the answer it came back with, held so the page can report it. */
@@ -193,18 +196,173 @@ function Outcome({
   );
 }
 
+/** The list, which is where a deleted person's own page can no longer send a reader. */
+const ACCOUNTS = '/admin/accounts';
+
+/** A count and the noun it counts, pluralised for the English console. */
+function counted(howMany: number, noun: string): string {
+  return `${howMany} ${noun}${howMany === 1 ? '' : 's'}`;
+}
+
+/**
+ * What this delete would remove and what it would leave, in one sentence
+ * (`ADMIN-001/T4`).
+ *
+ * The two kinds of read record are one number here, because what somebody opened
+ * is one thing to an admin and two tables only to the schema. No deck or report is
+ * named: the count is what makes the size of the act legible, and the titles would
+ * be reading a person's history in order to justify deleting it (`DATA-R01`).
+ *
+ * It is a sentence rather than a list because it is read in the moment before an
+ * irreversible act, and a table of seven numbers at that moment is skipped.
+ */
+function erasureSentence(counts: ErasureCounts): string {
+  const removed = [
+    counted(counts.sessions, 'session'),
+    counted(counts.invitations, 'invitation'),
+    counted(counts.grants, 'grant'),
+    counted(counts.deckReads + counts.reportReads, 'read record'),
+  ];
+
+  const kept =
+    counts.authoredRevisions === 0
+      ? 'They wrote nothing, so no document is left behind.'
+      : `It keeps ${counted(counts.authoredRevisions, 'revision')} they wrote, with the author removed.`;
+
+  return `Removing this account also removes ${removed.slice(0, -1).join(', ')} and ${removed[removed.length - 1]}. ${kept}`;
+}
+
+/** Whether the delete is in flight, has succeeded, or is waiting to be asked for. */
+type ErasePhase = 'idle' | 'erasing' | 'gone';
+
+/** What the delete reported, and whether it is news about the act or a failure of it. */
+interface Reported {
+  readonly failed: boolean;
+  readonly text: string;
+}
+
+/**
+ * The one control on this page that nothing undoes (`ADMIN-001/T4`).
+ *
+ * It posts to a route of its own rather than through the act runner above, because
+ * it carries the typed name the confirmation collected and the route checks that
+ * name again before erasing anything — a disabled button is a courtesy, not a
+ * control.
+ *
+ * **A delete that worked leaves this page behind.** The account the page is about
+ * no longer exists, so re-reading it — what every other act here does — would land
+ * on the `404` an unknown id gives. It goes to the list instead, which is where the
+ * admin can see that the row has gone. The phase stays `gone` across that
+ * navigation so the control cannot be pressed a second time while it is under way.
+ *
+ * What it reports is announced rather than focused, unlike the acts above: the
+ * panel returns focus to the trigger as it closes, and the trigger is still there,
+ * so moving focus would take it away from where the reader just left it. The
+ * region that announces is mounted empty from the first render, because a live
+ * region that appears in the same render as its own first text is not reliably
+ * read — the announcement is of a change within a region, so the region has to
+ * have been there to change.
+ */
+function DeleteAccount({
+  accountId,
+  name,
+  erasure,
+  disabled,
+}: {
+  readonly accountId: string;
+  /** The person's name, which the confirmation states and demands typed. */
+  readonly name: string;
+  readonly erasure: ErasureCounts;
+  /** Whether another act on this page is running. */
+  readonly disabled: boolean;
+}): ReactElement {
+  const router = useRouter();
+  const [phase, setPhase] = useState<ErasePhase>('idle');
+  const [reported, setReported] = useState<Reported | null>(null);
+
+  async function erase(typedName: string): Promise<void> {
+    setPhase('erasing');
+    setReported(null);
+
+    try {
+      const response = await fetch(`/admin/accounts/${accountId}/delete`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ confirmName: typedName }),
+      });
+
+      if (response.redirected) {
+        setReported({ failed: true, text: 'Your session has ended. Open the page again to sign in.' });
+      } else if (response.status === 200) {
+        const answer = (await response.json()) as AccountDeleteAnswer;
+
+        if (answer.outcome === 'changed') {
+          setPhase('gone');
+          router.push(ACCOUNTS);
+        } else {
+          setReported({
+            failed: false,
+            text: 'Nothing was deleted: an admin cannot delete their own account, and deleting the last admin who can sign in is refused.',
+          });
+        }
+      } else if (response.status >= 500) {
+        // A server failure is not a refusal, and saying which it was would be a
+        // guess: the delete and its audit row are one transaction, so it most
+        // likely wrote nothing — but this surface cannot see that, and the page can.
+        setReported({
+          failed: true,
+          text: `The account was not deleted (status ${response.status}) — the server failed rather than refusing. Re-read the page to see where things stand.`,
+        });
+      } else {
+        setReported({
+          failed: true,
+          text: `The delete was refused (status ${response.status}). Re-read the page: the account may already be gone, or its name may not be what this page shows.`,
+        });
+      }
+    } catch {
+      setReported({ failed: true, text: 'The delete could not be sent — the network request failed.' });
+    } finally {
+      // `gone` stands: the page is on its way to the list and the control must not
+      // re-arm behind it.
+      setPhase((current) => (current === 'gone' ? current : 'idle'));
+    }
+  }
+
+  return (
+    <>
+      <DestructiveAction
+        action="account.delete"
+        subject={name}
+        details={<p>{erasureSentence(erasure)}</p>}
+        disabled={disabled || phase !== 'idle'}
+        onConfirm={(typedName) => void erase(typedName)}
+      />
+      <div role="status">
+        {reported === null ? null : (
+          <p className={reported.failed ? styles.failure : styles.outcome}>
+            {reported.text}
+          </p>
+        )}
+      </div>
+    </>
+  );
+}
+
 export function PersonActions({
   accountId,
   name,
   state,
   self,
+  erasure,
 }: {
   readonly accountId: string;
-  /** The person's name, which the suspension confirmation states. */
+  /** The person's name, which the suspension and delete confirmations state. */
   readonly name: string;
   readonly state: AccountState;
   /** Whether the admin reading the page is the person it is about. */
   readonly self: boolean;
+  /** What a delete would remove and leave, which its confirmation states. */
+  readonly erasure: ErasureCounts;
 }): ReactElement {
   const runner = useAccountAction(accountId);
   const held = runner.busy !== null;
@@ -264,12 +422,18 @@ export function PersonActions({
             />
           </li>
         ) : null}
+
+        {self ? null : (
+          <li>
+            <DeleteAccount accountId={accountId} name={name} erasure={erasure} disabled={held} />
+          </li>
+        )}
       </ul>
 
       {self ? (
         <p className={styles.note}>
-          This is your own account. Suspending it is refused, so the control is not offered — ask the
-          other admin.
+          This is your own account. Suspending and deleting it are both refused, so neither control
+          is offered — ask the other admin.
         </p>
       ) : null}
 

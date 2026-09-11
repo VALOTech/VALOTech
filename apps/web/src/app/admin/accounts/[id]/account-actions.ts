@@ -45,3 +45,15 @@ export interface AccountActionAnswer {
   /** Why that link has to be delivered by hand. */
   readonly deliverByHand?: string;
 }
+
+/**
+ * What came of a delete (`ADMIN-001/T4`).
+ *
+ * Its own answer rather than the one above, because deletion is not one of the
+ * acts that route performs and two of that type's three outcomes are impossible
+ * here: there is no `requested`, and no link. `changed` means the row is gone;
+ * `unchanged` means a guard refused it and nothing was written (`ADMIN-DEC-01`).
+ */
+export interface AccountDeleteAnswer {
+  readonly outcome: 'changed' | 'unchanged';
+}

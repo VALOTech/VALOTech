@@ -59,7 +59,7 @@ import { sql, type Transaction } from 'kysely';
 
 import { recordAudit } from '../audit/record';
 import { invalidateAllForAccountIn } from '../auth/session';
-import { type AccountGrant, grantsForAccount } from '../content/grants';
+import { type AccountGrant, erasureContentCounts, grantsForAccount } from '../content/grants';
 import { getDb } from '../db/index';
 import type { AccountRole, AccountState, Database } from '../db/types';
 
@@ -420,6 +420,70 @@ export async function endAllSessions(accountId: string, actorId: string): Promis
 
       return true;
     });
+}
+
+/** What deleting an account removes and what it leaves, by count and by kind. */
+export interface ErasureCounts {
+  readonly sessions: number;
+  readonly invitations: number;
+  /** Grants of access the person held, of any item type. */
+  readonly grants: number;
+  readonly deckReads: number;
+  readonly reportReads: number;
+  /** Revisions the person wrote, which survive with a null author (`DATA-002/T5`). */
+  readonly authoredRevisions: number;
+}
+
+/** The tables holding rows that are about one account and go with it (`DATA-002`). */
+type AccountScopedTable = 'sessions' | 'invitations' | 'deck_reads' | 'report_reads';
+
+async function countFor(table: AccountScopedTable, accountId: string): Promise<number> {
+  // `count(*)` is an `int8`, which the driver hands back as a string rather than
+  // rounding a value a JavaScript number cannot hold exactly.
+  const counted = await getDb()
+    .selectFrom(table)
+    .select((eb) => eb.fn.countAll<string>().as('rows'))
+    .where('account_id', '=', accountId)
+    .executeTakeFirstOrThrow();
+
+  return Number(counted.rows);
+}
+
+/**
+ * What deleting an account would take with it and what it would leave behind, for
+ * the confirmation to state before it takes the typed name (`ADMIN-001/T4`).
+ *
+ * Five kinds go and one stays, which is the erasure manifest's split seen from the
+ * surface (`DATA-002`). What is about the person — the ways they could sign in,
+ * the access they held, what they opened — is removed by the foreign keys'
+ * cascades. A revision they wrote stays, with its author unset, because a
+ * published document is the company's rather than theirs (`DATA-002/T5`).
+ *
+ * Counts, not rows. The confirmation needs to say how much goes; a preview that
+ * named which decks somebody had opened would be putting their reading history on
+ * an admin's screen in order to justify deleting it (`DATA-R01`).
+ *
+ * The grant and the revision halves come from the content module, which is where
+ * those tables are read. The rest are this person's own rows, each scoped by
+ * `account_id` (`DATA-R05`).
+ */
+export async function erasureCounts(accountId: string): Promise<ErasureCounts> {
+  const [sessions, invitations, deckReads, reportReads, content] = await Promise.all([
+    countFor('sessions', accountId),
+    countFor('invitations', accountId),
+    countFor('deck_reads', accountId),
+    countFor('report_reads', accountId),
+    erasureContentCounts(accountId),
+  ]);
+
+  return {
+    sessions,
+    invitations,
+    grants: content.grants,
+    deckReads,
+    reportReads,
+    authoredRevisions: content.authoredRevisions,
+  };
 }
 
 /**

@@ -16,11 +16,12 @@
  * entry cannot be marked final and then quietly skip the typing, and a reversible
  * act cannot acquire the friction reserved for the final ones.
  *
- * The entries for deleting an account (`ADMIN-001/T4`), deleting a file
- * (`CMS-003`) and sending mail (`MAIL-001`) are listed before those surfaces
- * exist, because a list that named only what is already built would be silent
- * about the three the design singles out and each surface would arrive deciding
- * its own friction. Suspension (`ADMIN-001/T2`) is the entry with a caller today.
+ * The entries for deleting a file (`CMS-003`) and sending mail (`MAIL-001`) are
+ * listed before those surfaces exist, because a list that named only what is
+ * already built would be silent about two of the three acts the design singles
+ * out, and each surface would then arrive deciding its own friction. Suspension
+ * (`ADMIN-001/T2`) and deleting an account (`ADMIN-001/T4`) are the entries with
+ * callers today, and the second is the first to take a typed name.
  */
 
 /** What undoes an act, or the statement that nothing does. */

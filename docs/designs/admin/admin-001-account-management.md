@@ -102,6 +102,13 @@ remain**, by count and by kind, and requires the person's name to be typed
 (`ADMIN-002`). An admin deleting an account should not be surprised afterwards
 by either half.
 
+The surface is a dedicated route, `POST /admin/accounts/<id>/delete { confirmName }`,
+separate from the action route because deletion alone carries a value beyond its
+own name. It re-checks that name server-side with the same predicate the panel
+gates on — a posted body is whatever the caller sent — and only then calls
+`eraseAccount`, which owns the refusals; a name that does not match is a `400`
+and nothing is erased.
+
 Deleting the last admin is refused. Deleting yourself is refused. Both are the
 kind of thing that is obvious until somebody is cleaning up at the end of a long
 day.

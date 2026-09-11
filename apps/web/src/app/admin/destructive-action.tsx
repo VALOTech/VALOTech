@@ -12,8 +12,18 @@
  * they are confirming against.
  *
  * The act itself is the caller's: this component decides only that it was
- * confirmed. Nothing here knows what suspending means, which is what keeps one
- * confirmation in front of every such act rather than one per surface.
+ * confirmed, and hands back what was typed so the caller can have the act's own
+ * surface check it as well. A button that stays off is a courtesy to the person
+ * confirming and never a control — whatever a caller posts is whatever any caller
+ * could post — so the name travels rather than being consumed here. Nothing in
+ * this file knows what suspending means, which is what keeps one confirmation in
+ * front of every such act rather than one per surface.
+ *
+ * `details` carries what only the caller can know. The consequence comes from the
+ * registry and is true of every subject; a caller with something particular to add
+ * — how many rows this one subject would take with it — puts it in the panel
+ * between that sentence and the line about undoing the act, so the general
+ * statement is read first, the particular one second, and the finality last.
  *
  * Keyboard and colour (`A11Y-R01`, `A11Y-R02`, `A11Y-R03`). The trigger is a real
  * button carrying `aria-expanded`; opening moves focus into the confirmation — to
@@ -35,7 +45,7 @@
  */
 
 import { useEffect, useId, useRef, useState } from 'react';
-import type { KeyboardEvent as ReactKeyboardEvent, ReactElement } from 'react';
+import type { KeyboardEvent as ReactKeyboardEvent, ReactElement, ReactNode } from 'react';
 
 import {
   DESTRUCTIVE_ACTIONS,
@@ -49,12 +59,19 @@ export function DestructiveAction({
   action,
   subject,
   onConfirm,
+  details,
   disabled = false,
 }: {
   readonly action: DestructiveActionId;
   /** The thing being acted on, by the name the person reading the page sees. */
   readonly subject: string;
-  readonly onConfirm: () => void;
+  /**
+   * What was typed, for an act that asked for the name; the empty string for one
+   * that did not.
+   */
+  readonly onConfirm: (typedName: string) => void;
+  /** What this one subject would cost, beside the consequence every subject shares. */
+  readonly details?: ReactNode;
   readonly disabled?: boolean;
 }): ReactElement {
   const { verb, consequence, reversal } = DESTRUCTIVE_ACTIONS[action];
@@ -71,9 +88,22 @@ export function DestructiveAction({
   const panelId = `${base}-panel`;
   const headingId = `${base}-heading`;
   const consequenceId = `${base}-consequence`;
+  const detailsId = `${base}-details`;
   const hintId = `${base}-hint`;
   const waitingId = `${base}-waiting`;
   const fieldId = `${base}-name`;
+
+  // Everything the confirm button is described by, in reading order. The
+  // particulars belong to the description rather than to the panel alone: this is
+  // the moment of commitment, and a reader who tabbed straight to the button would
+  // otherwise hear the general consequence and not this subject's cost.
+  const describedBy = [
+    consequenceId,
+    details === undefined ? null : detailsId,
+    disabled ? waitingId : null,
+  ]
+    .filter((id): id is string => id !== null)
+    .join(' ');
 
   const ready = (!typedRequired || typedNameMatches(typed, subject)) && !disabled;
 
@@ -109,10 +139,13 @@ export function DestructiveAction({
   }
 
   function confirm(): void {
+    // Read before closing, which clears it.
+    const typedName = typed;
+
     // Closed the same way a cancel closes it, so focus lands back on the trigger
     // rather than on the body when the panel that held it goes.
     close();
-    onConfirm();
+    onConfirm(typedName);
   }
 
   return (
@@ -140,6 +173,11 @@ export function DestructiveAction({
           <p className={styles.consequence} id={consequenceId}>
             {consequence}
           </p>
+          {details === undefined ? null : (
+            <div className={styles.details} id={detailsId}>
+              {details}
+            </div>
+          )}
           <p className={styles.reversal}>
             {reversal.kind === 'final' ? 'This cannot be undone.' : reversal.undo}
           </p>
@@ -176,7 +214,7 @@ export function DestructiveAction({
               type="button"
               className={styles.confirm}
               disabled={!ready}
-              aria-describedby={disabled ? `${consequenceId} ${waitingId}` : consequenceId}
+              aria-describedby={describedBy}
               onClick={confirm}
             >
               {verb} {subject}

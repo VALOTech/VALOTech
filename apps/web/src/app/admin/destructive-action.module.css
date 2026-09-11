@@ -70,9 +70,23 @@
 }
 
 .consequence,
+.details,
 .reversal {
   margin: 0 0 0.4rem;
   font-size: 0.9rem;
+}
+
+/* What this one subject would cost, which the caller supplies. It is the
+   particular beside the registry's general sentence, so it is set apart by a rule
+   and an indent rather than by a colour — the panel's red already means
+   "destructive", and a second hue here would be a second meaning (A11Y-R03). */
+.details {
+  padding-left: 0.6rem;
+  border-left: 2px solid var(--danger-line);
+}
+
+.details p {
+  margin: 0;
 }
 
 .reversal {

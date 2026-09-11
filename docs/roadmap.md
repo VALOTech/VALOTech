@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_295 tasks in the plan, 174 closed, 121 outstanding._
+_295 tasks in the plan, 175 closed, 120 outstanding._
 
 ---
 
@@ -70,10 +70,9 @@ _61/69 closed (88%) · 8 outstanding — 4 buildable now · 3 waiting on the own
 
 _The machinery every kind of writing shares — the editor, the media, the locale states, the audience rule, publishing, search — plus the account, configuration and logging surfaces an operator needs before anything is published. Building it once is the whole reason a report, an update and a deck are three navigations over one system rather than three systems._
 
-_43/63 closed (68%) · 20 outstanding — 17 buildable now · 3 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_44/63 closed (69%) · 19 outstanding — 16 buildable now · 3 waiting on the owner · 0 external residue · 0 parked to a later wave._
 
-- **ADMIN-001** · Account management — 6/8 closed · depth 5
-  - `[ ] ADMIN-001/T4` — Deletion is a real delete; the confirmation lists what goes and what remains, and takes the typed name
+- **ADMIN-001** · Account management — 7/8 closed · depth 5
   - `[ ] ADMIN-001/T6` — Creation issues an invitation; no admin ever sets another person's password
 
 - **CFG-001** · Runtime configuration — 6/6 closed
