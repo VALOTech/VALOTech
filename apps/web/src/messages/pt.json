@@ -23,5 +23,15 @@
     "expiredTitle": "Esta ligação já não funciona",
     "expiredBody": "Pode já ter sido usada ou ter expirado. Peça um novo convite ao seu administrador, ou solicite outra reposição.",
     "unexpected": "Ocorreu um erro. Tente novamente dentro de momentos."
+  },
+  "sessions": {
+    "title": "As suas sessões",
+    "intro": "Os dispositivos e navegadores com sessão iniciada atualmente na sua conta.",
+    "current": "Este dispositivo",
+    "began": "Sessão iniciada",
+    "lastActive": "Última atividade",
+    "expires": "Expira",
+    "endEverywhere": "Terminar sessão em todo o lado",
+    "endEverywhereHint": "Termina todas as sessões, incluindo esta. Terá de iniciar sessão novamente."
   }
 }

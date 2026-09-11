@@ -26,7 +26,7 @@
 import { headers } from 'next/headers';
 import { notFound, redirect } from 'next/navigation';
 
-import { type Actor, requireAdmin, type SessionRequest } from './gate';
+import { type Actor, requireAdmin, requireInvestor, type SessionRequest } from './gate';
 
 const SIGN_IN = '/sign-in';
 
@@ -56,4 +56,15 @@ async function currentRequest(): Promise<SessionRequest> {
  */
 export async function requireAdminPage(): Promise<Actor> {
   return enforce(await requireAdmin(await currentRequest()));
+}
+
+/**
+ * The reader of a room surface, or the page never renders: a signed-out reader
+ * is sent to the sign-in form. An admin passes where an investor does, because
+ * the gate lets an admin read whatever an investor may (`AUTH-002`); a room
+ * surface such as the session list (`AUTH-004/T2`) is a reader's own, not the
+ * console's, so it does not turn a signed-in investor away.
+ */
+export async function requireInvestorPage(): Promise<Actor> {
+  return enforce(await requireInvestor(await currentRequest()));
 }

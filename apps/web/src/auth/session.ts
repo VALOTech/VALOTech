@@ -258,3 +258,28 @@ export async function liveSessionsForAccount(accountId: string): Promise<LiveSes
     expiresAt: row.expires_at,
   }));
 }
+
+/**
+ * The id of the session the presented token names, while it is live, or `null`.
+ *
+ * The session list marks its current row with this (`AUTH-004/T2`): it resolves
+ * by the same SHA-256 the gate does and never selects `token_hash`, so what it
+ * hands back is an id the surface can compare, never the secret itself. It does
+ * not slide the session — a read for a display must not extend what it displays
+ * — and it uses the same liveness predicate as the list, so a token whose row
+ * has lapsed marks nothing rather than marking a row the list did not show.
+ */
+export async function currentSessionId(token: string | null): Promise<string | null> {
+  if (token === null) {
+    return null;
+  }
+
+  const row = await getDb()
+    .selectFrom('sessions')
+    .select('id')
+    .where('token_hash', '=', createHash('sha256').update(token).digest('hex'))
+    .where('expires_at', '>', sql<Date>`now()`)
+    .executeTakeFirst();
+
+  return row?.id ?? null;
+}

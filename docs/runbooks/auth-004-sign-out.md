@@ -6,11 +6,11 @@
 > deploy-level commands — restart, redeploy — await `OPS-001` and are written as
 > `<OPS-001>` where the concrete command does not exist yet.
 >
-> **What reaches a person today:** the two endpoints and the header, and no
-> control that posts to them. `AUTH-004/T2` — the session list, and the button
-> on it — is blocked on `decisions-log.md#I18N-DEC-02`, so a sign-out currently
-> arrives from a client that posts the form itself. The endpoints are mounted
-> and live: anything holding a session cookie can end it.
+> **What reaches a person today:** the two endpoints, the header, and the session
+> list at `/account/sessions` (`AUTH-004/T2`), which lists this account's live
+> sessions, marks this device, and carries the control that ends them all. The
+> endpoints are mounted and live: anything holding a session cookie can end its
+> own session or every session the account holds.
 
 ## What this feature is
 

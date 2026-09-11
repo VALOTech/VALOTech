@@ -23,5 +23,15 @@
     "expiredTitle": "Dieser Link funktioniert nicht mehr",
     "expiredBody": "Er wurde möglicherweise bereits verwendet oder ist abgelaufen. Bitten Sie Ihren Administrator um eine neue Einladung, oder fordern Sie eine weitere Zurücksetzung an.",
     "unexpected": "Etwas ist schiefgelaufen. Versuchen Sie es in einem Moment erneut."
+  },
+  "sessions": {
+    "title": "Ihre Sitzungen",
+    "intro": "Die Geräte und Browser, die derzeit in Ihrem Konto angemeldet sind.",
+    "current": "Dieses Gerät",
+    "began": "Angemeldet",
+    "lastActive": "Zuletzt aktiv",
+    "expires": "Läuft ab",
+    "endEverywhere": "Überall abmelden",
+    "endEverywhereHint": "Beendet jede Sitzung, auch diese. Sie müssen sich erneut anmelden."
   }
 }

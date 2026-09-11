@@ -23,5 +23,15 @@
     "expiredTitle": "Liên kết này không còn hiệu lực",
     "expiredBody": "Liên kết có thể đã được sử dụng hoặc đã hết hạn. Hãy yêu cầu quản trị viên gửi lời mời mới, hoặc yêu cầu đặt lại lần nữa.",
     "unexpected": "Đã có lỗi xảy ra. Vui lòng thử lại sau giây lát."
+  },
+  "sessions": {
+    "title": "Phiên đăng nhập của bạn",
+    "intro": "Các thiết bị và trình duyệt hiện đang đăng nhập vào tài khoản của bạn.",
+    "current": "Thiết bị này",
+    "began": "Đã đăng nhập",
+    "lastActive": "Hoạt động gần nhất",
+    "expires": "Hết hạn",
+    "endEverywhere": "Đăng xuất khỏi mọi nơi",
+    "endEverywhereHint": "Kết thúc mọi phiên, kể cả phiên này. Bạn sẽ cần đăng nhập lại."
   }
 }

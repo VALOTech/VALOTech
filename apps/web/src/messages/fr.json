@@ -23,5 +23,15 @@
     "expiredTitle": "Ce lien ne fonctionne plus",
     "expiredBody": "Il a peut-être déjà été utilisé ou a expiré. Demandez une nouvelle invitation à votre administrateur, ou demandez une autre réinitialisation.",
     "unexpected": "Une erreur s'est produite. Réessayez dans un instant."
+  },
+  "sessions": {
+    "title": "Vos sessions",
+    "intro": "Les appareils et navigateurs actuellement connectés à votre compte.",
+    "current": "Cet appareil",
+    "began": "Connexion",
+    "lastActive": "Dernière activité",
+    "expires": "Expire",
+    "endEverywhere": "Se déconnecter partout",
+    "endEverywhereHint": "Met fin à toutes les sessions, y compris celle-ci. Vous devrez vous reconnecter."
   }
 }

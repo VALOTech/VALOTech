@@ -21,6 +21,11 @@ export default getRequestConfig(async () => {
 
   return {
     locale,
+    // UTC, so a server-rendered timestamp is the same wherever the process runs
+    // rather than the machine's zone; the reader's own zone is not knowable
+    // without client script, and a session list read in UTC is honest rather
+    // than wrong. It is the one place a formatted date's zone is decided.
+    timeZone: 'UTC',
     messages: (await import(`../messages/${locale}.json`)).default,
   };
 });

@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_295 tasks in the plan, 187 closed, 108 outstanding._
+_295 tasks in the plan, 188 closed, 107 outstanding._
 
 ---
 
@@ -35,7 +35,7 @@ _46/48 closed (95%) · 2 outstanding — 0 buildable now · 0 waiting on the own
 
 _Who may read what, and what records that they did. Everything above reads through the gate this wave builds, so a shortcut here is a shortcut in every feature after it. Sign-out precedes invitation deliberately: a session that cannot be ended server-side is a defect that grows with every account created. The scene sits here too, one layer above the page it moves behind._
 
-_64/69 closed (92%) · 5 outstanding — 3 buildable now · 1 waiting on the owner · 1 external residue · 0 parked to a later wave._
+_65/69 closed (94%) · 4 outstanding — 2 buildable now · 1 waiting on the owner · 1 external residue · 0 parked to a later wave._
 
 - **AUTH-001** · Sign-in — 5/5 closed
 - **DATA-003** · Backup and restore — 5/5 closed
@@ -54,9 +54,7 @@ _64/69 closed (92%) · 5 outstanding — 3 buildable now · 1 waiting on the own
 - **SCENE-005** · Orbit stages — 4/4 closed
 - **SCENE-006** · The mapping stage — 2/2 closed
 - **ADMIN-002** · Admin console shell — 5/5 closed
-- **AUTH-004** · Sign-out — 4/5 closed · depth 4
-  - `[ ] AUTH-004/T2` — The session list shows this account's live sessions and marks the current one
-
+- **AUTH-004** · Sign-out — 5/5 closed
 - **CMS-001** · Content model and revisions — 6/6 closed
 - **SCENE-004** · Annotation chips — 3/3 closed
 - **SEC-001** · Security baseline — 4/5 closed · depth 4

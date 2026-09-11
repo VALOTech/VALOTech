@@ -23,5 +23,15 @@
     "expiredTitle": "此链接已失效",
     "expiredBody": "该链接可能已被使用或已过期。请向管理员索取新的邀请，或重新申请重置。",
     "unexpected": "出了点问题。请稍后重试。"
+  },
+  "sessions": {
+    "title": "您的会话",
+    "intro": "当前登录到您账户的设备和浏览器。",
+    "current": "当前设备",
+    "began": "登录时间",
+    "lastActive": "最近活动",
+    "expires": "到期时间",
+    "endEverywhere": "在所有设备上退出登录",
+    "endEverywhereHint": "结束包括当前会话在内的所有会话。您需要重新登录。"
   }
 }

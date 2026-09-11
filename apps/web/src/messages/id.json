@@ -23,5 +23,15 @@
     "expiredTitle": "Tautan ini sudah tidak berlaku",
     "expiredBody": "Tautan mungkin sudah digunakan atau kedaluwarsa. Mintalah undangan baru kepada administrator Anda, atau minta penyetelan ulang lagi.",
     "unexpected": "Terjadi kesalahan. Coba lagi dalam beberapa saat."
+  },
+  "sessions": {
+    "title": "Sesi Anda",
+    "intro": "Perangkat dan browser yang saat ini masuk ke akun Anda.",
+    "current": "Perangkat ini",
+    "began": "Masuk pada",
+    "lastActive": "Terakhir aktif",
+    "expires": "Kedaluwarsa",
+    "endEverywhere": "Keluar dari semua perangkat",
+    "endEverywhereHint": "Mengakhiri setiap sesi, termasuk yang ini. Anda perlu masuk lagi."
   }
 }

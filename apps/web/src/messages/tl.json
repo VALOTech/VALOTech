@@ -23,5 +23,15 @@
     "expiredTitle": "Hindi na gumagana ang link na ito",
     "expiredBody": "Maaaring nagamit na ito o nag-expire na. Humingi ng bagong imbitasyon sa iyong administrator, o humiling ng panibagong reset.",
     "unexpected": "May nangyaring mali. Subukang muli sa ilang sandali."
+  },
+  "sessions": {
+    "title": "Ang iyong mga session",
+    "intro": "Ang mga device at browser na kasalukuyang naka-sign in sa iyong account.",
+    "current": "Ang device na ito",
+    "began": "Naka-sign in noong",
+    "lastActive": "Huling aktibo",
+    "expires": "Mag-e-expire",
+    "endEverywhere": "Mag-sign out sa lahat ng device",
+    "endEverywhereHint": "Tinatapos ang bawat session, kasama ito. Kakailanganin mong mag-sign in ulit."
   }
 }

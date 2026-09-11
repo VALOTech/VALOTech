@@ -23,5 +23,15 @@
     "expiredTitle": "Este enlace ya no funciona",
     "expiredBody": "Es posible que ya se haya usado o que haya caducado. Pida una nueva invitación a su administrador, o solicite otro restablecimiento.",
     "unexpected": "Algo ha salido mal. Vuelva a intentarlo en un momento."
+  },
+  "sessions": {
+    "title": "Sus sesiones",
+    "intro": "Los dispositivos y navegadores con la sesión iniciada actualmente en su cuenta.",
+    "current": "Este dispositivo",
+    "began": "Sesión iniciada",
+    "lastActive": "Última actividad",
+    "expires": "Caduca",
+    "endEverywhere": "Cerrar sesión en todos los dispositivos",
+    "endEverywhereHint": "Finaliza todas las sesiones, incluida esta. Tendrá que iniciar sesión de nuevo."
   }
 }

@@ -23,5 +23,15 @@
     "expiredTitle": "此連結已失效",
     "expiredBody": "該連結可能已被使用或已過期。請向管理員索取新的邀請，或重新申請重設。",
     "unexpected": "發生錯誤，請稍後再試。"
+  },
+  "sessions": {
+    "title": "您的工作階段",
+    "intro": "目前登入您帳戶的裝置與瀏覽器。",
+    "current": "目前的裝置",
+    "began": "登入時間",
+    "lastActive": "最近活動",
+    "expires": "到期時間",
+    "endEverywhere": "在所有裝置上登出",
+    "endEverywhereHint": "結束包括目前工作階段在內的所有工作階段。您需要重新登入。"
   }
 }

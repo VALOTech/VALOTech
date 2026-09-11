@@ -23,5 +23,15 @@
     "expiredTitle": "Pautan ini tidak lagi berfungsi",
     "expiredBody": "Pautan mungkin telah digunakan atau telah tamat tempoh. Minta jemputan baharu daripada pentadbir anda, atau minta tetapan semula sekali lagi.",
     "unexpected": "Berlaku ralat. Cuba lagi dalam beberapa saat."
+  },
+  "sessions": {
+    "title": "Sesi anda",
+    "intro": "Peranti dan pelayar yang sedang log masuk ke akaun anda.",
+    "current": "Peranti ini",
+    "began": "Log masuk pada",
+    "lastActive": "Terakhir aktif",
+    "expires": "Tamat tempoh",
+    "endEverywhere": "Log keluar dari semua peranti",
+    "endEverywhereHint": "Menamatkan setiap sesi, termasuk sesi ini. Anda perlu log masuk semula."
   }
 }

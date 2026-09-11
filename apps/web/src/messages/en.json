@@ -23,5 +23,15 @@
     "expiredTitle": "This link no longer works",
     "expiredBody": "It may have been used already, or it has expired. Ask your administrator for a new invitation, or request another reset.",
     "unexpected": "Something went wrong. Try again in a moment."
+  },
+  "sessions": {
+    "title": "Your sessions",
+    "intro": "The devices and browsers currently signed in to your account.",
+    "current": "This device",
+    "began": "Signed in",
+    "lastActive": "Last active",
+    "expires": "Expires",
+    "endEverywhere": "Sign out everywhere",
+    "endEverywhereHint": "Ends every session, including this one. You will need to sign in again."
   }
 }

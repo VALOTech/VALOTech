@@ -23,5 +23,15 @@
     "expiredTitle": "Bu bağlantı artık çalışmıyor",
     "expiredBody": "Daha önce kullanılmış veya süresi dolmuş olabilir. Yöneticinizden yeni bir davet isteyin veya yeniden sıfırlama talep edin.",
     "unexpected": "Bir şeyler ters gitti. Lütfen birazdan tekrar deneyin."
+  },
+  "sessions": {
+    "title": "Oturumlarınız",
+    "intro": "Şu anda hesabınızda oturum açmış cihazlar ve tarayıcılar.",
+    "current": "Bu cihaz",
+    "began": "Oturum açıldı",
+    "lastActive": "Son etkinlik",
+    "expires": "Sona eriyor",
+    "endEverywhere": "Her yerde oturumu kapat",
+    "endEverywhereHint": "Bu oturum dahil tüm oturumları sonlandırır. Yeniden oturum açmanız gerekir."
   }
 }
