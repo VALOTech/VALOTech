@@ -8,5 +8,20 @@
     "error": "E-Mail-Adresse und Passwort stimmen nicht überein.",
     "tooManyAttempts": "Zu viele Versuche. Warten Sie einen Moment und versuchen Sie es erneut.",
     "unexpected": "Etwas ist schiefgelaufen. Versuchen Sie es in einem Moment erneut."
+  },
+  "setPassword": {
+    "title": "Wählen Sie Ihr Passwort",
+    "intro": "Legen Sie das Passwort fest, mit dem Sie sich im Investorenbereich anmelden.",
+    "password": "Neues Passwort",
+    "confirm": "Passwort bestätigen",
+    "submit": "Passwort festlegen und anmelden",
+    "hint": "Mindestens 12 Zeichen, und kein gängiges Passwort.",
+    "tooShort": "Verwenden Sie mindestens 12 Zeichen.",
+    "tooLong": "Verwenden Sie höchstens 200 Zeichen.",
+    "tooCommon": "Dieses Passwort ist zu gängig. Wählen Sie ein weniger vorhersehbares.",
+    "mismatch": "Die beiden Passwörter stimmen nicht überein.",
+    "expiredTitle": "Dieser Link funktioniert nicht mehr",
+    "expiredBody": "Er wurde möglicherweise bereits verwendet oder ist abgelaufen. Bitten Sie Ihren Administrator um eine neue Einladung, oder fordern Sie eine weitere Zurücksetzung an.",
+    "unexpected": "Etwas ist schiefgelaufen. Versuchen Sie es in einem Moment erneut."
   }
 }

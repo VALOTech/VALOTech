@@ -8,5 +8,20 @@
     "error": "E-posta adresi veya parola eşleşmiyor.",
     "tooManyAttempts": "Çok fazla deneme yapıldı. Lütfen biraz bekleyip tekrar deneyin.",
     "unexpected": "Bir şeyler ters gitti. Lütfen birazdan tekrar deneyin."
+  },
+  "setPassword": {
+    "title": "Parolanızı seçin",
+    "intro": "Yatırımcı odasına giriş yapmak için kullanacağınız parolayı belirleyin.",
+    "password": "Yeni parola",
+    "confirm": "Parolayı onaylayın",
+    "submit": "Parolayı belirle ve giriş yap",
+    "hint": "En az 12 karakter, ve yaygın bir parola olmamalı.",
+    "tooShort": "En az 12 karakter kullanın.",
+    "tooLong": "En fazla 200 karakter kullanın.",
+    "tooCommon": "Bu parola çok yaygın. Daha az tahmin edilebilir bir tane seçin.",
+    "mismatch": "İki parola eşleşmiyor.",
+    "expiredTitle": "Bu bağlantı artık çalışmıyor",
+    "expiredBody": "Daha önce kullanılmış veya süresi dolmuş olabilir. Yöneticinizden yeni bir davet isteyin veya yeniden sıfırlama talep edin.",
+    "unexpected": "Bir şeyler ters gitti. Lütfen birazdan tekrar deneyin."
   }
 }

@@ -8,5 +8,20 @@
     "error": "That email address and password do not match.",
     "tooManyAttempts": "Too many attempts. Wait a moment and try again.",
     "unexpected": "Something went wrong. Try again in a moment."
+  },
+  "setPassword": {
+    "title": "Choose your password",
+    "intro": "Set the password you will use to sign in to the investor room.",
+    "password": "New password",
+    "confirm": "Confirm password",
+    "submit": "Set password and sign in",
+    "hint": "At least 12 characters, and not a common password.",
+    "tooShort": "Use at least 12 characters.",
+    "tooLong": "Use at most 200 characters.",
+    "tooCommon": "That password is too common. Choose a less predictable one.",
+    "mismatch": "The two passwords do not match.",
+    "expiredTitle": "This link no longer works",
+    "expiredBody": "It may have been used already, or it has expired. Ask your administrator for a new invitation, or request another reset.",
+    "unexpected": "Something went wrong. Try again in a moment."
   }
 }

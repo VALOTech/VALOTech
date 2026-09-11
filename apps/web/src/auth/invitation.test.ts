@@ -36,12 +36,14 @@ import { getConfig, loadConfig } from '../config/index';
 import { closeDb, getDb } from '../db/index';
 import type { AccountsTable, InvitationsTable } from '../db/types';
 import { MAX_EMAIL_LENGTH } from './address';
-import { hashPassword } from './password';
+import { hashPassword, verifyPassword } from './password';
 import {
   consumeToken,
   inviteAccount,
   issueToken,
   requestReset,
+  setPasswordWithToken,
+  tokenIsLive,
   EmailTakenError,
   INVITATION_TTL_SECONDS,
   RESET_TTL_SECONDS,
@@ -1181,6 +1183,123 @@ describe.skipIf(!HAS_DATABASE)('AUTH-003 invitation and reset tokens', () => {
 
       expect(await rowCount(theirId)).toBe(1);
       expect(await consumeToken(theirs)).toBe(theirId);
+    });
+  });
+
+  describe('setting a password through a token', () => {
+    const CHOSEN = 'a-chosen-development-password';
+
+    it('activates an invited account, sets its password, and consumes the token as one act', async () => {
+      const id = await clearInvitations(INVITEE);
+      await getDb()
+        .updateTable('accounts')
+        .set({ state: 'invited', password_hash: null })
+        .where('id', '=', id)
+        .execute();
+      const token = await issueToken(id, INVITATION_TTL_SECONDS);
+
+      expect(await setPasswordWithToken(token, await hashPassword(CHOSEN))).toEqual({
+        kind: 'set',
+        accountId: id,
+      });
+
+      const account = await accountFor(INVITEE);
+      expect(account?.state).toBe('active');
+      // The password set is the one chosen, read back and checked the way sign-in will.
+      expect(await verifyPassword(account?.password_hash ?? null, CHOSEN)).toBe(true);
+      // The consume is part of the same transaction: a set password always has a spent token.
+      expect((await rowFor(token))?.consumed_at).not.toBeNull();
+      expect(await tokenIsLive(token)).toBe(false);
+    });
+
+    it('resets an already-active account without leaving its active state', async () => {
+      const id = await clearInvitations(RESETTER);
+      const token = await issueToken(id, RESET_TTL_SECONDS);
+
+      expect(await setPasswordWithToken(token, await hashPassword(CHOSEN))).toEqual({
+        kind: 'set',
+        accountId: id,
+      });
+
+      const account = await accountFor(RESETTER);
+      expect(account?.state).toBe('active');
+      expect(await verifyPassword(account?.password_hash ?? null, CHOSEN)).toBe(true);
+    });
+
+    it('answers invalid for a missing, used or expired token, and sets no password', async () => {
+      const id = await clearInvitations(INVITEE);
+      await getDb()
+        .updateTable('accounts')
+        .set({ state: 'invited', password_hash: null })
+        .where('id', '=', id)
+        .execute();
+
+      expect(await setPasswordWithToken(unissuedToken(), await hashPassword(CHOSEN))).toEqual({
+        kind: 'invalid',
+      });
+
+      const used = await issueToken(id, INVITATION_TTL_SECONDS);
+      expect(await consumeToken(used)).toBe(id);
+      expect(await setPasswordWithToken(used, await hashPassword(CHOSEN))).toEqual({ kind: 'invalid' });
+
+      const stale = await issueToken(id, INVITATION_TTL_SECONDS);
+      await expire(stale);
+      expect(await setPasswordWithToken(stale, await hashPassword(CHOSEN))).toEqual({ kind: 'invalid' });
+
+      // None of the three touched the account: still invited, still holding no password.
+      const account = await accountFor(INVITEE);
+      expect(account?.state).toBe('invited');
+      expect(account?.password_hash).toBeNull();
+    });
+
+    it('refuses a suspended account, never writing a password onto access that was ended', async () => {
+      const id = await clearInvitations(INVITEE);
+      await getDb()
+        .updateTable('accounts')
+        .set({ state: 'invited', password_hash: null })
+        .where('id', '=', id)
+        .execute();
+      const token = await issueToken(id, INVITATION_TTL_SECONDS);
+      await getDb().updateTable('accounts').set({ state: 'suspended' }).where('id', '=', id).execute();
+
+      try {
+        expect(await setPasswordWithToken(token, await hashPassword(CHOSEN))).toEqual({
+          kind: 'suspended',
+        });
+
+        // suspended -> active is the transition the WHERE refuses in the same
+        // statement that would have written the hash, so neither happens.
+        const account = await accountFor(INVITEE);
+        expect(account?.state).toBe('suspended');
+        expect(account?.password_hash).toBeNull();
+      } finally {
+        await getDb().updateTable('accounts').set({ state: 'invited' }).where('id', '=', id).execute();
+      }
+    });
+  });
+
+  describe('peeking whether a token is live', () => {
+    it('is true for a live token and does not consume it', async () => {
+      const id = await clearInvitations(INVITEE);
+      const token = await issueToken(id, INVITATION_TTL_SECONDS);
+
+      expect(await tokenIsLive(token)).toBe(true);
+      // The peek left the token usable: it is the page's question, not the write's.
+      expect(await consumeToken(token)).toBe(id);
+    });
+
+    it('is false for a used, expired or unissued token', async () => {
+      const id = await clearInvitations(INVITEE);
+
+      const used = await issueToken(id, INVITATION_TTL_SECONDS);
+      expect(await consumeToken(used)).toBe(id);
+      expect(await tokenIsLive(used)).toBe(false);
+
+      const stale = await issueToken(id, INVITATION_TTL_SECONDS);
+      await expire(stale);
+      expect(await tokenIsLive(stale)).toBe(false);
+
+      expect(await tokenIsLive(unissuedToken())).toBe(false);
     });
   });
 });

@@ -8,5 +8,20 @@
     "error": "O e-mail e a palavra-passe não coincidem.",
     "tooManyAttempts": "Demasiadas tentativas. Aguarde um momento e tente novamente.",
     "unexpected": "Ocorreu um erro. Tente novamente dentro de momentos."
+  },
+  "setPassword": {
+    "title": "Escolha a sua palavra-passe",
+    "intro": "Defina a palavra-passe que irá usar para iniciar sessão na sala de investidores.",
+    "password": "Nova palavra-passe",
+    "confirm": "Confirme a palavra-passe",
+    "submit": "Definir a palavra-passe e iniciar sessão",
+    "hint": "Pelo menos 12 caracteres, e que não seja uma palavra-passe comum.",
+    "tooShort": "Use pelo menos 12 caracteres.",
+    "tooLong": "Use no máximo 200 caracteres.",
+    "tooCommon": "Essa palavra-passe é demasiado comum. Escolha uma menos previsível.",
+    "mismatch": "As duas palavras-passe não coincidem.",
+    "expiredTitle": "Esta ligação já não funciona",
+    "expiredBody": "Pode já ter sido usada ou ter expirado. Peça um novo convite ao seu administrador, ou solicite outra reposição.",
+    "unexpected": "Ocorreu um erro. Tente novamente dentro de momentos."
   }
 }

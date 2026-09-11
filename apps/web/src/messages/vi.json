@@ -8,5 +8,20 @@
     "error": "Email hoặc mật khẩu không khớp.",
     "tooManyAttempts": "Bạn đã thử quá nhiều lần. Vui lòng đợi một lát rồi thử lại.",
     "unexpected": "Đã có lỗi xảy ra. Vui lòng thử lại sau giây lát."
+  },
+  "setPassword": {
+    "title": "Chọn mật khẩu của bạn",
+    "intro": "Đặt mật khẩu bạn sẽ dùng để đăng nhập vào phòng nhà đầu tư.",
+    "password": "Mật khẩu mới",
+    "confirm": "Xác nhận mật khẩu",
+    "submit": "Đặt mật khẩu và đăng nhập",
+    "hint": "Ít nhất 12 ký tự, và không phải là mật khẩu phổ biến.",
+    "tooShort": "Hãy dùng ít nhất 12 ký tự.",
+    "tooLong": "Chỉ dùng tối đa 200 ký tự.",
+    "tooCommon": "Mật khẩu này quá phổ biến. Hãy chọn một mật khẩu khó đoán hơn.",
+    "mismatch": "Hai mật khẩu không khớp nhau.",
+    "expiredTitle": "Liên kết này không còn hiệu lực",
+    "expiredBody": "Liên kết có thể đã được sử dụng hoặc đã hết hạn. Hãy yêu cầu quản trị viên gửi lời mời mới, hoặc yêu cầu đặt lại lần nữa.",
+    "unexpected": "Đã có lỗi xảy ra. Vui lòng thử lại sau giây lát."
   }
 }

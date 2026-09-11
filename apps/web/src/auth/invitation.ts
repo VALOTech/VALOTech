@@ -198,7 +198,8 @@ export async function issueToken(accountId: string, ttlSeconds: number): Promise
 }
 
 /**
- * Consume a token and return the account it belonged to, or `null`.
+ * Consume a token and return the account it belonged to, or `null`, inside the
+ * caller's transaction.
  *
  * `null` covers three states — no such token, already consumed, past its expiry
  * — and the caller answers them identically, because telling them apart tells
@@ -209,10 +210,13 @@ export async function issueToken(accountId: string, ttlSeconds: number): Promise
  * first's lock, and when the first commits the second re-evaluates this
  * predicate against the row as it now stands, where `consumed_at` is no longer
  * null. It matches nothing, returns nothing, and answers `null` — a lock the
- * caller neither takes nor can forget to take.
+ * caller neither takes nor can forget to take. It takes the transaction as an
+ * argument so `setPasswordWithToken` can make the consume and the password write
+ * one atomic act: a consume is the check, and a check split from the write it
+ * authorises is a check.
  */
-export async function consumeToken(token: string): Promise<string | null> {
-  const consumed = await getDb()
+async function consumeTokenIn(trx: Transaction<Database>, token: string): Promise<string | null> {
+  const consumed = await trx
     .updateTable('invitations')
     .set({ consumed_at: sql<Date>`now()` })
     .where('token_hash', '=', hashOf(token))
@@ -222,6 +226,88 @@ export async function consumeToken(token: string): Promise<string | null> {
     .executeTakeFirst();
 
   return consumed?.account_id ?? null;
+}
+
+/** Consume a token in a transaction of its own (`AUTH-003/T2`). */
+export async function consumeToken(token: string): Promise<string | null> {
+  return getDb()
+    .transaction()
+    .execute((trx) => consumeTokenIn(trx, token));
+}
+
+/**
+ * Whether a token is still live — unconsumed and unexpired — without consuming
+ * it (`AUTH-003/T4`).
+ *
+ * The GET that shows the set-password form asks this to choose between the form
+ * and the expired page. It does not guard the write — `setPasswordWithToken`'s
+ * atomic consume does — so a peek going stale the instant after it returns is
+ * harmless: the page it decided is re-fetched, and the POST consumes under its
+ * own predicate. Knowing a token is live requires holding it, so this confirms
+ * nothing to anyone who did not already have the 32-byte secret in the URL.
+ */
+export async function tokenIsLive(token: string): Promise<boolean> {
+  const row = await getDb()
+    .selectFrom('invitations')
+    .select('account_id')
+    .where('token_hash', '=', hashOf(token))
+    .where('consumed_at', 'is', null)
+    .where('expires_at', '>', sql<Date>`now()`)
+    .executeTakeFirst();
+
+  return row !== undefined;
+}
+
+/** What setting a password through a token did. */
+export type SetPasswordResult =
+  | { readonly kind: 'set'; readonly accountId: string }
+  | { readonly kind: 'invalid' }
+  | { readonly kind: 'suspended' };
+
+/**
+ * Consume a token and set the account's password, atomically (`AUTH-003/T4`).
+ *
+ * The consume and the write are one transaction, so a burned token always
+ * leaves a password set: a consume that committed while the update failed would
+ * spend the person's only link and leave them unable to sign in. The password is
+ * hashed by the caller, before this opens the transaction, because Argon2 is
+ * deliberately slow and holding the row across it would serialise every
+ * concurrent accept behind one hash.
+ *
+ * `invited` becomes `active`, and an already-`active` account resetting a
+ * forgotten password stays active; a `suspended` account is refused in the same
+ * `WHERE` rather than by a read-then-check, so a suspension committing mid-flight
+ * cannot slip a password onto access that was just ended (`AUTH-003` §3). A
+ * missing, used or expired token is one answer — `invalid` — for the reason the
+ * consume gives one.
+ */
+export async function setPasswordWithToken(
+  token: string,
+  passwordHash: string,
+): Promise<SetPasswordResult> {
+  return getDb()
+    .transaction()
+    .execute(async (trx) => {
+      const accountId = await consumeTokenIn(trx, token);
+
+      if (accountId === null) {
+        return { kind: 'invalid' };
+      }
+
+      const activated = await trx
+        .updateTable('accounts')
+        .set({ password_hash: passwordHash, state: 'active' })
+        .where('id', '=', accountId)
+        .where('state', '<>', 'suspended')
+        .returning('id')
+        .executeTakeFirst();
+
+      if (activated === undefined) {
+        return { kind: 'suspended' };
+      }
+
+      return { kind: 'set', accountId };
+    });
 }
 
 /** The person an admin is inviting. `DATA-R01` is the whole of it: a name, an address, a role. */

@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_295 tasks in the plan, 185 closed, 110 outstanding._
+_295 tasks in the plan, 187 closed, 108 outstanding._
 
 ---
 
@@ -35,7 +35,7 @@ _46/48 closed (95%) · 2 outstanding — 0 buildable now · 0 waiting on the own
 
 _Who may read what, and what records that they did. Everything above reads through the gate this wave builds, so a shortcut here is a shortcut in every feature after it. Sign-out precedes invitation deliberately: a session that cannot be ended server-side is a defect that grows with every account created. The scene sits here too, one layer above the page it moves behind._
 
-_62/69 closed (89%) · 7 outstanding — 5 buildable now · 1 waiting on the owner · 1 external residue · 0 parked to a later wave._
+_64/69 closed (92%) · 5 outstanding — 3 buildable now · 1 waiting on the owner · 1 external residue · 0 parked to a later wave._
 
 - **AUTH-001** · Sign-in — 5/5 closed
 - **DATA-003** · Backup and restore — 5/5 closed
@@ -46,17 +46,15 @@ _62/69 closed (89%) · 7 outstanding — 5 buildable now · 1 waiting on the own
   - `[!] SEC-002/T4` — Only changed fields are recorded, and no personal data reaches the trail  · _pending-decision_ · **Blocked by:** pending-decision: SEC-DEC-01 — whether a changed field records its name or an allow-listed value is the trail's personal-data policy, and it is the u…
 
 - **AUTH-002** · Session and role gate — 4/4 closed
-- **AUTH-003** · Invitation and password reset — 5/7 closed · depth 3
+- **AUTH-003** · Invitation and password reset — 6/7 closed · depth 3
   - `[ ] AUTH-003/T3` — The mail that carries the link, in the invitee's locale
-  - `[ ] AUTH-003/T4` — The set-password form, its policy, and the sign-in that follows
 
 - **SCENE-002** · Satellites and their rings — 2/2 closed
 - **SCENE-003** · The sky — 3/3 closed
 - **SCENE-005** · Orbit stages — 4/4 closed
 - **SCENE-006** · The mapping stage — 2/2 closed
 - **ADMIN-002** · Admin console shell — 5/5 closed
-- **AUTH-004** · Sign-out — 3/5 closed · depth 4
-  - `[~] AUTH-004/T4` — Every authenticated response is `no-store`, verified by pressing the back button  · **Note:** The mechanism ships and is header-verified; the acceptance the row names — pressing Back — is owed, so this is in-progress rather than closed. apps/w…
+- **AUTH-004** · Sign-out — 4/5 closed · depth 4
   - `[ ] AUTH-004/T2` — The session list shows this account's live sessions and marks the current one
 
 - **CMS-001** · Content model and revisions — 6/6 closed

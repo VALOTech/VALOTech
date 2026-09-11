@@ -8,5 +8,20 @@
     "error": "电子邮箱或密码不匹配。",
     "tooManyAttempts": "尝试次数过多。请稍候片刻后重试。",
     "unexpected": "出了点问题。请稍后重试。"
+  },
+  "setPassword": {
+    "title": "设置您的密码",
+    "intro": "设置您用于登录投资人空间的密码。",
+    "password": "新密码",
+    "confirm": "确认密码",
+    "submit": "设置密码并登录",
+    "hint": "至少 12 个字符，且不能是常见密码。",
+    "tooShort": "请至少使用 12 个字符。",
+    "tooLong": "最多使用 200 个字符。",
+    "tooCommon": "该密码过于常见，请选择更难猜到的密码。",
+    "mismatch": "两次输入的密码不一致。",
+    "expiredTitle": "此链接已失效",
+    "expiredBody": "该链接可能已被使用或已过期。请向管理员索取新的邀请，或重新申请重置。",
+    "unexpected": "出了点问题。请稍后重试。"
   }
 }

@@ -110,11 +110,17 @@ Cheapest first.
        curl -s -o /dev/null -D - "$APP_ORIGIN/_next/static/chunks/<hash>.js" -H "Cookie: valotech=<any-value>" | grep -i '^cache-control'
        Cache-Control: public, max-age=31536000, immutable
 
-**Not yet run: the back button in a real browser.** The header is the mechanism
-and it is measured above; the behaviour it buys — pressing Back after a sign-out
-and getting the sign-in path rather than a rendered gated page — needs a gated
-page to exist, which arrives with `INV-002`. Drive it then, on Chromium and on
-Safari, whose back-forward caches differ.
+**The back button, in a browser.** The header is the mechanism, measured above;
+the behaviour it buys — pressing Back after a sign-out and getting the sign-in
+path rather than a rendered gated page — is exercised on the admin console
+(`/admin`), which the gate refuses to an unauthenticated reader exactly as it
+will the investor room, so it did not wait for `INV-002`. Driven on Chromium
+(`AUTH-004/T4`, 2026-09-11): a signed-in request for the console answered
+`no-store`, a sign-out landed on the public root, and the Back button re-fetched
+the console and was redirected to the sign-in path rather than restoring it from
+history. Safari's back-forward cache treats `no-store` differently and is worth
+a WebKit spot-check when one is to hand; it is the same header on the same
+response either way.
 
 ## Rollback
 
@@ -141,5 +147,7 @@ the `session.invalidate_all` audit row.
 
 2026-09-07, against PostgreSQL 17.11 and a `next build` artifact served by
 `next start`, by the `AUTH-004` build: every command above was executed and its
-output is the output recorded here. The back-button check named in **Diagnosis**
-is the one step that was not run, and it says so where it is written.
+output is the output recorded here. The back-button behaviour named in
+**Diagnosis** was then driven on Chromium against the admin console on
+2026-09-11 (`AUTH-004/T4`); a WebKit spot-check is the one variation not yet run,
+and it says so where it is written.

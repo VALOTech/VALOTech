@@ -8,5 +8,20 @@
     "error": "Email atau kata sandi tidak cocok.",
     "tooManyAttempts": "Terlalu banyak percobaan. Tunggu sebentar lalu coba lagi.",
     "unexpected": "Terjadi kesalahan. Coba lagi dalam beberapa saat."
+  },
+  "setPassword": {
+    "title": "Pilih kata sandi Anda",
+    "intro": "Tetapkan kata sandi yang akan Anda gunakan untuk masuk ke ruang investor.",
+    "password": "Kata sandi baru",
+    "confirm": "Konfirmasi kata sandi",
+    "submit": "Tetapkan kata sandi dan masuk",
+    "hint": "Minimal 12 karakter, dan bukan kata sandi yang umum.",
+    "tooShort": "Gunakan minimal 12 karakter.",
+    "tooLong": "Gunakan maksimal 200 karakter.",
+    "tooCommon": "Kata sandi ini terlalu umum. Pilih yang lebih sulit ditebak.",
+    "mismatch": "Kedua kata sandi tidak cocok.",
+    "expiredTitle": "Tautan ini sudah tidak berlaku",
+    "expiredBody": "Tautan mungkin sudah digunakan atau kedaluwarsa. Mintalah undangan baru kepada administrator Anda, atau minta penyetelan ulang lagi.",
+    "unexpected": "Terjadi kesalahan. Coba lagi dalam beberapa saat."
   }
 }

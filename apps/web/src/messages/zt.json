@@ -8,5 +8,20 @@
     "error": "電子郵件或密碼不相符。",
     "tooManyAttempts": "嘗試次數過多，請稍候片刻後再試。",
     "unexpected": "發生錯誤，請稍後再試。"
+  },
+  "setPassword": {
+    "title": "設定您的密碼",
+    "intro": "設定您用於登入投資人空間的密碼。",
+    "password": "新密碼",
+    "confirm": "確認密碼",
+    "submit": "設定密碼並登入",
+    "hint": "至少 12 個字元，且不能是常見密碼。",
+    "tooShort": "請至少使用 12 個字元。",
+    "tooLong": "最多使用 200 個字元。",
+    "tooCommon": "此密碼過於常見，請選擇更難猜到的密碼。",
+    "mismatch": "兩次輸入的密碼不一致。",
+    "expiredTitle": "此連結已失效",
+    "expiredBody": "該連結可能已被使用或已過期。請向管理員索取新的邀請，或重新申請重設。",
+    "unexpected": "發生錯誤，請稍後再試。"
   }
 }

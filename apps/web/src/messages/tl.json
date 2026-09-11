@@ -8,5 +8,20 @@
     "error": "Hindi tugma ang email address at password.",
     "tooManyAttempts": "Masyadong maraming pagsubok. Maghintay sandali at subukang muli.",
     "unexpected": "May nangyaring mali. Subukang muli sa ilang sandali."
+  },
+  "setPassword": {
+    "title": "Piliin ang iyong password",
+    "intro": "Itakda ang password na gagamitin mo para mag-sign in sa investor room.",
+    "password": "Bagong password",
+    "confirm": "Kumpirmahin ang password",
+    "submit": "Itakda ang password at mag-sign in",
+    "hint": "Hindi bababa sa 12 character, at hindi karaniwang password.",
+    "tooShort": "Gumamit ng hindi bababa sa 12 character.",
+    "tooLong": "Gumamit ng hindi hihigit sa 200 character.",
+    "tooCommon": "Masyadong karaniwan ang password na ito. Pumili ng mas mahirap hulaan.",
+    "mismatch": "Hindi magkatugma ang dalawang password.",
+    "expiredTitle": "Hindi na gumagana ang link na ito",
+    "expiredBody": "Maaaring nagamit na ito o nag-expire na. Humingi ng bagong imbitasyon sa iyong administrator, o humiling ng panibagong reset.",
+    "unexpected": "May nangyaring mali. Subukang muli sa ilang sandali."
   }
 }

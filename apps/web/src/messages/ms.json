@@ -8,5 +8,20 @@
     "error": "E-mel atau kata laluan tidak sepadan.",
     "tooManyAttempts": "Terlalu banyak percubaan. Tunggu sebentar lalu cuba lagi.",
     "unexpected": "Berlaku ralat. Cuba lagi dalam beberapa saat."
+  },
+  "setPassword": {
+    "title": "Pilih kata laluan anda",
+    "intro": "Tetapkan kata laluan yang akan anda guna untuk log masuk ke ruang pelabur.",
+    "password": "Kata laluan baharu",
+    "confirm": "Sahkan kata laluan",
+    "submit": "Tetapkan kata laluan dan log masuk",
+    "hint": "Sekurang-kurangnya 12 aksara, dan bukan kata laluan yang biasa.",
+    "tooShort": "Gunakan sekurang-kurangnya 12 aksara.",
+    "tooLong": "Gunakan tidak melebihi 200 aksara.",
+    "tooCommon": "Kata laluan ini terlalu biasa. Pilih yang lebih sukar diteka.",
+    "mismatch": "Kedua-dua kata laluan tidak sepadan.",
+    "expiredTitle": "Pautan ini tidak lagi berfungsi",
+    "expiredBody": "Pautan mungkin telah digunakan atau telah tamat tempoh. Minta jemputan baharu daripada pentadbir anda, atau minta tetapan semula sekali lagi.",
+    "unexpected": "Berlaku ralat. Cuba lagi dalam beberapa saat."
   }
 }
