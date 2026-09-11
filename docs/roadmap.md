@@ -70,7 +70,7 @@ _61/69 closed (88%) · 8 outstanding — 4 buildable now · 3 waiting on the own
 
 _The machinery every kind of writing shares — the editor, the media, the locale states, the audience rule, publishing, search — plus the account, configuration and logging surfaces an operator needs before anything is published. Building it once is the whole reason a report, an update and a deck are three navigations over one system rather than three systems._
 
-_46/63 closed (73%) · 17 outstanding — 14 buildable now · 3 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_46/63 closed (73%) · 17 outstanding — 13 buildable now · 3 waiting on the owner · 0 external residue · 1 parked to a later wave._
 
 - **ADMIN-001** · Account management — 8/8 closed
 - **CFG-001** · Runtime configuration — 6/6 closed
@@ -99,9 +99,9 @@ _46/63 closed (73%) · 17 outstanding — 14 buildable now · 3 waiting on the o
   - `[ ] CMS-004/T6` — A public item's cache is purged on publish and on withdraw
 
 - **CMS-007** · Search and filter in the room — 3/6 closed · depth 6
-  - `[ ] CMS-007/T3` — Kind, product, period and type filters, composing into one statement
   - `[ ] CMS-007/T5` — The empty state names what narrowed the result and offers to widen it
   - `[ ] CMS-007/T6` — The field is labelled, keyboard-operable, and announces its result count
+  - `[!] CMS-007/T3` — Kind, product, period and type filters, composing into one statement  · _cross-wave-parked_ · **Blocked by:** POST-001/T3 (the optional product tag from the six) — the product filter narrows on a product a content item carries, and no item carries one until t…
 
 - **DATA-002** · Erasure and retention — 5/5 closed
 ## W3 — What is written
