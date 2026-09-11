@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_295 tasks in the plan, 171 closed, 124 outstanding._
+_295 tasks in the plan, 172 closed, 123 outstanding._
 
 ---
 
@@ -35,7 +35,7 @@ _46/48 closed (95%) · 2 outstanding — 0 buildable now · 0 waiting on the own
 
 _Who may read what, and what records that they did. Everything above reads through the gate this wave builds, so a shortcut here is a shortcut in every feature after it. Sign-out precedes invitation deliberately: a session that cannot be ended server-side is a defect that grows with every account created. The scene sits here too, one layer above the page it moves behind._
 
-_59/69 closed (85%) · 10 outstanding — 6 buildable now · 3 waiting on the owner · 1 external residue · 0 parked to a later wave._
+_60/69 closed (86%) · 9 outstanding — 5 buildable now · 3 waiting on the owner · 1 external residue · 0 parked to a later wave._
 
 - **AUTH-001** · Sign-in — 4/5 closed · depth 2
   - `[!] AUTH-001/T4` — The sign-in form, in twenty languages, keyboard-reachable, with an accessible name on every field  · _pending-decision_ · **Blocked by:** pending-decision: I18N-DEC-02 — the form must render in the reader's locale across twenty, and the application has no i18n framework yet; which one i…
@@ -56,8 +56,7 @@ _59/69 closed (85%) · 10 outstanding — 6 buildable now · 3 waiting on the ow
 - **SCENE-003** · The sky — 3/3 closed
 - **SCENE-005** · Orbit stages — 4/4 closed
 - **SCENE-006** · The mapping stage — 2/2 closed
-- **ADMIN-002** · Admin console shell — 3/5 closed · depth 4
-  - `[~] ADMIN-002/T2` — The seven destinations, with the landing surface listing what needs attention  · **Note:** The seven-destination nav ships in apps/web/src/app/admin/layout.tsx as the console's navigational chrome. The landing surface's listing of what need…
+- **ADMIN-002** · Admin console shell — 4/5 closed · depth 4
   - `[ ] ADMIN-002/T3` — One destructive-action component, naming the subject, with a typed confirmation for the three that cannot be undone
 
 - **AUTH-004** · Sign-out — 3/5 closed · depth 4

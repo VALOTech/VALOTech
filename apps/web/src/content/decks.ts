@@ -141,3 +141,52 @@ export async function recordDeckRead(accountId: string, deckId: string, version:
     .onConflict((oc) => oc.columns(['account_id', 'deck_id', 'version']).doUpdateSet({ last_opened_at: sql`now()` }))
     .execute();
 }
+
+/** A deck an active investor holds a grant to but has never opened — an item for the admin landing. */
+export interface UnopenedDeckGrant {
+  readonly deckTitle: string;
+  readonly accountName: string;
+  readonly grantedAt: Date;
+}
+
+/**
+ * Every deck grant an active investor has never opened, longest-waiting first
+ * (`ADMIN-002/T2`). The console's landing surface reads it to name one thing that
+ * needs attention: an investor was given a deck and has not looked at it.
+ *
+ * A grant counts as opened once any `deck_reads` row exists for the pair, whatever
+ * version — seeing the deck is what a read records, and a version the reader was
+ * never served is not one they failed to open. Only `active` accounts count: an
+ * invited account cannot sign in to open anything and a suspended one may not, so
+ * an unopened grant of theirs is expected rather than a thing to act on. Only deck
+ * items count; a grant to another type is not a deck a reader opens. It is an
+ * admin-wide read, called under the `/admin` gate, and lives in the content module
+ * because it reads `content_grants` (`CMS-006/T5`'s access boundary).
+ */
+export async function decksGrantedButNeverOpened(): Promise<UnopenedDeckGrant[]> {
+  const rows = await getDb()
+    .selectFrom('content_grants')
+    .innerJoin('content_items', 'content_items.id', 'content_grants.item_id')
+    .innerJoin('accounts', 'accounts.id', 'content_grants.account_id')
+    .leftJoin('deck_reads', (join) =>
+      join
+        .onRef('deck_reads.deck_id', '=', 'content_grants.item_id')
+        .onRef('deck_reads.account_id', '=', 'content_grants.account_id'),
+    )
+    .where('content_items.type', '=', 'deck')
+    .where('accounts.state', '=', 'active')
+    .where('deck_reads.account_id', 'is', null)
+    .select([
+      'content_items.title as deckTitle',
+      'accounts.name as accountName',
+      'content_grants.granted_at as grantedAt',
+    ])
+    .orderBy('content_grants.granted_at')
+    .execute();
+
+  return rows.map((row) => ({
+    deckTitle: row.deckTitle,
+    accountName: row.accountName,
+    grantedAt: row.grantedAt,
+  }));
+}
