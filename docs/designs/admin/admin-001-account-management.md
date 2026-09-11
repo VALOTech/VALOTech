@@ -48,6 +48,29 @@ nobody remembered to close.
 | Sessions | Live sessions, and a control to end them all (`AUTH-004`) |
 | Actions | Resend invitation, reset password, suspend, reinstate, delete |
 
+### The action route
+
+    POST /admin/accounts/<id>/action   { action }
+
+One route for the acts the page performs — `resend-invitation`, `reset-password`,
+`suspend`, `reinstate`, `end-sessions` — because each is a name and a call to the
+service that owns it, and five routes would be five copies of the gate, the
+origin check and the body parse, the fifth written in a hurry. Delete is not
+among them: it is `ADMIN-001/T4`, its own surface with a typed confirmation.
+
+The answer is one of three. `changed` — a write happened. `unchanged` — none did,
+which covers both an act asking for a state the account already holds and an act a
+guard refused (`ADMIN-DEC-01`), because the services answer both with the same
+value and a route inventing a reason would be guessing which. `requested` — the
+password reset alone, whose flow reports nothing back by design (`SEC-R03`), so
+the honest answer is that the request was made and not that a token was written.
+
+The handler asks the gate itself (`requireAdmin`) rather than resting on the
+segment layout — a route handler inherits no layout — refuses a cross-site
+`Origin` before anything else (the cookie is `SameSite=Lax`, so this is a second
+lock), and resolves the subject before dispatching, so an id no account holds is a
+`404` and not an `unchanged` that would read like a refusal.
+
 ### The four states
 
 | State | Can sign in | Set by |

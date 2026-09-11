@@ -1,11 +1,12 @@
 /**
  * What an admin does to somebody else's account (`ADMIN-001`): the list of who
- * can sign in, the five acts that change one — suspend, role change, reinstate,
- * erase, and honour a read-tracking objection — and a read of everything held
- * about one, for a data-portability request (`LEGAL-GLOBAL-001/T2`).
+ * can sign in and the one person behind a row of it, the six acts that change an
+ * account — suspend, role change, reinstate, end every session, erase, and honour
+ * a read-tracking objection — and a read of everything held about one, for a
+ * data-portability request (`LEGAL-GLOBAL-001/T2`).
  *
- * The list is a plain read and carries none of what follows. Each act is one
- * carrying several writes, and the design is that the writes are one
+ * The reads are plain and carry none of what follows. Each act is one carrying
+ * several writes, and the design is that the writes are one
  * transaction. A suspension that changed the state and failed to end
  * the sessions would leave a suspended person signed in for the rest of the
  * day; a role change that changed the role and failed to end the sessions would
@@ -20,7 +21,11 @@
  * lookup followed by a decision would let two admins acting at once both pass
  * the lookup and both write; here the second blocks on the first's row lock and
  * then re-evaluates this predicate against the row as the first left it, so it
- * matches nothing and the trail carries one act rather than two.
+ * matches nothing and the trail carries one act rather than two. Ending every
+ * session has no narrowed `UPDATE` to carry that check — a delete either matches
+ * rows or it does not — so it locks the rows it is about to remove and reads
+ * whether there were any, which lands in the same place: the second of two
+ * concurrent calls finds them gone and records nothing.
  *
  * **Nothing to change is not an error, and it is not an act either.** An
  * account already in the state being asked for is left untouched: no session is
@@ -50,7 +55,7 @@
  * sessions for a suspended account would be describing access already refused.
  */
 
-import type { Transaction } from 'kysely';
+import { sql, type Transaction } from 'kysely';
 
 import { recordAudit } from '../audit/record';
 import { invalidateAllForAccountIn } from '../auth/session';
@@ -100,6 +105,64 @@ export async function listAccounts(): Promise<AccountListRow[]> {
     .orderBy('last_sign_in', (order) => order.asc().nullsFirst())
     .orderBy('email')
     .execute();
+}
+
+/**
+ * The shape an account id takes, checked before a value from a URL reaches a
+ * uuid column. `accounts.id` is a uuid, so a segment that is not one would make
+ * the query raise where the honest answer is that no account holds it.
+ */
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+/** One person, as the identity section of their page states them (`ADMIN-001/T2`). */
+export interface PersonIdentity {
+  readonly id: string;
+  readonly email: string;
+  readonly name: string;
+  readonly role: AccountRole;
+  readonly state: AccountState;
+  readonly createdAt: Date;
+  /** `null` when the person has never signed in. */
+  readonly lastSignIn: Date | null;
+}
+
+/**
+ * The one person a page is about, or `null` when no account holds the id
+ * (`ADMIN-001/T2`).
+ *
+ * Seven fields, which is the identity section and the whole of what the record
+ * holds about a person worth showing (`DATA-R01`): the password hash stays in the
+ * database, `updated_at` is the row's own clock rather than anything about them,
+ * and there is no note field to read because there is no note field.
+ *
+ * It is also what resolves the subject of an act: a surface that knows the
+ * account exists can answer "no such account" itself, instead of handing an
+ * unknown id to an operation whose `false` would read as a refusal.
+ */
+export async function personIdentity(accountId: string): Promise<PersonIdentity | null> {
+  if (!UUID.test(accountId)) {
+    return null;
+  }
+
+  const account = await getDb()
+    .selectFrom('accounts')
+    .select(['id', 'email', 'name', 'role', 'state', 'created_at', 'last_sign_in'])
+    .where('id', '=', accountId)
+    .executeTakeFirst();
+
+  if (account === undefined) {
+    return null;
+  }
+
+  return {
+    id: account.id,
+    email: account.email,
+    name: account.name,
+    role: account.role,
+    state: account.state,
+    createdAt: account.created_at,
+    lastSignIn: account.last_sign_in,
+  };
 }
 
 /**
@@ -292,6 +355,65 @@ export async function reinstateAccount(accountId: string, actorId: string): Prom
       await recordAudit(trx, {
         actorId,
         action: 'account.reinstate',
+        subjectType: 'account',
+        subjectId: accountId,
+      });
+
+      return true;
+    });
+}
+
+/**
+ * End every session an account holds, on any device, at an admin's hand
+ * (`ADMIN-001/T2`, `AUTH-004`). Returns whether anything was ended — `false` when
+ * the account held no live session, in which case nothing is written and nothing
+ * is recorded.
+ *
+ * It is the same delete a person performs on themselves, asked for by somebody
+ * else, so the account-wide predicate is `invalidateAllForAccountIn`'s and not a
+ * second spelling of it. What this adds is the audit row: a person ending their
+ * own sessions is a routine act the trail does not hold, and an admin ending
+ * somebody else's is a privileged one it does (`SEC-R04`), recorded in the same
+ * transaction as the delete so the two cannot come apart.
+ *
+ * What counts as something to end is a session the gate would still resolve, so
+ * the check carries the gate's own liveness predicate: an account whose only rows
+ * have lapsed has no access to revoke, and recording an act there would put a
+ * revocation in the trail that revoked nothing. A lapsed row beside a live one is
+ * deleted with it — it is not a session, and the retention sweep would have taken
+ * it anyway.
+ *
+ * The rows are locked before they are deleted so the check and the act are one:
+ * two admins pressing at once meet at the lock, and the second finds the rows
+ * gone and records nothing, where a count taken outside a transaction would let
+ * both write an act.
+ *
+ * It needs none of the guard the state-changing acts carry (`ADMIN-DEC-01`).
+ * Ending sessions takes away no access: the account may still sign in, so no act
+ * here can leave the room without an admin who can, and an admin who ends their
+ * own sessions has signed themselves out rather than locked themselves out.
+ */
+export async function endAllSessions(accountId: string, actorId: string): Promise<boolean> {
+  return getDb()
+    .transaction()
+    .execute(async (trx) => {
+      const live = await trx
+        .selectFrom('sessions')
+        .select('id')
+        .where('account_id', '=', accountId)
+        .where('expires_at', '>', sql<Date>`now()`)
+        .forUpdate()
+        .execute();
+
+      if (live.length === 0) {
+        return false;
+      }
+
+      await invalidateAllForAccountIn(trx, accountId);
+
+      await recordAudit(trx, {
+        actorId,
+        action: 'session.invalidate_all',
         subjectType: 'account',
         subjectId: accountId,
       });

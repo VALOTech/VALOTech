@@ -23,7 +23,12 @@ import type { Actor } from '../auth/gate';
 import { closeDb, getDb } from '../db/index';
 
 import type { Block } from './blocks';
-import { deckRevisionFor, decksGrantedButNeverOpened, recordDeckRead } from './decks';
+import {
+  deckRevisionFor,
+  decksGrantedButNeverOpened,
+  grantedDecksForAccount,
+  recordDeckRead,
+} from './decks';
 import { addGrant } from './grants';
 import { createItem, saveDraft } from './items';
 import { publish, withdraw } from './publish';
@@ -395,6 +400,139 @@ describe.skipIf(!HAS_DATABASE)('a deck publication version (DECK-002/T1)', () =>
       expect(mine).toHaveLength(2);
       expect(mine[0]?.grantedAt).toEqual(OLD);
       expect(mine[1]?.grantedAt.getTime() ?? 0).toBeGreaterThan(OLD.getTime());
+    });
+  });
+
+  describe('the decks one person may read (ADMIN-001/T2, DECK-004/T5)', () => {
+    /** An investor of this suite's own, whose grants no other test here touches. */
+    async function grantee(): Promise<string> {
+      const row = await getDb()
+        .insertInto('accounts')
+        .values({
+          email: `access-${randomUUID()}@example.test`,
+          name: 'A grantee',
+          role: 'investor',
+          state: 'active',
+        })
+        .returning('id')
+        .executeTakeFirstOrThrow();
+      return row.id;
+    }
+
+    /** Put a read at a chosen moment, so "the latest open" is asserted against fixed values. */
+    async function openedAt(accountId: string, deckId: string, version: number, at: Date): Promise<void> {
+      await recordDeckRead(accountId, deckId, version);
+      await getDb()
+        .updateTable('deck_reads')
+        .set({ last_opened_at: at })
+        .where('account_id', '=', accountId)
+        .where('deck_id', '=', deckId)
+        .where('version', '=', version)
+        .execute();
+    }
+
+    it('carries the deck, the grant, no pin and no open, key for key', async () => {
+      const deck = await aDeck();
+      const reader = await grantee();
+      await addGrant(deck, reader, authorId);
+
+      const rows = await grantedDecksForAccount(reader);
+
+      expect(rows).toHaveLength(1);
+      // The whole row rather than named fields: a read that widened to a column
+      // the access list has no business showing would pass a looser assertion.
+      expect(rows[0]).toEqual({
+        deckId: deck,
+        deckTitle: 'A deck',
+        grantedAt: expect.any(Date),
+        pinnedVersion: null,
+        lastOpenedAt: null,
+      });
+    });
+
+    it('carries the pinned version when the grant holds them to one', async () => {
+      const deck = await aDeck();
+      const reader = await grantee();
+      await addGrant(deck, reader, authorId, 2);
+
+      expect((await grantedDecksForAccount(reader))[0]?.pinnedVersion).toBe(2);
+    });
+
+    it('answers one row per grant, carrying the latest open across every version read', async () => {
+      const deck = await aDeck();
+      const reader = await grantee();
+      await addGrant(deck, reader, authorId);
+
+      const early = new Date('2026-01-02T03:04:05.000Z');
+      const late = new Date('2026-05-06T07:08:09.000Z');
+      await openedAt(reader, deck, 1, early);
+      await openedAt(reader, deck, 2, late);
+
+      const rows = await grantedDecksForAccount(reader);
+
+      // One row, not two: the grant is the subject and the reads are a column of
+      // it, so a read per version would list the same deck twice and an admin
+      // would count one grant as two.
+      expect(rows).toHaveLength(1);
+      expect(rows[0]?.lastOpenedAt).toEqual(late);
+    });
+
+    it("is the one account: another person's grant and another person's read stay out of it", async () => {
+      const deck = await aDeck();
+      const mine = await grantee();
+      const theirs = await grantee();
+      const theirDeck = await aDeck();
+      await addGrant(deck, mine, authorId);
+      await addGrant(deck, theirs, authorId);
+      await addGrant(theirDeck, theirs, authorId);
+      await openedAt(theirs, deck, 1, new Date('2026-03-03T03:03:03.000Z'));
+
+      const rows = await grantedDecksForAccount(mine);
+
+      // One row for the one deck granted to this person, and `null` for the open
+      // — the read belongs to the other account, and a join that matched only the
+      // deck would hand their moment to this person's row (`DATA-R05`).
+      expect(rows).toHaveLength(1);
+      expect(rows[0]?.deckId).toBe(deck);
+      expect(rows[0]?.lastOpenedAt).toBeNull();
+    });
+
+    it('omits a granted item that is not a deck', async () => {
+      const report = await createItem({
+        type: 'report',
+        slug: `acc-r-${randomUUID()}`,
+        title: 'A report',
+        period: '2027-Q2',
+        audience: 'granted',
+      });
+      const reader = await grantee();
+      await addGrant(report.id, reader, authorId);
+
+      expect(await grantedDecksForAccount(reader)).toEqual([]);
+    });
+
+    it('orders the oldest grant first, whatever order the grants were made in', async () => {
+      const first = await aDeck();
+      const second = await aDeck();
+      const reader = await grantee();
+      await addGrant(first, reader, authorId);
+      await addGrant(second, reader, authorId);
+
+      const OLD = new Date('2018-06-01T00:00:00.000Z');
+      await getDb()
+        .updateTable('content_grants')
+        .set({ granted_at: OLD })
+        .where('item_id', '=', second)
+        .where('account_id', '=', reader)
+        .execute();
+
+      // `second` was granted later and is now dated earlier, so an order that
+      // echoed insertion would come back the other way round.
+      expect((await grantedDecksForAccount(reader)).map((row) => row.deckId)).toEqual([second, first]);
+    });
+
+    it('answers an empty list for an account holding no grant at all', async () => {
+      expect(await grantedDecksForAccount(await grantee())).toEqual([]);
     });
   });
 });

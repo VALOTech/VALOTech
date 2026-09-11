@@ -1,0 +1,132 @@
+/* The destructive control and its confirmation (ADMIN-002/T3). It sits inside the
+   admin console, which is a light, plain staff surface, so the red is measured
+   against that ground (A11Y-R03): #7f1d1d on white and white on #991b1b both
+   clear WCAG AA for body text at this size. The colour is never the message —
+   the verb is on the control, the consequence is a sentence, and whether the act
+   can be undone is written out — so the panel still reads correctly in
+   monochrome or to somebody who cannot separate the hues. */
+
+.destructive {
+  --danger-ink: #7f1d1d;
+  --danger-solid: #991b1b;
+  --danger-bg: #fef2f2;
+  --danger-line: #b91c1c;
+  --danger-muted: #52525b;
+  --danger-off-bg: #f4f4f5;
+
+  display: block;
+}
+
+.trigger,
+.confirm,
+.cancel {
+  font: inherit;
+  font-size: 0.85rem;
+  padding: 0.35rem 0.7rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.trigger {
+  border: 1px solid var(--danger-line);
+  background: #fff;
+  color: var(--danger-ink);
+}
+
+.trigger:hover {
+  background: var(--danger-bg);
+}
+
+.trigger:disabled {
+  border-color: var(--danger-muted);
+  color: var(--danger-muted);
+  cursor: not-allowed;
+}
+
+.panel {
+  margin-top: 0.5rem;
+  padding: 0.75rem;
+  border: 1px solid var(--danger-line);
+  border-left-width: 4px;
+  border-radius: 8px;
+  background: var(--danger-bg);
+  max-width: 34rem;
+}
+
+.heading {
+  margin: 0 0 0.4rem;
+  font-weight: 700;
+  color: var(--danger-ink);
+}
+
+/* The heading takes focus when the panel opens, so it needs a ring of its own. */
+.heading:focus-visible,
+.trigger:focus-visible,
+.confirm:focus-visible,
+.cancel:focus-visible,
+.field:focus-visible {
+  outline: 3px solid var(--danger-line);
+  outline-offset: 2px;
+}
+
+.consequence,
+.reversal {
+  margin: 0 0 0.4rem;
+  font-size: 0.9rem;
+}
+
+.reversal {
+  font-weight: 600;
+  color: var(--danger-ink);
+}
+
+.fieldLabel {
+  display: block;
+  font-size: 0.85rem;
+  margin-bottom: 0.2rem;
+}
+
+.field {
+  width: 100%;
+  max-width: 22rem;
+  font: inherit;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid var(--danger-line);
+  border-radius: 6px;
+  background: #fff;
+}
+
+.hint {
+  margin: 0.25rem 0 0.6rem;
+  font-size: 0.8rem;
+  color: var(--danger-muted);
+}
+
+.controls {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.6rem;
+}
+
+.confirm {
+  border: 1px solid var(--danger-solid);
+  background: var(--danger-solid);
+  color: #fff;
+}
+
+.confirm:hover {
+  background: #7f1d1d;
+}
+
+.confirm:disabled {
+  border-color: var(--danger-muted);
+  background: var(--danger-off-bg);
+  color: var(--danger-muted);
+  cursor: not-allowed;
+}
+
+.cancel {
+  border: 1px solid var(--danger-muted);
+  background: #fff;
+  color: var(--danger-muted);
+}

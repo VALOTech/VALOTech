@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_295 tasks in the plan, 172 closed, 123 outstanding._
+_295 tasks in the plan, 174 closed, 121 outstanding._
 
 ---
 
@@ -35,7 +35,7 @@ _46/48 closed (95%) · 2 outstanding — 0 buildable now · 0 waiting on the own
 
 _Who may read what, and what records that they did. Everything above reads through the gate this wave builds, so a shortcut here is a shortcut in every feature after it. Sign-out precedes invitation deliberately: a session that cannot be ended server-side is a defect that grows with every account created. The scene sits here too, one layer above the page it moves behind._
 
-_60/69 closed (86%) · 9 outstanding — 5 buildable now · 3 waiting on the owner · 1 external residue · 0 parked to a later wave._
+_61/69 closed (88%) · 8 outstanding — 4 buildable now · 3 waiting on the owner · 1 external residue · 0 parked to a later wave._
 
 - **AUTH-001** · Sign-in — 4/5 closed · depth 2
   - `[!] AUTH-001/T4` — The sign-in form, in twenty languages, keyboard-reachable, with an accessible name on every field  · _pending-decision_ · **Blocked by:** pending-decision: I18N-DEC-02 — the form must render in the reader's locale across twenty, and the application has no i18n framework yet; which one i…
@@ -56,9 +56,7 @@ _60/69 closed (86%) · 9 outstanding — 5 buildable now · 3 waiting on the own
 - **SCENE-003** · The sky — 3/3 closed
 - **SCENE-005** · Orbit stages — 4/4 closed
 - **SCENE-006** · The mapping stage — 2/2 closed
-- **ADMIN-002** · Admin console shell — 4/5 closed · depth 4
-  - `[ ] ADMIN-002/T3` — One destructive-action component, naming the subject, with a typed confirmation for the three that cannot be undone
-
+- **ADMIN-002** · Admin console shell — 5/5 closed
 - **AUTH-004** · Sign-out — 3/5 closed · depth 4
   - `[~] AUTH-004/T4` — Every authenticated response is `no-store`, verified by pressing the back button  · **Note:** The mechanism ships and is header-verified; the acceptance the row names — pressing Back — is owed, so this is in-progress rather than closed. apps/w…
   - `[!] AUTH-004/T2` — The session list shows this account's live sessions and marks the current one  · _pending-decision_ · **Blocked by:** pending-decision: I18N-DEC-02 — the list is a localised page and the application has no i18n framework yet; which one it uses is the owner's to settl…
@@ -72,10 +70,9 @@ _60/69 closed (86%) · 9 outstanding — 5 buildable now · 3 waiting on the own
 
 _The machinery every kind of writing shares — the editor, the media, the locale states, the audience rule, publishing, search — plus the account, configuration and logging surfaces an operator needs before anything is published. Building it once is the whole reason a report, an update and a deck are three navigations over one system rather than three systems._
 
-_42/63 closed (66%) · 21 outstanding — 18 buildable now · 3 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_43/63 closed (68%) · 20 outstanding — 17 buildable now · 3 waiting on the owner · 0 external residue · 0 parked to a later wave._
 
-- **ADMIN-001** · Account management — 5/8 closed · depth 5
-  - `[ ] ADMIN-001/T2` — The person page: identity, access, sessions, actions
+- **ADMIN-001** · Account management — 6/8 closed · depth 5
   - `[ ] ADMIN-001/T4` — Deletion is a real delete; the confirmation lists what goes and what remains, and takes the typed name
   - `[ ] ADMIN-001/T6` — Creation issues an invitation; no admin ever sets another person's password
 

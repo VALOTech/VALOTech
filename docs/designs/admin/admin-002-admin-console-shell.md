@@ -39,10 +39,16 @@ not `403`, so the existence of the console is not confirmed to an investor who
 guesses the path. A signed-out request goes to sign-in with the destination
 remembered.
 
-**Every admin route inherits it.** A new admin page is protected by being under
-the segment, and there is no way to add one that is not. That is the reason the
-shell exists as a design rather than as a component: the failure it prevents is
-the eleventh admin page shipping without the check the first ten have.
+**Every admin _page_ inherits it.** A page under the segment is protected by being
+there, and there is no way to add one that is not — the failure the shell prevents
+is the eleventh page shipping without the check the first ten have. That is the
+reason the shell is a design rather than a component. A **route handler** under
+the segment is the exception a reader has to know: it extends no layout, so it
+does not inherit the check and calls `requireAdmin` itself, as `ADMIN-001`'s
+action route and `CMS-002`'s draft route both do. A design that called the
+inheritance total would be the dangerous kind of wrong — read as structural where
+it is not, and a handler shipped without its own check would be an open admin
+endpoint.
 
 ### Navigation
 

@@ -20,6 +20,9 @@ import styles from './accounts.module.css';
  * The timestamp is rendered as UTC, spelled out in the header, because an admin
  * comparing two accounts needs one clock and not their own. The `/admin`
  * layout's role check gates the page; it does not re-check.
+ *
+ * The name is the way to the person's page (`ADMIN-001/T2`), which is where the
+ * question this list raises — why has nobody signed in — is actually answered.
  */
 export default async function AccountsPage(): Promise<ReactElement> {
   const accounts = await listAccounts();
@@ -44,7 +47,9 @@ export default async function AccountsPage(): Promise<ReactElement> {
           <tbody>
             {accounts.map((account) => (
               <tr key={account.id}>
-                <td>{account.name}</td>
+                <td>
+                  <a href={`/admin/accounts/${account.id}`}>{account.name}</a>
+                </td>
                 <td>{account.email}</td>
                 <td>{account.role}</td>
                 <td>{account.state}</td>

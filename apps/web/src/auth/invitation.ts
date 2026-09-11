@@ -389,6 +389,63 @@ export async function inviteAccount(
 }
 
 /**
+ * Issue a fresh invitation for somebody who has not accepted theirs, and hand
+ * back the link (`ADMIN-001/T2`). Returns `null` when the account is not waiting
+ * on an invitation, in which case no token is minted and the one it holds — if any
+ * — is left alone.
+ *
+ * Narrowed to `invited`, which is stricter than `issueTokenIn`'s own refusal of a
+ * suspended account, and the narrowing is the whole of why this is a function
+ * rather than a call to `issueToken`. An invitation link sets a password, so
+ * issuing one for an `active` account would hand an admin the way into a person's
+ * account that `ADMIN-001` §3 refuses them: an admin who could set a password
+ * could sign in as that person, and the trail would say the person did it. An
+ * account that has not accepted has no password to take over, which is why
+ * creation may hand its link to an admin and a resend may do no more than repeat
+ * that.
+ *
+ * The account row is locked while the state is read, so a resend and an
+ * acceptance racing each other serialise: either the acceptance commits first and
+ * this finds an `active` account and mints nothing, or this mints first and the
+ * link it replaced is the one that stops working.
+ *
+ * What comes back is `inviteAccount`'s value and the delivery sentence with it —
+ * the token is in this answer and in no row, so the admin delivers it or nobody
+ * does (`AUTH-003/T7`).
+ */
+export async function resendInvitation(accountId: string): Promise<Invitation | null> {
+  const token = await getDb()
+    .transaction()
+    .execute(async (trx) => {
+      const invited = await trx
+        .selectFrom('accounts')
+        .select('id')
+        .where('id', '=', accountId)
+        .where('state', '=', 'invited')
+        .forUpdate()
+        .executeTakeFirst();
+
+      if (invited === undefined) {
+        return null;
+      }
+
+      return issueTokenIn(trx, accountId, INVITATION_TTL_SECONDS);
+    });
+
+  if (token === null) {
+    return null;
+  }
+
+  const { mail } = getConfig();
+
+  return {
+    accountId,
+    link: inviteLink(token),
+    deliverByHand: mail.available ? NO_SEND_YET : mail.unavailable,
+  };
+}
+
+/**
  * Ask for a password reset. Answers the same for an address an account holds
  * and one it does not (`SEC-R03`).
  *

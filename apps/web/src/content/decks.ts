@@ -190,3 +190,78 @@ export async function decksGrantedButNeverOpened(): Promise<UnopenedDeckGrant[]>
     grantedAt: row.grantedAt,
   }));
 }
+
+/** One deck an account may read: which deck, any pin it holds them to, when it was granted, and when they last opened it. */
+export interface AccountDeckAccess {
+  readonly deckId: string;
+  readonly deckTitle: string;
+  readonly grantedAt: Date;
+  /** The version the grant holds them to, or `null` when they read the current one. */
+  readonly pinnedVersion: number | null;
+  /** `null` when they have never opened it. */
+  readonly lastOpenedAt: Date | null;
+}
+
+/**
+ * Every deck one account may read, oldest grant first (`ADMIN-001/T2`,
+ * `DECK-004/T5`).
+ *
+ * This is the from-the-account view, which is the one that gets asked when
+ * somebody's involvement ends and which turns "revoke their access" from a search
+ * into a list. It lives in the content module for the reason every read of
+ * `content_grants` does, and beside `decksGrantedButNeverOpened` because the two
+ * answer the same question from opposite ends.
+ *
+ * `lastOpenedAt` is the latest open across every version, because a reader who was
+ * served two versions opened the deck at the later of them, and a version they
+ * were never served is not one they failed to open. It is `null` for a grant never
+ * opened, which — beside a `grantedAt` a year old — is what makes the list
+ * actionable rather than historical.
+ *
+ * Scoped to the one account (`DATA-R05`) and narrowed to decks: a grant to another
+ * type is not a deck anybody opens, and counting one here would put a row in the
+ * access list that the deck reader cannot explain.
+ *
+ * It takes an id rather than the reader because the reader is the admin and the
+ * subject is somebody else — the `/admin` segment is what decides whether the
+ * asker may ask, as it does for every read on the console.
+ */
+export async function grantedDecksForAccount(accountId: string): Promise<AccountDeckAccess[]> {
+  const rows = await getDb()
+    .selectFrom('content_grants')
+    .innerJoin('content_items', 'content_items.id', 'content_grants.item_id')
+    .leftJoin('deck_reads', (join) =>
+      join
+        .onRef('deck_reads.deck_id', '=', 'content_grants.item_id')
+        .onRef('deck_reads.account_id', '=', 'content_grants.account_id'),
+    )
+    .where('content_grants.account_id', '=', accountId)
+    .where('content_items.type', '=', 'deck')
+    .select((eb) => [
+      'content_items.id as deckId',
+      'content_items.title as deckTitle',
+      'content_grants.granted_at as grantedAt',
+      'content_grants.pinned_version as pinnedVersion',
+      eb.fn.max<Date | null>('deck_reads.last_opened_at').as('lastOpenedAt'),
+    ])
+    .groupBy([
+      'content_items.id',
+      'content_items.title',
+      'content_grants.granted_at',
+      'content_grants.pinned_version',
+    ])
+    // Oldest grant first, and the title breaks a tie: two grants made in one
+    // transaction share `now()`, so without a second key their order could swap
+    // between renders — a list that looks wrong while being right.
+    .orderBy('content_grants.granted_at')
+    .orderBy('content_items.title')
+    .execute();
+
+  return rows.map((row) => ({
+    deckId: row.deckId,
+    deckTitle: row.deckTitle,
+    grantedAt: row.grantedAt,
+    pinnedVersion: row.pinnedVersion,
+    lastOpenedAt: row.lastOpenedAt,
+  }));
+}

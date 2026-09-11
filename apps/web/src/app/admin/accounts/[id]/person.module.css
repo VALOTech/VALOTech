@@ -1,0 +1,156 @@
+/* One person's page (ADMIN-001/T2). Plain like the list it is reached from: four
+   sections read top to bottom, and the only colour is on the outcome of an act,
+   which is also the only thing on the page that was not true when it loaded. The
+   destructive control brings its own style (ADMIN-002/T3), so nothing red is
+   defined here. */
+
+.back {
+  margin: 0 0 0.5rem;
+  font-size: 0.85rem;
+}
+
+.identity {
+  margin: 0.5rem 0 1.5rem;
+  font-size: 0.9rem;
+}
+
+/* The columns are laid out per pair rather than on the list, so the list keeps its
+   term-and-definition semantics. Every pair shares the template, so the values
+   still line up down the page. */
+.pair {
+  display: grid;
+  grid-template-columns: 11rem 1fr;
+  gap: 1rem;
+  margin-bottom: 0.3rem;
+}
+
+.identity dt {
+  font-weight: 600;
+}
+
+.identity dd {
+  margin: 0;
+}
+
+.rows {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  margin: 0.5rem 0 1rem;
+}
+
+.rows th,
+.rows td {
+  text-align: left;
+  padding: 0.4rem 0.6rem;
+  border-bottom: 1px solid #e4e4ea;
+  vertical-align: top;
+}
+
+.rows th {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Timestamps line up digit under digit, so a column scanned for the oldest one is
+   read by eye rather than character by character. */
+.when {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.actions {
+  list-style: none;
+  margin: 0.5rem 0 0;
+  padding: 0;
+}
+
+.actions li {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin: 0 0 0.6rem;
+}
+
+.action {
+  font: inherit;
+  font-size: 0.85rem;
+  padding: 0.35rem 0.7rem;
+  border: 1px solid #2b3a8c;
+  border-radius: 6px;
+  background: #fff;
+  color: #2b3a8c;
+  cursor: pointer;
+}
+
+.action:hover {
+  background: #eef1fb;
+}
+
+.action:disabled {
+  border-color: #52525b;
+  color: #52525b;
+  cursor: not-allowed;
+}
+
+.action:focus-visible {
+  outline: 2px solid #2b3a8c;
+  outline-offset: 1px;
+}
+
+.note {
+  font-size: 0.8rem;
+  color: #52525b;
+}
+
+.outcome {
+  margin: 1rem 0 0;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid #2b3a8c;
+  border-radius: 6px;
+  background: #eef1fb;
+  font-size: 0.9rem;
+  max-width: 44rem;
+}
+
+.outcome p {
+  margin: 0 0 0.4rem;
+}
+
+/* The report of an act takes focus when it appears, because the control that
+   started it is often gone by then. `:focus` rather than `:focus-visible`: the
+   focus is moved by script, which `:focus-visible` does not reliably match, and a
+   message that has just taken focus must show that it has. */
+.outcome:focus,
+.failure:focus {
+  outline: 3px solid #2b3a8c;
+  outline-offset: 2px;
+}
+
+.deliver {
+  font-weight: 600;
+}
+
+/* The invitation link is long and must survive a copy intact, so it wraps at any
+   character rather than being clipped or reflowed on word boundaries. */
+.link {
+  display: block;
+  padding: 0.4rem 0.5rem;
+  border: 1px solid #d8d8e0;
+  border-radius: 4px;
+  background: #fff;
+  font-size: 0.8rem;
+  overflow-wrap: anywhere;
+}
+
+.failure {
+  margin: 1rem 0 0;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #7f1d1d;
+  border-radius: 6px;
+  background: #fde2e1;
+  color: #7f1d1d;
+  font-size: 0.9rem;
+  max-width: 44rem;
+}

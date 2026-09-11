@@ -1,6 +1,7 @@
 /**
- * Writing and unwriting a session (`AUTH-002`). Sign-in is the only thing that
- * issues one; `AUTH-004` and `ADMIN-001` are the only things that end one.
+ * Writing and unwriting a session (`AUTH-002`), and reading which ones an account
+ * holds. Sign-in is the only thing that issues one; `AUTH-004` and `ADMIN-001`
+ * are the only things that end one.
  *
  * The cookie carries a random token and the `sessions` row stores only its
  * hash, so a database dump is a set of hashes rather than a set of live
@@ -17,7 +18,7 @@
 
 import { createHash, randomBytes } from 'node:crypto';
 
-import type { Transaction } from 'kysely';
+import { sql, type Transaction } from 'kysely';
 
 import { getConfig } from '../config/index';
 import { getDb } from '../db/index';
@@ -213,4 +214,47 @@ export async function invalidateAllForAccount(accountId: string): Promise<void> 
   await getDb()
     .transaction()
     .execute((trx) => invalidateAllForAccountIn(trx, accountId));
+}
+
+/** One live session an account holds: when it began, when it was last used, when it lapses. */
+export interface LiveSession {
+  readonly id: string;
+  readonly createdAt: Date;
+  readonly lastSeenAt: Date;
+  readonly expiresAt: Date;
+}
+
+/**
+ * Every session an account can still present, most recently used first
+ * (`ADMIN-001/T2`, `AUTH-004`).
+ *
+ * `expires_at > now()` is the gate's own liveness predicate, read from the
+ * database's clock for the reason the gate reads it there: a list filtered by this
+ * process's clock would show a session the gate refuses, or hide one it admits. A
+ * lapsed row is left in the table for the retention sweep to take and is simply
+ * not a session any more, so it is not listed as one.
+ *
+ * It never selects `token_hash`. The row's hash is what a session is presented
+ * with, and a surface has no use for it — what an admin needs is how many ways in
+ * exist and when each was last used.
+ *
+ * Scoped to the one account by its argument (`DATA-R05`), like every other read
+ * about a person: an admin surface asks about somebody, never about everybody.
+ */
+export async function liveSessionsForAccount(accountId: string): Promise<LiveSession[]> {
+  const rows = await getDb()
+    .selectFrom('sessions')
+    .select(['id', 'created_at', 'last_seen_at', 'expires_at'])
+    .where('account_id', '=', accountId)
+    .where('expires_at', '>', sql<Date>`now()`)
+    .orderBy('last_seen_at', 'desc')
+    .orderBy('id')
+    .execute();
+
+  return rows.map((row) => ({
+    id: row.id,
+    createdAt: row.created_at,
+    lastSeenAt: row.last_seen_at,
+    expiresAt: row.expires_at,
+  }));
 }
