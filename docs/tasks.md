@@ -411,7 +411,8 @@ PRD: `MAIL-001`
 ## MAIL-002 · Mail log and unsubscribe
 PRD: `MAIL-002`, `DATA-R04`
 
-- [ ] MAIL-002/T1 — Rows written before the attempt, keyed by account and never by address
+- [x] MAIL-002/T1 — Rows written before the attempt, keyed by account and never by address
+  Evidence: Closed by cross-reference (§1.10): the mail_log write this task names is the one apps/web/src/mail/send.ts:send already performs for MAIL-001/T5 — one row per recipient inserted queued, inside the send transaction, before any message is handed to the port. It is keyed by account and not by address structurally: mail_log (apps/web/src/db/types.ts:MailLogTable) carries account_id and has no address or email column, so a row cannot hold an address, and the write records the recipient only as that account_id (DATA-R02, DATA-R03 — the address lives on the account and is deleted with it). Verified live against PostgreSQL 17.11 by apps/web/src/mail/send.test.ts (10 passed): every recipient's row exists queued before the first hand-off, read back by account_id, with no address column to read. A second write path would be the redundancy §1.10 forbids; the unsubscribe and admin-log surfaces that also read these rows are MAIL-002/T2 and T6.
 - [ ] MAIL-002/T2 — An unsubscribe that works in one click without signing in, and a preference inside the room
 - [ ] MAIL-002/T3 — Transactional mail is never suppressed, enforced by the `kind` set at send time
 - [ ] MAIL-002/T4 — A manual `stop sending` control with its reason, and the send view naming the mailbox bounces arrive in

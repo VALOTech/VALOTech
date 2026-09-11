@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_295 tasks in the plan, 178 closed, 117 outstanding._
+_295 tasks in the plan, 179 closed, 116 outstanding._
 
 ---
 
@@ -108,7 +108,7 @@ _46/63 closed (73%) · 17 outstanding — 13 buildable now · 3 waiting on the o
 
 _The three content types, and the compliance posture that governs what is held about the people reading them. Updates come before decks, and not only because they are the simpler shape of the same problem: they are what the room is for. An investor signs in to find out what has happened since they last looked._
 
-_23/59 closed (38%) · 36 outstanding — 35 buildable now · 1 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_24/59 closed (40%) · 35 outstanding — 34 buildable now · 1 waiting on the owner · 0 external residue · 0 parked to a later wave._
 
 - **DECK-001** · Deck authoring — 2/5 closed · depth 7
   - `[ ] DECK-001/T2` — An overview of section cards in order, showing heading, first line and what each carries
@@ -150,8 +150,7 @@ _23/59 closed (38%) · 36 outstanding — 35 buildable now · 1 waiting on the o
   - `[ ] LEGAL-GLOBAL-001/T4` — The breach runbook uses the 72-hour clock for everyone
   - `[ ] LEGAL-GLOBAL-001/T5` — A one-page record of processing, and a written statement of what is deliberately not claimed
 
-- **MAIL-002** · Mail log and unsubscribe — 0/6 closed · depth 8
-  - `[ ] MAIL-002/T1` — Rows written before the attempt, keyed by account and never by address
+- **MAIL-002** · Mail log and unsubscribe — 1/6 closed · depth 8
   - `[ ] MAIL-002/T2` — An unsubscribe that works in one click without signing in, and a preference inside the room
   - `[ ] MAIL-002/T3` — Transactional mail is never suppressed, enforced by the `kind` set at send time
   - `[ ] MAIL-002/T4` — A manual `stop sending` control with its reason, and the send view naming the mailbox bounces arrive in
