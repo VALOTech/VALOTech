@@ -35,10 +35,10 @@ _46/48 closed (95%) · 2 outstanding — 0 buildable now · 0 waiting on the own
 
 _Who may read what, and what records that they did. Everything above reads through the gate this wave builds, so a shortcut here is a shortcut in every feature after it. Sign-out precedes invitation deliberately: a session that cannot be ended server-side is a defect that grows with every account created. The scene sits here too, one layer above the page it moves behind._
 
-_61/69 closed (88%) · 8 outstanding — 4 buildable now · 3 waiting on the owner · 1 external residue · 0 parked to a later wave._
+_61/69 closed (88%) · 8 outstanding — 6 buildable now · 1 waiting on the owner · 1 external residue · 0 parked to a later wave._
 
 - **AUTH-001** · Sign-in — 4/5 closed · depth 2
-  - `[!] AUTH-001/T4` — The sign-in form, in twenty languages, keyboard-reachable, with an accessible name on every field  · _pending-decision_ · **Blocked by:** pending-decision: I18N-DEC-02 — the form must render in the reader's locale across twenty, and the application has no i18n framework yet; which one i…
+  - `[ ] AUTH-001/T4` — The sign-in form, in twenty languages, keyboard-reachable, with an accessible name on every field
 
 - **DATA-003** · Backup and restore — 5/5 closed
 - **I18N-002** · Served-copy parity gate — 2/2 closed
@@ -59,7 +59,7 @@ _61/69 closed (88%) · 8 outstanding — 4 buildable now · 3 waiting on the own
 - **ADMIN-002** · Admin console shell — 5/5 closed
 - **AUTH-004** · Sign-out — 3/5 closed · depth 4
   - `[~] AUTH-004/T4` — Every authenticated response is `no-store`, verified by pressing the back button  · **Note:** The mechanism ships and is header-verified; the acceptance the row names — pressing Back — is owed, so this is in-progress rather than closed. apps/w…
-  - `[!] AUTH-004/T2` — The session list shows this account's live sessions and marks the current one  · _pending-decision_ · **Blocked by:** pending-decision: I18N-DEC-02 — the list is a localised page and the application has no i18n framework yet; which one it uses is the owner's to settl…
+  - `[ ] AUTH-004/T2` — The session list shows this account's live sessions and marks the current one
 
 - **CMS-001** · Content model and revisions — 6/6 closed
 - **SCENE-004** · Annotation chips — 3/3 closed

@@ -43,16 +43,6 @@ An entry is filed the moment the choice surfaces, not when it is answered. Nothi
 - **Revises:** AUTH-001/T2 — the route's `clientAddress` ships the leftmost-hop safe default; the answer changes which hop it reads
 - **Status:** OPEN. Safe default: the leftmost `X-Forwarded-For` hop, with the trust boundary documented in the route. The per-account limit is unaffected and is the real protection against stuffing one account; the per-address limit is best-effort until the trusted-proxy count is known.
 
-<a id="I18N-DEC-02"></a>
-### `I18N-DEC-02` — The Next.js application's own i18n framework — OPEN
-
-- **Decision:** The gateway localises through a static dictionary (`I18N-001`: `assets/i18n.js` + `data-i18n`), which suits a file served without a build. The application under `apps/web` renders server-side, has no i18n runtime and no design for one, yet `AUTH-001/T4` and every gated surface must render in the reader's locale across twenty (`I18N-R01`, `I18N-R02`). What framework does the application localise through, and where do its dictionaries come from?
-- **Options:** **A** `next-intl` — the App Router standard: server components, locale negotiation, message catalogues; the twenty gateway locales become its content, adapted to the catalogue shape · **B** A thin custom loader that reads the gateway's existing `assets/i18n.js` dictionaries directly, so one dictionary serves both surfaces and no dependency is added · **C** Another library (`@lingui`, `react-i18next`).
-- **Recommendation:** **A**. `next-intl` is built for this rendering model and carries the locale routing, negotiation and pluralisation the application would otherwise hand-roll; the gateway's twenty locales become its message content, so the translation already done is reused rather than redone. **B** adds no dependency but reimplements what the library solves, against a dictionary shaped for a static page. The cost of **A** is one dependency and a catalogue format, which is the shape the translation skills already target.
-- **Decision owner:** user
-- **Blocks:** AUTH-001/T4, AUTH-004/T2
-- **Status:** OPEN. Safe default: the application ships no localised UI until this lands. `AUTH-001/T4` and `AUTH-004/T2` wait rather than shipping English-only pages that would violate `I18N-R01` silently; the routes and the gate they sit on are already built and unaffected — a person can sign in and sign out without either page existing.
-
 <a id="AUTH-DEC-04"></a>
 ### `AUTH-DEC-04` — Does a reset request invalidate a pending invitation, or are the two token kinds independent — OPEN
 
@@ -130,6 +120,16 @@ An entry is filed the moment the choice surfaces, not when it is answered. Nothi
 ---
 
 ## Resolved decisions
+
+<a id="I18N-DEC-02"></a>
+### `I18N-DEC-02` — The Next.js application's own i18n framework — RESOLVED 2026-09-11
+
+- **Decision:** The gateway localises through a static dictionary (`I18N-001`: `assets/i18n.js` + `data-i18n`), which suits a file served without a build. The application under `apps/web` renders server-side, has no i18n runtime and no design for one, yet `AUTH-001/T4` and every gated surface must render in the reader's locale across twenty (`I18N-R01`, `I18N-R02`). What framework does the application localise through, and where do its dictionaries come from?
+- **Options:** **A** `next-intl` — the App Router standard: server components, locale negotiation, message catalogues; the twenty gateway locales become its content, adapted to the catalogue shape · **B** A thin custom loader that reads the gateway's existing `assets/i18n.js` dictionaries directly, so one dictionary serves both surfaces and no dependency is added · **C** Another library (`@lingui`, `react-i18next`).
+- **Recommendation:** **A**. `next-intl` is built for this rendering model and carries the locale routing, negotiation and pluralisation the application would otherwise hand-roll; the gateway's twenty locales become its message content, so the translation already done is reused rather than redone. **B** adds no dependency but reimplements what the library solves, against a dictionary shaped for a static page. The cost of **A** is one dependency and a catalogue format, which is the shape the translation skills already target.
+- **Decision owner:** user
+- **Settled by:** user
+- **Status:** RESOLVED 2026-09-11 — **A**, `next-intl`. The owner chose the App Router standard: the application localises through next-intl's server-component message catalogues, and the gateway's twenty locales become that catalogue's content rather than being re-translated. `AUTH-001/T4` and `AUTH-004/T2` are unblocked; the localised surfaces the application owes — the auth forms, the reading views, the room shell, and the gateway served by the application — build on this framework.
 
 <a id="SEC-DEC-02"></a>
 ### `SEC-DEC-02` — Whether every route renders on demand, to reach the policy's nonce — RESOLVED 2026-09-07 · loop-settled
