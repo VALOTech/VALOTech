@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_295 tasks in the plan, 188 closed, 107 outstanding._
+_295 tasks in the plan, 189 closed, 106 outstanding._
 
 ---
 
@@ -64,7 +64,7 @@ _65/69 closed (94%) · 4 outstanding — 2 buildable now · 1 waiting on the own
 
 _The machinery every kind of writing shares — the editor, the media, the locale states, the audience rule, publishing, search — plus the account, configuration and logging surfaces an operator needs before anything is published. Building it once is the whole reason a report, an update and a deck are three navigations over one system rather than three systems._
 
-_49/63 closed (77%) · 14 outstanding — 10 buildable now · 3 waiting on the owner · 0 external residue · 1 parked to a later wave._
+_50/63 closed (79%) · 13 outstanding — 9 buildable now · 3 waiting on the owner · 0 external residue · 1 parked to a later wave._
 
 - **ADMIN-001** · Account management — 8/8 closed
 - **CFG-001** · Runtime configuration — 6/6 closed
@@ -72,9 +72,8 @@ _49/63 closed (77%) · 14 outstanding — 10 buildable now · 3 waiting on the o
   - `[!] CMS-003/T2` — Raster images are re-encoded, so EXIF and its location do not survive  · _pending-decision_ · **Blocked by:** pending-decision: CMS-DEC-03 — re-encoding needs an image library, and which one is a new dependency the owner chooses; the safe default refuses rast…
   - `[!] CMS-003/T3` — SVG is parsed and stripped to shape and text, or refused  · _pending-decision_ · **Blocked by:** pending-decision: CMS-DEC-03 — sanitising SVG needs a library, or the design's refuse-outright fallback; the choice is the owner's, and the safe defa…
 
-- **CMS-005** · Locale variants and translation state — 3/6 closed · depth 5
+- **CMS-005** · Locale variants and translation state — 4/6 closed · depth 5
   - `[ ] CMS-005/T4` — The review screen shows source beside translation, editable, marked one locale at a time
-  - `[ ] CMS-005/T6` — A new revision starts with no locale rows, and the grid shows it
   - `[!] CMS-005/T3` — Drafting translates block text and reassembles marks by span, never by offset arithmetic  · _pending-decision_ · **Blocked by:** pending-decision: CMS-DEC-04 — the mark reassembly by span needs a programmatic per-span translator, so which carrier drafts a locale (a self-hosted…
 
 - **CMS-006** · Audience and access — 6/6 closed

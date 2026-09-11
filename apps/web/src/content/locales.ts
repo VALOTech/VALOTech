@@ -14,7 +14,7 @@
  */
 
 import { getDb } from '../db/index';
-import type { JsonValue } from '../db/types';
+import type { ContentLocaleState, JsonValue } from '../db/types';
 
 import type { ContentRevision } from './items';
 
@@ -65,4 +65,67 @@ export async function localeFor(revision: ContentRevision, requested: string): P
   }
 
   return { blocks: revision.blocks, locale: AUTHORED_LOCALE, fellBack: true };
+}
+
+/** One revision's locale coverage, for the admin grid (`CMS-005/T6`). */
+export interface LocaleRevision {
+  readonly revisionId: string;
+  readonly createdAt: Date;
+  /** True for a published revision, false for the open draft. */
+  readonly published: boolean;
+  /**
+   * Locale to state for every locale that holds a row — `machine` or `reviewed`.
+   * A locale absent here has no row and is not started; the authored language
+   * never holds a row, so it is absent and the grid renders it as authored.
+   */
+  readonly localeStates: Readonly<Record<string, ContentLocaleState>>;
+}
+
+/**
+ * Every revision of an item and the locale state of each, newest first, for the
+ * admin grid (`CMS-005/T6`).
+ *
+ * A new revision has no locale rows at all (`CMS-005` §3): its column is the one
+ * authored language and nineteen not-started cells, with nothing carried forward
+ * from the revision it replaced — the property the grid exists to make visible.
+ * The read is two queries rather than a join for exactly that reason: an inner
+ * join would drop a revision that holds no locale rows, and that revision is the
+ * empty column the grid must show.
+ */
+export async function localeGrid(itemId: string): Promise<LocaleRevision[]> {
+  const revisions = await getDb()
+    .selectFrom('content_revisions')
+    .select(['id', 'created_at', 'published_at'])
+    .where('item_id', '=', itemId)
+    .orderBy('created_at', 'desc')
+    .orderBy('id')
+    .execute();
+
+  if (revisions.length === 0) {
+    return [];
+  }
+
+  const rows = await getDb()
+    .selectFrom('content_locales')
+    .select(['revision_id', 'locale', 'state'])
+    .where(
+      'revision_id',
+      'in',
+      revisions.map((revision) => revision.id),
+    )
+    .execute();
+
+  const byRevision = new Map<string, Record<string, ContentLocaleState>>();
+  for (const row of rows) {
+    const states = byRevision.get(row.revision_id) ?? {};
+    states[row.locale] = row.state;
+    byRevision.set(row.revision_id, states);
+  }
+
+  return revisions.map((revision) => ({
+    revisionId: revision.id,
+    createdAt: revision.created_at,
+    published: revision.published_at !== null,
+    localeStates: byRevision.get(revision.id) ?? {},
+  }));
 }

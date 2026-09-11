@@ -22,7 +22,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { closeDb, getDb } from '../db/index';
 import type { ContentLocaleState } from '../db/types';
 import { createItem, type ContentRevision } from './items';
-import { localeFor, type ServedLocale } from './locales';
+import { localeFor, localeGrid, type ServedLocale } from './locales';
 
 const DATABASE_URL = (process.env.DATABASE_URL ?? '').trim();
 const HAS_DATABASE = DATABASE_URL !== '';
@@ -38,7 +38,7 @@ interface Seed {
   readonly lang: string;
 }
 
-describe.skipIf(!HAS_DATABASE)('CMS-005 localeFor', () => {
+describe.skipIf(!HAS_DATABASE)('CMS-005 locale variants', () => {
   beforeAll(async () => {
     await runner({
       databaseUrl: DATABASE_URL,
@@ -136,5 +136,85 @@ describe.skipIf(!HAS_DATABASE)('CMS-005 localeFor', () => {
     // zt is a script apart, not a region of zh; with no reviewed zt it is English, never zh.
     expect(served).toMatchObject({ locale: 'en', fellBack: true });
     expect(langOf(served)).toBe('en');
+  });
+
+  describe('localeGrid (T6)', () => {
+    async function newItem(): Promise<string> {
+      const item = await createItem({ type: 'update', slug: `g-${randomUUID()}`, title: 'A grid update' });
+      return item.id;
+    }
+
+    // created_at is set explicitly rather than left to now(), so two revisions
+    // order deterministically by time rather than by the tie-break on a random id.
+    async function addRevision(itemId: string, published: boolean, createdAt = sql<Date>`now()`): Promise<string> {
+      const revision = await getDb()
+        .insertInto('content_revisions')
+        .values({
+          item_id: itemId,
+          blocks: sql`'{"lang":"en"}'::jsonb`,
+          published_at: published ? sql<Date>`now()` : null,
+          created_at: createdAt,
+        })
+        .returning('id')
+        .executeTakeFirstOrThrow();
+      return revision.id;
+    }
+
+    async function addLocale(revisionId: string, locale: string, state: ContentLocaleState): Promise<void> {
+      await getDb()
+        .insertInto('content_locales')
+        .values({
+          revision_id: revisionId,
+          locale,
+          blocks: sql`'{}'::jsonb`,
+          state,
+          reviewed_at: state === 'reviewed' ? sql`now()` : null,
+        })
+        .execute();
+    }
+
+    it('shows a fresh revision as one with no locale rows', async () => {
+      const id = await newItem();
+      await addRevision(id, false);
+
+      const grid = await localeGrid(id);
+
+      expect(grid).toHaveLength(1);
+      expect(grid[0]?.published).toBe(false);
+      // No rows: the grid renders this as the authored language and nineteen
+      // not-started cells, which is the property `CMS-005` §3 makes visible.
+      expect(grid[0]?.localeStates).toEqual({});
+    });
+
+    it('carries the state of each locale that has a row, machine and reviewed apart', async () => {
+      const id = await newItem();
+      const revision = await addRevision(id, false);
+      await addLocale(revision, 'fr', 'reviewed');
+      await addLocale(revision, 'de', 'machine');
+
+      const grid = await localeGrid(id);
+
+      expect(grid).toHaveLength(1);
+      expect(grid[0]?.localeStates).toEqual({ fr: 'reviewed', de: 'machine' });
+    });
+
+    it('lists revisions newest first, and the new one inherits no locale rows', async () => {
+      const id = await newItem();
+      const older = await addRevision(id, true, sql<Date>`now() - interval '1 minute'`);
+      await addLocale(older, 'fr', 'reviewed');
+      const newer = await addRevision(id, false);
+
+      const grid = await localeGrid(id);
+
+      expect(grid).toHaveLength(2);
+      expect(grid[0]?.revisionId).toBe(newer);
+      expect(grid[0]?.localeStates).toEqual({});
+      expect(grid[1]?.revisionId).toBe(older);
+      expect(grid[1]?.localeStates).toEqual({ fr: 'reviewed' });
+    });
+
+    it('returns nothing for an item with no revisions', async () => {
+      expect(await localeGrid(await newItem())).toEqual([]);
+    });
   });
 });
