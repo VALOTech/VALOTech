@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_295 tasks in the plan, 181 closed, 114 outstanding._
+_295 tasks in the plan, 184 closed, 111 outstanding._
 
 ---
 
@@ -70,7 +70,7 @@ _61/69 closed (88%) · 8 outstanding — 6 buildable now · 1 waiting on the own
 
 _The machinery every kind of writing shares — the editor, the media, the locale states, the audience rule, publishing, search — plus the account, configuration and logging surfaces an operator needs before anything is published. Building it once is the whole reason a report, an update and a deck are three navigations over one system rather than three systems._
 
-_46/63 closed (73%) · 17 outstanding — 13 buildable now · 3 waiting on the owner · 0 external residue · 1 parked to a later wave._
+_49/63 closed (77%) · 14 outstanding — 10 buildable now · 3 waiting on the owner · 0 external residue · 1 parked to a later wave._
 
 - **ADMIN-001** · Account management — 8/8 closed
 - **CFG-001** · Runtime configuration — 6/6 closed
@@ -85,10 +85,7 @@ _46/63 closed (73%) · 17 outstanding — 13 buildable now · 3 waiting on the o
 
 - **CMS-006** · Audience and access — 6/6 closed
 - **OPS-002** · Logging and monitoring — 6/6 closed
-- **CMS-002** · Authoring surface — 2/7 closed · depth 6
-  - `[~] CMS-002/T1` — A block list the author operates by keyboard, with each block's type visible  · **Note:** Built. apps/web/src/app/admin/content/[id]/edit/editor.tsx renders the blocks as a list of focusable rows; each row shows its written type (apps/web/…
-  - `[~] CMS-002/T2` — The seven block types, each with the fields its schema requires  · **Note:** Built. apps/web/src/app/admin/content/[id]/edit/block-fields.tsx:BlockFields edits each of the seven types with the fields its schema demands (headin…
-  - `[~] CMS-002/T6` — Explicit save, a visible unsaved state, and a local copy offered back after a closed tab  · **Note:** Built. apps/web/src/app/admin/content/[id]/edit/editor.tsx saves explicitly on a control and on Ctrl/Cmd-S (POST to the route below), states the unsa…
+- **CMS-002** · Authoring surface — 5/7 closed · depth 6
   - `[ ] CMS-002/T4` — Marks by selection, stored as offsets, with the editor's model the block array and not the DOM
   - `[ ] CMS-002/T5` — Paste imports plain text plus recognised structure and nothing else
 
