@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_295 tasks in the plan, 170 closed, 125 outstanding._
+_295 tasks in the plan, 171 closed, 124 outstanding._
 
 ---
 
@@ -116,7 +116,7 @@ _42/63 closed (66%) · 21 outstanding — 18 buildable now · 3 waiting on the o
 
 _The three content types, and the compliance posture that governs what is held about the people reading them. Updates come before decks, and not only because they are the simpler shape of the same problem: they are what the room is for. An investor signs in to find out what has happened since they last looked._
 
-_21/59 closed (35%) · 38 outstanding — 38 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_22/59 closed (37%) · 37 outstanding — 36 buildable now · 1 waiting on the owner · 0 external residue · 0 parked to a later wave._
 
 - **DECK-001** · Deck authoring — 2/5 closed · depth 7
   - `[ ] DECK-001/T2` — An overview of section cards in order, showing heading, first line and what each carries
@@ -131,12 +131,11 @@ _21/59 closed (35%) · 38 outstanding — 38 buildable now · 0 waiting on the o
   - `[ ] LEGAL-SG-001/T5` — A breach runbook with the assessment steps and both notification paths
   - `[ ] LEGAL-SG-001/T6` — The backup window disclosed in the notice rather than omitted
 
-- **MAIL-001** · Investor mail — 3/8 closed · depth 7
+- **MAIL-001** · Investor mail — 4/8 closed · depth 7
   - `[ ] MAIL-001/T4` — The send requires the recipient count to be typed, and re-resolves every recipient first
-  - `[ ] MAIL-001/T5` — One row per recipient written before the attempt; a failure leaves the row and the send continues
-  - `[ ] MAIL-001/T6` — Retry sends only to the ones that failed
   - `[ ] MAIL-001/T7` — With no credential the composer works, the list resolves, and the send control is disabled with the reason
   - `[ ] MAIL-001/T8` — One SMTP connection per send, TLS required, and a connection that cannot be secured fails rather than falling back
+  - `[!] MAIL-001/T6` — Retry sends only to the ones that failed  · _pending-decision_ · **Blocked by:** pending-decision: MAIL-DEC-02 — a retry must never reach a recipient who already received the message, and `mail_log` never supersedes an earlier att…
 
 - **POST-001** · Update authoring — 0/6 closed · depth 7
   - `[ ] POST-001/T1` — A composer that opens with the cursor in the body and fits without scrolling

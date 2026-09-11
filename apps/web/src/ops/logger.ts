@@ -28,6 +28,7 @@
 
 import { getConfig } from '../config/index';
 import { currentRequestId } from './request-context';
+import { scrub } from './scrub';
 
 /**
  * Every event a line may carry. An entry is added here in the commit that adds
@@ -56,22 +57,6 @@ export type LogLevel = 'error' | 'warn' | 'info' | 'debug';
  * handed a whole account or request to serialise whole.
  */
 export type LogFields = Readonly<Record<string, string | number | boolean | null>>;
-
-/**
- * The shapes the scrubber masks. An address is the obvious leak; a run of forty
- * or more base64url characters is the other — a 32-byte token is forty-three of
- * them and a SHA-256 hash is sixty-four, while a UUID account id is thirty-six
- * and stays readable, because an id is what ties a line to an act and is not the
- * secret the token is. The scrubber is a backstop: `fields` being primitives is
- * what keeps an object out in the first place.
- */
-const ADDRESS = /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/g;
-const LONG_SECRET = /[A-Za-z0-9_-]{40,}/g;
-const REDACTED = '[redacted]';
-
-function scrub(value: string): string {
-  return value.replace(ADDRESS, REDACTED).replace(LONG_SECRET, REDACTED);
-}
 
 function scrubFields(fields: LogFields): {
   out: Record<string, string | number | boolean | null>;

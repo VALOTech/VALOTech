@@ -54,9 +54,14 @@ non-transactional message.
 | `queue_id`, `error` | The id the server returned on `250`, or its reply text |
 
 Written **before** the attempt, so a crash between write and send leaves a record
-of an attempt rather than no record at all. The body is not stored: the subject,
-the recipient and the time answer every question the log is asked, and storing
-the body would put a message about a person in a table with a long retention.
+of an attempt rather than no record at all. A row still `queued` after a send has
+ended is exactly that — an attempt whose outcome SMTP never reported — and is
+read like an `accepted` one: its delivery is unknown, so it is never re-sent
+automatically (a blind re-send is the double-send [`MAIL-DEC-02`](../../decisions-log.md#MAIL-DEC-02)
+exists to prevent), and a bounce for it, if any, arrives in the `MAIL_FROM`
+mailbox like every other. The body is not stored: the subject, the recipient and
+the time answer every question the log is asked, and storing the body would put a
+message about a person in a table with a long retention.
 
 ### Bounces, and why there are none here
 

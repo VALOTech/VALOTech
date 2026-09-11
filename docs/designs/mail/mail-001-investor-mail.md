@@ -103,8 +103,11 @@ is not an afterthought — it is what a corporate mail client shows.
    point.
 3. Write a `mail_log` row per recipient, `queued`.
 4. Send one at a time, updating each row with its receipt or its error.
-5. Audit once as `mail.send` with the subject and the count — never with the
-   addresses (`DATA-R02`).
+5. Audit once as `mail.send` — the actor, and that a send happened. The subject
+   and the count belong in the audit's `before`/`after`, whose shape
+   [`SEC-DEC-01`](../../decisions-log.md#SEC-DEC-01) has not settled, so the row
+   ships that decision's safe default and carries neither yet; an address belongs
+   in neither field regardless (`DATA-R02`).
 
 **No batching and no background job.** The admin waits, and watches the count.
 A send that happens after the person leaves the page is a send nobody can stop
@@ -158,6 +161,14 @@ transactional, so `MAIL-002`'s unsubscribe must never suppress it.
 - **No open or click tracking.** A pixel in a message to a named investor is
   surveillance of a person the company is asking for money. Whether they opened
   it is not worth what it costs to know.
+- **How a retry stays idempotent is not yet settled.** Re-sending only the failed
+  (`T6`) must never reach a recipient who already received the message, and
+  `mail_log` records each attempt as its own row without superseding an earlier
+  one — so the mechanism that marks a failed row spent once a later attempt
+  succeeds shapes `MAIL-002`'s table. It is filed at
+  [`MAIL-DEC-02`](../../decisions-log.md#MAIL-DEC-02); until it settles, `T6` is
+  not built and a failed recipient is re-reached only by a fresh, deliberately
+  re-confirmed send.
 
 ## 7. Task list
 

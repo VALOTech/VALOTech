@@ -36,10 +36,13 @@ export interface Receipt {
 
 /**
  * The one method: a recipient address, the rendered subject, plain text and HTML
- * together, and a receipt back. The adapter behind it (`MAIL-001/T8`) opens one
- * TLS-secured connection per send and fails rather than falling back to
- * plaintext; absent a credential the port is unavailable and says why
- * (`MAIL-001/T7`, `CRED-001`).
+ * together, and a receipt back. It resolves with the receipt when the server
+ * accepts the message, and rejects when the server refuses it or the connection
+ * cannot be made — the rejection's message is the server's reply, which the send
+ * records against that recipient's row (masked first, `DATA-R02`) and does not
+ * let end the send. The adapter behind it (`MAIL-001/T8`) opens one TLS-secured
+ * connection per send and fails rather than falling back to plaintext; absent a
+ * credential the port is unavailable and says why (`MAIL-001/T7`, `CRED-001`).
  */
 export interface Mailer {
   send(to: string, subject: string, text: string, html: string): Promise<Receipt>;

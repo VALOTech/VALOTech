@@ -18,6 +18,7 @@ An entry is filed the moment the choice surfaces, not when it is answered. Nothi
 - **Recommendation:** **B**. Only **B** can express the portfolio history `INV-003` rests on and the undo context `CFG-001` reads, and it keeps `DATA-R02` mechanical: the allow-list is a fixed table checked at the one insert site (`SEC-002/T3`), so a field the list does not name cannot reach the trail. **A** is simpler but would force `INV-003` to grow the portfolio-history table the schema was deliberately built without. The cost of **B** is that the allow-list must be complete before the first audited write — which is why it is settled now, not discovered when `account.create` first records a row into a seven-year table.
 - **Decision owner:** user
 - **Blocks:** SEC-002/T4
+- **Revises:** MAIL-001/T5 — the `mail.send` audit ships this decision's safe default (`before`/`after` null), recording that a send happened and by whom; a resolution to **B** records the subject and the recipient count in `after` under the allow-list
 - **Status:** OPEN. Safe default: `apps/web/src/audit/record.ts:recordAudit` writes `before: null` and `after: null` on every audited write — the trail records that a privileged act happened and by whom, and holds no changed field until this settles. So the seven-year trail cannot hold a personal value it has no code to write, and the allow-list can be added at the one insert site when it lands.
 
 <a id="AUTH-DEC-02"></a>
@@ -104,6 +105,16 @@ An entry is filed the moment the choice surfaces, not when it is answered. Nothi
 - **Decision owner:** user
 - **Blocks:** CMS-005/T3
 - **Status:** OPEN. Safe default: `CMS-005/T3` is unbuilt — drafting a machine locale is not yet a route — so no machine-drafted or untranslated text can reach a reader: `apps/web/src/content/locales.ts:localeFor` serves only a `reviewed` row (`CMS-005/T1,T2,T5`, built), and the authored language is served until a locale is reviewed (`I18N-R04`), which is correct with or without this decision.
+
+<a id="MAIL-DEC-02"></a>
+### `MAIL-DEC-02` — How a retry of the failed recipients stays idempotent — OPEN
+
+- **Decision:** `MAIL-001/T6` re-sends to the recipients whose last attempt failed, and must never reach one who already received the message — a re-send that does is how a person receives investor mail twice, the one act this product cannot withdraw. `mail_log` records each attempt as its own row and never supersedes an earlier one, so a failed row stays `failed` after a later attempt succeeds and a second retry keyed on the same rows sends again. What mechanism makes the retry idempotent?
+- **Options:** **A** A `retry_of` column on `mail_log` — a re-send row names the failed row it supersedes, and a failed row that has a successor is never eligible again, whatever the caller passes; the idempotency lives in the data, and the migration is additive · **B** An idempotency key per `(send, recipient)` that a re-send reuses, so a second attempt with the same key is refused at the log — more general, a larger build, and it must define what "the same send" is across a retry · **C** No column — the retry excludes a failed row when a later `accepted` row exists for the same account and subject; no migration, but two genuine sends with the same subject to one account collide, and the guarantee rests on subjects being unique · **D** No stored guarantee — the caller threads the new row ids forward each time, so an accepted row is never in the next retry set; correct only while every caller does so, which is the fragility the other three remove.
+- **Recommendation:** **A**. It is the smallest change that puts the guarantee in the data rather than in a caller or a subject heuristic: `retry_of uuid REFERENCES mail_log(id)` is additive, and "a failed row with a successor is spent" is one predicate the retry reads. **C** is cheapest but wrong for two same-subject campaigns to one investor, which a fundraise produces; **D** rests the guarantee on the caller threading ids forward, the fragility the other three remove; **B** is the most general and the most to build for a send list of a few dozen. Filed rather than loop-settled because it is the first idempotency mechanism of its kind in this repository and it shapes `MAIL-002`'s table (`.claude/CLAUDE.md` §1.11).
+- **Decision owner:** user
+- **Blocks:** MAIL-001/T6
+- **Status:** OPEN. Safe default: `MAIL-001/T6` is not built, so no automated retry exists and no path re-sends by naming prior rows — a double send is not reachable through a retry that is absent. `apps/web/src/mail/send.ts:send` writes each recipient's terminal state, so the mechanism this settles has the per-attempt record it will read; until then a failed recipient is re-reached only by composing a fresh send, a deliberate act whose recipient count is typed again (`MAIL-001/T4`), so a second delivery takes two deliberate sends rather than one button.
 
 ---
 
