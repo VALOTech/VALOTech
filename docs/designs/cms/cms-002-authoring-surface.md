@@ -7,7 +7,7 @@ depends_on: [ADMIN-002, CMS-001, CMS-003]
 depended_by: [DECK-001, POST-001, RPT-001]
 layers_touched: [service, api, frontend, ui]
 cross_cutting_rules: [CMS-R04, A11Y-R01, A11Y-R02, A11Y-R03, I18N-R01]
-status: design-ready
+status: implemented
 ---
 
 # `CMS-002` — Authoring surface

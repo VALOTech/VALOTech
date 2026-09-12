@@ -7,7 +7,7 @@ depends_on: [INFRA-001]
 depended_by: [AUTH-001, AUTH-002, AUTH-003, CMS-001, DATA-003, SEC-002]
 layers_touched: [infra, data]
 cross_cutting_rules: [DATA-R01, DATA-R03, DATA-R05, SEC-R04, CMS-R01, CMS-R03]
-status: design-ready
+status: implemented
 ---
 
 # `DATA-001` — Schema and migrations

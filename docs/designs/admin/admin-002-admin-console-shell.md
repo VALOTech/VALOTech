@@ -7,7 +7,7 @@ depends_on: [AUTH-002]
 depended_by: [ADMIN-001, CFG-001, CMS-002]
 layers_touched: [api, frontend, ui]
 cross_cutting_rules: [SEC-R01, DATA-R05, I18N-R01, A11Y-R01, A11Y-R02, A11Y-R03]
-status: design-ready
+status: implemented
 ---
 
 # `ADMIN-002` — Admin console shell

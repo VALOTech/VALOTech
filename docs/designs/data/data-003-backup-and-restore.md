@@ -7,7 +7,7 @@ depends_on: [CRED-001, DATA-001]
 depended_by: [OPS-001]
 layers_touched: [infra, data]
 cross_cutting_rules: [SEC-R05, DATA-R02, DATA-R03]
-status: design-ready
+status: implemented
 ---
 
 # `DATA-003` — Backup and restore

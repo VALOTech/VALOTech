@@ -7,7 +7,7 @@ depends_on: [DATA-001]
 depended_by: [AUTH-002, AUTH-003]
 layers_touched: [data, domain, service, api, frontend, ui]
 cross_cutting_rules: [SEC-R03, SEC-R05, DATA-R02, I18N-R01, A11Y-R01, A11Y-R02]
-status: design-ready
+status: implemented
 ---
 
 # `AUTH-001` — Sign-in

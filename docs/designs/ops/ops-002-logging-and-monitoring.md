@@ -7,7 +7,7 @@ depends_on: [CRED-001, SEC-001]
 depended_by: [OPS-001]
 layers_touched: [infra, service, api]
 cross_cutting_rules: [DATA-R02, SEC-R04, SEC-R05]
-status: design-ready
+status: implemented
 ---
 
 # `OPS-002` — Logging and monitoring

@@ -80,7 +80,7 @@ A third role — an editor who may draft but not publish, an analyst who may rea
 | Code | Feature | Status | What it is |
 |---|---|---|---|
 | `SITE-001` | The gateway page | live | One page, nine chapters, a fixed scene behind them, a sign-in entry, and a contact close |
-| `SITE-002` | Public and investor chapter split | live | Two chapters and the mechanism detail under seven claims are hidden from a visitor; the nav names the hidden pair only to a signed-in reader |
+| `SITE-002` | Public and investor chapter split | design | Two chapters and the mechanism detail under seven claims are hidden from a visitor; the nav names the hidden pair only to a signed-in reader |
 | `SITE-003` | Chapter sequence | live | Problem, Answer, Your people, Why, Workforce, ValoStack, Yours-not-ours, Contact — the designer's order |
 | `SITE-004` | Contact close | live | A short call, an e-mail CTA, and the reason pricing is not published |
 | `SCENE-001` | The world and its journey | live | A lunar sphere that becomes Earth across the page; stations per chapter |
@@ -89,7 +89,7 @@ A third role — an editor who may draft but not publish, an analyst who may rea
 | `SCENE-004` | Annotation chips | live | Fifteen labels across five chapters, each pinned to one body |
 | `SCENE-005` | Orbit stages | live | Two chapters whose cards ride an ellipse about the world |
 | `SCENE-006` | Mapping stage | live | The centre chapter, where five pairs arrive one at a time |
-| `I18N-001` | Twenty-locale runtime dictionary | live | 303 keys per locale, authored translations, swapped without a reload |
+| `I18N-001` | Twenty-locale runtime dictionary | design | 303 keys per locale, authored translations, swapped without a reload |
 | `I18N-002` | Served-copy parity gate | live | `scripts/sync-static-copy.mjs --check` refuses a push where markup and dictionary disagree |
 | `SITE-005` | The gateway served by the application | design | The same page, the same twenty locales and the same measured scene, served by the app instead of GitHub Pages — with the gated chapters resolved server-side rather than hidden by a stylesheet |
 | `SITE-006` | Legal pages and the consent surface | design | `legal/privacy`, `legal/cookies` and `legal/terms` in twenty locales, and the ecosystem's three-category consent banner with the non-essential categories off |
@@ -99,12 +99,12 @@ A third role — an editor who may draft but not publish, an analyst who may rea
 
 | Code | Feature | Status | What it is |
 |---|---|---|---|
-| `AUTH-001` | Sign-in | design | E-mail and password against a server-side account; failures indistinguishable and rate-limited |
+| `AUTH-001` | Sign-in | live | E-mail and password against a server-side account; failures indistinguishable and rate-limited |
 | `AUTH-002` | Session and role gate | design | httpOnly cookie, rotation on privilege change, server-side invalidation; every gated read scoped by role at the query |
 | `AUTH-003` | Invitation and password reset | design | An admin invites; the invitee sets their own password from a single-use, expiring link |
-| `AUTH-004` | Sign-out | design | Session destroyed server-side, not merely cleared client-side |
-| `ADMIN-001` | Account management | design | Create, suspend and delete investor accounts; grant and revoke deck access; audited |
-| `ADMIN-002` | Admin console shell | design | The staff surface the other admin features live in |
+| `AUTH-004` | Sign-out | live | Session destroyed server-side, not merely cleared client-side |
+| `ADMIN-001` | Account management | live | Create, suspend and delete investor accounts; grant and revoke deck access; audited |
+| `ADMIN-002` | Admin console shell | live | The staff surface the other admin features live in |
 
 ### 5.3 The content system — `CMS`
 
@@ -116,12 +116,12 @@ translated, previewed, published, withdrawn or audited.
 
 | Code | Feature | Status | What it is |
 |---|---|---|---|
-| `CMS-001` | Content model and revisions | design | One storage model behind every kind of content: an item, its type, its ordered revisions, the revision that is published, and the audience it is published to. Nothing is edited in place — an edit is a new revision, so what an investor read last month is still recoverable |
-| `CMS-002` | Authoring surface | design | The editor an admin writes in: structured blocks — heading, paragraph, list, quote, image, figure — never raw markup from a form, because markup from a form is both an injection surface and a way to break a layout nobody can fix from the admin screen |
+| `CMS-001` | Content model and revisions | live | One storage model behind every kind of content: an item, its type, its ordered revisions, the revision that is published, and the audience it is published to. Nothing is edited in place — an edit is a new revision, so what an investor read last month is still recoverable |
+| `CMS-002` | Authoring surface | live | The editor an admin writes in: structured blocks — heading, paragraph, list, quote, image, figure — never raw markup from a form, because markup from a form is both an injection surface and a way to break a layout nobody can fix from the admin screen |
 | `CMS-003` | Media library | design | The images and files content references: uploaded once, re-used, served under the same audience rule as the item that references them. An investor-only screenshot must not be readable by URL |
 | `CMS-004` | Preview, publish and withdraw | design | An admin sees a draft exactly as an investor will, publishes a revision deliberately, and can return to the previously published revision in one action. A draft is visible to nobody else, ever |
 | `CMS-005` | Locale variants and translation state | design | Per item, per locale: not started, machine draft, reviewed. A machine draft is never shown to a reader; an unreviewed locale falls back to the authored language — `docs/decisions-log.md#I18N-DEC-01` |
-| `CMS-006` | Audience and access | design | Public, every investor, or named investors. Enforced in the query that fetches the item, never in the template that renders it — the template is where this rule has historically been broken |
+| `CMS-006` | Audience and access | live | Public, every investor, or named investors. Enforced in the query that fetches the item, never in the template that renders it — the template is where this rule has historically been broken |
 | `CMS-007` | Search and filter in the room | design | Find an item by kind, by product, by period, or by its words. A room with two years of updates and no search is an archive nobody reads |
 
 ### 5.4 What is written — `RPT`, `POST`, `DECK`, `INV`, `MAIL`
@@ -150,16 +150,16 @@ because an investor navigates each of them differently.
 
 | Code | Feature | Status | What it is |
 |---|---|---|---|
-| `DATA-001` | Schema and migrations | design | Accounts, sessions, decks, deck sections, deck grants, posts, mail log, audit, configuration |
-| `DATA-002` | Erasure and retention | design | A real delete for an investor's personal data; audit retained minimally; retention windows stated |
-| `DATA-003` | Backup and restore | design | A restore that has been performed, not merely configured |
+| `DATA-001` | Schema and migrations | live | Accounts, sessions, decks, deck sections, deck grants, posts, mail log, audit, configuration |
+| `DATA-002` | Erasure and retention | live | A real delete for an investor's personal data; audit retained minimally; retention windows stated |
+| `DATA-003` | Backup and restore | live | A restore that has been performed, not merely configured |
 | `SEC-001` | Security baseline | design | CSP, HSTS, secure cookies, parameterised queries, dependency and secret scanning in CI |
 | `SEC-002` | Audit log | design | Append-only record of every privileged write |
 | `CFG-001` | Runtime configuration | design | The values an admin may change without a deploy, each with its prior value and a single-action undo |
 | `OPS-001` | Hosting and deploy | design | Where the app runs, and how valotech.org points at it — AWS, ECS on Fargate (`docs/decisions-log.md#INFRA-DEC-05`), built last |
-| `OPS-002` | Logging and monitoring | design | Structured logs with a request id, no personal data, and an alert an operator can act on |
-| `INFRA-001` | Local development stack | design | One command brings up PostgreSQL and the app against it |
-| `CRED-001` | Credential handling | design | SMTP and database credentials from the environment; a missing one degrades its feature and leaves the system up |
+| `OPS-002` | Logging and monitoring | live | Structured logs with a request id, no personal data, and an alert an operator can act on |
+| `INFRA-001` | Local development stack | live | One command brings up PostgreSQL and the app against it |
+| `CRED-001` | Credential handling | live | SMTP and database credentials from the environment; a missing one degrades its feature and leaves the system up |
 
 ### 5.6 Compliance — `LEGAL-SG`, `LEGAL-GLOBAL`
 

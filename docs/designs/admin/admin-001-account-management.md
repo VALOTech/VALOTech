@@ -7,7 +7,7 @@ depends_on: [ADMIN-002, AUTH-003, AUTH-004, SEC-002]
 depended_by: [DATA-002, DECK-004, MAIL-001]
 layers_touched: [data, domain, service, api, frontend, ui]
 cross_cutting_rules: [DATA-R01, DATA-R02, DATA-R03, SEC-R04, A11Y-R01, A11Y-R02]
-status: design-ready
+status: implemented
 ---
 
 # `ADMIN-001` — Account management

@@ -6,7 +6,8 @@ built, and the chain PRD code -> design -> task -> code -> test only holds if
 each link resolves. This checks the links a machine can check: that a design's
 code matches its filename and its folder, that depends_on and depended_by agree
 in both directions, that every code it names exists, that its layers are the
-canonical tokens, and that a design waiting on something says what.
+canonical tokens, that a design waiting on something says what, and that
+its status still tracks the task ledger and the PRD row in both directions.
 
 Run: python scripts/validate-designs.py [--strict]
 """
@@ -25,6 +26,7 @@ DESIGNS = os.path.join(ROOT, "docs", "designs")
 PRD = os.path.join(ROOT, "docs", "PRD.md")
 REGISTER = os.path.join(ROOT, "docs", "decisions-log.md")
 CHECKLIST = os.path.join(ROOT, "docs", "operator-checklist.md")
+TASKS = os.path.join(ROOT, "docs", "tasks.md")
 
 LAYERS = {"scene", "infra", "data", "domain", "service", "api", "frontend", "ui"}
 STATUSES = {"draft", "under-review", "design-ready", "implemented", "deprecated",
@@ -37,6 +39,15 @@ BLOCKER_KINDS = {"credential", "vendor", "legal", "threshold"}
 FEATURE = re.compile(r"^[A-Z][A-Z0-9-]*-\d{3}$")
 RULE = re.compile(r"^([A-Z][A-Z0-9-]*-R\d{2}|P-\d{2})$")
 DEC = re.compile(r"^[A-Z][A-Z0-9-]*-DEC-\d{2}$")
+
+# A row is attributed to the code it NAMES, not to the heading it sits under, so
+# a task filed in another section still counts against its own design.
+TASK_ROW = re.compile(
+    r"^\s*-\s*\[([ ~!x])\]\s+([A-Z][A-Z0-9-]*(?:-\d{3})?/T\d+(?:[a-z]\d*)?)\s+[\u2014-]")
+LEDGER_TRACKED = {"under-review", "design-ready", "implemented"}
+# `blocked` is a designed feature waiting on something real -- a credential, a
+# dependency -- so it reads as a legitimate PRD cell for a design-ready design.
+PRD_CELLS_FOR_STATUS = {"implemented": {"live"}, "design-ready": {"design", "blocked"}}
 
 
 def read(path):
@@ -95,6 +106,7 @@ def main():
     prd = read(PRD) if os.path.exists(PRD) else ""
     register = read(REGISTER) if os.path.exists(REGISTER) else ""
     checklist = read(CHECKLIST) if os.path.exists(CHECKLIST) else ""
+    tasks = read(TASKS) if os.path.exists(TASKS) else ""
 
     designs = {}
     for path in files:
@@ -199,6 +211,42 @@ def main():
     for code, status in catalogue:
         if status in ("live", "design") and code not in designs:
             problems.append("docs/PRD.md: %s is %s and has no design" % (code, status))
+
+    # A design's status and the task ledger are two answers to one question --
+    # is this built? -- and each document is internally consistent while they
+    # disagree, so neither shows the drift on its own. `design-ready` over a
+    # closed ledger reads UNSTARTED to whoever is choosing what to build next;
+    # `implemented` over an open row claims done while work remains.
+    closed, total = {}, {}
+    for line in tasks.splitlines():
+        row = TASK_ROW.match(line)
+        if not row:
+            continue
+        owner = row.group(2).split("/")[0]
+        total[owner] = total.get(owner, 0) + 1
+        if row.group(1) == "x":
+            closed[owner] = closed.get(owner, 0) + 1
+
+    prd_cell = dict(catalogue)
+    for code, (rel, meta) in sorted(designs.items()):
+        status = meta.get("status", "")
+        if status not in LEDGER_TRACKED or code not in total:
+            continue
+        done, all_of = closed.get(code, 0), total[code]
+        if done == all_of and status != "implemented":
+            problems.append("%s: status '%s' but all %d '%s' task rows are closed -- "
+                            "advance it to 'implemented' here and to 'live' on the PRD row, "
+                            "or re-open the row that is not really done"
+                            % (rel, status, all_of, code))
+        elif done != all_of and status == "implemented":
+            problems.append("%s: status 'implemented' but %d of %d '%s' task rows are still "
+                            "open -- drop back to 'design-ready' here and to 'design' on the "
+                            "PRD row until they close" % (rel, all_of - done, all_of, code))
+        want = PRD_CELLS_FOR_STATUS.get(status)
+        if want and prd_cell.get(code) and prd_cell[code] not in want:
+            problems.append("%s: status '%s' but the PRD row reads '%s', not one of %s -- one "
+                            "feature, two answers to whether it is built"
+                            % (rel, status, prd_cell[code], sorted(want)))
 
     if problems:
         for problem in problems:

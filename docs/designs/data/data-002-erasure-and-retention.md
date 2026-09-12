@@ -7,7 +7,7 @@ depends_on: [ADMIN-001, SEC-002]
 depended_by: [LEGAL-GLOBAL-001, LEGAL-SG-001]
 layers_touched: [data, domain, service]
 cross_cutting_rules: [DATA-R01, DATA-R02, DATA-R03, DATA-R10, SEC-R04]
-status: design-ready
+status: implemented
 ---
 
 # `DATA-002` — Erasure and retention

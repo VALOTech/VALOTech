@@ -7,7 +7,7 @@ depends_on: [AUTH-002, CMS-001]
 depended_by: [CMS-007, DECK-004, INV-001, POST-002, RPT-002]
 layers_touched: [data, domain, service, api]
 cross_cutting_rules: [CMS-R02, CMS-R03, SEC-R01, DATA-R05, SEC-R04]
-status: design-ready
+status: implemented
 ---
 
 # `CMS-006` — Audience and access

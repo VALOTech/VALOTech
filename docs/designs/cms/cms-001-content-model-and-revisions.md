@@ -7,7 +7,7 @@ depends_on: [AUTH-002, DATA-001]
 depended_by: [CMS-002, CMS-003, CMS-004, CMS-005, CMS-006, CMS-007]
 layers_touched: [data, domain, service]
 cross_cutting_rules: [CMS-R01, CMS-R04, DATA-R05, SEC-R04]
-status: design-ready
+status: implemented
 ---
 
 # `CMS-001` — Content model and revisions

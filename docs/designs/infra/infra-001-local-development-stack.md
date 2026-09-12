@@ -7,7 +7,7 @@ depends_on: []
 depended_by: [CRED-001, DATA-001]
 layers_touched: [infra]
 cross_cutting_rules: [SEC-R05, DATA-R06]
-status: design-ready
+status: implemented
 ---
 
 # `INFRA-001` — Local development stack

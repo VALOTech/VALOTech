@@ -7,7 +7,7 @@ depends_on: [AUTH-002]
 depended_by: [ADMIN-001]
 layers_touched: [domain, service, api, frontend, ui]
 cross_cutting_rules: [SEC-R02, SEC-R04, I18N-R01, A11Y-R01, A11Y-R02]
-status: design-ready
+status: implemented
 ---
 
 # `AUTH-004` — Sign-out

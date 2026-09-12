@@ -7,7 +7,7 @@ depends_on: [SITE-001]
 depended_by: []
 layers_touched: [frontend, ui]
 cross_cutting_rules: [SEC-R01, P-01, P-02]
-status: implemented
+status: design-ready
 ---
 
 # `SITE-002` — Public and investor chapter split
