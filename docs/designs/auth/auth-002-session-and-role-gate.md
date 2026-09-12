@@ -155,6 +155,18 @@ invalidation whenever it suspends or re-roles an account.
   and a register entry, not a silent substitution. The build found the session
   model a poor fit and chose the hand-rolled store; the reasoning is
   `AUTH-DEC-01`.
+- **The token is a `string`, and so is the cookie.** Nothing in the type system
+  stops a future route parsing the cookie itself and handing the whole value to
+  `resolveSession`, which would hash a string no row is keyed on and refuse a
+  reader who is signed in. The hazard is not hypothetical: teaching the suites
+  the difference cost twenty-seven call sites, every one of which compiled. A
+  nominal type minted only by `tokenOfCookie` would make the mistake a compile
+  error and a second cookie parser structurally impossible, at the cost of a
+  brand on a value that is a string everywhere it is stored or sent. Not built:
+  it touches every caller and every suite, and the single parser (§3) holds the
+  property today by convention. Worth building the next time this surface is
+  opened.
+
 - **Signing the cookie.** The cookie is the token and an HMAC of it under
   `SESSION_SECRET`, checked before the row is looked up (**A**, `AUTH-DEC-02`,
   built by `AUTH-002/T5`). The alternative was the bare token, validated by the

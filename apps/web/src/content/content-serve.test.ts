@@ -85,9 +85,9 @@ describe.skipIf(!HAS_DATABASE)('GET /content/[id] serves by audience (CMS-006/T4
   let investorA: Actor;
   let investorB: Actor;
 
-  let adminToken = '';
-  let investorAToken = '';
-  let investorBToken = '';
+  let adminCookie = '';
+  let investorACookie = '';
+  let investorBCookie = '';
 
   const itemId: Record<'public' | 'investor' | 'granted' | 'draft', string> = {
     public: '',
@@ -143,9 +143,9 @@ describe.skipIf(!HAS_DATABASE)('GET /content/[id] serves by audience (CMS-006/T4
     investorA = await account('read-investor-a@example.test', 'investor');
     investorB = await account('read-investor-b@example.test', 'investor');
 
-    adminToken = (await issue(admin.id)).value;
-    investorAToken = (await issue(investorA.id)).value;
-    investorBToken = (await issue(investorB.id)).value;
+    adminCookie = (await issue(admin.id)).value;
+    investorACookie = (await issue(investorA.id)).value;
+    investorBCookie = (await issue(investorB.id)).value;
 
     itemId.public = await makeItem('public', 'public', true);
     itemId.investor = await makeItem('investor', 'investor', true);
@@ -155,10 +155,10 @@ describe.skipIf(!HAS_DATABASE)('GET /content/[id] serves by audience (CMS-006/T4
 
   afterAll(closeDb);
 
-  function get(id: string, token: string | null): Promise<Response> {
+  function get(id: string, cookie: string | null): Promise<Response> {
     const headers = new Headers();
-    if (token !== null) {
-      headers.set('Cookie', `${sessionCookieName()}=${token}`);
+    if (cookie !== null) {
+      headers.set('Cookie', `${sessionCookieName()}=${cookie}`);
     }
     const request = new Request(`http://localhost:3100/content/${id}`, { headers });
     return GET(request, { params: Promise.resolve({ id }) });
@@ -186,7 +186,7 @@ describe.skipIf(!HAS_DATABASE)('GET /content/[id] serves by audience (CMS-006/T4
     });
 
     it('serves it to an investor and an admin', async () => {
-      for (const token of [investorAToken, adminToken]) {
+      for (const token of [investorACookie, adminCookie]) {
         const response = await get(itemId.public, token);
         await expectServed(response, 'public');
         // The route's own header is public; proxy.ts overlays no-store on a
@@ -202,7 +202,7 @@ describe.skipIf(!HAS_DATABASE)('GET /content/[id] serves by audience (CMS-006/T4
     });
 
     it('serves it, private and no-store, to an investor and an admin', async () => {
-      for (const token of [investorAToken, adminToken]) {
+      for (const token of [investorACookie, adminCookie]) {
         const response = await get(itemId.investor, token);
         await expectServed(response, 'investor');
         expect(response.headers.get('Cache-Control')).toBe('private, no-store');
@@ -212,7 +212,7 @@ describe.skipIf(!HAS_DATABASE)('GET /content/[id] serves by audience (CMS-006/T4
 
   describe('a granted item', () => {
     it('serves it, no-store, to the grantee and an admin', async () => {
-      for (const token of [investorAToken, adminToken]) {
+      for (const token of [investorACookie, adminCookie]) {
         const response = await get(itemId.granted, token);
         await expectServed(response, 'granted');
         expect(response.headers.get('Cache-Control')).toBe('private, no-store');
@@ -220,14 +220,14 @@ describe.skipIf(!HAS_DATABASE)('GET /content/[id] serves by audience (CMS-006/T4
     });
 
     it('is 404 to a non-grantee investor and to a visitor', async () => {
-      expect((await get(itemId.granted, investorBToken)).status).toBe(404);
+      expect((await get(itemId.granted, investorBCookie)).status).toBe(404);
       expect((await get(itemId.granted, null)).status).toBe(404);
     });
   });
 
   describe('a draft, with no published revision', () => {
     it('is 404 to its author, an investor and a visitor alike', async () => {
-      for (const token of [adminToken, investorAToken, null]) {
+      for (const token of [adminCookie, investorACookie, null]) {
         expect((await get(itemId.draft, token)).status).toBe(404);
       }
     });
@@ -268,7 +268,7 @@ describe.skipIf(!HAS_DATABASE)('GET /content/[id] serves by audience (CMS-006/T4
 
       // A visitor may no longer read it, and an investor still may — now no-store.
       expect((await get(id, null)).status).toBe(404);
-      const after = await get(id, investorAToken);
+      const after = await get(id, investorACookie);
       await expectServed(after, servedKey);
       expect(after.headers.get('Cache-Control')).toBe('private, no-store');
     });

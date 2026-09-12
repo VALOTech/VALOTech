@@ -93,7 +93,7 @@ is not, and the surface says which is which.
 
 A real delete of the `accounts` row (`DATA-R03`). The cascades remove sessions,
 invitations, grants, read states and deck-read records. What survives is the
-audit trail, which holds ids and actions and no personal data (`SEC-002`) — and
+audit trail, which holds ids and actions and no personal field, because no action's allow-list may name one (`SEC-002/T4`) — and
 content the person authored, whose `author_id` becomes null, because a published
 report is the company's document and cascading it would delete an investor's
 archive to satisfy a staff erasure.

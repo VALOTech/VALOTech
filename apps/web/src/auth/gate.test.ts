@@ -203,7 +203,14 @@ const REFUSED: Array<[string, () => Request]> = [
   ],
   [
     'a signature from another secret',
-    () => presentingRaw(`${unissuedToken()}.${foreignSignature(unissuedToken())}`),
+    () => {
+      // One token, signed twice over: under a secret this server never held,
+      // which is what every live cookie becomes when `SESSION_SECRET` is
+      // rotated. Two separate tokens would only retest the row above.
+      const token = unissuedToken();
+
+      return presentingRaw(`${token}.${foreignSignature(token)}`);
+    },
   ],
 ];
 

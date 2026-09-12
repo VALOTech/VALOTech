@@ -94,10 +94,10 @@ describe.skipIf(!HAS_DATABASE)('GET /media/[id] serves by audience (CMS-003/T5, 
   let investorA: Actor;
   let investorB: Actor;
 
-  let adminToken = '';
-  let uploaderToken = '';
-  let investorAToken = '';
-  let investorBToken = '';
+  let adminCookie = '';
+  let uploaderCookie = '';
+  let investorACookie = '';
+  let investorBCookie = '';
 
   const fx: Record<'public' | 'investor' | 'granted' | 'draft' | 'unplaced', Fixture> = {
     public: { mediaId: '', bytes: Buffer.alloc(0), mime: 'image/png' },
@@ -163,10 +163,10 @@ describe.skipIf(!HAS_DATABASE)('GET /media/[id] serves by audience (CMS-003/T5, 
     investorA = await account('serve-investor-a@example.test', 'investor');
     investorB = await account('serve-investor-b@example.test', 'investor');
 
-    adminToken = (await issue(admin.id)).value;
-    uploaderToken = (await issue(uploader.id)).value;
-    investorAToken = (await issue(investorA.id)).value;
-    investorBToken = (await issue(investorB.id)).value;
+    adminCookie = (await issue(admin.id)).value;
+    uploaderCookie = (await issue(uploader.id)).value;
+    investorACookie = (await issue(investorA.id)).value;
+    investorBCookie = (await issue(investorB.id)).value;
 
     await placedFile('public', 'public', true);
     await placedFile('investor', 'investor', true);
@@ -181,10 +181,10 @@ describe.skipIf(!HAS_DATABASE)('GET /media/[id] serves by audience (CMS-003/T5, 
 
   afterAll(closeDb);
 
-  function get(id: string, token: string | null): Promise<Response> {
+  function get(id: string, cookie: string | null): Promise<Response> {
     const headers = new Headers();
-    if (token !== null) {
-      headers.set('Cookie', `${sessionCookieName()}=${token}`);
+    if (cookie !== null) {
+      headers.set('Cookie', `${sessionCookieName()}=${cookie}`);
     }
     const request = new Request(`http://localhost:3100/media/${id}`, { headers });
     return GET(request, { params: Promise.resolve({ id }) });
@@ -212,7 +212,7 @@ describe.skipIf(!HAS_DATABASE)('GET /media/[id] serves by audience (CMS-003/T5, 
     });
 
     it('serves it to an investor and an admin', async () => {
-      for (const token of [investorAToken, adminToken]) {
+      for (const token of [investorACookie, adminCookie]) {
         const response = await get(fx.public.mediaId, token);
         await expectServed(response, fx.public);
         // The route's own header is public; proxy.ts overlays no-store on a
@@ -228,7 +228,7 @@ describe.skipIf(!HAS_DATABASE)('GET /media/[id] serves by audience (CMS-003/T5, 
     });
 
     it('serves it, private and no-store, to an investor and an admin', async () => {
-      for (const token of [investorAToken, adminToken]) {
+      for (const token of [investorACookie, adminCookie]) {
         const response = await get(fx.investor.mediaId, token);
         await expectServed(response, fx.investor);
         expect(response.headers.get('Cache-Control')).toBe('private, no-store');
@@ -236,7 +236,7 @@ describe.skipIf(!HAS_DATABASE)('GET /media/[id] serves by audience (CMS-003/T5, 
     });
 
     it('serves the stored type and a filename derived from it', async () => {
-      const response = await get(fx.investor.mediaId, investorAToken);
+      const response = await get(fx.investor.mediaId, investorACookie);
       expect(response.headers.get('Content-Type')).toBe('application/pdf');
       expect(response.headers.get('Content-Disposition')).toBe(
         `inline; filename="${fx.investor.mediaId}.pdf"`,
@@ -246,7 +246,7 @@ describe.skipIf(!HAS_DATABASE)('GET /media/[id] serves by audience (CMS-003/T5, 
 
   describe("a granted item's file", () => {
     it('serves it, no-store, to the grantee and an admin', async () => {
-      for (const token of [investorAToken, adminToken]) {
+      for (const token of [investorACookie, adminCookie]) {
         const response = await get(fx.granted.mediaId, token);
         await expectServed(response, fx.granted);
         expect(response.headers.get('Cache-Control')).toBe('private, no-store');
@@ -254,20 +254,20 @@ describe.skipIf(!HAS_DATABASE)('GET /media/[id] serves by audience (CMS-003/T5, 
     });
 
     it('is 404 to a non-grantee investor and to a visitor', async () => {
-      expect((await get(fx.granted.mediaId, investorBToken)).status).toBe(404);
+      expect((await get(fx.granted.mediaId, investorBCookie)).status).toBe(404);
       expect((await get(fx.granted.mediaId, null)).status).toBe(404);
     });
   });
 
   describe('an unplaced file, referenced by nothing', () => {
     it('serves it, no-store, to its uploader', async () => {
-      const response = await get(fx.unplaced.mediaId, uploaderToken);
+      const response = await get(fx.unplaced.mediaId, uploaderCookie);
       await expectServed(response, fx.unplaced);
       expect(response.headers.get('Cache-Control')).toBe('private, no-store');
     });
 
     it('is 404 to another admin, an investor and a visitor — the uploader, not any admin', async () => {
-      for (const token of [adminToken, investorAToken, null]) {
+      for (const token of [adminCookie, investorACookie, null]) {
         expect((await get(fx.unplaced.mediaId, token)).status).toBe(404);
       }
     });
@@ -276,7 +276,7 @@ describe.skipIf(!HAS_DATABASE)('GET /media/[id] serves by audience (CMS-003/T5, 
   describe('a file referenced only by an unpublished item', () => {
     it('is 404 to a visitor and an investor, the item having no audience yet', async () => {
       expect((await get(fx.draft.mediaId, null)).status).toBe(404);
-      expect((await get(fx.draft.mediaId, investorAToken)).status).toBe(404);
+      expect((await get(fx.draft.mediaId, investorACookie)).status).toBe(404);
     });
   });
 

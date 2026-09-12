@@ -129,11 +129,16 @@ const UNPARSEABLE_ACTOR = 'not-a-uuid';
 
 /**
  * What one arrangement may cost before it is a failure rather than a slow test.
- * The erasure-count case builds fifteen round trips before its first assertion
- * — two accounts, two sessions, an invitation, three items, their grants and
- * their reads — and under the whole suite's parallel load that crosses Vitest's
- * five-second default. A test that fails for having been slow is the worst kind
- * of red: it goes away when somebody looks at it.
+ * The erasure-count cases build their subject out of some forty statements
+ * before the first assertion — accounts, sessions, an invitation, items, grants
+ * and reads, each a real statement against a real database — and under the whole
+ * suite's parallel load that crosses Vitest's five-second default. A test that
+ * fails for having been slow is the worst kind of red: it goes away when
+ * somebody looks at it.
+ *
+ * It is a bound on the arrangement and not a licence for the subject: what it
+ * measures, `erasureCounts`, is five statements behind one `Promise.all`, so a
+ * regression in the thing under test would have to be enormous to hide here.
  */
 const SLOW_ARRANGEMENT_MS = 30_000;
 

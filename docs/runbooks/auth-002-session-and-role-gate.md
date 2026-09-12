@@ -27,7 +27,7 @@ which is almost always a session that expired or an account that was suspended.
 | Signal | Meaning |
 |---|---|
 | one reader is sent to the sign-in form repeatedly | their session expired, their account is not `active`, or their browser is not returning the cookie |
-| every reader is sent to the form at once | a deploy changed `APP_ENV`, so the cookie name moved between `valotech` and `__Host-valotech` and the one the browsers hold is no longer asked for; or the `sessions` rows were deleted |
+| every reader is sent to the form at once | `SESSION_SECRET` was rotated, or two instances hold different ones, so the signature on every cookie fails (`AUTH-002/T5`) — deliberate if somebody just rotated it, a split deploy if not; or a deploy changed `APP_ENV`, so the cookie name moved between `valotech` and `__Host-valotech` and the one the browsers hold is no longer asked for; or the `sessions` rows were deleted |
 | readers are sent to the form after a short idle | `SESSION_TTL_SECONDS` was shortened. It applies from the next request rather than retroactively — each request sets `expires_at` to `now()` plus the new value — so it costs the idle rather than everyone |
 | every reader gets an error page rather than the form | the database is unreachable — the gate rejects rather than resolving to nobody, which is deliberate: a redirect would be indistinguishable from a session that ended |
 | an investor reports a `404` on an admin path | healthy. `requireAdmin` answers a signed-in non-admin the way a path that does not exist answers, so the console's existence is not confirmed |
@@ -53,6 +53,12 @@ moves forward on every request they make.
 
       psql "$DATABASE_URL" -c "update accounts set state = 'suspended' where email = 'reader@example.test'"
       UPDATE 1
+
+- **Everyone must be signed out at once** — rotate `SESSION_SECRET` and restart.
+  Every cookie in the world carries a signature under the old secret and none
+  verifies under the new one, so this ends every session everywhere without
+  touching a row (`AUTH-002/T5`, `AUTH-DEC-02`). It is the fleet-wide form of
+  the two deletes above, and the only one that needs no database.
 
 - **Everyone bounced to the form after a deploy** — compare `APP_ENV` with the
   previous deployment before touching the data. A cookie name that moved cannot
@@ -85,7 +91,19 @@ Cheapest first.
        ------+------
            1 |    1
 
-3. Does the database answer at all? If this fails, the error page is explained
+3. Do the live rows and the refusals disagree? A reader whose row reads `live |
+   t` in step 1 and who is still sent to the form is holding a cookie whose
+   signature does not verify — `SESSION_SECRET` was rotated, or the instance
+   that answered holds a different one from the instance that signed them in.
+   Nothing in the database shows this, because the signature is not stored:
+   compare the secret each running instance holds.
+
+       psql "$DATABASE_URL" -c "select count(*) filter (where expires_at > now()) as live from sessions"
+
+   A healthy `live` count beside readers who cannot get in is the signature, not
+   the session.
+
+4. Does the database answer at all? If this fails, the error page is explained
    and nothing above will run either.
 
        psql "$DATABASE_URL" -c 'select count(*) from accounts'
@@ -95,7 +113,13 @@ Cheapest first.
 The gate is code and holds no migration of its own — `sessions` and `accounts`
 precede it — so there is nothing to unwind in the data. If a deploy broke it,
 redeploy the prior image (`<OPS-001>`). Sessions survive a restart: they are
-rows, not process memory, so nobody is signed out by the rollback.
+rows, not process memory, so an ordinary rollback signs nobody out.
+
+Crossing `AUTH-002/T5` is the exception, in both directions. The cookie is the
+token and a signature over it; the build before it reads the whole value as the
+token. So deploying that change ends every live session and rolling back past
+it ends them again — the rows are untouched, the readers sign in once more, and
+there is nothing to unwind beyond telling them.
 
 ## What this feature depends on
 

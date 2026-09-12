@@ -83,12 +83,19 @@ Cheapest first.
    development and `__Host-valotech` everywhere else; send the one this
    deployment uses.
 
-       curl -s -o /dev/null -D - "$APP_ORIGIN/" -H "Cookie: valotech=<any-value>" | grep -i '^cache-control'
+       TOKEN=$(node -e "const c=require('crypto'),t=c.randomBytes(32).toString('base64url');\
+       console.log(t+'.'+c.createHmac('sha256',process.env.SESSION_SECRET).update(t).digest('base64url'))")
+       curl -s -o /dev/null -D - "$APP_ORIGIN/" -H "Cookie: valotech=$TOKEN" | grep -i '^cache-control'
        cache-control: no-store
 
-   The value need not be a real session — the proxy asks whether a cookie was
-   presented, not whether it resolves. If this answers anything else, the proxy
-   is not running for that path.
+   The value must verify under this deployment's `SESSION_SECRET`: the proxy
+   shares the gate's cookie parser, so a signature it turns away is not a
+   presented session at all (`AUTH-002/T5`). It still need not name a row — the
+   proxy asks whether a session was presented, not whether it resolves — which
+   is why the token above is minted rather than copied from a browser. If this
+   answers nothing, the proxy is not running for that path **or** the token was
+   signed under a secret this deployment does not hold; step 1 of
+   `docs/runbooks/auth-002-session-and-role-gate.md` tells the two apart.
 
 3. **Is an anonymous response still cacheable?** It should be: marking the
    public gateway unstorable for everybody would be a different defect.
@@ -107,8 +114,12 @@ Cheapest first.
    here is a performance regression, not a leak, and it means the matcher's
    exemption broke.
 
-       curl -s -o /dev/null -D - "$APP_ORIGIN/_next/static/chunks/<hash>.js" -H "Cookie: valotech=<any-value>" | grep -i '^cache-control'
+       curl -s -o /dev/null -D - "$APP_ORIGIN/_next/static/chunks/<hash>.js" -H "Cookie: valotech=$TOKEN" | grep -i '^cache-control'
        Cache-Control: public, max-age=31536000, immutable
+
+   `$TOKEN` is step 2's, and it has to verify: an unsigned value answers the
+   same thing here whether the exemption works or the signature failed, so it
+   would make this step unable to tell them apart.
 
 **The back button, in a browser.** The header is the mechanism, measured above;
 the behaviour it buys — pressing Back after a sign-out and getting the sign-in
@@ -126,8 +137,12 @@ response either way.
 
 Sign-out is code and holds no migration of its own — `sessions` and `accounts`
 precede it — so there is nothing to unwind in the data. If a deploy broke it,
-redeploy the prior image (`<OPS-001>`). Nobody is signed out by the rollback:
-sessions are rows, not process memory, and a deleted row does not come back.
+redeploy the prior image (`<OPS-001>`). An ordinary restart signs nobody out —
+sessions are rows, not process memory, and a deleted row does not come back —
+but rolling back across `AUTH-002/T5` does, in both directions: the cookie's
+format changed, so a value signed under one build does not verify under the
+other and every reader lands on the form. The rows survive; readers sign in
+again and nothing is lost but the session.
 
 Rolling back past this feature restores the state it was built to end — a
 session that can only be ended by waiting for `expires_at`, which is
