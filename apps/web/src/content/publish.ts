@@ -183,6 +183,11 @@ async function publishRevision(itemId: string, revisionId: string, actorId: stri
         action: 'content.publish',
         subjectType: 'content_item',
         subjectId: itemId,
+        // What this publication replaced, beside what replaced it (`CMS-R07`):
+        // `null` on a first publication, which is the honest statement that the
+        // item showed nothing before.
+        before: { revision_id: locked.current_revision_id },
+        after: { revision_id: revisionId },
       });
 
       return item;
@@ -235,6 +240,8 @@ export async function withdraw(itemId: string, actorId: string): Promise<Content
         action: 'content.withdraw',
         subjectType: 'content_item',
         subjectId: itemId,
+        before: { revision_id: item.current_revision_id },
+        after: { revision_id: previous?.id ?? null },
       });
 
       return updated;

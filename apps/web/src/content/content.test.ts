@@ -160,6 +160,17 @@ describe.skipIf(!HAS_DATABASE)('CMS-001 content model', () => {
     return getDb().selectFrom('content_revisions').selectAll().where('item_id', '=', itemId).execute();
   }
 
+  /** What each act of one kind on one item recorded, oldest first. */
+  async function auditMoves(itemId: string, action: AuditAction) {
+    return getDb()
+      .selectFrom('audit')
+      .select(['before', 'after'])
+      .where('subject_id', '=', itemId)
+      .where('action', '=', action)
+      .orderBy('id')
+      .execute();
+  }
+
   describe('createItem', () => {
     it('creates an item with no published revision, so a reader query finds nothing yet', async () => {
       const item = await createItem({ type: 'update', slug: `u-${randomUUID()}`, title: 'An update', kind: 'progress' });
@@ -261,6 +272,22 @@ describe.skipIf(!HAS_DATABASE)('CMS-001 content model', () => {
       expect(await auditCount(item.id, 'content.publish')).toBe(1);
     });
 
+    it('records the revision a publication replaced beside the one that replaced it', async () => {
+      const item = await createItem({ type: 'update', slug: `u-${randomUUID()}`, title: 'Replaced', kind: 'progress' });
+      const first = await saveDraft(item.id, [{ type: 'heading', level: 2, text: 'One' }], authorId);
+      await publish(item.id, first.id, authorId);
+      const second = await saveDraft(item.id, [{ type: 'heading', level: 2, text: 'Two' }], authorId);
+      await publish(item.id, second.id, authorId);
+
+      // `CMS-R07` asks what a publication replaced, and a first publication
+      // replaced nothing — `null` is that answer rather than an absent side, so
+      // "what were they shown, and when" is answerable from the trail alone.
+      expect(await auditMoves(item.id, 'content.publish')).toEqual([
+        { before: { revision_id: null }, after: { revision_id: first.id } },
+        { before: { revision_id: first.id }, after: { revision_id: second.id } },
+      ]);
+    });
+
     it('re-validates the body, refusing an invalid revision and recording nothing', async () => {
       const item = await createItem({ type: 'update', slug: `u-${randomUUID()}`, title: 'Invalid publish', kind: 'progress' });
       // A revision inserted past saveDraft's validator, the way a direct write or
@@ -295,6 +322,13 @@ describe.skipIf(!HAS_DATABASE)('CMS-001 content model', () => {
       // Withdrawal is a pointer move, not a delete: both revisions survive.
       expect(await revisionsOf(item.id)).toHaveLength(2);
       expect(await auditCount(item.id, 'content.withdraw')).toBe(2);
+
+      // Each withdrawal records what the item showed and what it fell back to,
+      // the second landing on nothing.
+      expect(await auditMoves(item.id, 'content.withdraw')).toEqual([
+        { before: { revision_id: r2.id }, after: { revision_id: r1.id } },
+        { before: { revision_id: r1.id }, after: { revision_id: null } },
+      ]);
     });
 
     it('refuses to withdraw an item that shows nothing', async () => {
@@ -323,6 +357,13 @@ describe.skipIf(!HAS_DATABASE)('CMS-001 content model', () => {
 
       expect(changed.audience).toBe('public');
       expect(await audienceChanges(item.id)).toBe(1);
+
+      // Both audiences, because one alone cannot tell a widening from a
+      // narrowing — and this one is a widening, which is the reading that
+      // matters (`SEC-DEC-01`).
+      const [move] = await auditMoves(item.id, 'content.audience_change');
+      expect(move?.before).toEqual({ audience: 'investor' });
+      expect(move?.after).toEqual({ audience: 'public' });
     });
 
     it('records nothing and writes nothing when the audience is unchanged', async () => {

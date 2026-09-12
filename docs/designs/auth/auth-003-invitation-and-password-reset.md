@@ -123,7 +123,11 @@ on-screen link `inviteAccount` returns is the whole delivery mechanism.
 ## 5. Cross-cutting compliance
 
 - **`SEC-R03`** — reset and invitation answer identically whatever the address,
-  and the request is rate-limited per account and per address.
+  and the request is rate-limited per account and per address. An
+  admin-initiated reset is audited and a self-service one is not
+  ([`ADMIN-DEC-03`](../../decisions-log.md#ADMIN-DEC-03)); the difference turns
+  on whether an actor was supplied, never on what the database holds, so the
+  public path takes no branch an account's existence could decide.
 - **`SEC-R05`** — no credential in the tree; absence degrades delivery only.
 - **`DATA-R01`** — an invitation stores an account id and a hash. Nothing else.
 - **`DATA-R04`** — this mail is transactional and consented by the act of being

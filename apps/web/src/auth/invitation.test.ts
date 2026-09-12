@@ -24,7 +24,7 @@
  * invitations and deletes them again.
  */
 
-import { createHash, randomBytes } from 'node:crypto';
+import { createHash, randomBytes, randomUUID } from 'node:crypto';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -34,7 +34,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
 import { getConfig, loadConfig } from '../config/index';
 import { closeDb, getDb } from '../db/index';
-import type { AccountsTable, InvitationsTable } from '../db/types';
+import type { AccountsTable, AccountState, AuditAction, AuditTable, InvitationsTable } from '../db/types';
 import { MAX_EMAIL_LENGTH } from './address';
 import { hashPassword, verifyPassword } from './password';
 import {
@@ -42,6 +42,7 @@ import {
   inviteAccount,
   issueToken,
   requestReset,
+  resendInvitation,
   setPasswordWithToken,
   tokenIsLive,
   EmailTakenError,
@@ -472,6 +473,16 @@ async function creationsOf(subjectId: string): Promise<{ actor_id: string | null
     .selectFrom('audit')
     .select('actor_id')
     .where('action', '=', 'account.create')
+    .where('subject_id', '=', subjectId)
+    .execute();
+}
+
+/** The trail's rows of one kind about one account, read independently of the writer. */
+async function auditOf(subjectId: string, action: AuditAction): Promise<Selectable<AuditTable>[]> {
+  return getDb()
+    .selectFrom('audit')
+    .selectAll()
+    .where('action', '=', action)
     .where('subject_id', '=', subjectId)
     .execute();
 }
@@ -1183,6 +1194,147 @@ describe.skipIf(!HAS_DATABASE)('AUTH-003 invitation and reset tokens', () => {
 
       expect(await rowCount(theirId)).toBe(1);
       expect(await consumeToken(theirs)).toBe(theirId);
+    });
+  });
+
+  /**
+   * What an admin starts on somebody else's behalf, and what the trail holds of
+   * it (`ADMIN-001/T9`, `ADMIN-DEC-03`).
+   *
+   * Each test makes its own account, because the trail is append-only: a count
+   * taken against an address the suite seeds once would read every earlier
+   * test's rows as well as its own, and would keep passing after the act it
+   * names stopped writing one.
+   */
+  describe('auditing what an admin starts (ADMIN-001/T9)', () => {
+    const AUDITED_DOMAIN = '@invitation-audited.test';
+
+    /** A fresh account in a stated state, and the address it holds. */
+    async function anAccount(state: AccountState): Promise<{ id: string; email: string }> {
+      const email = `${randomUUID()}${AUDITED_DOMAIN}`;
+      const row = await getDb()
+        .insertInto('accounts')
+        .values({ email, name: 'An Invited Investor', role: 'investor', state })
+        .returning('id')
+        .executeTakeFirstOrThrow();
+
+      return { id: row.id, email };
+    }
+
+    afterAll(async () => {
+      await getDb().deleteFrom('accounts').where('email', 'like', `%${AUDITED_DOMAIN}`).execute();
+    });
+
+    it('records one invitation_resend when a resend mints, against the admin who pressed it', async () => {
+      const { id } = await anAccount('invited');
+      const actor = randomUUID();
+
+      expect(await resendInvitation(id, actor)).not.toBeNull();
+
+      const rows = await auditOf(id, 'account.invitation_resend');
+
+      expect(rows).toHaveLength(1);
+      expect(rows[0]?.actor_id).toBe(actor);
+      expect(rows[0]?.subject_type).toBe('account');
+      // A resend changes which token is live, and a token is the one thing this
+      // module keeps out of every row it writes, so the act is the whole record.
+      expect(rows[0]?.before).toBeNull();
+      expect(rows[0]?.after).toBeNull();
+    });
+
+    it.each<AccountState>(['active', 'suspended'])(
+      'records nothing when a resend mints nothing for a %s account',
+      async (state) => {
+        const { id } = await anAccount(state);
+
+        expect(await resendInvitation(id, randomUUID())).toBeNull();
+
+        // An admin who pressed a button that refused took no capability, so the
+        // trail holds no act — and there is no link for one to have described.
+        expect(await auditOf(id, 'account.invitation_resend')).toHaveLength(0);
+        expect(await rowCount(id)).toBe(0);
+      },
+    );
+
+    it('mints nothing when the audit cannot be written: the token and the row are one transaction', async () => {
+      const { id } = await anAccount('invited');
+      const standing = await issueToken(id, INVITATION_TTL_SECONDS);
+
+      // An actor the audit's uuid column refuses fails the insert inside the
+      // transaction the mint is in. Nothing is caught on this path, so the
+      // refusal takes the mint with it (`SEC-R04`).
+      await expect(resendInvitation(id, 'not-a-uuid')).rejects.toThrow(
+        /invalid input syntax for type uuid/,
+      );
+
+      // Issuing deletes what is outstanding before it mints, so a rollback has
+      // to restore the link the invitee is already holding — asked of the
+      // liveness the consumption path reads rather than of a row count alone.
+      expect(await tokenIsLive(standing)).toBe(true);
+      expect(await rowCount(id)).toBe(1);
+      expect(await auditOf(id, 'account.invitation_resend')).toHaveLength(0);
+    });
+
+    it('records an admin-initiated reset for an active account', async () => {
+      const { id, email } = await anAccount('active');
+      const actor = randomUUID();
+
+      await requestReset(email, { actorId: actor, accountId: id });
+
+      const rows = await auditOf(id, 'account.password_reset_request');
+
+      expect(rows).toHaveLength(1);
+      expect(rows[0]?.actor_id).toBe(actor);
+      expect(rows[0]?.subject_type).toBe('account');
+      expect(await rowCount(id)).toBe(1);
+    });
+
+    it.each<AccountState>(['invited', 'suspended'])(
+      'records an admin-initiated reset for a %s account, which mints nothing',
+      async (state) => {
+        const { id, email } = await anAccount(state);
+        const actor = randomUUID();
+
+        await requestReset(email, { actorId: actor, accountId: id });
+
+        // The statements are narrowed to an `active` account, so nothing is
+        // minted for this one — and the row is written all the same, because
+        // what happened is that an admin asked. It is the same fact the person
+        // page answers `requested` to state.
+        expect(await rowCount(id)).toBe(0);
+        expect(await auditOf(id, 'account.password_reset_request')).toHaveLength(1);
+      },
+    );
+
+    it('records nothing for the public form, for an address an account holds and one it does not', async () => {
+      const { id, email } = await anAccount('active');
+
+      await requestReset(email);
+      await requestReset(`${randomUUID()}${AUDITED_DOMAIN}`);
+
+      // The public form carries no actor, so there is no admin act to hold — and
+      // a trail of who forgot their password is what a table kept seven years
+      // past an erasure must not accumulate (`DATA-R02`). The path still ran:
+      // the token is the proof of that.
+      expect(await auditOf(id, 'account.password_reset_request')).toHaveLength(0);
+      expect(await rowCount(id)).toBe(1);
+    });
+
+    it('carries no name and no address into either row', async () => {
+      const { id, email } = await anAccount('invited');
+      const actor = randomUUID();
+
+      await resendInvitation(id, actor);
+      await requestReset(email, { actorId: actor, accountId: id });
+
+      const serialised = JSON.stringify([
+        ...(await auditOf(id, 'account.invitation_resend')),
+        ...(await auditOf(id, 'account.password_reset_request')),
+      ]);
+
+      expect(serialised).not.toContain(email);
+      expect(serialised).not.toContain('@');
+      expect(serialised).not.toContain('An Invited Investor');
     });
   });
 

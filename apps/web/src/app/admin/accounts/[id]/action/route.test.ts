@@ -427,6 +427,11 @@ describe.skipIf(!HAS_DATABASE)('POST /admin/accounts/<id>/action', () => {
       // one is dead, and the one just handed over opens this account.
       expect(await consumeToken(first)).toBeNull();
       expect(await consumeToken(tokenOf(answer.link ?? ''))).toBe(subject);
+
+      // A fresh link sets a password, so the trail has to name the admin who
+      // took that capability rather than the person it is over (`ADMIN-DEC-03`).
+      const trail = await auditFor(subject);
+      expect(trail).toEqual([{ action: 'account.invitation_resend', actor_id: admin.id }]);
     });
 
     it('issues nothing for an account that has accepted, so no admin holds a way into it', async () => {
@@ -442,6 +447,8 @@ describe.skipIf(!HAS_DATABASE)('POST /admin/accounts/<id>/action', () => {
       expect(answer.outcome).toBe('unchanged');
       expect(answer.link).toBeUndefined();
       expect(await outstandingInvitations(subject)).toBe(0);
+      // Nothing was minted, so nothing was taken, so the trail holds nothing.
+      expect(await auditFor(subject)).toHaveLength(0);
     });
 
     it('issues nothing for a suspended account, whose way in was just removed', async () => {
@@ -470,6 +477,12 @@ describe.skipIf(!HAS_DATABASE)('POST /admin/accounts/<id>/action', () => {
       expect(answer.outcome).toBe('requested');
       expect(answer.link).toBeUndefined();
       expect(await outstandingInvitations(subject)).toBe(1);
+
+      // The request is the audited fact, against the admin who made it and the
+      // account it was made about (`ADMIN-DEC-03`).
+      expect(await auditFor(subject)).toEqual([
+        { action: 'account.password_reset_request', actor_id: admin.id },
+      ]);
     });
 
     it('writes nothing for an account that cannot sign in, and says no more than before', async () => {
@@ -485,6 +498,14 @@ describe.skipIf(!HAS_DATABASE)('POST /admin/accounts/<id>/action', () => {
       // `requestReset` carries, reached through this route.
       expect(await outstandingInvitations(invited)).toBe(1);
       expect(await outstandingInvitations(suspended)).toBe(0);
+
+      // Both are recorded even though neither minted anything: what an admin did
+      // was ask, and the row says exactly that and no more.
+      for (const subject of [invited, suspended]) {
+        expect(await auditFor(subject)).toEqual([
+          { action: 'account.password_reset_request', actor_id: admin.id },
+        ]);
+      }
     });
   });
 });

@@ -205,6 +205,16 @@ describe.skipIf(!HAS_DATABASE)('the cached accessor (CFG-001/T5)', () => {
         .where('actor_id', '=', actor)
         .execute();
 
+    /** What each of an actor's changes recorded, oldest first. */
+    const movesBy = (actor: string) =>
+      getDb()
+        .selectFrom('audit')
+        .select(['before', 'after'])
+        .where('action', '=', 'config.change')
+        .where('actor_id', '=', actor)
+        .orderBy('id')
+        .execute();
+
     // `config.changed_by` is a foreign key to `accounts(id)`, so the actor of a
     // change is a real account — a bare random uuid violates it. A fresh account
     // per test also makes the append-only audit countable by that actor.
@@ -236,10 +246,35 @@ describe.skipIf(!HAS_DATABASE)('the cached accessor (CFG-001/T5)', () => {
 
       const changes = await changesBy(actor);
       expect(changes).toHaveLength(1);
-      // The key and values are in the config row; the audit holds the act, with
-      // subject_id null because the key is not a uuid and before/after awaiting
-      // SEC-DEC-01.
+      // `subject_id` is null because a setting key is not a uuid; the key rides
+      // in the recorded fields instead, which is why the allow-list names it
+      // alongside the value (`SEC-DEC-01`).
       expect(changes[0]).toEqual({ subject_type: 'config', subject_id: null });
+
+      expect(await movesBy(actor)).toEqual([
+        {
+          before: { key: 'session.max_age_days', value: '30' },
+          after: { key: 'session.max_age_days', value: '45' },
+        },
+      ]);
+    });
+
+    it('records the key and both values, and a revert records them the other way round', async () => {
+      const actor = await anAdmin();
+
+      await changeSetting('room.banner', 'First', actor);
+      await changeSetting('room.banner', 'Second', actor);
+      expect(await revertSetting('room.banner', actor)).toBe(true);
+
+      // Each row is a complete statement of the setting at that moment: what it
+      // was and what it became. The revert's pair is the change's reversed,
+      // which is what makes a revert readable as a revert rather than as a third
+      // arbitrary value.
+      expect(await movesBy(actor)).toEqual([
+        { before: { key: 'room.banner', value: '' }, after: { key: 'room.banner', value: 'First' } },
+        { before: { key: 'room.banner', value: 'First' }, after: { key: 'room.banner', value: 'Second' } },
+        { before: { key: 'room.banner', value: 'Second' }, after: { key: 'room.banner', value: 'First' } },
+      ]);
     });
 
     it('captures the prior stored value as previous on a second change', async () => {

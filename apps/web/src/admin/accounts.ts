@@ -258,7 +258,10 @@ export async function suspendAccount(accountId: string, actorId: string): Promis
 /**
  * Change an account's role, ending every session it holds. Returns whether the
  * role changed — `false` when the account already held it, in which case
- * nothing is written, nobody is signed out and nothing is recorded.
+ * nothing is written, nobody is signed out and nothing is recorded. The trail
+ * carries the role that was replaced beside the one that replaced it
+ * (`SEC-DEC-01`), so a reader months later can tell which direction a privilege
+ * moved without restoring a database.
  *
  * The sessions go because a privilege change that leaves the old session's
  * claims in place is a privilege change that has not happened yet (`SEC-R02`).
@@ -293,6 +296,23 @@ export async function changeRole(
         return false;
       }
 
+      // The role as it stands, read under the lock the `UPDATE` will hold
+      // anyway, because the `UPDATE ... RETURNING` can only hand back the value
+      // it wrote and the trail records what a change replaced (`SEC-DEC-01`).
+      // It decides nothing — the narrowed `UPDATE` below is still the check, so
+      // a second concurrent call re-evaluates that predicate against the row the
+      // first committed and matches nothing, whatever this read saw.
+      const held = await trx
+        .selectFrom('accounts')
+        .select('role')
+        .where('id', '=', accountId)
+        .forUpdate()
+        .executeTakeFirst();
+
+      if (held === undefined) {
+        return false;
+      }
+
       const changed = await trx
         .updateTable('accounts')
         .set({ role: newRole })
@@ -312,6 +332,8 @@ export async function changeRole(
         action: 'account.role_change',
         subjectType: 'account',
         subjectId: accountId,
+        before: { role: held.role },
+        after: { role: newRole },
       });
 
       return true;

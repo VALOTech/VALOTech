@@ -68,7 +68,7 @@ async function perform(
 ): Promise<AccountActionAnswer> {
   switch (action) {
     case 'resend-invitation': {
-      const invitation = await resendInvitation(person.id);
+      const invitation = await resendInvitation(person.id, actorId);
 
       return invitation === null
         ? { outcome: 'unchanged' }
@@ -77,8 +77,11 @@ async function perform(
     case 'reset-password':
       // By the address the account holds rather than one a caller supplies: the
       // reset flow is keyed by address, and the only address an admin may start
-      // one for is the one already on the row they are looking at.
-      await requestReset(person.email);
+      // one for is the one already on the row they are looking at. The actor
+      // travels with that account's id, which is what tells `requestReset` this
+      // is an admin's request and not the public form's, and the audit is its
+      // own to write inside its own transaction.
+      await requestReset(person.email, { actorId, accountId: person.id });
 
       return { outcome: 'requested' };
     case 'suspend':

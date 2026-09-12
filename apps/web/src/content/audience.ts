@@ -18,6 +18,11 @@
  * altered nothing would record an act that did not happen. The row is locked
  * first so two changes racing for one item settle in an order rather than both
  * reading the same prior value.
+ *
+ * The row carries both audiences (`SEC-DEC-01`). One alone cannot tell a
+ * narrowing from a widening, and which of the two it was is the whole question
+ * this act is read for — a public report moved to `granted` is a mistake being
+ * contained, and the reverse is a disclosure.
  */
 
 import { recordAudit } from '../audit/record';
@@ -61,6 +66,8 @@ export async function changeAudience(
         action: 'content.audience_change',
         subjectType: 'content_item',
         subjectId: itemId,
+        before: { audience: current.audience },
+        after: { audience },
       });
 
       return updated;

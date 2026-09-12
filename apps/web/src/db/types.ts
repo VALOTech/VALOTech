@@ -60,6 +60,8 @@ export const AUDIT_ACTIONS = [
   'account.role_change',
   'account.reinstate',
   'account.object_read_tracking',
+  'account.invitation_resend',
+  'account.password_reset_request',
   'grant.add',
   'grant.remove',
   'content.publish',

@@ -164,12 +164,19 @@ action. **`DATA-002`** is the erasure design this implements the admin half of.
   `author_id` and the document keeps its text. A "transferred to" field would be
   more informative and would be a place to record a person after they were
   erased.
-- **Resend and reset are audited.** The person page's resend-invitation and
-  reset-password acts ship writing no audit row — `SEC-R04`'s set names neither.
-  Because a resent or reset link can set a password, auditing them is decided
-  (**A**, `ADMIN-DEC-03`): a new `audit.action` value folded into the CHECK (the
-  `account.reinstate` precedent) and a `recordAudit` inside the resend
-  transaction, with the reset control kept as it is. Built by `ADMIN-001/T9`.
+- **Resend and reset are both audited.** A resend hands an admin a fresh link
+  that sets a password, which is a capability over somebody else's account and
+  belongs in the trail — without a row, a link opened later shows only the
+  original `account.create`. A reset is lower weight, because it hands back
+  nothing and so misattributes no capability, and it is audited beside the
+  resend all the same: the difference costs one more value in a closed
+  vocabulary, and an admin who started a reset is an act a reader looks for.
+  So two `audit.action` values are folded into the CHECK (the
+  `account.reinstate` precedent, `ADMIN-DEC-03`), each written inside the
+  transaction of the act it records. The reset keeps its control and the
+  sentence it carries, which names exactly what did and did not happen — more
+  honest than an absent control that leaves the admin guessing whether the
+  console can reset at all. Built by `ADMIN-001/T9`.
 
 ## 7. Task list
 
@@ -181,4 +188,4 @@ action. **`DATA-002`** is the erasure design this implements the admin half of.
 - `ADMIN-001/T6` — Creation issues an invitation; no admin ever sets another person's password
 - `ADMIN-001/T7` — A role change ends every session and is audited
 - `ADMIN-001/T8` — Reinstating a suspended account restores it to active and is audited
-- `ADMIN-001/T9` — Audit resend-invitation and reset-password: a new audit.action value, and a recordAudit inside the resend transaction
+- `ADMIN-001/T9` — Audit resend-invitation and reset-password: two new audit.action values, and a recordAudit inside each act's transaction

@@ -104,11 +104,12 @@ is not an afterthought — it is what a corporate mail client shows.
    point.
 3. Write a `mail_log` row per recipient, `queued`.
 4. Send one at a time, updating each row with its receipt or its error.
-5. Audit once as `mail.send` — the actor, and that a send happened. The subject
-   and the count belong in the audit's `before`/`after`, whose shape
-   [`SEC-DEC-01`](../../decisions-log.md#SEC-DEC-01) has not settled, so the row
-   ships that decision's safe default and carries neither yet; an address belongs
-   in neither field regardless (`DATA-R02`).
+5. Audit once as `mail.send` — the actor, the subject, and the recipient count,
+   which are the two fields this action's allow-list names
+   ([`SEC-DEC-01`](../../decisions-log.md#SEC-DEC-01)). A send replaces nothing,
+   so only the `after` side is written. No address goes in either, and who
+   received the message stays in the `mail_log` row, which is kept two years and
+   erased with the account rather than seven and outliving it (`DATA-R02`).
 
 **No batching and no background job.** The admin waits, and watches the count.
 A send that happens after the person leaves the page is a send nobody can stop

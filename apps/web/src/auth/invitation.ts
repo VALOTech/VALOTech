@@ -340,6 +340,21 @@ export interface Invitation {
 }
 
 /**
+ * An admin asking for a reset on somebody else's behalf: who asked, and the
+ * account the request is about.
+ *
+ * The two arrive together rather than as two parameters because the audit row
+ * needs both — the admin is its actor and the account is its subject — and a
+ * shape that let one arrive without the other would let a caller record an act
+ * against no subject, or a subject with nobody accountable for it. There is no
+ * value of this type that is half-supplied.
+ */
+export interface ResetRequestedBy {
+  readonly actorId: string;
+  readonly accountId: string;
+}
+
+/**
  * Why an admin carries the link even where mail is configured. The credential
  * says a message *could* be sent; nothing yet says one *was*.
  */
@@ -498,8 +513,20 @@ export async function inviteAccount(
  * What comes back is `inviteAccount`'s value and the delivery sentence with it —
  * the token is in this answer and in no row, so the admin delivers it or nobody
  * does (`AUTH-003/T7`).
+ *
+ * Minting is audited, in the same transaction that mints (`SEC-R04`,
+ * `ADMIN-DEC-03`). A fresh link sets a password, so a resend hands an admin a
+ * capability over somebody else's account and the trail has to hold who took
+ * it — without the row, a link opened later would show only the original
+ * `account.create`. The row records the act and no field values: what a resend
+ * changes is which token is live, and a token is the one thing this module
+ * keeps out of every row it writes. A call that mints nothing records nothing,
+ * because an admin who pressed a button that refused took no capability.
  */
-export async function resendInvitation(accountId: string): Promise<Invitation | null> {
+export async function resendInvitation(
+  accountId: string,
+  actorId: string,
+): Promise<Invitation | null> {
   const token = await getDb()
     .transaction()
     .execute(async (trx) => {
@@ -515,7 +542,16 @@ export async function resendInvitation(accountId: string): Promise<Invitation | 
         return null;
       }
 
-      return issueTokenIn(trx, accountId, INVITATION_TTL_SECONDS);
+      const minted = await issueTokenIn(trx, accountId, INVITATION_TTL_SECONDS);
+
+      await recordAudit(trx, {
+        actorId,
+        action: 'account.invitation_resend',
+        subjectType: 'account',
+        subjectId: accountId,
+      });
+
+      return minted;
     });
 
   if (token === null) {
@@ -561,8 +597,30 @@ export async function resendInvitation(accountId: string): Promise<Invitation | 
  *
  * Nothing is returned. A token in the answer would be a self-service reset for
  * anybody who knows an address; even a boolean would be the oracle itself.
+ *
+ * An admin starting this for somebody else is an audited act; a person starting
+ * it for themselves is not (`ADMIN-DEC-03`). The trail holds privileged writes —
+ * one account reaching into another's access (`SEC-R04`) — and a request the
+ * account's own holder makes is neither privileged nor anybody else's, so
+ * recording it would put the fact that a named person forgot their password
+ * into a table kept seven years past their erasure (`DATA-R02`). So the row is
+ * keyed on **who is asking**: an admin arrives carrying an actor and the account
+ * it is the subject for, the public form carries neither, and nothing here reads
+ * the database to decide between them. That is what keeps the shape above
+ * intact — an existence test is exactly the branch a timing measurement reads,
+ * and this one is over a parameter the caller already held.
+ *
+ * What the admin path records is the **request**, not a token. The statements
+ * below are narrowed to an `active` account, so pressing reset for an invited or
+ * a suspended one mints nothing — and the row is written all the same, because
+ * what happened is that an admin asked. It is the same reason the person page
+ * answers `requested` rather than `changed`: that is the strongest true
+ * statement either of them can make.
  */
-export async function requestReset(email: string): Promise<void> {
+export async function requestReset(
+  email: string,
+  requestedBy?: ResetRequestedBy,
+): Promise<void> {
   const address = normaliseAddress(email);
 
   // Refused before the address is used for anything, and refused for its length
@@ -622,6 +680,15 @@ export async function requestReset(email: string): Promise<void> {
             .where('state', '=', 'active'),
         )
         .execute();
+
+      if (requestedBy !== undefined) {
+        await recordAudit(trx, {
+          actorId: requestedBy.actorId,
+          action: 'account.password_reset_request',
+          subjectType: 'account',
+          subjectId: requestedBy.accountId,
+        });
+      }
     });
 
   // Deferred: AUTH-003/T3 — mail the reset link to the address when a row was

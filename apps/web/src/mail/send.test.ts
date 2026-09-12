@@ -290,7 +290,7 @@ describe.skipIf(!HAS_DATABASE)('the send loop (MAIL-001/T5)', () => {
     expect(await statesOf(recipients)).toEqual(['failed', 'failed', 'failed']);
   });
 
-  it('records one mail.send against the sender, carrying no address and no recipient list', async () => {
+  it('records one mail.send carrying the subject and the count, and no address', async () => {
     const recipients = await threeRecipients();
     const actor = randomUUID();
 
@@ -305,8 +305,12 @@ describe.skipIf(!HAS_DATABASE)('the send loop (MAIL-001/T5)', () => {
         action: 'mail.send',
         subject_type: 'mail',
         subject_id: null,
+        // A send replaces nothing, so there is no `before` side to it; what the
+        // trail holds is what went out and to how many people, which is the
+        // allow-list's whole entry for this action (`SEC-DEC-01`). Who received
+        // it is the `mail_log` row's, erased with the account.
         before: null,
-        after: null,
+        after: { subject: message.subject, recipient_count: recipients.length },
       },
     ]);
 

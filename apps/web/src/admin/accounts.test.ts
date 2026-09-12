@@ -578,6 +578,33 @@ describe.skipIf(!HAS_DATABASE)('ADMIN-001 account mutations', () => {
       expect(trail[0]?.subject_type).toBe('account');
     });
 
+    it('records the role it replaced beside the one that replaced it', async () => {
+      const id = await newAccount('active', 'investor');
+
+      await changeRole(id, 'admin', randomUUID());
+
+      const [promotion] = await auditFor(id);
+
+      // Two values rather than one: with only the new role the trail cannot say
+      // whether an account was promoted or was already there, which is the whole
+      // question a privilege change is read for (`SEC-DEC-01`).
+      expect(promotion?.before).toEqual({ role: 'investor' });
+      expect(promotion?.after).toEqual({ role: 'admin' });
+    });
+
+    it('carries no name and no address into the trail', async () => {
+      const id = await newAccount('active', 'investor');
+
+      await changeRole(id, 'admin', randomUUID());
+
+      // The account this suite creates carries both, and the allow-list is what
+      // keeps either out of a table kept past the account's own erasure
+      // (`DATA-R02`).
+      const serialised = JSON.stringify(await auditFor(id));
+      expect(serialised).not.toContain('@');
+      expect(serialised).not.toContain('An Investor');
+    });
+
     it('ends a demoted admin session, so no elevated session outlives the demotion', async () => {
       const id = await newAccount('active', 'admin');
       // A second admin, so demoting the first does not strand the room and is

@@ -198,12 +198,14 @@ export function validateSetting<K extends SettingKey>(key: K, raw: string): Chan
  * never clamped. An accepted change is one transaction: the previous value is
  * captured from the current row — or the declared default when no row exists
  * yet, so reverting the first change restores the default rather than null — the
- * new value is written, and `config.change` is audited (`SEC-R04`). The audit's
- * field values wait on `SEC-DEC-01` (`before`/`after` are null until `SEC-002/T4`,
- * and the key is a string the uuid `subject_id` cannot hold); the config row
- * itself carries the key, both values, who and when, which is what a revert and
- * the console read. A secret-shaped key is refused before any write, the same
- * backstop the read path applies (`SEC-R05`).
+ * new value is written, and `config.change` is audited (`SEC-R04`). The audit
+ * row carries the key beside both values (`SEC-DEC-01`): the key because
+ * `subject_id` is a uuid and cannot hold it, and both values because a trail
+ * that named only the setting could not say which way it moved. The config row
+ * carries the same pair plus who and when, which is what a revert and the
+ * console read; the audit is the history that row does not keep. A
+ * secret-shaped key is refused before any write, the same backstop the read
+ * path applies (`SEC-R05`).
  */
 export async function changeSetting<K extends SettingKey>(
   key: K,
@@ -249,6 +251,8 @@ export async function changeSetting<K extends SettingKey>(
         action: 'config.change',
         subjectType: 'config',
         subjectId: null,
+        before: { key, value: previous },
+        after: { key, value: validated.stored },
       });
     });
 
@@ -301,6 +305,8 @@ export async function revertSetting<K extends SettingKey>(
         action: 'config.change',
         subjectType: 'config',
         subjectId: null,
+        before: { key, value: row.value },
+        after: { key, value: row.previous_value },
       });
 
       return true;

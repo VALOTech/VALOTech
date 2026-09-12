@@ -109,6 +109,12 @@ function failureText(error: unknown): string {
  * the pairing is what lets a failure be written against the one recipient it
  * belongs to, and a multi-row insert would rest that pairing on the order the
  * server happens to return.
+ *
+ * The audit row carries the subject and how many people it went to
+ * (`SEC-DEC-01`), and no address: who received a message is the `mail_log`
+ * row's, kept two years and erased with the account, while the trail is kept
+ * seven and outlives it (`DATA-R02`). It is the `after` side alone, because a
+ * send replaces nothing.
  */
 async function queueAndRecord(
   recipients: readonly Recipient[],
@@ -129,7 +135,13 @@ async function queueAndRecord(
         queued.push({ recipient, logId: row.id });
       }
 
-      await recordAudit(trx, { actorId, action: 'mail.send', subjectType: 'mail', subjectId: null });
+      await recordAudit(trx, {
+        actorId,
+        action: 'mail.send',
+        subjectType: 'mail',
+        subjectId: null,
+        after: { subject: message.subject, recipient_count: recipients.length },
+      });
 
       return queued;
     });

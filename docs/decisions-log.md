@@ -45,6 +45,18 @@ An entry is filed the moment the choice surfaces, not when it is answered. Nothi
 
 ---
 
+<a id="SEC-DEC-03"></a>
+### `SEC-DEC-03` — Whether text an admin wrote may enter the seven-year trail — OPEN
+
+- **Decision:** `SEC-DEC-01` keeps a person out of the audit by naming fields: no action may record `name` or `email`. Two fields it does name carry text an admin typed rather than a value the system chose — `config.change` records the value of `room.banner` and `room.signin_message`, and `mail.send` records the subject an admin wrote. Either can contain a person’s name, so the field-name rule holds while the row still carries a person into a table kept seven years past an erasure. Does the trail keep those values as written, or does something narrower stand in for them?
+- **Options:** **A** As written (as built) — the values are staff’s own words about the company, and what a setting said when it changed is the question the row exists to answer · **B** Record the key and omit the value for the free-text setting types, keeping it for `int` and `bool`, and record the mail subject’s length rather than its text — no free text reaches the trail, at the cost of a `config.change` row that cannot say what the banner became and a `mail.send` row that cannot be matched to the message · **C** Record a digest of the free text, which matches a row to a message without holding it and answers nothing else.
+- **Recommendation:** **A**. These values are written by staff about the company rather than collected about a person, so `DATA-R01`’s minimisation is not engaged the way it is for an investor’s row, and the residue is bounded by who can write it — two admins, whose own rows already name them. **B** removes exactly the thing a reader months later is asking about, and **C** keeps a row nobody can read. Reopen if a free-text setting is ever filled from something a visitor or an investor writes, which would turn staff prose into collected data.
+- **Decision owner:** user
+- **Blocks:** — none —
+- **Revises:** SEC-002/T4 — the allow-list ships `value` for `config.change` and `subject` for `mail.send`; the answer changes what those rows hold
+- **Status:** OPEN. Safe default: the values as written, which is what `SEC-DEC-01` names. `DATA-R02` holds by construction for every field the system itself fills; what is at issue is only text a named admin typed, and no path today lets anybody else fill it.
+
+---
 ## Resolved decisions
 
 <a id="AUTH-DEC-02"></a>
