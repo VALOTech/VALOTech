@@ -230,9 +230,11 @@ the world are in direct competition: darken it enough for every word and the
 world is gone, because the layers multiply rather than add. So the chapter's
 ground stops being a ground — it is a wash at 0.28 that no text stands on — and
 each block of copy that is inside no card takes a plate of its own. Only two
-layers ever sit over the world, and the plate is glass rather than paint: a
+layers ever sit over the world, and the plate is glass rather than paint — a
 blurred backdrop removes the detail that fights a letterform while keeping the
-colour and the light, which buys the same legibility at far less opacity.
+colour and the light. Everywhere except the cover, where the world is the bare
+lunar rock and a blur erases it outright; `A11Y-001` §3 carries the reasoning
+and the readings.
 
 The set of plated blocks is not a guess. It is the blocks that hold text and are
 inside no card — the chapter heads, the loose statements and tags, the cover's

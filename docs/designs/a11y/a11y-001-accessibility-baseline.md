@@ -61,11 +61,27 @@ named share of the world reaching the eye. The way to hold both is to stop
 stacking: the chapter's ground is a wash no text stands on, and each block of
 copy carries its own plate, so the world is behind two layers and never three.
 
-**A plate is glass, not paint.** What fights a letterform is the world's detail
-rather than its brightness — a cloud edge crossing a stem puts a near-white
-pixel against a near-white glyph — so blurring the backdrop removes the edge,
-keeps the colour and the light, and buys the same legibility at far less
-opacity.
+**A plate is glass, not paint — except where the subject is dark.** What fights
+a letterform is the world's detail rather than its brightness: a cloud edge
+crossing a stem puts a near-white pixel against a near-white glyph. Blurring the
+backdrop removes the edge, keeps the colour and the light, and holds the same
+legibility at far less opacity; dropping it costs two dozen runs at the same
+alphas. But a blur is an averaging filter, and **a dark subject's only signal is
+texture**, which is exactly what an average removes. A lit Earth survives it
+because it carries colour and brightness. The bare lunar rock of the cover
+carries neither, and its craters are the whole of what separates a grey sphere
+from a near-black sky: at 14px the Moon vanished, and at 5px it still vanished.
+
+So the blur is decided per surface rather than per page. The cover's plate is a
+plain fill — and, having no wash beneath it, it is the only layer over the world
+there and carries the contrast bound alone, at 0.60. Every other plate is glass.
+
+**Two grounds of the same opacity are not the same ground.** The glass family's
+fill is an indigo several steps lighter than the card family's near-black, and
+over a lit cloud that lightness is what a 12px accent label cannot afford —
+2.4:1 at an opacity the card family clears comfortably. A ground is a geometry
+first, a colour second, and an opacity third; each of the three failed here in
+that order.
 
 **The smallest label binds the largest surface, and it binds through colour.**
 The accent is darker than the body text, so over the world's brightest pixel a

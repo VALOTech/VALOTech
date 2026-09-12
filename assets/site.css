@@ -2894,8 +2894,15 @@ html:not(.can-scene) .planet {
     padding: 14px 16px;
   }
 
+  /* The glass family's fill is an indigo, several steps lighter than the card
+     family's near-black, and over a lit cloud that lightness is what a 12px
+     accent label cannot afford — measured at 2.4:1 where AA asks 4.5, at the
+     same opacity the card family clears comfortably. This one carries an
+     accent label on the brightest part of the world, so it takes the dark
+     ground. Its siblings keep the glass they were designed in. */
   .dept {
     padding: 13px 15px;
+    background: rgba(9, 11, 16, 0.68);
   }
 
   /* The cover's copy stands on the world with nothing between them, and the
@@ -2922,15 +2929,29 @@ html:not(.can-scene) .planet {
     padding: 16px var(--gut);
     border-radius: var(--r-panel);
     background: rgba(8, 10, 18, var(--plate));
-    /* Glass, not paint. What fights a letterform is not the world's brightness
-       but its detail: a cloud edge crossing a stem puts a near-white pixel
-       against a near-white glyph. Blurring the backdrop removes the edge and
-       leaves the colour and the light, so the same legibility costs far less
-       opacity — the plate can sit at 0.42 where a flat fill needed 0.58, and
-       a third more of the world comes through. Where the browser cannot do
-       it, the fill alone is still a ground (`A11Y-R03`). */
+    /* Glass over the living world. What fights a letterform is the world's
+       detail rather than its brightness — a cloud edge crossing a stem puts a
+       near-white pixel against a near-white glyph — so blurring the backdrop
+       removes the edge, keeps the colour and the light, and holds the same
+       legibility at far less opacity. Dropping it costs real contrast: two
+       dozen runs fall below AA at the same alphas without it. */
     backdrop-filter: blur(14px) saturate(1.15);
     -webkit-backdrop-filter: blur(14px) saturate(1.15);
+  }
+
+  /* The cover is the one place a blur cannot go, and the reason is the world
+     rather than the text. A lit Earth survives an average because it carries
+     colour and brightness; the bare lunar rock of the cover carries neither,
+     and its craters are the entire signal separating a grey sphere from a
+     near-black sky. Blurred at 14px the Moon vanished, and at 5px it still
+     vanished. So the cover's plate is a plain fill — and, having no chapter
+     wash beneath it, it is the only layer over the world there and carries
+     the whole contrast bound itself: 0.60 holds AA against the brightest
+     pixel the rock can paint, and still shows 40% of it. */
+  .hero-copy {
+    --plate: 0.6;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
   }
 
   /* A hard-edged rectangle over a planet reads as a slab laid on the picture,
@@ -2958,7 +2979,9 @@ html:not(.can-scene) .planet {
      same hue, so the labels move and the cards stay open. */
   .note,
   .dept-need,
-  .fit-role {
+  .fit-role,
+  .foot-h,
+  .eyebrow {
     color: var(--accent-bright);
   }
 
