@@ -6,9 +6,10 @@
  * a paragraph. A foreign stylesheet, a script, a table, an inline colour — none
  * of it crosses the form, because the parser reads the pasted HTML into the block
  * vocabulary `CMS-001` defines rather than keeping any markup (`CMS-R04`). The
- * only inline emphasis a paste keeps is the link, because a link carries meaning
- * a reader follows; bold and italic are re-applied by selection (`CMS-002/T4`),
- * not smuggled in with a stylesheet.
+ * only inline emphasis a paste keeps is the link, and only a safe one: a
+ * `javascript:` or `data:` href drops to plain text (`isSafeMarkHref`), since a
+ * stored link is rendered as an `<a href>` a reader follows. Bold and italic are
+ * re-applied by selection (`CMS-002/T4`), not smuggled in with a stylesheet.
  *
  * `blocksFromText` is the plain-text path and is pure — no DOM — so it is the
  * fallback when there is no HTML and it is what the unit tests pin. `blocksFromHtml`
@@ -17,7 +18,7 @@
  * parser is a browser thing and a mock of it would prove nothing.
  */
 
-import type { Block, Mark } from './blocks';
+import { isSafeMarkHref, type Block, type Mark } from './blocks';
 
 /** Elements whose content is never text: their children are dropped entirely. */
 const DROP = new Set(['script', 'style', 'head', 'noscript', 'template', 'title']);
@@ -68,8 +69,9 @@ function collectInline(node: Node, draft: Draft): void {
       const start = draft.text.length;
       collectInline(element, draft);
       const end = draft.text.length;
-      // A link with no target is not a link; its text stays, its mark does not.
-      if (href.length > 0 && start < end) {
+      // The link's text stays; only a safe target becomes a mark, so a pasted
+      // `javascript:` or `data:` href drops to plain text (`isSafeMarkHref`).
+      if (isSafeMarkHref(href) && start < end) {
         draft.marks.push({ start, end, type: 'link', href });
       }
       continue;

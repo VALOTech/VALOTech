@@ -65,6 +65,18 @@ describe('applyMark', () => {
     expect(applyMark([], 'link', 0, 4, '   ')).toEqual([]);
   });
 
+  it('applies no link for an unsafe scheme, so a javascript: or data: target never becomes a mark', () => {
+    expect(applyMark([], 'link', 0, 4, 'javascript:alert(1)')).toEqual([]);
+    expect(applyMark([], 'link', 0, 4, 'data:text/html,<script>1</script>')).toEqual([]);
+  });
+
+  it('applies a link for mailto, tel and a relative path, not only http(s)', () => {
+    expect(applyMark([], 'link', 0, 4, 'mailto:ir@valo.example')).toEqual([
+      { start: 0, end: 4, type: 'link', href: 'mailto:ir@valo.example' },
+    ]);
+    expect(applyMark([], 'link', 0, 4, '/reports/q3')).toEqual([{ start: 0, end: 4, type: 'link', href: '/reports/q3' }]);
+  });
+
   it('clips an existing link out of the new span, so the newest link wins on overlap', () => {
     const marks: Mark[] = [{ start: 0, end: 10, type: 'link', href: 'https://old.example' }];
     expect(applyMark(marks, 'link', 4, 8, 'https://new.example')).toEqual([

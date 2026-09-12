@@ -15,7 +15,7 @@
  * paragraph's marks have one order whoever wrote them.
  */
 
-import type { Mark, MarkType } from './blocks';
+import { isSafeMarkHref, type Mark, type MarkType } from './blocks';
 
 /** Sorted by start, then end, so a rendered or stored paragraph has one order. */
 function sortMarks(marks: Mark[]): Mark[] {
@@ -50,8 +50,9 @@ function clipOut(mark: Mark, start: number, end: number): Mark[] {
  * A `link` is different because it carries a target: applying one clips any
  * existing link out of the new span first, so a character is under at most one
  * link and the newest wins where they overlap — two links on one word have no
- * meaning a renderer could honour. A link with no target applies nothing, the
- * same refusal `validateBlocks` makes on write.
+ * meaning a renderer could honour. A link with no target — or an unsafe one, a
+ * `javascript:` or `data:` scheme a paste might carry — applies nothing, the same
+ * refusal `validateBlocks` makes on write (`isSafeMarkHref`).
  */
 export function applyMark(marks: Mark[], type: MarkType, start: number, end: number, href?: string): Mark[] {
   if (!Number.isInteger(start) || !Number.isInteger(end) || start < 0 || start >= end) {
@@ -60,7 +61,9 @@ export function applyMark(marks: Mark[], type: MarkType, start: number, end: num
 
   if (type === 'link') {
     const target = (href ?? '').trim();
-    if (target.length === 0) {
+    // An empty or unsafe target applies no link (`isSafeMarkHref`): the words
+    // stay unmarked rather than becoming a link the validator would refuse.
+    if (!isSafeMarkHref(target)) {
       return marks;
     }
     const cleared = marks.flatMap((mark) => (mark.type === 'link' ? clipOut(mark, start, end) : [mark]));

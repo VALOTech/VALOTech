@@ -32,6 +32,31 @@ export interface Mark {
   href?: string;
 }
 
+/**
+ * Whether a `link` mark's target is one a reader may be sent to safely. Only
+ * `http`, `https`, `mailto` and `tel` — and same-site relative paths, which
+ * resolve to `http(s)` against any base — are allowed; `javascript:`, `data:`
+ * and `vbscript:` are refused, because a stored link is rendered as an `<a href>`
+ * and those schemes run script when the link is followed. That is a stored XSS an
+ * author need not have typed: a paste can carry it, and a target typed into the
+ * link control can too. The refusal lives at the write boundary in `validateMarks`,
+ * so no unsafe target is ever stored and a reader render is safe by construction;
+ * the paste parser and the mark toolbar apply the same test up front, so neither
+ * makes a mark the validator would then reject.
+ */
+export function isSafeMarkHref(href: string): boolean {
+  const value = href.trim();
+  if (value.length === 0) {
+    return false;
+  }
+  try {
+    const { protocol } = new URL(value, 'https://valo.invalid');
+    return protocol === 'http:' || protocol === 'https:' || protocol === 'mailto:' || protocol === 'tel:';
+  } catch {
+    return false;
+  }
+}
+
 export const BLOCK_TYPES = [
   'heading',
   'paragraph',
@@ -112,6 +137,13 @@ function validateMarks(value: unknown, textLength: number, where: string): Mark[
     if (markType === 'link') {
       if (typeof href !== 'string' || href.length === 0) {
         fail(`${where}.marks[${i}]`, 'a link mark requires a non-empty href');
+      }
+      // The scheme is checked here, not only where a mark is made, because this
+      // is the boundary every write crosses -- a paste, the toolbar, a direct
+      // POST -- so a `javascript:` or `data:` target cannot be stored and later
+      // rendered as an executable `<a href>` (a stored XSS).
+      if (!isSafeMarkHref(href)) {
+        fail(`${where}.marks[${i}]`, 'a link mark href must be http, https, mailto, tel or a relative path');
       }
       return { start, end, type: markType, href };
     }

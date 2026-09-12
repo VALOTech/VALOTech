@@ -20,7 +20,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { closeDb, getDb } from '../db/index';
 import type { AuditAction } from '../db/types';
 import { changeAudience } from './audience';
-import { type Block, BlockValidationError, validateBlocks } from './blocks';
+import { type Block, BlockValidationError, isSafeMarkHref, validateBlocks } from './blocks';
 import { createItem, saveDraft } from './items';
 import { publish, withdraw } from './publish';
 
@@ -72,8 +72,28 @@ describe('validateBlocks', () => {
     ['an unknown mark type', [{ type: 'paragraph', text: 'hi', marks: [{ start: 0, end: 1, type: 'blink' }] }]],
     ['a link mark with no href', [{ type: 'paragraph', text: 'hi', marks: [{ start: 0, end: 1, type: 'link' }] }]],
     ['a non-link mark carrying an href', [{ type: 'paragraph', text: 'hi', marks: [{ start: 0, end: 1, type: 'em', href: 'x' }] }]],
+    ['a link mark with a javascript: href', [{ type: 'paragraph', text: 'hi', marks: [{ start: 0, end: 1, type: 'link', href: 'javascript:alert(1)' }] }]],
+    ['a link mark with a data: href', [{ type: 'paragraph', text: 'hi', marks: [{ start: 0, end: 1, type: 'link', href: 'data:text/html,<script>1</script>' }] }]],
   ])('rejects %s', (_case, value) => {
     expect(() => validateBlocks(value)).toThrow(BlockValidationError);
+  });
+
+  it('admits a link mark whose href is a safe scheme or a relative path', () => {
+    for (const href of ['https://valotech.org', 'http://example.test', 'mailto:ir@valo.example', 'tel:+6512345678', '/reports/q3', '#section']) {
+      const blocks: Block[] = [{ type: 'paragraph', text: 'hi', marks: [{ start: 0, end: 2, type: 'link', href }] }];
+      expect(validateBlocks(blocks)).toEqual(blocks);
+    }
+  });
+
+  it('isSafeMarkHref admits safe schemes and relative paths, and refuses script-bearing ones', () => {
+    // The stored href is rendered as an `<a href>`, so a scheme that runs script
+    // when followed is a stored XSS; only these are followed harmlessly.
+    for (const href of ['https://x.test', 'http://x.test', 'mailto:a@b.test', 'tel:+15551234', '/path', '#anchor', 'reports/q3']) {
+      expect(isSafeMarkHref(href)).toBe(true);
+    }
+    for (const href of ['javascript:alert(1)', 'data:text/html,x', 'vbscript:msgbox', '  javascript:alert(1)  ', '']) {
+      expect(isSafeMarkHref(href)).toBe(false);
+    }
   });
 
   it('names the block index and the field in the message it throws (CMS-002/T7)', () => {
