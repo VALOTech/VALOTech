@@ -53,10 +53,21 @@ referencing it, and applies `CMS-006`'s predicate. No match is a `404`.
    it is keyed by and what a serve returns are one thing and no caller can
    reach around it. Bytes that sniffed as a raster and then will not decode are
    refused rather than stored unread.
-4. **Strip a PDF's metadata** through a library (`CMS-DEC-05`) before it is
-   stored — the Info dictionary's author and producer, the XMP packet, local
-   file paths, and the metadata of images embedded in it — so a PDF leaks no more
-   than a re-encoded raster does (`DATA-R02`).
+4. **Strip a PDF's metadata** through `pdf-lib` (`CMS-DEC-05`), inside
+   `storeMedia` and before the bytes are hashed, for the same reason step 3 is
+   there. The Info dictionary is removed **whole** rather than blanked field by
+   field — a dictionary that is gone cannot keep an entry nobody thought to name,
+   so the author and producer the decision names go, and the creation and
+   modification dates and any local path a design tool wrote into `/Producer` go
+   with them. The XMP packet is removed from the catalogue **and from every
+   page**, and each packet's stream object is deleted from the document rather
+   than merely unlinked: an unlinked packet stays in the file, where a text
+   extractor finds the city a photograph was taken in while every structural read
+   reports it gone. **What this does not reach** is the metadata of images
+   embedded inside the PDF, which `CMS-DEC-05` names as the depth the library
+   affords rather than a promise; a PDF therefore leaks less than it did and not
+   yet as little as a re-encoded raster (`DATA-R02`). A file that carries the
+   header and will not parse is refused rather than stored unread.
 5. **SVG is refused** (`CMS-DEC-03`). An SVG is a document that can carry script
    and external references, and there is no sanitiser here to trust: it is not an
    accepted type, so it is turned away like any other. A logo arrives as a raster.
@@ -141,3 +152,4 @@ not a copy. **`SEC-001`** owns the upload validation rules this design applies.
 - `CMS-003/T6` — Cache headers follow the audience; nothing gated is cacheable
 - `CMS-003/T7` — Deletion is refused while a reference exists, and is audited when it is not
 - `CMS-003/T8` — An uploaded PDF's metadata is stripped before storage
+- `CMS-003/T9` — The upload route and the admin control that posts to it, capped at 10 MB and refusing by sniffed type

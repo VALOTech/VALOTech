@@ -13,13 +13,14 @@
  * cascades from `media` — a file deleted out from under a published document
  * would take its references with it rather than be refused.
  *
- * A raster is re-encoded on the way in (`CMS-003/T2`): `storeMedia` decodes and
- * re-encodes it through `jimp` (`CMS-DEC-03`) before it hashes anything, so what
- * is stored is the encoder's own output and the EXIF — including the GPS of
- * wherever a screenshot was taken — is not in it (`DATA-R02`). The re-encode is
- * inside the store rather than in front of it because there is no upload route
- * yet to put it in front of, and a guarantee that depends on a caller arriving
- * later and remembering is not one.
+ * Nothing is stored as it arrived. A raster is decoded and re-encoded through
+ * `jimp` (`CMS-003/T2`, `CMS-DEC-03`) and a PDF has its metadata removed through
+ * `pdf-lib` (`CMS-003/T8`, `CMS-DEC-05`), both inside `storeMedia` and before it
+ * hashes anything, so what is stored is this module's own output and the EXIF, the
+ * author, the producer and the local paths that came with the upload are in none
+ * of it (`DATA-R02`). Both are inside the store rather than in front of it because
+ * there is no upload route yet to put them in front of, and a guarantee that
+ * depends on a caller arriving later and remembering is not one.
  *
  * SVG is not accepted at all (`CMS-003/T3`): `CMS-DEC-03` refused it rather than
  * trust a sanitiser, so an `<svg>` document sniffs to `null` and the upload turns
@@ -33,6 +34,7 @@
 import { createHash } from 'node:crypto';
 
 import { Jimp } from 'jimp';
+import { PDFDocument, PDFName, PDFRef } from 'pdf-lib';
 
 import type { Actor } from '../auth/gate';
 import { recordAudit } from '../audit/record';
@@ -92,9 +94,9 @@ export interface StoredMedia {
 /**
  * A file whose bytes the decoder could not read.
  *
- * It is a refusal and not a pass-through: bytes that sniffed as a raster and
- * then would not decode are not a picture, and storing them unread would store
- * exactly the payload the re-encode exists to drop.
+ * It is a refusal and not a pass-through: bytes that sniffed as one of the
+ * accepted types and then would not parse are not that file, and storing them
+ * unread would store exactly the payload the scrub exists to drop.
  */
 export class UndecodableImageError extends Error {
   readonly mime: string;
@@ -117,10 +119,6 @@ export class UndecodableImageError extends Error {
  * admin who uploads a screenshot should get the format back that they chose.
  */
 async function reencoded(bytes: Uint8Array, mime: AcceptedMime): Promise<Buffer> {
-  if (!(REENCODED_MIME as readonly string[]).includes(mime)) {
-    return Buffer.from(bytes);
-  }
-
   try {
     const image = await Jimp.read(Buffer.from(bytes));
 
@@ -132,6 +130,75 @@ async function reencoded(bytes: Uint8Array, mime: AcceptedMime): Promise<Buffer>
   }
 }
 
+/** The key a PDF hangs its XMP packet from, on the catalogue and on a page. */
+const METADATA_KEY = PDFName.of('Metadata');
+
+/**
+ * A PDF with nothing about its author left in it (`CMS-003/T8`, `CMS-DEC-05`).
+ *
+ * Three things go, and each was measured rather than assumed. The **Info
+ * dictionary** is removed whole rather than blanked field by field, because a
+ * removed dictionary cannot keep an entry nobody thought to name — the author and
+ * the producer the decision names, and with them the creation and modification
+ * dates and any local path a design tool wrote into `/Producer`. The **XMP
+ * packet** goes from the catalogue and from every page, since some tools write one
+ * per page. And each packet's **stream object is deleted from the document**, not
+ * merely unlinked: unlinking leaves the object orphaned and `pdf-lib` still writes
+ * it out, so the city an image was shot in stays in the file where any text
+ * extractor finds it while every structural read says it is gone. That is the
+ * failure this function is shaped around.
+ *
+ * The file does not announce the tool that scrubbed it either, and that falls out
+ * of removing the dictionary rather than being arranged: `pdf-lib` writes its own
+ * `/Producer` and a fresh `/ModDate` into the Info dictionary at save, and there
+ * is no longer one to write them into. Measured both ways — the bytes are
+ * identical with and without the library's `updateMetadata` option, because the
+ * dictionary is gone before it could apply.
+ *
+ * What it does not reach is the metadata of images embedded inside the PDF, which
+ * `CMS-DEC-05` names as the depth the library affords rather than a promise.
+ */
+async function withoutMetadata(bytes: Uint8Array): Promise<Buffer> {
+  // The whole scrub is the boundary, not the parse alone. `load` accepts a file
+  // that carries the header and nothing a reader would call a document, and hands
+  // back one with no catalogue at all; the failure then surfaces further down as a
+  // raw `TypeError` about a property nobody named. Wrapping only the parse would
+  // let that escape `storeMedia` as a crash instead of a refusal.
+  try {
+    const document = await PDFDocument.load(Buffer.from(bytes));
+
+    const info: unknown = document.context.trailerInfo.Info;
+    if (info instanceof PDFRef) {
+      document.context.delete(info);
+      delete document.context.trailerInfo.Info;
+    }
+
+    for (const holder of [document.catalog, ...document.getPages().map((page) => page.node)]) {
+      const packet = holder.get(METADATA_KEY);
+      holder.delete(METADATA_KEY);
+
+      if (packet instanceof PDFRef) {
+        document.context.delete(packet);
+      }
+    }
+
+    return Buffer.from(await document.save());
+  } catch {
+    // The parser's own message quotes the bytes it choked on (`DATA-R02`), so what
+    // is reported is the type the file claimed to be and nothing out of it.
+    throw new UndecodableImageError('application/pdf');
+  }
+}
+
+/** The bytes as this module writes them, which is the only form it stores. */
+async function scrubbed(bytes: Uint8Array, mime: AcceptedMime): Promise<Buffer> {
+  if ((REENCODED_MIME as readonly string[]).includes(mime)) {
+    return reencoded(bytes, mime);
+  }
+
+  return withoutMetadata(bytes);
+}
+
 /**
  * Store bytes under their SHA-256, returning the row's id (`CMS-003/T4`). The
  * same bytes stored twice are one row: the insert yields to an existing `sha256`
@@ -139,18 +206,18 @@ async function reencoded(bytes: Uint8Array, mime: AcceptedMime): Promise<Buffer>
  * the same row instead of one erroring. `deduped` tells the caller whether it
  * created the row, which the upload route reports as "already here".
  *
- * A raster is re-encoded first and the hash is taken of what that produced, so
- * the stored bytes, the `sha256` they are keyed by and the file a serve hands
- * back are all the same encoder output (`CMS-003/T2`). Two uploads of one
- * screenshot that differ only in their EXIF therefore land on one row, because
- * after the re-encode they are one file.
+ * The bytes are scrubbed first and the hash is taken of what that produced, so
+ * the stored file, the `sha256` it is keyed by and what a serve hands back are
+ * one thing (`CMS-003/T2`, `CMS-003/T8`). Two uploads of one screenshot that
+ * differ only in their EXIF therefore land on one row, and so do two of one
+ * report that differ only in who exported it: after the scrub they are one file.
  */
 export async function storeMedia(
   bytes: Uint8Array,
   mime: AcceptedMime,
   uploaderId: string,
 ): Promise<StoredMedia> {
-  const buffer = await reencoded(bytes, mime);
+  const buffer = await scrubbed(bytes, mime);
   const sha256 = createHash('sha256').update(buffer).digest('hex');
 
   const inserted = await getDb()

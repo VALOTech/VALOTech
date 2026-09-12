@@ -17,6 +17,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { Jimp } from 'jimp';
+import { PDFDocument, PDFName } from 'pdf-lib';
 import { sql } from 'kysely';
 import { runner } from 'node-pg-migrate';
 import { Pool } from 'pg';
@@ -67,6 +68,27 @@ const BOM = String.fromCharCode(0xfeff);
  */
 async function imageOf(colour: number, mime: 'image/png' | 'image/jpeg' = 'image/png') {
   return new Jimp({ width: 8, height: 6, color: colour }).getBuffer(mime);
+}
+
+/**
+ * A PDF carrying what a design tool leaves behind: an Info dictionary naming the
+ * person and the machine, and an XMP packet on the catalogue and on the page,
+ * since some tools write one of each.
+ */
+async function seededPdf(mark: string): Promise<Buffer> {
+  const document = await PDFDocument.create();
+  document.addPage([200, 200]);
+  document.setAuthor(`${mark} Lovelace`);
+  document.setTitle(`${mark} board deck`);
+  document.setCreator(`${mark} Designer 4.2`);
+  document.setProducer(`${mark} Designer C:/Users/${mark}/Desktop/deck.pdf`);
+
+  const key = PDFName.of('Metadata');
+  const packet = (text: string) => document.context.register(document.context.stream(text, { Type: 'Metadata' }));
+  document.catalog.set(key, packet(`<x:xmpmeta><photoshop:City>${mark}town</photoshop:City></x:xmpmeta>`));
+  document.getPage(0).node.set(key, packet(`<x:xmpmeta>${mark}-per-page</x:xmpmeta>`));
+
+  return Buffer.from(await document.save());
 }
 
 /**
@@ -307,16 +329,77 @@ describe.skipIf(!HAS_DATABASE)('the media store against a real database', () => 
       await expect(refusal).rejects.not.toThrow(new RegExp(secret));
     });
 
-    it('stores a PDF as it arrived, which CMS-003/T8 is what changes', async () => {
+    it('refuses bytes that sniff as a PDF and will not parse, storing nothing', async () => {
       const uploader = await anAccount();
-      const pdf = Buffer.from('%PDF-1.7\n/Author (Ada Lovelace)\n');
+      const before = await getDb().selectFrom('media').select('id').execute();
+
+      await expect(
+        storeMedia(Buffer.from('%PDF-1.7\nnot really a document'), 'application/pdf', uploader),
+      ).rejects.toThrow(UndecodableImageError);
+
+      expect(await getDb().selectFrom('media').select('id').execute()).toHaveLength(before.length);
+    });
+  });
+
+  describe('a PDF is stored without its metadata (CMS-003/T8)', () => {
+    it('keeps the document and drops the Info dictionary and every XMP packet', async () => {
+      const uploader = await anAccount();
+      const pdf = await seededPdf('Ada');
+
+      // The fixture is half the test: one that quietly stopped carrying the
+      // metadata would pass while proving nothing.
+      expect(pdf.includes('Adatown')).toBe(true);
+      expect(pdf.includes('Ada-per-page')).toBe(true);
 
       const { id } = await storeMedia(pdf, 'application/pdf', uploader);
+      const stored = await storedBytes(id);
 
-      // The re-encode is the raster path's, and a PDF is not a raster. Its own
-      // scrub is `CMS-003/T8`; until then this records what is true rather than
-      // what is wanted.
-      expect((await storedBytes(id)).equals(pdf)).toBe(true);
+      // Read as bytes, not only as structure. An unlinked XMP packet is invisible
+      // to a structural read and still sits in the file for any text extractor to
+      // find, which is the failure this task is shaped around.
+      expect(stored.includes('Adatown')).toBe(false);
+      expect(stored.includes('Ada-per-page')).toBe(false);
+      expect(stored.includes('Lovelace')).toBe(false);
+      expect(stored.includes('C:/Users')).toBe(false);
+
+      // And read as structure, so the scrub is not merely a byte coincidence.
+      const reloaded = await PDFDocument.load(stored, { updateMetadata: false });
+      expect(reloaded.getAuthor()).toBeUndefined();
+      expect(reloaded.getTitle()).toBeUndefined();
+      expect(reloaded.getCreator()).toBeUndefined();
+      expect(reloaded.getProducer()).toBeUndefined();
+      expect(reloaded.catalog.get(PDFName.of('Metadata'))).toBeUndefined();
+
+      // Still the document somebody uploaded.
+      expect(sniffType(stored)).toBe('application/pdf');
+      expect(reloaded.getPageCount()).toBe(1);
+    });
+
+    it('does not announce the tool that scrubbed it', async () => {
+      const uploader = await anAccount();
+
+      const { id } = await storeMedia(await seededPdf('Grace'), 'application/pdf', uploader);
+      const stored = await storedBytes(id);
+
+      // The library stamps its own name and a fresh timestamp into `/Producer` on
+      // save unless told not to. A file that says which tool touched it and when
+      // is metadata the upload did not arrive with.
+      expect(stored.includes('pdf-lib')).toBe(false);
+    });
+
+    it('stores one row for the same document uploaded twice', async () => {
+      const uploader = await anAccount();
+      const pdf = await seededPdf('Hopper');
+
+      const first = await storeMedia(pdf, 'application/pdf', uploader);
+      const second = await storeMedia(pdf, 'application/pdf', uploader);
+
+      // The scrub is deterministic, which is what keeps the hash a content key.
+      // Two different documents scrubbed do not converge — their object layouts
+      // differ — so this says the scrub is stable, not that metadata is all that
+      // distinguishes two files.
+      expect(second.id).toBe(first.id);
+      expect(second.deduped).toBe(true);
     });
   });
 

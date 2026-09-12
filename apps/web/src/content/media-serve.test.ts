@@ -29,6 +29,7 @@ import { Pool } from 'pg';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { Jimp } from 'jimp';
+import { PDFDocument } from 'pdf-lib';
 
 import { GET } from '../app/media/[id]/route';
 import type { Actor } from '../auth/gate';
@@ -79,10 +80,18 @@ async function recreateIsolatedDatabase(): Promise<void> {
 const PNG = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
 
 /** Distinct bytes per fixture, so a body assertion tells the files apart. */
+/** A real one-page PDF, distinct per marker: the store parses what it is handed. */
+async function onePagePdf(marker: string): Promise<Buffer> {
+  const document = await PDFDocument.create();
+  document.addPage([200, 200]).drawText(marker);
+
+  return Buffer.from(await document.save());
+}
+
 /** A distinct real image per marker: the store decodes what it is handed. */
 const bytesFor = async (marker: string, mime: AcceptedMime): Promise<Buffer> =>
   mime === 'application/pdf'
-    ? Buffer.concat([Buffer.from('%PDF-1.7\n'), Buffer.from(marker)])
+    ? await onePagePdf(marker)
     : new Jimp({
         width: 8,
         height: 6,
