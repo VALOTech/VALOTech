@@ -137,7 +137,7 @@ the audit row is the fact.
   headline as values; recording the value of every changed field would put a
   name and an e-mail into the trail on `account.create`. The reconciliation is
   a per-action allow-list of recordable fields — which fields each action may
-  record is `SEC-DEC-01`. Status: open — decisions-log.md#SEC-DEC-01.
+  record is `SEC-DEC-01`. Status: decided (B, a per-action allow-list) — decisions-log.md#SEC-DEC-01.
 - **No signing or hash chain.** A tamper-evident chain would prove the trail
   has not been rewritten. With the database owner able to disable a trigger, the
   chain would only move the trust boundary rather than remove it, and the

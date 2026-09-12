@@ -30,11 +30,12 @@ than left to be discovered by a message nobody received.
 
 ## 2. Layer walkthrough
 
-**Down.** A `Mailer` port with one method, and one SMTP adapter behind it. The
-port stays because the adapter is the part most likely to change — `MAIL-DEC-01`
-names the signal that would change it — and because a port is what lets the send
-path be tested without a mail server. A `mail_log` row is written **before** the
-attempt and updated with the outcome (`MAIL-002`).
+**Down.** A `Mailer` port with one method, and one SMTP adapter behind it, built
+on `nodemailer` (`MAIL-DEC-03`). The port stays because the adapter is the part
+most likely to change — `MAIL-DEC-01` names the signal that would change it — and
+because a port is what lets the send path be tested without a mail server. A
+`mail_log` row is written **before** the attempt and updated with the outcome
+(`MAIL-002`).
 
 **Up.** A composer, a recipient list the admin selects into, a preview of the
 actual message, and a send control that names the count and requires the count

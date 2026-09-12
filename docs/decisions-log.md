@@ -80,6 +80,26 @@ An entry is filed the moment the choice surfaces, not when it is answered. Nothi
 
 ## Resolved decisions
 
+<a id="AUTH-DEC-05"></a>
+### `AUTH-DEC-05` — Self-service password reset, or admin-initiated only — RESOLVED 2026-09-12
+
+- **Decision:** `AUTH-003` §3 lists a public `/forgot` where anyone requests a reset, but it was never built — it cannot deliver a reset link without mail (SMTP, unbuilt), and for an invite-only room of named investors a public reset-request page is an enumeration surface the room may not need. Does the room keep self-service reset (a public `/forgot`), or is reset admin-initiated only?
+- **Options:** **A** Admin-initiated only — no public `/forgot`; an investor asks an admin, who resets from the person page, and the link reaches them as an invitation's does. Removes a public surface and a mail dependency for reset, and `SEC-001/T4`'s reset-request clause is moot, so it completes at sign-in and acceptance. · **B** Self-service `/forgot` (the design's choice) — a public reset-request page, rate-limited and anti-enumeration, which needs mail delivery to send the link.
+- **Recommendation:** **A**, for an invite-only room whose investors an admin already knows — the manual reset step is trivial at this scale and it drops a public surface. The owner chose **B**.
+- **Decision owner:** user
+- **Settled by:** user
+- **Status:** RESOLVED 2026-09-12 — **B**, self-service `/forgot` is kept, as `AUTH-003` §3 specifies. It waits on mail delivery — `AUTH-003/T3` mails the link over the `MAIL-001/T8` adapter — so `SEC-001/T4`'s reset-request rate limit stays `[~]` until the page lands, and a future dev1 iteration builds the `/forgot` page, its rate limit and the mail together. Reopen for admin-only if the investor base outgrows self-service's worth.
+
+<a id="MAIL-DEC-03"></a>
+### `MAIL-DEC-03` — The Node SMTP client library for the mail adapter — RESOLVED 2026-09-12
+
+- **Decision:** `MAIL-DEC-01` settled the carrier as SMTP against the company's mailbox, and `MAIL-001` §3 puts one SMTP adapter behind the `Mailer` port. Node ships no SMTP client, so the adapter needs a library, and a new dependency is the owner's (`§14`). Which library opens the TLS-secured SMTP connection `MAIL-001/T8` describes?
+- **Options:** **A** `nodemailer` — the standard Node SMTP client: TLS, authentication, one connection per send and error handling built in. · **B** A raw SMTP client over a TLS socket — no dependency, but the handshake, authentication and error handling are hand-written. · **C** A lighter third-party SMTP client — fewer features, its TLS and errors to check.
+- **Recommendation:** **A**. `nodemailer` is the ubiquitous, stable choice and matches `MAIL-001/T8`'s shape exactly — one connection, TLS required, failing rather than falling back to plaintext — while the credential `SMTP_URL` stays the owner's to supply (`CRED-001`, PENDING).
+- **Decision owner:** user
+- **Settled by:** user
+- **Status:** RESOLVED 2026-09-12 — **A**, `nodemailer`. `MAIL-001/T8`'s adapter is built on `nodemailer`, one TLS-secured connection per send failing rather than falling back, with `SMTP_URL` supplied by the owner at deploy (PENDING). This unblocks a future dev1 iteration to build the adapter and, with it, the invitation mail (`AUTH-003/T3`), the reset link the self-service `/forgot` sends (`AUTH-DEC-05`), and the failed-recipient retry (`MAIL-001/T6`).
+
 <a id="SEC-DEC-01"></a>
 ### `SEC-DEC-01` — What a changed field records in the audit: its name, or its value — RESOLVED 2026-09-12
 
