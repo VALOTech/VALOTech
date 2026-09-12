@@ -14,14 +14,19 @@
  *  - `204` with the session cookie — set and signed in.
  *  - `400 weak_password` with the `problem`, so the form says which rule to fix.
  *  - `400 invalid_request` — the body is not two strings.
+ *  - `429 too_many_attempts` with `Retry-After` — too many accepts against one
+ *    token (`SEC-001` §3, per token: a single-use token brute-forced is an account).
  *  - `409 expired` — the token is missing, used or expired (one answer, `SEC-R03`).
  *  - `403 suspended` — the account's access was ended; a link cannot restore it.
  *  - `403 cross_origin` — a cross-site page driving the form (login CSRF).
  */
 
+import { createHash } from 'node:crypto';
+
 import { setPasswordWithToken } from '../../../../auth/invitation';
 import { hashPassword } from '../../../../auth/password';
 import { checkPassword } from '../../../../auth/password-policy';
+import { getRateLimiter } from '../../../../auth/rate-limit';
 import { issue, serializeCookie } from '../../../../auth/session';
 import { getConfig } from '../../../../config/index';
 import { withRequestId } from '../../../../ops/request-context';
@@ -34,6 +39,7 @@ const INVALID_REQUEST = JSON.stringify({ error: 'invalid_request' });
 const EXPIRED = JSON.stringify({ error: 'expired' });
 const SUSPENDED = JSON.stringify({ error: 'suspended' });
 const CROSS_ORIGIN = JSON.stringify({ error: 'cross_origin' });
+const TOO_MANY_ATTEMPTS = JSON.stringify({ error: 'too_many_attempts' });
 
 /**
  * A token is 32 bytes base64url — 43 characters — so a field longer than this is
@@ -101,6 +107,25 @@ export const POST = withRequestId(async (request: Request): Promise<Response> =>
     return new Response(JSON.stringify({ error: 'weak_password', problem }), {
       status: 400,
       headers: JSON_HEADERS,
+    });
+  }
+
+  // Rate-limited per token (`SEC-001` §3: invitation acceptance, per token — a
+  // single-use token brute-forced is an account), keyed by the token's hash so
+  // the 32-byte secret is not held in the limiter's memory for a window. Counted
+  // after the weak-password refusal, which is a statement about the request and
+  // distinguishes no token, and before the Argon2 hash and the consume — so a
+  // refused attempt costs the attacker the hash it would otherwise pay for, and
+  // a legitimate accept, which is one valid password, is never near the limit.
+  // The 429 is decided before the token is looked up, so it says the same thing
+  // whatever the token is (`SEC-R03`).
+  const tokenKey = createHash('sha256').update(submission.token).digest('hex');
+  const limit = getRateLimiter().hit(`set-password:${tokenKey}`);
+
+  if (limit.limited) {
+    return new Response(TOO_MANY_ATTEMPTS, {
+      status: 429,
+      headers: { ...JSON_HEADERS, 'Retry-After': String(limit.retryAfterSeconds) },
     });
   }
 

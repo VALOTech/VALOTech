@@ -7,15 +7,18 @@
  * The editor's model is the block array, not the DOM (`CMS-002` §3): a field
  * edit produces a new `Block` value and hands it up, and the same `Block` union
  * the one schema module validates is the one these controls edit. Every input
- * carries a label, so each control has an accessible name (`A11Y-R02`). Marks
- * (`CMS-002/T4`) are a later task: a paragraph's text is edited here as plain
- * text and its marks travel unchanged.
+ * carries a label, so each control has an accessible name (`A11Y-R02`). A
+ * paragraph's emphasis is marks over its plain text (`CMS-002/T4`): the toolbar
+ * applies one to the textarea's selection, the marks list shows and removes
+ * them, and editing the text remaps their offsets — all on the block's own data
+ * through `content/marks.ts`, never a rendered node.
  */
 
 import type { ReactElement } from 'react';
-import { useId } from 'react';
+import { useId, useRef, useState } from 'react';
 
-import type { Block, BlockType } from '../../../../../content/blocks';
+import type { Block, BlockType, Mark, MarkType } from '../../../../../content/blocks';
+import { applyMark, remapMarks, removeMark } from '../../../../../content/marks';
 
 import styles from './editor.module.css';
 
@@ -97,18 +100,140 @@ function HeadingFields({ block, onChange }: { block: Narrow<'heading'>; onChange
   );
 }
 
+/** The written name of each mark type, on the toolbar and in the marks list. */
+const MARK_LABELS: Readonly<Record<MarkType, string>> = {
+  strong: 'Bold',
+  em: 'Italic',
+  code: 'Code',
+  link: 'Link',
+};
+
+/** The three emphasis marks the toolbar toggles; a link is separate, since it needs a target. */
+const EMPHASIS: readonly MarkType[] = ['strong', 'em', 'code'];
+
 function ParagraphFields({ block, onChange }: { block: Narrow<'paragraph'>; onChange: (b: Block) => void }): ReactElement {
+  const id = useId();
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [selection, setSelection] = useState<{ start: number; end: number }>({ start: 0, end: 0 });
+  const [href, setHref] = useState('');
+  const hasSelection = selection.start < selection.end;
+
+  function rememberSelection(): void {
+    const element = textareaRef.current;
+    if (element !== null) {
+      setSelection({ start: element.selectionStart, end: element.selectionEnd });
+    }
+  }
+
+  // The text and its marks are one value handed up together: editing the text
+  // remaps the marks so a span still covers the words it covered, and the model
+  // stays the block array rather than a rendered node (`CMS-002/T4`).
+  function changeText(text: string): void {
+    onChange({ ...block, text, marks: remapMarks(block.marks, block.text, text) });
+  }
+
+  function addEmphasis(type: MarkType): void {
+    onChange({ ...block, marks: applyMark(block.marks, type, selection.start, selection.end) });
+  }
+
+  function addLink(): void {
+    onChange({ ...block, marks: applyMark(block.marks, 'link', selection.start, selection.end, href) });
+    setHref('');
+  }
+
   return (
-    <Field label="Text">
-      {(id) => (
+    <div className={styles.paragraph}>
+      <label className={styles.field} htmlFor={id}>
+        <span className={styles.fieldLabel}>Text</span>
         <textarea
           id={id}
+          ref={textareaRef}
           className={styles.textarea}
           value={block.text}
-          onChange={(e) => onChange({ ...block, text: e.target.value })}
+          onChange={(e) => changeText(e.target.value)}
+          onSelect={rememberSelection}
         />
-      )}
-    </Field>
+      </label>
+
+      <div className={styles.markBar} role="group" aria-label="Emphasis">
+        {EMPHASIS.map((type) => (
+          <button
+            key={type}
+            type="button"
+            className={styles.button}
+            disabled={!hasSelection}
+            // Keep the textarea's selection: a button that took focus would collapse it.
+            onMouseDown={(event) => event.preventDefault()}
+            onClick={() => addEmphasis(type)}
+          >
+            {MARK_LABELS[type]}
+          </button>
+        ))}
+        <span className={styles.linkControl}>
+          <input
+            className={styles.input}
+            aria-label="Link URL"
+            placeholder="https://…"
+            value={href}
+            onChange={(event) => setHref(event.target.value)}
+          />
+          <button
+            type="button"
+            className={styles.button}
+            disabled={!hasSelection || href.trim() === ''}
+            onMouseDown={(event) => event.preventDefault()}
+            onClick={addLink}
+          >
+            Link
+          </button>
+        </span>
+      </div>
+
+      <MarksList text={block.text} marks={block.marks} onChange={(marks) => onChange({ ...block, marks })} />
+    </div>
+  );
+}
+
+/**
+ * The paragraph's marks, each shown as its kind and the words it covers, with a
+ * control to remove it. A textarea cannot render bold inline, so this list is
+ * how an author sees which text a mark holds — and, after the text is edited,
+ * that the offsets still land on the right words (`CMS-002/T4`). Absent until a
+ * mark exists.
+ */
+function MarksList({
+  text,
+  marks,
+  onChange,
+}: {
+  text: string;
+  marks: Mark[];
+  onChange: (marks: Mark[]) => void;
+}): ReactElement | null {
+  if (marks.length === 0) {
+    return null;
+  }
+  return (
+    <ul className={styles.markList} aria-label="Marks on this paragraph">
+      {marks.map((mark, index) => {
+        const covered = text.slice(mark.start, mark.end);
+        return (
+          <li key={`${mark.type}-${mark.start}-${mark.end}-${index}`} className={styles.markItem}>
+            <span className={styles.markKind}>{MARK_LABELS[mark.type]}</span>
+            <span className={styles.markText}>{covered}</span>
+            {mark.type === 'link' ? <span className={styles.markHref}>{mark.href}</span> : null}
+            <button
+              type="button"
+              className={styles.button}
+              aria-label={`Remove ${MARK_LABELS[mark.type]} on “${covered}”`}
+              onClick={() => onChange(removeMark(marks, index))}
+            >
+              Remove
+            </button>
+          </li>
+        );
+      })}
+    </ul>
   );
 }
 

@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_295 tasks in the plan, 189 closed, 106 outstanding._
+_295 tasks in the plan, 190 closed, 105 outstanding._
 
 ---
 
@@ -58,13 +58,13 @@ _65/69 closed (94%) · 4 outstanding — 2 buildable now · 1 waiting on the own
 - **CMS-001** · Content model and revisions — 6/6 closed
 - **SCENE-004** · Annotation chips — 3/3 closed
 - **SEC-001** · Security baseline — 4/5 closed · depth 4
-  - `[ ] SEC-001/T4` — Rate limits on sign-in, reset and invitation, per account and per address, refusing identically
+  - `[~] SEC-001/T4` — Rate limits on sign-in, reset and invitation, per account and per address, refusing identically  · **Note:** Two of the three surfaces are rate-limited. Sign-in is limited per account and per address (apps/web/src/app/api/auth/sign-in/route.ts, AUTH-001), an…
 
 ## W2 — The desk
 
 _The machinery every kind of writing shares — the editor, the media, the locale states, the audience rule, publishing, search — plus the account, configuration and logging surfaces an operator needs before anything is published. Building it once is the whole reason a report, an update and a deck are three navigations over one system rather than three systems._
 
-_50/63 closed (79%) · 13 outstanding — 9 buildable now · 3 waiting on the owner · 0 external residue · 1 parked to a later wave._
+_51/63 closed (80%) · 12 outstanding — 8 buildable now · 3 waiting on the owner · 0 external residue · 1 parked to a later wave._
 
 - **ADMIN-001** · Account management — 8/8 closed
 - **CFG-001** · Runtime configuration — 6/6 closed
@@ -78,8 +78,7 @@ _50/63 closed (79%) · 13 outstanding — 9 buildable now · 3 waiting on the ow
 
 - **CMS-006** · Audience and access — 6/6 closed
 - **OPS-002** · Logging and monitoring — 6/6 closed
-- **CMS-002** · Authoring surface — 5/7 closed · depth 6
-  - `[ ] CMS-002/T4` — Marks by selection, stored as offsets, with the editor's model the block array and not the DOM
+- **CMS-002** · Authoring surface — 6/7 closed · depth 6
   - `[ ] CMS-002/T5` — Paste imports plain text plus recognised structure and nothing else
 
 - **CMS-004** · Preview, publish and withdraw — 2/6 closed · depth 6

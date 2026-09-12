@@ -211,3 +211,84 @@
   font-style: italic;
   margin: 0.5rem 0 1rem;
 }
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.button:disabled:hover {
+  background: #fff;
+}
+
+/* A paragraph is its text and the marks over it (CMS-002/T4). Marks are applied
+   from the textarea's own selection and listed below it, because a textarea
+   cannot show bold inline — the list is where an author sees which words each
+   span holds and removes it. */
+.paragraph {
+  margin: 0.4rem 0;
+}
+
+.markBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.4rem;
+}
+
+.linkControl {
+  display: flex;
+  gap: 0.3rem;
+  align-items: center;
+  flex: 1 1 14rem;
+}
+
+.linkControl .input {
+  flex: 1 1 auto;
+  width: auto;
+}
+
+.markList {
+  list-style: none;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.markItem {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  padding: 0.3rem 0.5rem;
+  border: 1px solid var(--edit-line);
+  border-radius: 6px;
+  background: #f7f7fb;
+}
+
+.markKind {
+  font-weight: 700;
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--edit-accent);
+  flex: 0 0 auto;
+}
+
+.markText {
+  color: var(--edit-ink);
+  flex: 1 1 auto;
+  overflow-wrap: anywhere;
+}
+
+.markHref {
+  color: var(--edit-muted);
+  overflow-wrap: anywhere;
+}
+
+.markItem .button {
+  flex: 0 0 auto;
+}
