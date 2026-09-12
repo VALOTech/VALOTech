@@ -22,7 +22,7 @@
 import { NextRequest } from 'next/server';
 import { describe, expect, it } from 'vitest';
 
-import { sessionCookieName } from './auth/session';
+import { sessionCookieName, signToken } from './auth/session';
 import { config, proxy } from './proxy';
 
 // Read through getConfig() on the first call inside a test body, which is after
@@ -54,9 +54,19 @@ const CONSTANT_HEADERS: ReadonlyArray<readonly [string, string]> = [
   ['Permissions-Policy', 'camera=(), microphone=(), geolocation=(), browsing-topics=(), interest-cohort=()'],
 ];
 
+/**
+ * A cookie of the shape `issue()` mints: a token and its signature. A bare
+ * token is not one, which is the whole of why this is a call rather than a
+ * literal — the proxy shares the gate's parser, so what it counts as a session
+ * is what the gate counts as one.
+ */
+function presentedCookie(): string {
+  return `${sessionCookieName()}=${signToken('a-token')}`;
+}
+
 /** The two request shapes every response-level property is crossed against. */
 const SESSION_STATES: ReadonlyArray<readonly [string, string | null]> = [
-  ['a request presenting a session', `${sessionCookieName()}=a-token`],
+  ['a request presenting a session', presentedCookie()],
   ['a request presenting none', null],
 ];
 
@@ -187,14 +197,14 @@ describe('the security baseline', () => {
 
 describe('the proxy', () => {
   it('marks a response unstorable when the request presented a session', () => {
-    const response = proxy(requestWith(`${sessionCookieName()}=a-token`));
+    const response = proxy(requestWith(presentedCookie()));
 
     expect(response.headers.get('Cache-Control')).toBe(NO_STORE);
   });
 
   it('marks it for a cookie among others, whatever order the browser sent them in', () => {
-    const before = proxy(requestWith(`theme=dark; ${sessionCookieName()}=a-token`));
-    const after = proxy(requestWith(`${sessionCookieName()}=a-token; theme=dark`));
+    const before = proxy(requestWith(`theme=dark; ${presentedCookie()}`));
+    const after = proxy(requestWith(`${presentedCookie()}; theme=dark`));
 
     expect(before.headers.get('Cache-Control')).toBe(NO_STORE);
     expect(after.headers.get('Cache-Control')).toBe(NO_STORE);
@@ -206,7 +216,7 @@ describe('the proxy', () => {
     // day somebody forgets; the cookie is what makes the response an
     // authenticated one, and it is the same cookie on every path.
     for (const path of ['/', '/room', '/room/2026-q3', '/account/sessions', '/api/anything']) {
-      const response = proxy(requestWith(`${sessionCookieName()}=a-token`, path));
+      const response = proxy(requestWith(presentedCookie(), path));
 
       expect(response.headers.get('Cache-Control')).toBe(NO_STORE);
     }
@@ -220,6 +230,10 @@ describe('the proxy', () => {
     ['a cookie belonging to something else', 'theme=dark'],
     ['a cookie whose name only starts the same way', 'valotech-preview=a-token'],
     ['the session cookie with an empty value', `${sessionCookieName()}=`],
+    // A forged cookie marks nothing private, because it is not a session
+    // anywhere else either: the response it asked for carries nothing to hold.
+    ['the session cookie carrying a bare token', `${sessionCookieName()}=a-token`],
+    ['the session cookie under a signature that is not ours', `${sessionCookieName()}=a-token.wrong`],
   ])('leaves it alone for %s, which is not a session', (_case, cookie) => {
     expect(proxy(requestWith(cookie)).headers.get('Cache-Control')).toBeNull();
   });

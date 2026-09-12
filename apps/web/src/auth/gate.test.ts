@@ -17,7 +17,7 @@
  * sessions and deletes them again.
  */
 
-import { createHash, randomBytes } from 'node:crypto';
+import { createHash, createHmac, randomBytes } from 'node:crypto';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -29,7 +29,7 @@ import { getConfig } from '../config/index';
 import { closeDb, getDb } from '../db/index';
 import { type Actor, requireAdmin, requireInvestor, resolveSession } from './gate';
 import { hashPassword } from './password';
-import { issue, sessionCookieName } from './session';
+import { issue, sessionCookieName, signToken, tokenOfCookie } from './session';
 
 const DATABASE_URL = (process.env.DATABASE_URL ?? '').trim();
 const HAS_DATABASE = DATABASE_URL !== '';
@@ -69,6 +69,23 @@ function unissuedToken(): string {
   return randomBytes(32).toString('base64url');
 }
 
+/** The signature this server puts on a token, read back from its own cookie. */
+function signatureOf(token: string): string {
+  return signToken(token).slice(token.length + 1);
+}
+
+/**
+ * A signature over the same token under a different secret — which is what
+ * every live cookie becomes the moment `SESSION_SECRET` is rotated. Computed
+ * here rather than by changing the environment, because the configuration is
+ * read once per process and a test cannot rotate it back.
+ */
+function foreignSignature(token: string): string {
+  return createHmac('sha256', 'a secret this server never held')
+    .update(token)
+    .digest('base64url');
+}
+
 function request(cookie: string | null): Request {
   const headers = new Headers();
 
@@ -79,8 +96,14 @@ function request(cookie: string | null): Request {
   return new Request('http://localhost:3100/room', { headers });
 }
 
+/** A request presenting a token the way a browser holds it: signed. */
 function presenting(token: string): Request {
-  return request(`${sessionCookieName()}=${token}`);
+  return request(`${sessionCookieName()}=${signToken(token)}`);
+}
+
+/** A request presenting a cookie value verbatim, for the ones nothing signed. */
+function presentingRaw(value: string): Request {
+  return request(`${sessionCookieName()}=${value}`);
 }
 
 /** The actor an answer carries, or a failure naming what came back instead. */
@@ -147,10 +170,21 @@ async function writeSession(email: string, lastSeen: string, expires: string): P
 }
 
 /** The token a real sign-in would have put in the reader's browser. */
+/**
+ * The token of a fresh session for an account.
+ *
+ * The token rather than the cookie value, because the store takes one and the
+ * cookie carries it beside a signature. `presenting` puts the signature back.
+ */
 async function issuedFor(email: string): Promise<string> {
   const cookie = await issue(await accountId(email));
+  const carried = tokenOfCookie(cookie.value);
 
-  return cookie.value;
+  if (carried === null) {
+    throw new Error('issue() minted a cookie the gate cannot read');
+  }
+
+  return carried;
 }
 
 /** Every shape of request that carries no session the gate can resolve. */
@@ -158,8 +192,19 @@ const REFUSED: Array<[string, () => Request]> = [
   ['no cookie header', () => request(null)],
   ['a cookie of some other name', () => request(`other=${unissuedToken()}`)],
   ['an empty cookie value', () => request(`${sessionCookieName()}=`)],
-  ['a token that is not base64url at all', () => presenting('not a token')],
-  ['a well-formed token no row holds', () => presenting(unissuedToken())],
+  ['a token that is not base64url at all', () => presentingRaw('not a token')],
+  // Signed, so the refusal is the row lookup's and not the signature's: the
+  // two reasons a token is refused are tested one at a time.
+  ['a correctly signed token no row holds', () => presenting(unissuedToken())],
+  ['a token carrying no signature at all', () => presentingRaw(unissuedToken())],
+  [
+    'a signature that is not over this token',
+    () => presentingRaw(`${unissuedToken()}.${signatureOf(unissuedToken())}`),
+  ],
+  [
+    'a signature from another secret',
+    () => presentingRaw(`${unissuedToken()}.${foreignSignature(unissuedToken())}`),
+  ],
 ];
 
 describe.skipIf(!HAS_DATABASE)('the role gate', () => {
@@ -240,13 +285,17 @@ describe.skipIf(!HAS_DATABASE)('the role gate', () => {
     it('finds the session cookie behind another cookie in the header', async () => {
       const token = await issuedFor(INVESTOR);
 
-      const answer = await requireInvestor(request(`theme=dark; ${sessionCookieName()}=${token}`));
+      const answer = await requireInvestor(
+        request(`theme=dark; ${sessionCookieName()}=${signToken(token)}`),
+      );
 
       expect(actorOf(answer).role).toBe('investor');
     });
 
     it('answers a caller that holds headers and no request, which is what a page holds', async () => {
-      const headers = new Headers({ Cookie: `${sessionCookieName()}=${await issuedFor(ADMIN)}` });
+      const headers = new Headers({
+        Cookie: `${sessionCookieName()}=${signToken(await issuedFor(ADMIN))}`,
+      });
 
       expect(actorOf(await requireAdmin({ headers })).role).toBe('admin');
     });
@@ -284,6 +333,21 @@ describe.skipIf(!HAS_DATABASE)('the role gate', () => {
       expect(response.headers.get('Location')).toBe('/sign-in');
       expect(response.headers.get('Cache-Control')).toBe('no-store');
       expect(await response.text()).toBe('');
+    });
+
+    it('refuses a live session presented without its signature', async () => {
+      // The discriminating case. Every other refusal above would also happen
+      // if nothing checked the signature at all — an unsigned value simply
+      // hashes to nothing any row holds. This token's row exists, so the only
+      // thing that can turn it away is the check, and a build that dropped the
+      // check would authenticate this request.
+      const carried = await issuedFor(INVESTOR);
+
+      expect(await resolveSession(carried)).not.toBeNull();
+
+      const answer = await requireInvestor(presentingRaw(carried));
+
+      expect(responseOf(answer).status).toBe(303);
     });
 
     it('ignores a live token presented under another cookie name', async () => {

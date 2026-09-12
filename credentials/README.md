@@ -19,7 +19,7 @@ message.
 | Variable | Who produces it | Why it exists |
 |---|---|---|
 | `DATABASE_URL` | `docker compose up` locally; the host, in production | Everything the investor room stores |
-| `SESSION_SECRET` | the owner, generated locally | Will sign the session cookie once `AUTH-002/T5` lands (`AUTH-DEC-02`); until then it is unused on the session path, and the lever that ends every session is deleting the session rows (`AUTH-004`) |
+| `SESSION_SECRET` | the owner, generated locally | Signs the session cookie (`AUTH-DEC-02`), so rotating it and restarting ends every live session at once |
 | the mail carrier's key | unanswered — [`MAIL-DEC-01`](../docs/decisions-log.md#MAIL-DEC-01) | Carries an invitation and an investor message. Until the decision lands, no mail is sent and no key exists |
 
 Three, and two of them the owner makes rather than buys. That is why this
@@ -36,10 +36,12 @@ analytics; closing the tab loses everything in it, which is the point.
 
 ## When a credential leaks
 
-Rotate first, investigate second. Ending every live session today means deleting
-the session rows — `AUTH-004`'s end-everywhere control, or truncating `sessions` —
-because `SESSION_SECRET` does not yet sign the cookie; once `AUTH-002/T5` signs it
-(`AUTH-DEC-02`), rotating the secret and restarting becomes that lever.
+Rotate first, investigate second. Rotating `SESSION_SECRET` and restarting ends
+every live session everywhere, because every cookie in the world carries a
+signature under the old secret and none of them verifies under the new one
+(`AUTH-DEC-02`). Deleting the session rows — `AUTH-004`'s end-everywhere control,
+or truncating `sessions` — does the same for one account or for all of them, and
+needs no restart.
 `DATABASE_URL` is rotated by changing the database password. A mail key is revoked
 at the provider. Then file
 what happened as a `REVIEW` row in [`docs/tasks.md`](../docs/tasks.md), because

@@ -54,7 +54,7 @@ Every table, and what it holds about a person:
 | `media` | `uploaded_by` | set null |
 | `portfolio` | `updated_by` | set null |
 | `config` | `changed_by` | set null |
-| `audit` | ids, actions, timestamps, changed field names | **retained** — holds no personal data by construction (`SEC-002`) |
+| `audit` | ids, actions, timestamps, and the values of the fields each action's allow-list names | **retained** — no action's list may name a personal field, so a person does not enter it by construction (`SEC-002/T4`, `SEC-DEC-01`); what a permitted free-text field may still carry is open at `SEC-DEC-03` |
 | `pgmigrations` | — (migration name, run time) | — (bookkeeping the migration tool owns; no person appears) |
 
 **The split is between what is about the person and what the person did on the
@@ -81,7 +81,7 @@ pattern. A gate that gets quieter each time it fires stops being a gate.
 
 | Data | Kept | Why that long |
 |---|---|---|
-| `audit` | 7 years | The longest applicable Singapore record-keeping obligation; holds no personal data |
+| `audit` | 7 years | The longest applicable Singapore record-keeping obligation; holds ids, acts and non-personal values (`SEC-002/T4`) |
 | `mail_log` | 2 years | Long enough to answer a question about a past campaign (`MAIL-002`) |
 | `sessions` | until expiry, then deleted | Nothing is learned from an expired session |
 | `invitations` | until consumed or expired, then deleted | An unused invitation is a live credential; a spent or lapsed one is not |
@@ -116,7 +116,10 @@ rather than restating it.
 ## 5. Cross-cutting compliance
 
 - **`DATA-R01`** — the manifest is short because the schema holds little.
-- **`DATA-R02`** — nothing personal in the audit, which is why it can be kept.
+- **`DATA-R02`** — the audit records the values of named fields and no personal
+  one, checked at the single site that writes the row (`SEC-002/T4`), which is
+  why it can be kept past an erasure. The residue a free-text value could still
+  carry is `SEC-DEC-03`.
 - **`DATA-R03`** — a real delete, and the manifest is the proof it is complete.
 - **`DATA-R10`** — every window above is enforced by a scheduled deletion, and
   `DATA-002/T4` is that schedule.
@@ -128,8 +131,8 @@ rather than restating it.
   exemption line, never a weaker pattern.
 - **Seven years for the audit is a ceiling, not a requirement.** It is the
   longest plausible obligation rather than a specific one, chosen because the
-  rows are tiny and hold nothing personal. `LEGAL-SG-001` may narrow it to
-  something citable.
+  rows are tiny and hold no person the allow-list would let in (`SEC-002/T4`).
+  `LEGAL-SG-001` may narrow it to something citable.
 - **No anonymised retention of behaviour.** An erased account's read records go
   entirely rather than being kept without the id. Keeping them would be useful
   and would be data about a person the company was asked to forget.

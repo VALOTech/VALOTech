@@ -45,7 +45,7 @@ import {
   issueToken,
   SuspendedAccountError,
 } from '../auth/invitation';
-import { issue } from '../auth/session';
+import { issue, tokenOfCookie } from '../auth/session';
 import { recordDeckRead } from '../content/decks';
 import { addGrant } from '../content/grants';
 import { createItem, saveDraft } from '../content/items';
@@ -127,6 +127,16 @@ async function recreateIsolatedDatabase(): Promise<void> {
  */
 const UNPARSEABLE_ACTOR = 'not-a-uuid';
 
+/**
+ * What one arrangement may cost before it is a failure rather than a slow test.
+ * The erasure-count case builds fifteen round trips before its first assertion
+ * — two accounts, two sessions, an invitation, three items, their grants and
+ * their reads — and under the whole suite's parallel load that crosses Vitest's
+ * five-second default. A test that fails for having been slow is the worst kind
+ * of red: it goes away when somebody looks at it.
+ */
+const SLOW_ARRANGEMENT_MS = 30_000;
+
 /** The suite hashes for itself, so both sides of an assertion are independent. */
 function hashOf(token: string): string {
   return createHash('sha256').update(token).digest('hex');
@@ -166,6 +176,23 @@ async function roleOf(accountId: string): Promise<AccountRole> {
     .executeTakeFirstOrThrow();
 
   return account.role;
+}
+
+/**
+ * The token a fresh session for an account carries.
+ *
+ * `issue` hands back a cookie, and a cookie is the token and its signature;
+ * the store takes the token. Reading it the way the gate does keeps this file
+ * asserting about sessions rather than about the cookie's shape.
+ */
+async function tokenFor(accountId: string): Promise<string> {
+  const carried = tokenOfCookie((await issue(accountId)).value);
+
+  if (carried === null) {
+    throw new Error('issue() minted a cookie the gate cannot read');
+  }
+
+  return carried;
 }
 
 async function sessionCount(accountId: string): Promise<number> {
@@ -459,7 +486,7 @@ describe.skipIf(!HAS_DATABASE)('ADMIN-001 account mutations', () => {
 
     it('leaves the account resolving to nobody, so a copy of the cookie is dead', async () => {
       const id = await newAccount('active');
-      const token = (await issue(id)).value;
+      const token = await tokenFor(id);
 
       expect(await resolveSession(token)).not.toBeNull();
 
@@ -513,7 +540,7 @@ describe.skipIf(!HAS_DATABASE)('ADMIN-001 account mutations', () => {
 
     it('rolls the state, the sessions and the invitation back when the audit cannot be written', async () => {
       const id = await newAccount('active');
-      const token = (await issue(id)).value;
+      const token = await tokenFor(id);
       await issueToken(id, INVITATION_TTL_SECONDS);
 
       // The audit insert is the last write, and it refuses this actor id, so
@@ -534,7 +561,7 @@ describe.skipIf(!HAS_DATABASE)('ADMIN-001 account mutations', () => {
     it('touches no other account', async () => {
       const mine = await newAccount('active');
       const theirs = await newAccount('active');
-      const theirToken = (await issue(theirs)).value;
+      const theirToken = await tokenFor(theirs);
       await issueToken(theirs, INVITATION_TTL_SECONDS);
 
       await suspendAccount(mine, randomUUID());
@@ -610,7 +637,7 @@ describe.skipIf(!HAS_DATABASE)('ADMIN-001 account mutations', () => {
       // A second admin, so demoting the first does not strand the room and is
       // not refused for it (`ADMIN-DEC-01`); that refusal has its own tests.
       await newAccount('active', 'admin');
-      const token = (await issue(id)).value;
+      const token = await tokenFor(id);
 
       expect((await resolveSession(token))?.role).toBe('admin');
 
@@ -627,7 +654,7 @@ describe.skipIf(!HAS_DATABASE)('ADMIN-001 account mutations', () => {
 
     it('writes nothing, signs nobody out and records nothing when the role is already held', async () => {
       const id = await newAccount('active', 'investor');
-      const token = (await issue(id)).value;
+      const token = await tokenFor(id);
 
       expect(await changeRole(id, 'investor', randomUUID())).toBe(false);
 
@@ -648,7 +675,7 @@ describe.skipIf(!HAS_DATABASE)('ADMIN-001 account mutations', () => {
 
     it('rolls the role and the sessions back when the audit cannot be written', async () => {
       const id = await newAccount('active', 'investor');
-      const token = (await issue(id)).value;
+      const token = await tokenFor(id);
 
       await expect(changeRole(id, 'admin', UNPARSEABLE_ACTOR)).rejects.toThrow(
         /invalid input syntax for type uuid/,
@@ -673,7 +700,7 @@ describe.skipIf(!HAS_DATABASE)('ADMIN-001 account mutations', () => {
     it('touches no other account', async () => {
       const mine = await newAccount('active', 'investor');
       const theirs = await newAccount('active', 'investor');
-      const theirToken = (await issue(theirs)).value;
+      const theirToken = await tokenFor(theirs);
 
       await changeRole(mine, 'admin', randomUUID());
 
@@ -843,7 +870,7 @@ describe.skipIf(!HAS_DATABASE)('ADMIN-001 account mutations', () => {
       const actor = randomUUID();
       const id = await newAccount('active');
       await issue(id);
-      const token = (await issue(id)).value;
+      const token = await tokenFor(id);
       await issueToken(id, INVITATION_TTL_SECONDS);
 
       expect(await sessionCount(id)).toBe(2);
@@ -911,7 +938,7 @@ describe.skipIf(!HAS_DATABASE)('ADMIN-001 account mutations', () => {
 
     it('rolls the deletion back when the audit cannot be written', async () => {
       const id = await newAccount('active');
-      const token = (await issue(id)).value;
+      const token = await tokenFor(id);
 
       // The audit insert is the last write and refuses this actor id, so the
       // delete has already run when the failure arrives. What the assertions read
@@ -929,7 +956,7 @@ describe.skipIf(!HAS_DATABASE)('ADMIN-001 account mutations', () => {
     it('touches no other account', async () => {
       const mine = await newAccount('active');
       const theirs = await newAccount('active');
-      const theirToken = (await issue(theirs)).value;
+      const theirToken = await tokenFor(theirs);
 
       await eraseAccount(mine, randomUUID());
 
@@ -1014,7 +1041,7 @@ describe.skipIf(!HAS_DATABASE)('ADMIN-001 account mutations', () => {
         reportReads: 5,
         authoredRevisions: 6,
       });
-    });
+    }, SLOW_ARRANGEMENT_MS);
 
     it('counts one account only, and never what belongs to another person (`DATA-R05`)', async () => {
       const mine = await newAccount('active');

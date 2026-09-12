@@ -103,6 +103,9 @@ cannot quietly disagree. **`POST-001`** offers the prefilled update.
   content and follows `CMS-005`'s fallback.
 - **`A11Y-R01`**, **`A11Y-R02`** — the board is a list, each entry named, and
   the stage is readable without colour.
+- **Presentation** — the six rows read as a picture of where the portfolio
+  stands, not a table of words: a stage is shown by position as well as named,
+  and the headline reads as its caption ([`INV-DEC-01`](../../decisions-log.md#INV-DEC-01)).
 
 ## 6. Open questions and trade-offs
 

@@ -88,6 +88,8 @@ be here. **`INV-001`** is the chrome.
 - **`A11Y-R02`** — images carry their descriptions.
 - **`A11Y-R03`** — contrast on the ground this renders on.
 - **`SCENE-R04`** — nothing moves.
+- **Presentation** — a deck is a sequence of arguments, and each section shows
+  the figure its argument turns on ([`INV-DEC-01`](../../decisions-log.md#INV-DEC-01)).
 
 ## 6. Open questions and trade-offs
 

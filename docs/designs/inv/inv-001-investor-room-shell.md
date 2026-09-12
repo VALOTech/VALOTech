@@ -102,6 +102,9 @@ inlined.
 - **`A11Y-R01`** — landmarks, a skip link, keyboard reach, visible focus.
 - **`A11Y-R02`** — the unread count is announced, not only rendered as a dot.
 - **`A11Y-R03`** — contrast on the room's own ground.
+- **Presentation** — the landing is scannable before it is read: what is new,
+  where things stand and what is waiting are shown as distinct things rather
+  than as a list of sentences ([`INV-DEC-01`](../../decisions-log.md#INV-DEC-01)).
 
 ## 6. Open questions and trade-offs
 

@@ -1,6 +1,15 @@
+import { createHmac } from 'node:crypto';
+
 import { describe, expect, it } from 'vitest';
 
-import { expiredCookie, serializeCookie, sessionCookieName, type SessionCookie } from './session';
+import {
+  expiredCookie,
+  serializeCookie,
+  sessionCookieName,
+  type SessionCookie,
+  signToken,
+  tokenOfCookie,
+} from './session';
 
 // The parts of a session cookie a test can pin without a database: the
 // serialisation and the name. Issuing a row is exercised through the sign-in
@@ -70,3 +79,70 @@ describe('expiredCookie', () => {
     expect(header).toContain('SameSite=Lax');
   });
 });
+
+/**
+ * The environment this file's configuration singleton is built from. Every
+ * test sets it, because the singleton is built by whichever one runs first and
+ * the order is not this file's to choose.
+ */
+function environment(): void {
+  process.env.APP_ENV = 'production';
+  process.env.APP_ORIGIN = 'https://valotech.org';
+  process.env.DATABASE_URL = 'postgres://valotech:pw@db.internal:5432/valotech';
+  process.env.DB_SSLMODE = 'require';
+  process.env.SESSION_SECRET = 'x'.repeat(40);
+}
+
+describe('signing the cookie (AUTH-002/T5)', () => {
+  const TOKEN = 'a-token';
+
+  it('signs with SESSION_SECRET itself, which is what makes rotating it a lever', () => {
+    environment();
+
+    // Computed here from the environment rather than read back through the
+    // verifier: a round trip agrees with itself under any key, so it could not
+    // tell SESSION_SECRET from a constant baked into the module — and a constant
+    // is a key rotating the secret would not change, so nobody would be signed
+    // out by a rotation that was supposed to sign out everybody.
+    const expected = createHmac('sha256', process.env.SESSION_SECRET as string)
+      .update(TOKEN)
+      .digest('base64url');
+
+    expect(signToken(TOKEN)).toBe(`${TOKEN}.${expected}`);
+  });
+
+  it('reads back the token it signed, and nothing else', () => {
+    environment();
+
+    expect(tokenOfCookie(signToken(TOKEN))).toBe(TOKEN);
+  });
+
+  it.each([
+    ['a bare token, which is what this cookie used to be', () => TOKEN],
+    ['an empty value', () => ''],
+    ['a separator with nothing before it', () => `.${signatureIn(signToken(TOKEN))}`],
+    ['a signature one character short', () => signToken(TOKEN).slice(0, -1)],
+    ['a signature from another secret', () => underAnotherSecret(TOKEN)],
+  ])('carries no token for %s', (_case, build) => {
+    environment();
+
+    expect(tokenOfCookie(build())).toBeNull();
+  });
+});
+
+/** The signature half of a cookie value. */
+function signatureIn(value: string): string {
+  return value.slice(value.lastIndexOf('.') + 1);
+}
+
+/**
+ * The same token under a key this server never held — which is what every live
+ * cookie becomes the moment `SESSION_SECRET` is rotated.
+ */
+function underAnotherSecret(token: string): string {
+  const signature = createHmac('sha256', 'another secret entirely')
+    .update(token)
+    .digest('base64url');
+
+  return `${token}.${signature}`;
+}

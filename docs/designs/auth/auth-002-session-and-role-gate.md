@@ -7,7 +7,7 @@ depends_on: [AUTH-001, DATA-001]
 depended_by: [ADMIN-002, AUTH-004, CMS-001, CMS-006, INV-001, INV-002, SEC-001, SITE-005]
 layers_touched: [data, domain, service, api, frontend]
 cross_cutting_rules: [SEC-R01, SEC-R02, DATA-R05, DATA-R02]
-status: design-ready
+status: implemented
 ---
 
 # `AUTH-002` — Session and role gate
@@ -46,7 +46,7 @@ renders a value it then hides: the row was never fetched.
 | Property | Value | Why |
 |---|---|---|
 | name | `__Host-valotech` in staging and production, `valotech` in development | the `__Host-` prefix forbids `Domain` and requires `Secure`, so a subdomain cannot set it; development is plain HTTP and cannot use it |
-| value | 32 random bytes, base64url | the `sessions.id` is never in the cookie |
+| value | `<token>.<signature>` — 32 random bytes base64url, then an HMAC-SHA256 of them under `SESSION_SECRET`, base64url | the `sessions.id` is never in the cookie; the signature is checked before the row is looked up, so a value this server never issued costs no round trip, and rotating the secret ends every session at once (`AUTH-DEC-02`) |
 | `HttpOnly` | yes | script cannot read it, so an XSS is not automatically a session theft |
 | `SameSite` | `Lax` | a cross-site POST carries no session; a normal navigation does |
 | `Secure` | outside development | |
@@ -155,13 +155,16 @@ invalidation whenever it suspends or re-roles an account.
   and a register entry, not a silent substitution. The build found the session
   model a poor fit and chose the hand-rolled store; the reasoning is
   `AUTH-DEC-01`.
-- **Signing the cookie.** The cookie ships as the bare token, its validity the
-  `token_hash` lookup alone (§3), which leaves `SESSION_SECRET` with no consumer
-  on this path. Signing it — `<token>.<HMAC(SESSION_SECRET, token)>`, verified
-  before the lookup — is decided (**A**, `AUTH-DEC-02`): it gives the required
-  credential a real consumer and makes rotating it an emergency sign-out lever.
-  Built by `AUTH-002/T5`; until then the bare token is the safe default and the
-  documented rotation lever is deleting the session rows (`AUTH-004`).
+- **Signing the cookie.** The cookie is the token and an HMAC of it under
+  `SESSION_SECRET`, checked before the row is looked up (**A**, `AUTH-DEC-02`,
+  built by `AUTH-002/T5`). The alternative was the bare token, validated by the
+  `token_hash` lookup alone: simpler, and it left a required credential with no
+  consumer on this path and made the rotation lever `CRED-001` documents a
+  sentence rather than a mechanism. What signing buys is that lever — rotating
+  the secret ends every session in the world — and a forged value turned away
+  before it costs a database round trip. What it costs is that the cookie and
+  the token are no longer the same string, so a caller holding one does not
+  hold the other.
 
 ## 7. Task list
 

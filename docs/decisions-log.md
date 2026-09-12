@@ -83,6 +83,19 @@ An entry is filed the moment the choice surfaces, not when it is answered. Nothi
 ---
 ## Resolved decisions
 
+<a id="INV-DEC-01"></a>
+### `INV-DEC-01` — What standard the investor-facing surfaces hold their presentation to — RESOLVED 2026-09-13
+
+- **Decision:** `INV-001`, `INV-003`, `RPT-003` and `DECK-003` are the surfaces an investor actually reads, and each design says what its surface must *contain* without saying what it must *be like to read*. Left there, the honest default is prose and a table — correct, and the thing an investor closes. What standard do these surfaces hold themselves to?
+- **Options:** **A** Presentation-grade — a figure an investor is asked to judge is shown as well as stated, each surface is scannable before it is read, and no surface is an undifferentiated block of text · **B** Content-first — ship the facts in the plainest form and treat the visual work as a later polish pass.
+- **Recommendation:** **A**, and this is the owner’s own instruction rather than a reading the loop derived.
+- **Decision owner:** user
+- **Settled by:** user
+- **Status:** RESOLVED 2026-09-13 — **A**. Every investor-facing surface is presented visually rather than as text; its figures are clear and grounded, so a reader can see where a number comes from; and it is easy to read, easy to follow, and easy to trust. The crude, the monotone and the repetitive are defects on these surfaces, not matters of taste. A surface that states its facts correctly and still reads as a wall of text does not meet this and is not finished. It binds `INV-001` (the room’s landing), `INV-003` (portfolio progress), `RPT-003` (reading a report) and `DECK-003` (reading a deck), and the public gateway holds the same line. It is not a licence to decorate: a figure is shown because showing it answers the question faster than saying it, never because a page looked plain — and `A11Y-R01` through `A11Y-R03` still bind, so nothing may rest on colour alone, every control stays reachable by keyboard, and contrast is measured against the painted pixel.
+
+---
+
+
 <a id="AUTH-DEC-02"></a>
 ### `AUTH-DEC-02` — Is the session cookie signed with `SESSION_SECRET` — RESOLVED 2026-09-12
 

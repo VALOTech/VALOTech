@@ -9,6 +9,14 @@
  * system CSPRNG, so there is no low-entropy secret for a slow hash to protect
  * and a per-request verification cost would buy nothing.
  *
+ * What the cookie holds is that token and an HMAC of it under
+ * `SESSION_SECRET` (`AUTH-DEC-02`). The signature is checked before the row
+ * is looked up, so a value nobody here issued is turned away without a
+ * database round trip, and rotating `SESSION_SECRET` invalidates every cookie
+ * in the world at once — the emergency sign-out lever `CRED-001` and
+ * `env.example` describe. The row still stores the hash of the bare token, so
+ * the signature is a property of the cookie and never of the session.
+ *
  * Issuing writes the row and hands the cookie back rather than setting it. The
  * caller applies it to its own response, which keeps this function a plain
  * asynchronous call with no request context to construct — and keeps the
@@ -16,7 +24,7 @@
  * parse.
  */
 
-import { createHash, randomBytes } from 'node:crypto';
+import { createHash, createHmac, randomBytes, timingSafeEqual } from 'node:crypto';
 
 import { sql, type Transaction } from 'kysely';
 
@@ -28,6 +36,67 @@ import type { Database } from '../db/types';
 const TOKEN_BYTES = 32;
 
 const MILLISECONDS_PER_SECOND = 1000;
+
+/**
+ * What separates the token from its signature. The token and the signature
+ * are both `base64url`, whose alphabet has no `.`, so the two are always
+ * separable — and the split reads from the right, because the signature is
+ * the part whose shape is fixed.
+ */
+const SIGNATURE_SEPARATOR = '.';
+
+/** The signature for one token under the current `SESSION_SECRET`. */
+function signatureOf(token: string): string {
+  return createHmac('sha256', getConfig().session.secret.value)
+    .update(token)
+    .digest('base64url');
+}
+
+/**
+ * The cookie value a token is carried in: the token, then its signature.
+ *
+ * Signing rather than encrypting, because nothing about the token is secret
+ * from the reader holding it — what the signature buys is that a value the
+ * server did not issue can be recognised as one before it is used to look
+ * anything up.
+ */
+export function signToken(token: string): string {
+  return `${token}${SIGNATURE_SEPARATOR}${signatureOf(token)}`;
+}
+
+/**
+ * The token a cookie value carries, or `null` when the value carries none
+ * this server signed.
+ *
+ * The comparison is `timingSafeEqual` rather than `===`, because a signature
+ * check that returns early on the first wrong byte tells an attacker how much
+ * of a forgery is right, and a forgery that can be guessed byte by byte is a
+ * forgery. Lengths are compared first and that comparison may short-circuit:
+ * the length of a SHA-256 signature is the same for every token, so it is not
+ * a secret and reveals nothing a reader could not compute.
+ *
+ * A value with no separator is refused, which is what makes a bare token --
+ * the shape this cookie had before it was signed — no longer a session.
+ */
+export function tokenOfCookie(value: string): string | null {
+  const separator = value.lastIndexOf(SIGNATURE_SEPARATOR);
+
+  // Nothing at index 0 either: a separator there leaves an empty token, and an
+  // empty token is never one this server minted.
+  if (separator <= 0) {
+    return null;
+  }
+
+  const token = value.slice(0, separator);
+  const presented = Buffer.from(value.slice(separator + 1));
+  const expected = Buffer.from(signatureOf(token));
+
+  if (presented.length !== expected.length) {
+    return null;
+  }
+
+  return timingSafeEqual(presented, expected) ? token : null;
+}
 
 /**
  * The cookie a signed-in reader carries. The attributes `AUTH-002` fixes are
@@ -121,6 +190,10 @@ export function expiredCookie(): SessionCookie {
  * authenticated session. The reader's own sessions on other devices are left
  * alone — ending those is what a privilege change does, not what signing in on
  * a second device means.
+ *
+ * The row stores the hash of the token and the cookie carries the token and
+ * its signature, so the two are not the same string and only one of them is
+ * ever written down.
  */
 export async function issue(accountId: string): Promise<SessionCookie> {
   const config = getConfig();
@@ -137,7 +210,7 @@ export async function issue(accountId: string): Promise<SessionCookie> {
 
   return {
     name: sessionCookieName(),
-    value: token,
+    value: signToken(token),
     httpOnly: true,
     sameSite: 'Lax',
     secure: config.app.env !== 'development',

@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_300 tasks in the plan, 194 closed, 106 outstanding._
+_300 tasks in the plan, 195 closed, 105 outstanding._
 
 ---
 
@@ -35,7 +35,7 @@ _46/48 closed (95%) · 2 outstanding — 0 buildable now · 0 waiting on the own
 
 _Who may read what, and what records that they did. Everything above reads through the gate this wave builds, so a shortcut here is a shortcut in every feature after it. Sign-out precedes invitation deliberately: a session that cannot be ended server-side is a defect that grows with every account created. The scene sits here too, one layer above the page it moves behind._
 
-_66/70 closed (94%) · 4 outstanding — 3 buildable now · 0 waiting on the owner · 1 external residue · 0 parked to a later wave._
+_67/70 closed (95%) · 3 outstanding — 2 buildable now · 0 waiting on the owner · 1 external residue · 0 parked to a later wave._
 
 - **AUTH-001** · Sign-in — 5/5 closed
 - **DATA-003** · Backup and restore — 5/5 closed
@@ -44,9 +44,7 @@ _66/70 closed (94%) · 4 outstanding — 3 buildable now · 0 waiting on the own
 - **SEC-002** · Audit log — 4/5 closed · depth 2
   - `[!] SEC-002/T2` — The application role holds no UPDATE or DELETE on it  · _external_ · **Blocked by:** pending-external: the REVOKE runs where the database is deployed, against the role in DATABASE_URL, and is documented at docs/operator-checklist.md#A…
 
-- **AUTH-002** · Session and role gate — 4/5 closed · depth 3
-  - `[ ] AUTH-002/T5` — Sign the session cookie with SESSION_SECRET, and verify the signature before the row lookup
-
+- **AUTH-002** · Session and role gate — 5/5 closed
 - **AUTH-003** · Invitation and password reset — 6/7 closed · depth 3
   - `[ ] AUTH-003/T3` — The mail that carries the link, in the invitee's locale
 

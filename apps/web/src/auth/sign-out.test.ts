@@ -31,7 +31,14 @@ import { POST as SIGN_OUT } from '../app/api/auth/sign-out/route';
 import { closeDb, getDb } from '../db/index';
 import { accountForToken, resolveSession } from './gate';
 import { hashPassword } from './password';
-import { invalidateAllForAccount, invalidateSession, issue, sessionCookieName } from './session';
+import {
+  invalidateAllForAccount,
+  invalidateSession,
+  issue,
+  sessionCookieName,
+  signToken,
+  tokenOfCookie,
+} from './session';
 import * as sessionModule from './session';
 
 const DATABASE_URL = (process.env.DATABASE_URL ?? '').trim();
@@ -71,7 +78,7 @@ function post(handler: Handler, token: string | null): Promise<Response> {
   const headers = new Headers();
 
   if (token !== null) {
-    headers.set('Cookie', `${sessionCookieName()}=${token}`);
+    headers.set('Cookie', `${sessionCookieName()}=${signToken(token)}`);
   }
 
   return handler(
@@ -130,9 +137,32 @@ async function clearSessions(email: string): Promise<string> {
   return id;
 }
 
-/** One fresh session for an account, and nothing a previous test left. */
+/**
+ * The token a cookie carries, read the way the gate reads it.
+ *
+ * `issue` hands back a cookie, and a cookie is the token and its signature;
+ * every function in the store takes the token.
+ */
+function tokenOf(cookieValue: string): string {
+  const carried = tokenOfCookie(cookieValue);
+
+  if (carried === null) {
+    throw new Error('issue() minted a cookie the gate cannot read');
+  }
+
+  return carried;
+}
+
+/**
+ * One fresh session for an account, and nothing a previous test left.
+ *
+ * The token rather than the cookie value, because that is what the store
+ * takes: the cookie carries the token and its signature, and the row holds
+ * the hash of the token alone. `post` signs it again on the way in, which is
+ * the same round trip a browser makes.
+ */
 async function onlySessionFor(email: string): Promise<string> {
-  return (await issue(await clearSessions(email))).value;
+  return tokenOf((await issue(await clearSessions(email))).value);
 }
 
 /**
@@ -265,8 +295,8 @@ describe.skipIf(!HAS_DATABASE)('AUTH-004 sign-out', () => {
     it('ends only this session, leaving the same account signed in elsewhere', async () => {
       const id = await clearSessions(READER);
 
-      const laptop = (await issue(id)).value;
-      const phone = (await issue(id)).value;
+      const laptop = tokenOf((await issue(id)).value);
+      const phone = tokenOf((await issue(id)).value);
 
       await post(SIGN_OUT, laptop);
 
@@ -322,9 +352,9 @@ describe.skipIf(!HAS_DATABASE)('AUTH-004 sign-out', () => {
     it('ends every session the account holds, including the one that asked', async () => {
       const id = await clearSessions(READER);
 
-      const laptop = (await issue(id)).value;
-      const phone = (await issue(id)).value;
-      const tablet = (await issue(id)).value;
+      const laptop = tokenOf((await issue(id)).value);
+      const phone = tokenOf((await issue(id)).value);
+      const tablet = tokenOf((await issue(id)).value);
 
       expect(await sessionCount(READER)).toBe(3);
 
@@ -337,7 +367,7 @@ describe.skipIf(!HAS_DATABASE)('AUTH-004 sign-out', () => {
 
     it('records one session.invalidate_all, with the account as both actor and subject', async () => {
       const id = await freshActiveAccount();
-      const token = (await issue(id)).value;
+      const token = tokenOf((await issue(id)).value);
 
       try {
         await post(SESSIONS_ALL, token);
@@ -377,8 +407,8 @@ describe.skipIf(!HAS_DATABASE)('AUTH-004 sign-out', () => {
     it('ends nothing for an expired session, which proves nothing about the account', async () => {
       const id = await clearSessions(READER);
 
-      const stale = (await issue(id)).value;
-      const live = (await issue(id)).value;
+      const stale = tokenOf((await issue(id)).value);
+      const live = tokenOf((await issue(id)).value);
 
       await getDb()
         .updateTable('sessions')
@@ -397,7 +427,7 @@ describe.skipIf(!HAS_DATABASE)('AUTH-004 sign-out', () => {
     it('ends nothing for a suspended account, whose sessions the gate already refuses', async () => {
       const id = await clearSessions(OTHER);
 
-      const token = (await issue(id)).value;
+      const token = tokenOf((await issue(id)).value);
       await getDb()
         .updateTable('accounts')
         .set({ state: 'suspended' })
@@ -450,7 +480,7 @@ describe.skipIf(!HAS_DATABASE)('AUTH-004 sign-out', () => {
   describe('resolving to end, not to extend, and failing safe when the delete does not run', () => {
     it('accountForToken returns the account without sliding its expiry', async () => {
       const id = await clearSessions(READER);
-      const token = (await issue(id)).value;
+      const token = tokenOf((await issue(id)).value);
 
       // Move the expiry somewhere a slide would visibly change: resolveSession
       // pushes it to now+TTL, accountForToken must leave it exactly here. This is
@@ -488,7 +518,7 @@ describe.skipIf(!HAS_DATABASE)('AUTH-004 sign-out', () => {
 
     it('rolls the delete back when the audit cannot be written, leaving the session unslid', async () => {
       const id = await clearSessions(READER);
-      const token = (await issue(id)).value;
+      const token = tokenOf((await issue(id)).value);
       // Set the expiry where a slide would show: accountForToken leaves it, a
       // sliding resolve would push it to now+TTL before the write failed.
       await getDb()

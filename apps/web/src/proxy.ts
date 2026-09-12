@@ -30,9 +30,12 @@
  * `proxy.ts` rather than `middleware.ts`: Next 16 deprecated the middleware
  * file convention in favour of this one, which always runs on the Node.js
  * runtime. That is Next's own rule for a proxy, not a consequence of what this
- * file imports — the cookie parser it calls reaches no crypto and opens no
- * pool. It shares that parser with the gate rather than copying it (R9), which
- * is what a second cookie parser on an auth path would be a place to get wrong.
+ * file imports — the cookie parser it calls verifies a signature and opens no
+ * pool, so the heaviest thing on this path is one HMAC. It shares that parser
+ * with the gate rather than copying it (R9), which is what a second cookie
+ * parser on an auth path would be a place to get wrong. Sharing it also means
+ * a forged cookie marks nothing private here: it is not a session anywhere
+ * else either, so the response it asked for carries nothing to protect.
  */
 
 import { NextResponse } from 'next/server';

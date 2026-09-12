@@ -100,7 +100,7 @@ A third role — an editor who may draft but not publish, an analyst who may rea
 | Code | Feature | Status | What it is |
 |---|---|---|---|
 | `AUTH-001` | Sign-in | live | E-mail and password against a server-side account; failures indistinguishable and rate-limited |
-| `AUTH-002` | Session and role gate | design | httpOnly cookie, rotation on privilege change, server-side invalidation; every gated read scoped by role at the query |
+| `AUTH-002` | Session and role gate | live | httpOnly cookie, rotation on privilege change, server-side invalidation; every gated read scoped by role at the query |
 | `AUTH-003` | Invitation and password reset | design | An admin invites; the invitee sets their own password from a single-use, expiring link |
 | `AUTH-004` | Sign-out | live | Session destroyed server-side, not merely cleared client-side |
 | `ADMIN-001` | Account management | live | Create, suspend and delete investor accounts; grant and revoke deck access; audited |

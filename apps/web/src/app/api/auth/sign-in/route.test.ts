@@ -112,6 +112,15 @@ const TIMING_SAMPLES = 3;
 /** 32 bytes, base64url, unpadded. */
 const TOKEN_LENGTH = 43;
 
+/**
+ * The token half of a cookie value, split here rather than parsed by the code
+ * under test: a hash assertion that read the token back through the verifier
+ * would agree with itself whatever secret signed it.
+ */
+function tokenHalf(value: string): string {
+  return value.slice(0, value.lastIndexOf('.'));
+}
+
 /** TEST-NET-1 (RFC 5737), one address per request, so no test shares a counter. */
 let addresses = 0;
 
@@ -338,9 +347,14 @@ describe.skipIf(!HAS_DATABASE)('POST /api/auth/sign-in', () => {
       await getDb().deleteFrom('sessions').where('account_id', '=', id).execute();
 
       const response = await signIn(ACTIVE, PASSWORD);
-      const token = cookieValue(setCookie(response));
+      const value = cookieValue(setCookie(response));
+      const token = tokenHalf(value);
 
+      // The browser holds the token and a signature over it; the row holds the
+      // hash of the token alone, so no two of the three are the same string.
       expect(token).toHaveLength(TOKEN_LENGTH);
+      expect(value).not.toBe(token);
+      expect(value.startsWith(`${token}.`)).toBe(true);
 
       const sessions = await getDb()
         .selectFrom('sessions')

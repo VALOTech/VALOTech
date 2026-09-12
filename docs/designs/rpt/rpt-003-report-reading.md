@@ -98,6 +98,8 @@ read after the reader has already been confused.
 - **`A11Y-R02`** — every image carries the description `CMS-002` required.
 - **`A11Y-R03`** — contrast measured on the ground this actually renders on.
 - **`SCENE-R04`** — satisfied by there being no motion.
+- **Presentation** — a figure is shown where it is discussed rather than left
+  for the reader to assemble out of the prose around it ([`INV-DEC-01`](../../decisions-log.md#INV-DEC-01)).
 
 ## 6. Open questions and trade-offs
 

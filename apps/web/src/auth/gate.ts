@@ -27,7 +27,7 @@ import { sql } from 'kysely';
 import { getConfig } from '../config/index';
 import { getDb } from '../db/index';
 import type { AccountRole } from '../db/types';
-import { sessionCookieName } from './session';
+import { sessionCookieName, tokenOfCookie } from './session';
 
 /**
  * The reader a gated read is performed for: who they are and what they may
@@ -64,12 +64,19 @@ const SIGN_IN = '/sign-in';
  * prefix, and accepts that a cookie planted by another service on `localhost`
  * would be read here.
  *
+ * The signature is checked here, which is what puts it before every row
+ * lookup rather than beside one of them: a caller that holds a token from
+ * this function holds one this server signed, and there is no other way for a
+ * request's cookie to become a token. A value that fails the check is not a
+ * different kind of answer — it is no token at all, the same answer as no
+ * cookie, so no caller grew a branch to handle it and none can forget to.
+ *
  * Exported because three surfaces read the cookie and only one of them
  * resolves it: the gate, `AUTH-004`'s sign-out — which deletes a session by
  * the token it was handed and never needs an actor — and the proxy, which
  * only asks whether a request is an authenticated one. A second parser on
  * any of those paths is a second place for the cookie name, the
- * first-cookie-wins rule and the empty value to be wrong.
+ * first-cookie-wins rule and the signature to be wrong.
  */
 export function presentedToken(headers: Headers): string | null {
   const header = headers.get('cookie');
@@ -88,9 +95,7 @@ export function presentedToken(headers: Headers): string | null {
       continue;
     }
 
-    const value = pair.slice(separator + 1);
-
-    return value === '' ? null : value;
+    return tokenOfCookie(pair.slice(separator + 1));
   }
 
   return null;
