@@ -1309,21 +1309,34 @@ html:not(.can-scene) .planet {
 }
 
 @media (max-width: 900px) {
-  .chapter--rails {
-    background: linear-gradient(
-      180deg,
-      rgba(8, 10, 18, 0.9) 0%,
-      rgba(8, 10, 18, 0.94) 22%,
-      rgba(8, 10, 18, 0.94) 100%
-    );
-  }
+  /* The phone's ground runs down the page rather than across it. There is one
+     column of reading on a frame this narrow and it spans the whole width, so
+     a side-to-side scrim leaves the far end of every line standing on the
+     world; being vertical it also has no reading direction, which is why
+     Arabic and Urdu need no mirrored copy of it.
 
-  [dir='rtl'] .chapter--rails {
+     It names every selector the wide variants name. A single-class override
+     loses to `.chapter--rails[data-orbit='left']` and to
+     `.chapter--rails.chapter--aside-end`, and four of the six chapters a
+     reader meets on a phone kept the wide gradient instead: dark at one edge
+     and clear across the third of the frame the copy actually sits on. That
+     put running copy on the bare world at a measured 1.6:1. */
+  .chapter--rails,
+  .chapter--rails[data-orbit='left'],
+  .chapter--rails[data-orbit='right'],
+  .chapter--rails.chapter--aside,
+  .chapter--rails.chapter--aside-end,
+  .chapter--channel,
+  [dir='rtl'] .chapter--rails,
+  [dir='rtl'] .chapter--rails[data-orbit='left'],
+  [dir='rtl'] .chapter--rails[data-orbit='right'],
+  [dir='rtl'] .chapter--rails.chapter--aside,
+  [dir='rtl'] .chapter--rails.chapter--aside-end {
     background: linear-gradient(
       180deg,
-      rgba(8, 10, 18, 0.9) 0%,
-      rgba(8, 10, 18, 0.94) 22%,
-      rgba(8, 10, 18, 0.94) 100%
+      rgba(8, 10, 18, var(--scrim-edge)) 0%,
+      rgba(8, 10, 18, var(--scrim)) 22%,
+      rgba(8, 10, 18, var(--scrim)) 100%
     );
   }
 
@@ -2768,6 +2781,23 @@ html:not(.can-scene) .planet {
     --type-display: clamp(40px, 10.5vw, 58px);
     --type-feature: clamp(30px, 8vw, 44px);
     --type-chapter: clamp(27px, 7vw, 38px);
+
+    /* On a phone the world stands in the middle of the frame rather than
+       beside the column, so it is meant to be seen through the argument
+       standing on it. Three grounds decide how much of it shows -- the
+       chapter's scrim, the panels over it, and how brightly the world itself
+       is drawn -- and they are tuned as one against a single bound: every run
+       of text holds WCAG AA against the pixel painted behind its letterforms
+       (`A11Y-R03`), measured on the running page at 390, 360 and 320 wide.
+       Pushing any one of them further alone is what takes copy below AA. */
+    --scrim: 0.72;
+    --scrim-edge: 0.66;
+    --card-bg: rgba(9, 11, 16, 0.74);
+    --glass-bg: rgba(24, 32, 62, 0.66);
+
+    /* A card here is nearly as wide as the frame, and a radius tuned against
+       a 220px column reads square at 350px. */
+    --r-panel: 16px;
   }
 
   .hero-grid,
@@ -2782,13 +2812,89 @@ html:not(.can-scene) .planet {
   .planet {
     width: min(92vw, 440px);
     height: min(92vw, 440px);
-    opacity: 0.55;
+    /* Read by the scene, which multiplies its intro fade by it; declared as
+       opacity as well for the machines that get the still frame and never run
+       the scene at all. Written once, so the two cannot disagree. */
+    --planet-dim: 0.7;
+    opacity: var(--planet-dim);
   }
 
   .sun {
     width: min(74vw, 380px);
     margin: calc(min(74vw, 380px) / -2) 0 0 calc(min(74vw, 380px) / -2);
     transform: translate(40vw, 13vh);
+  }
+
+  /* A chapter's breathing room is written against the height of the frame, and
+     a phone is the one shape where that is the wrong axis: the same 13vh that
+     gives a laptop a proportionate margin spends a quarter of a phone screen
+     on the gap between two chapters, on a frame with a third of the width to
+     fill. Measured across the page that was two and a half screens of
+     scrolling spent arriving nowhere. */
+  .chapter {
+    padding: clamp(56px, 7vh, 96px) 0;
+  }
+
+  .chapter-head {
+    margin-bottom: 32px;
+  }
+
+  /* Desktop padding on a 390px frame leaves a card that is mostly margin --
+     measured at half the height of a `.dept` card, and 48 of its 350 pixels
+     across. The words are what the card is for. */
+  .panel {
+    padding: 14px 16px;
+  }
+
+  .dept {
+    padding: 13px 15px;
+  }
+
+  /* The cover's copy stands on the world with nothing between them, and the
+     world is at its brightest right there: the bare rock's lit limb runs under
+     the sub-heading and the two calls to action. A plate behind the words --
+     rather than a scrim down the whole cover -- gives them a ground without
+     dimming the one screen the world is the subject of. The negative margin
+     keeps the copy aligned with every chapter below it while the plate itself
+     reaches into the gutter. */
+  .hero-copy {
+    margin-inline: calc(var(--gut) * -1);
+    padding: 20px var(--gut);
+    border-radius: var(--r-panel);
+    background: rgba(8, 10, 18, var(--scrim));
+  }
+
+  /* The footer's two gradients are built for a wide frame, where the world
+     stands to one side of the closing argument and a flat wash would sink it.
+     On a phone the world is behind the copy, so the vertical layer reaches
+     only half strength and the horizontal one is clear from 58% of the width:
+     the right of every closing line, and the top of the column, stand on the
+     bare world -- measured at 3.9:1 on the sentence that asks the reader to
+     get in touch. It takes the chapters' ground for the same reason they do,
+     in its own colour, which is the part of it that was never the problem. */
+  .footer {
+    padding-top: clamp(56px, 7vh, 96px);
+    background: linear-gradient(
+      180deg,
+      rgba(7, 7, 26, var(--scrim-edge)) 0%,
+      rgba(7, 7, 26, var(--scrim)) 22%,
+      rgba(7, 7, 26, var(--scrim)) 100%
+    );
+  }
+
+  /* A footer link is the whole of its list item, so it is a target in its own
+     right rather than a word inside a sentence, and the inline exception to
+     the twenty-four pixel minimum does not reach it: measured at eighteen
+     pixels tall, which is a thumb's problem and nobody else's. The gap closes
+     as the target grows, so the list keeps its rhythm. */
+  .foot-list {
+    gap: 2px;
+  }
+
+  .foot-list a,
+  .footer p.mono a {
+    display: block;
+    padding-block: 5px;
   }
 }
 

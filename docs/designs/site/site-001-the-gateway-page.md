@@ -187,6 +187,36 @@ the frame on a phone, which cost the reader the only way into the navigation, an
 the page reports no overflow when that happens because the row clips rather than
 scrolls.
 
+### A phone is a different shape, not a narrower one
+
+Most of this page adapts by yielding: a column narrows, a grid folds to one
+track, a set of markers becomes a list. Three things do not adapt that way,
+because their measure is written against the wrong axis or against the wrong
+box, and each one was carrying a wide frame's number onto a frame a third the
+width. **Most visitors read this page on a phone**, so these are its numbers
+rather than a fallback from somebody else's.
+
+**A chapter's breathing room is written as a share of the frame's height.** On a
+laptop `13vh` is a proportionate margin; on a phone it is a quarter of the
+screen spent on the gap between two chapters, on a frame with a third of the
+width to fill. Below 900px it is `7vh`, which takes the page from 13.6 to 12.2
+frames of scrolling.
+
+**A card's padding and its radius are written against a card, not against a
+frame.** Both were the wide frame's: 48px of horizontal padding and a 12px
+radius on a box 350px across, which is 90% of the frame — half the height of a
+`.dept` card was padding, and a radius tuned against a 220px column reads square
+at that width. Below 900px the padding is 16px and 14px and the radius is 16px,
+so what the card carries is the words.
+
+**The cover's copy had no ground under it.** Every chapter has a scrim; the cover
+had none, and it is the one screen where the world is at its brightest directly
+behind the text. It takes a plate rather than a wash down the whole cover, so
+the copy gets a ground without dimming the screen the world is the subject of;
+the plate reaches into the gutter through a negative margin, so the copy stays
+aligned with every chapter below it. The alphas are `#SITE-DEC-04`'s, and
+`A11Y-001/T6` is the bound they are tuned against.
+
 ## 4. Integration
 
 **`SITE-002`** hides two chapters and the mechanism detail inside this page.
@@ -223,3 +253,4 @@ painted pixel this palette produces.
 - `SITE-001/T6` — A frame past 2000px shows a larger page rather than a further one, in every element the frame carries
 - `SITE-001/T7` — The brand kit cannot publish a value the stylesheet has stopped using, and cannot omit one it declares
 - `SITE-001/T8` — Gateway is defined as a theme: two panel families, the type roles, and every deviation from the reference named with its measurement
+- `SITE-001/T9` — A phone gets its own vertical rhythm and its own card scale, rather than the wide frame's

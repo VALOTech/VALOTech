@@ -50,6 +50,41 @@ opaque enough that the planet never reads through the right-hand side of a
 paragraph, and why a label carries the near-black card ground rather than the
 lighter glass.
 
+**A ground is a geometry before it is an alpha, and the geometry is what fails
+silently.** An alpha that is wrong is wrong everywhere and somebody sees it; a
+ground that does not reach is right where it is looked at and absent where it
+is not. Below 900px the phone's scrim override named one class and lost on
+specificity to `.chapter--rails[data-orbit='left']` and
+`.chapter--rails.chapter--aside-end`, so four of the six chapters a reader
+meets kept a side-to-side gradient that is clear across the third of the frame
+a full-width reading column sits on. The cover and the footer had no phone
+ground at all. Running copy measured **1.58:1** where AA asks 4.5, an eyebrow
+**1.12:1**, a feature heading **2.25:1** — and none of it was reachable by
+reading the stylesheet, because every rule involved was doing exactly what it
+said. So the phone's ground runs **down** the page rather than across it, which
+has no reading direction to mirror either, and it names every selector the wide
+variants name.
+
+**The measurement has to find the letters, not the box they sit in.** A text
+run's rectangle also contains card borders, accent bars and whatever chrome
+overlaps it, so sampling the rectangle scores a bright pixel nowhere near a
+glyph as though the glyph sat on it. The reading is taken from a difference:
+the frame as painted, against the same frame with every glyph blanked, gives
+the mask of the letterforms; the ground is read only at those pixels. Each run
+is scored against **its own** colour, because a dark label on a light button is
+not white-on-white. And each failure is re-measured with the scene hidden, so
+it can be attributed to the world showing through rather than to a colour.
+
+### Target size
+
+A target needs 24 x 24 CSS pixels, and WCAG 2.2's exception is for a link
+**inside a sentence**, which is a property of its layout rather than of its
+size. A footer link is the whole of its list item, so the exception does not
+reach it and eighteen pixels of height is a thumb's problem and nobody else's.
+Below 900px those links are blocks with vertical padding and the list's gap
+closes as the target grows, so the rhythm holds. Above the breakpoint they are
+unchanged, where the pointer is a mouse.
+
 ### Reduced motion
 
 `prefers-reduced-motion` slows the planet's rotation to 0.9°/s and the satellites
@@ -117,3 +152,4 @@ reduced-motion branch, because each has velocity of its own to stop.
 - `A11Y-001/T3` — Reduced motion slows the scene and shows every chapter as a stacked list
 - `A11Y-001/T4` — Reveals and the nav mark read position directly rather than waiting for a threshold
 - `A11Y-001/T5` — A print stylesheet in black on white
+- `A11Y-001/T6` — Every run of copy holds AA against the painted pixel at phone widths, and every target is reachable by a thumb

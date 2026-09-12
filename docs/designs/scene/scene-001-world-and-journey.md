@@ -171,6 +171,42 @@ the frame's position is recorded:** comparing the new position against a variabl
 already assigned the new position is a guard whose difference is always zero, and
 such a guard reads as present in the source while never once having run.
 
+### The journey on a phone
+
+**There is no journey below 900px, because there is nowhere for it to go.** Every
+station above is the side a chapter leaves open, and a frame that narrow leaves
+no side: one reading column spans it. So the world holds one station at the
+centre and holds its scale, and the disc stands behind the argument for the
+whole page rather than travelling across the words it is standing behind. It is
+drawn at 0.7 of full strength, so the copy over it reads first —
+`#SITE-DEC-04` tunes that figure together with the two grounds above it, not
+independently of them.
+
+**The centre is the centre of what the reader can see**, which is half a header
+below the centre of the window; the disc measures 50% across and 54% down a
+390px frame at a drawn radius of 122px, identical at every point of the page.
+
+**The dim belongs to the stylesheet, and the scene multiplies rather than
+copies it** (`SCENE-R02`). It is published as `--planet-dim` on `.planet`,
+where the breakpoint that decides it sits beside every other breakpoint, and
+the scene reads the property off the element and multiplies its own intro fade
+by it. The property also carries `opacity` directly, for the machines that get
+the still frame and never run the scene, so one number serves both paths. The
+rule this replaces is what a second copy costs: the phone dim was written in
+CSS and never once painted, because the inline opacity the scene writes every
+frame overwrote it — true in the source, and absent from the screen.
+
+**Nothing drifts there either.** The few pixels of sinusoidal float are a
+wide-frame gesture — a world breathing beside a column of text, against a disc
+that is already moving. Behind the text, holding one station, they are the only
+thing moving in the frame and read as a picture that will not settle. A held
+station has to be held (`SCENE-R03`), so the float is off below the breakpoint.
+
+What a phone keeps is everything that is the argument rather than the
+arrangement: the self-rotation, the lunar-to-Earth scrub on scroll, and the star
+crossing the sky. The world stands still; it is not switched off
+(`SCENE-R04`, `#SCENE-DEC-02`).
+
 ### Rotation
 
 7.5° per second, a forty-eight second revolution. The reference turns at 1.5°,
@@ -301,3 +337,5 @@ belong to the page's choreography too.
 - `SCENE-001/T4` — A jump is placed rather than eased
 - `SCENE-001/T5` — The world's size follows the frame, with no flat ceiling and a floor that cannot shrink a tuned size
 - `SCENE-001/T6` — The close takes the open side of the footer
+- `SCENE-001/T7` — On a phone the world holds one station at the centre of the visible frame, and stops drifting there
+- `SCENE-001/T8` — The phone's dim is owned by the stylesheet and actually reaches the world

@@ -322,15 +322,22 @@ const JOURNEY = [
   { at: 1.0, x: 80, y: 50, scale: 0.86 }
 ];
 
-/* Narrower on a phone: the planet sits behind the copy there, so a wide swing
-   would drag the eye across the text rather than around the sun. */
+/* A phone holds the world still, in the middle of the frame.
+   The stations of the wide journey are the side each chapter leaves open, and
+   a frame this narrow leaves no side: the reading column spans it, so every
+   station is the same station and travelling between them only drags the disc
+   across the words it is standing behind. The scale is held too, because a
+   disc that grows and shrinks in place reads as breathing rather than as a
+   world -- it is the size the wide journey settles at for most of its length.
+
+   Two entries because a leg needs a destination. Both name the centre, so the
+   target never moves, the easing never runs, and the lead has nothing to lead.
+   The vertical 50 is the centre of what the reader can see rather than of the
+   window: `sceneCentreY` adds half the header. */
+const PHONE_SCALE = 0.92;
 const JOURNEY_NARROW = [
-  { at: 0.0, x: 48, y: 56, scale: 1.0 },
-  { at: 0.46, x: 62, y: 62, scale: 0.74 },
-  { at: 0.6, x: 64, y: 44, scale: 0.8 },
-  { at: 0.78, x: 48, y: 56, scale: 0.92 },
-  { at: 0.86, x: 48, y: 56, scale: 0.92 },
-  { at: 1.0, x: 62, y: 48, scale: 0.8 }
+  { at: 0.0, x: 50, y: 50, scale: PHONE_SCALE },
+  { at: 1.0, x: 50, y: 50, scale: PHONE_SCALE }
 ];
 
 const NARROW = 900;
@@ -566,6 +573,29 @@ function sceneCentreY(vh) {
   return vh / 2 + (isNaN(hdr) ? 0 : hdr / 2);
 }
 
+/* How far the world is drawn down from full strength. The stylesheet owns it,
+   because the breakpoint that decides it belongs with every other breakpoint,
+   and this file multiplies its own intro fade by it rather than keeping a
+   second copy of the number (`SCENE-R02`). Keeping a second copy is what made
+   the phone's dim dead: the stylesheet asked for it and the inline opacity
+   written here every frame overwrote it, so the value was true in the source
+   and never once painted. A missing property reads as full strength, which is
+   the honest default for a machine whose stylesheet did not load.
+
+   Cached against the frame width, because a computed-style read forces style
+   resolution and this runs once a frame. */
+let dimWidth = -1;
+let dimValue = 1;
+function worldDim() {
+  const vw = window.innerWidth;
+  if (vw !== dimWidth) {
+    const raw = parseFloat(getComputedStyle(container).getPropertyValue('--planet-dim'));
+    dimValue = isNaN(raw) ? 1 : Math.min(1, Math.max(0, raw));
+    dimWidth = vw;
+  }
+  return dimValue;
+}
+
 function moveOrbits(seconds, stage) {
   for (let n = 0; n < orbitNodes.length; n++) {
     const marks = orbitNodes[n].marks;
@@ -729,13 +759,20 @@ function place(now) {
 
   motion.visualScale = scale * introScale;
 
-  const floatX = still ? 0 : Math.sin((now / 1000) * 0.84) * 3;
-  const floatY = still ? 0 : Math.cos((now / 1000) * 0.71) * 6;
+  /* The drift is a wide-frame gesture: a world breathing beside a column of
+     text, a few pixels against a disc that is already travelling. On a phone
+     the world holds one station behind the text, so those few pixels are the
+     only thing moving in the whole frame and read as a picture that will not
+     settle -- 4.8px across and 4.0px down with nothing being scrolled at all.
+     A held station has to be held (`SCENE-R03`). */
+  const breathing = !still && wide;
+  const floatX = breathing ? Math.sin((now / 1000) * 0.84) * 3 : 0;
+  const floatY = breathing ? Math.cos((now / 1000) * 0.71) * 6 : 0;
 
   container.style.transform =
     `translate(calc(-50% + ${floatX.toFixed(1)}px + ${driftVW.toFixed(2)}vw),` +
     ` calc(-50% + var(--hdr) / 2 + ${floatY.toFixed(1)}px + ${offsetVH.toFixed(2)}vh))`;
-  container.style.opacity = introOpacity.toFixed(3);
+  container.style.opacity = (introOpacity * worldDim()).toFixed(3);
 
   /* The star, placed from the planet rather than from the frame. Its bearing
      is the orbit; its distance holds it in the band of open sky. */

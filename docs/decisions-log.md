@@ -387,3 +387,21 @@ An entry is filed the moment the choice surfaces, not when it is answered. Nothi
 - **Decision owner:** user
 - **Settled by:** user
 - **Status:** RESOLVED 2026-09-06 — **A**, on the CEO's instruction, reversing the earlier no-rings call. Each ring is the path of the body that rides it, drawn before the bodies so a label's plate covers it, revealed with its body, and running on a duration coprime with the other two so the three do not read as one blinking figure.
+
+<a id="SCENE-DEC-02"></a>
+### `SCENE-DEC-02` — What the world does on a phone — RESOLVED 2026-09-13
+
+- **Decision:** `SCENE-001`'s journey moves the world between the side each chapter leaves open. A phone leaves no side — the reading column spans the frame — so the phone table gave it six stations of its own and dragged the disc 47%→63% across the frame, 52%→65% down it, and 99px→133px in drawn radius, across the words it was standing behind. A separate drift moved it 4.8px across and 4.0px down with nothing being scrolled at all. Does the world travel on a phone, and if it stops, does it stop turning as well?
+- **Options:** **A** Hold one station at the centre of the visible frame and hold the scale, keep the self-rotation and keep the lunar-to-Earth scrub on scroll · **B** Hold the station and the rotation but drop the scrub, so the phone shows a living world from the first screen · **C** Freeze it entirely — a still image, no rotation and no scrub.
+- **Decision owner:** user
+- **Settled by:** user
+- **Status:** RESOLVED 2026-09-13 — **A**, with the world drawn at 0.7 of full strength so the copy standing on it reads first. The disc holds 50% across and 54% down — 54 rather than 50 because the scene measures from the centre of what a reader can see and the header covers the top of the frame — at a drawn radius of 122px on a 390px frame, measured identical across thirteen frames of the page. The idle drift is a wide-frame gesture and is off below 900px: measured at 0.00px over twelve samples with no scrolling, which is what `SCENE-R03` asks of a held station. **C** was refused because it contradicts `SCENE-R04`, and **B** because the scrub is the argument the page is built to make.
+
+<a id="SITE-DEC-04"></a>
+### `SITE-DEC-04` — How much of the world shows through the phone's grounds — RESOLVED 2026-09-13
+
+- **Decision:** With the world held behind the copy (`#SCENE-DEC-02`) the grounds over it decide whether it can be seen at all. Three of them stack: the chapter scrim, the panels, and how brightly the world itself is drawn. The panels were at 0.93 and the phone scrim at 0.94, so the world was effectively invisible through them — and where a ground did not reach, running copy sat on the bare world at a measured 1.6:1. How transparent may they be?
+- **Options:** **A** As transparent as WCAG AA allows, measured on the pixel painted behind the letterforms · **B** Further, with a blur and a narrow plate behind each line of text to hold AA · **C** Further still, accepting runs of copy below AA.
+- **Decision owner:** user
+- **Settled by:** user
+- **Status:** RESOLVED 2026-09-13 — **A**. Scrim 0.72, panels 0.74, glass 0.66 and the world at 0.7, tuned as one set against one bound: `A11Y-001/T6` measures every visible run of copy at 390, 360 and 320 wide and reports 0 below AA out of 825 runs, against 52 before. **A** was only reachable once the geometry was fixed — the transparency was never the binding constraint. Pushing any one of the four further alone is what takes copy below AA, which is why they are named together in one comment in `assets/site.css` rather than tuned independently. **C** would have narrowed `A11Y-R03`, which §1.11 reserves.

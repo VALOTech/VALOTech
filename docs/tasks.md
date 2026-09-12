@@ -40,6 +40,8 @@ Design: [docs/designs/site/site-001-the-gateway-page.md](designs/site/site-001-t
   Evidence: brand/GUIDELINES.md — ground, panels, accent, text, type, scale, space, motion and contrast, with the three opacity deviations from the reference stated in one table
 - [x] SITE-001/T7 — The brand kit cannot publish a value the stylesheet has stopped using, and cannot omit one it declares
   Evidence: scripts/check-brand-tokens.py — 39 tokens verified against `assets/site.css`, wired into `make check`; proved able to fail on a drifted value, on a token the kit invents, and on a name one kit file publishes and the other does not
+- [x] SITE-001/T9 — A phone gets its own vertical rhythm and its own card scale, rather than the wide frame's
+  Evidence: assets/site.css:@media (max-width: 900px) — a chapter's breathing room is written as `13vh`, which on a tall narrow frame spends a quarter of the screen between two chapters: 7vh below 900px takes the page from 13.6 to 12.2 frames of scrolling. Cards carried the wide frame's 48px of horizontal padding and 12px radius on a 350px box, half a `.dept` card's height being padding; 16px, 14px and a 16px radius at phone width. The cover's copy stood on the world with nothing between them and now carries the chapters' ground
 
 ## SITE-002 · Public and investor chapter split
 PRD: `SITE-002` · Decision: [decisions-log.md#SITE-DEC-01](decisions-log.md#SITE-DEC-01)
@@ -85,6 +87,10 @@ Design: [docs/designs/scene/scene-001-world-and-journey.md](designs/scene/scene-
   Evidence: assets/site.css:--planet · docs/decisions-log.md#SITE-DEC-02 — 994px at 3840 x 2160 and 432px at 1440 x 900, 46% and 48% of the frame height; satellites re-measured over the larger disc at three points of the orbit stage, minimum pairwise gap 8px, none off-frame
 - [x] SCENE-001/T6 — The close takes the open side of the footer
   Evidence: commit 535d981
+- [x] SCENE-001/T7 — On a phone the world holds one station at the centre of the visible frame, and stops drifting there
+  Evidence: assets/scene/boot.js:PHONE_SCALE · docs/decisions-log.md#SCENE-DEC-02 — thirteen frames of the page at 390 x 844 read an identical 50% across, 54% down and 122px drawn radius, against 47-63%, 52-65% and 99-133px before; the idle drift measured 0.00px across twelve samples with nothing being scrolled, against 4.8px across and 4.0px down
+- [x] SCENE-001/T8 — The phone's dim is owned by the stylesheet and actually reaches the world
+  Evidence: assets/scene/boot.js:worldDim · assets/site.css:--planet-dim — the stylesheet asked for 0.55 below 900px and the inline opacity written here every frame overwrote it, so the computed value measured 1 for as long as the rule had existed; the scene now reads the property off the element and multiplies its intro fade by it, and the property carries `opacity` as well for the machines that never run the scene. Measured 0.7
 
 ## SCENE-002 · Satellites and their rings
 PRD: `SCENE-002` · Decision: [decisions-log.md#SCENE-DEC-01](decisions-log.md#SCENE-DEC-01)
@@ -163,13 +169,15 @@ Design: [docs/designs/a11y/a11y-001-accessibility-baseline.md](designs/a11y/a11y
 - [x] A11Y-001/T1 — Keyboard reach and a focus ring measured against the panel, not the void
   Evidence: assets/site.css:focus-visible — a ring tuned against the page ground disappears the moment the control sits on a panel, which is where most of them are
 - [x] A11Y-001/T2 — Contrast measured against the painted pixel across five label chapters
-  Evidence: assets/site.css — panel fill is opaque enough that the planet never reads through the right-hand side of a paragraph
+  Evidence: assets/site.css — measured on wide frames, where the panel fill is opaque enough that the planet never reads through the right-hand side of a paragraph. The phone widths are their own measurement and their own finding: `A11Y-001/T6`
 - [x] A11Y-001/T3 — Reduced motion slows the scene and shows every chapter as a stacked list
   Evidence: assets/site.css:prefers-reduced-motion · assets/scene/boot.js
 - [x] A11Y-001/T4 — Reveals and the nav mark read position directly rather than waiting for a threshold
   Evidence: assets/site.js — an IntersectionObserver is notified only when a ratio crosses a threshold, so a flick that carries a block from below the fold to above it in one frame crosses nothing and the block never appears
 - [x] A11Y-001/T5 — A print stylesheet in black on white
   Evidence: assets/site.css:@media print
+- [x] A11Y-001/T6 — Every run of copy holds AA against the painted pixel at phone widths, and every target is reachable by a thumb
+  Evidence: assets/site.css:@media (max-width: 900px) · docs/decisions-log.md#SITE-DEC-04 — 825 visible runs measured at 390, 360 and 320 wide against the pixel painted behind their own letterforms: 52 below AA before, 0 after. The cause was geometry rather than opacity. The phone scrim override carried one class and lost to `.chapter--rails[data-orbit='left']` and `.chapter--rails.chapter--aside-end`, so four of the six chapters a reader meets kept a side-to-side gradient that is clear across the third of the frame the copy sits on; the cover and the footer had no phone ground at all. Worst readings before: 1.58:1 on running copy, 1.12:1 on an eyebrow, 2.25:1 on a feature heading. Footer links were 18px tall and are the whole of their list item, so WCAG 2.2's inline exception does not reach them; none remains under 24 x 24 below 900px
 
 ## DATA-001 · Schema and migrations
 
