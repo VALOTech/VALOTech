@@ -182,9 +182,20 @@ drawn at 0.7 of full strength, so the copy over it reads first —
 `#SITE-DEC-04` tunes that figure together with the two grounds above it, not
 independently of them.
 
-**The centre is the centre of what the reader can see**, which is half a header
-below the centre of the window; the disc measures 50% across and 54% down a
-390px frame at a drawn radius of 122px, identical at every point of the page.
+**The centre is the frame's own centre.** A wide frame puts the scene's vertical
+origin half a header below the middle of the window, because the header covers
+the top of a composition the world stands beside and measuring from the window
+left it about thirty pixels high at every size. A phone is the other case: the
+world is the subject, it holds one station, and the copy stands on it, so it
+takes the middle of the frame where the eye goes and the header reads as a bar
+over the top of it. The disc measures 50% across and 50% down, at a drawn radius
+of 122px on a 390px frame, identical at every point of the page.
+
+**That origin exists once.** The world's own transform and the star's placement
+each used to compute it — one as `var(--hdr) / 2` inside a CSS `calc`, one in
+JavaScript for the star and the orbit layers — and a vertical origin kept twice
+disagrees the moment one copy is tuned, which puts the star and the rings half a
+header off the disc they are placed from (`SCENE-R02`).
 
 **The dim belongs to the stylesheet, and the scene multiplies rather than
 copies it** (`SCENE-R02`). It is published as `--planet-dim` on `.planet`,
@@ -194,7 +205,20 @@ by it. The property also carries `opacity` directly, for the machines that get
 the still frame and never run the scene, so one number serves both paths. The
 rule this replaces is what a second copy costs: the phone dim was written in
 CSS and never once painted, because the inline opacity the scene writes every
-frame overwrote it — true in the source, and absent from the screen.
+frame overwrote it — true in the source, and absent from the screen. It is 1 on
+a phone: the grounds above the world are what hold the copy legible there
+(`SITE-DEC-04`), and dimming the world as well only takes it back off the
+screen it was brought onto.
+
+**The world's size is one value, and the same second copy cost the satellites.**
+`.orbits` is measured from `--planet`, so a phone that overrode `.planet`'s own
+width instead left the two disagreeing — 91px against a 359px disc — and every
+body circled inside the sphere it orbits. Nothing was broken in the sense of
+throwing an error: the layers were drawn, revealed and animated, at full
+opacity, behind the planet. A phone therefore sets `--planet` itself. Its orbit
+then runs at 2.6 times the drawn radius rather than four, which still clears the
+sphere — 159px against 122 — while keeping every body inside a frame a third the
+width the four was tuned for.
 
 **Nothing drifts there either.** The few pixels of sinusoidal float are a
 wide-frame gesture — a world breathing beside a column of text, against a disc

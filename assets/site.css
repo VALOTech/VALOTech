@@ -2784,16 +2784,25 @@ html:not(.can-scene) .planet {
 
     /* On a phone the world stands in the middle of the frame rather than
        beside the column, so it is meant to be seen through the argument
-       standing on it. Three grounds decide how much of it shows -- the
-       chapter's scrim, the panels over it, and how brightly the world itself
-       is drawn -- and they are tuned as one against a single bound: every run
-       of text holds WCAG AA against the pixel painted behind its letterforms
-       (`A11Y-R03`), measured on the running page at 390, 360 and 320 wide.
-       Pushing any one of them further alone is what takes copy below AA. */
-    --scrim: 0.72;
-    --scrim-edge: 0.66;
-    --card-bg: rgba(9, 11, 16, 0.74);
-    --glass-bg: rgba(24, 32, 62, 0.66);
+       standing on it. The grounds between the reader and it MULTIPLY rather
+       than add, and that is the whole difficulty: a scrim dark enough to
+       protect every word, with a panel over it, leaves
+       (1 - panel) x (1 - scrim) of the world on the screen. At 0.74 over 0.72
+       that is five per cent, which is none of it — legible, and a world
+       nobody can see.
+
+       So the scrim is a wash rather than a ground, and the blocks that stand
+       directly on it carry their own plate. Then only two layers ever stack
+       over the world: 0.55 over 0.28 leaves 32%, and 0.58 over 0.28 leaves
+       30% under bare copy — both of which hold WCAG AA against the brightest
+       pixel the world can paint (`A11Y-R03`), measured on the running page at
+       390, 360 and 320 wide. The bound is per surface; the wash alone is not
+       a ground and no text may stand on it. */
+    --scrim: 0.28;
+    --scrim-edge: 0.24;
+    --plate: 0.42;
+    --card-bg: rgba(9, 11, 16, 0.62);
+    --glass-bg: rgba(24, 32, 62, 0.62);
 
     /* A card here is nearly as wide as the frame, and a radius tuned against
        a 220px column reads square at 350px. */
@@ -2809,14 +2818,32 @@ html:not(.can-scene) .planet {
     padding-top: 0;
   }
 
+  /* The world's size is one value, and everything measured from it follows.
+     Overriding `.planet`'s own width instead left `--planet` at its wide-frame
+     formula — 91px here against a 359px disc — and `.orbits` is sized from
+     `--planet`, so the satellites circled inside the sphere they orbit and
+     were simply never visible on a phone (`SCENE-R02`). */
+  :root {
+    --planet: min(92vw, 440px);
+  }
+
   .planet {
-    width: min(92vw, 440px);
-    height: min(92vw, 440px);
     /* Read by the scene, which multiplies its intro fade by it; declared as
        opacity as well for the machines that get the still frame and never run
-       the scene at all. Written once, so the two cannot disagree. */
-    --planet-dim: 0.7;
+       the scene at all. Written once, so the two cannot disagree. At full
+       strength, because the grounds above it are what hold the copy legible
+       now and dimming the world as well only takes it back off the screen. */
+    --planet-dim: 1;
     opacity: var(--planet-dim);
+  }
+
+  /* An orbit four times the drawn radius across reaches 180px past the disc on
+     a wide frame and off both edges of a phone. Two and six tenths still
+     clears the sphere — 159px against a drawn radius of 122 — and keeps every
+     body inside the frame at every point of its path. */
+  .orbits {
+    --orbit-w: calc(var(--orbit-r) * 2.6);
+    --orbit-h: calc(var(--orbit-r) * 2.6);
   }
 
   .sun {
@@ -2832,11 +2859,32 @@ html:not(.can-scene) .planet {
      fill. Measured across the page that was two and a half screens of
      scrolling spent arriving nowhere. */
   .chapter {
-    padding: clamp(56px, 7vh, 96px) 0;
+    padding: clamp(44px, 5.5vh, 96px) 0;
   }
 
   .chapter-head {
-    margin-bottom: 32px;
+    margin-bottom: 24px;
+  }
+
+  /* A gap written for two columns becomes a row gap the moment they fold, and
+     its floor was set so a narrowing desktop never went under it — which
+     forces a phone up to 32px where its own 5vw asks for 19. Stacked, they
+     take a stack's gap. */
+  .hero-grid,
+  .orbit,
+  .footer-grid {
+    gap: 22px;
+  }
+
+  /* The cover carries a plate now, so its lower padding no longer has to hold
+     the copy clear of the world. */
+  .hero {
+    padding-bottom: 40px;
+  }
+
+  .footer-tagline,
+  .footer-legal {
+    margin-top: 32px;
   }
 
   /* Desktop padding on a 390px frame leaves a card that is mostly margin --
@@ -2857,11 +2905,65 @@ html:not(.can-scene) .planet {
      dimming the one screen the world is the subject of. The negative margin
      keeps the copy aligned with every chapter below it while the plate itself
      reaches into the gutter. */
-  .hero-copy {
+  /* Every block that stands directly on the wash carries its own ground. The
+     set is not a guess: it is the blocks that hold text and are inside no card
+     — the chapter heads, the loose statements and tags, and the footer's
+     columns. The plate reaches into the gutter so the copy stays aligned with
+     the cards below it while the ground runs the width of the frame. */
+  .hero-copy,
+  .chapter-head,
+  .statement,
+  .fit-head,
+  .chapter > .wrap > p,
+  .footer-grid > div,
+  .footer-tagline,
+  .footer-legal {
     margin-inline: calc(var(--gut) * -1);
-    padding: 20px var(--gut);
+    padding: 16px var(--gut);
     border-radius: var(--r-panel);
-    background: rgba(8, 10, 18, var(--scrim));
+    background: rgba(8, 10, 18, var(--plate));
+    /* Glass, not paint. What fights a letterform is not the world's brightness
+       but its detail: a cloud edge crossing a stem puts a near-white pixel
+       against a near-white glyph. Blurring the backdrop removes the edge and
+       leaves the colour and the light, so the same legibility costs far less
+       opacity — the plate can sit at 0.42 where a flat fill needed 0.58, and
+       a third more of the world comes through. Where the browser cannot do
+       it, the fill alone is still a ground (`A11Y-R03`). */
+    backdrop-filter: blur(14px) saturate(1.15);
+    -webkit-backdrop-filter: blur(14px) saturate(1.15);
+  }
+
+  /* A hard-edged rectangle over a planet reads as a slab laid on the picture,
+     and a wide radius is the whole of what can be done about it here: a mask
+     that feathered the plate's edge would feather the letters with it, because
+     a mask applies to the element and everything inside it. */
+  .chapter-head,
+  .statement,
+  .chapter > .wrap > p {
+    border-radius: 20px;
+  }
+
+  /* The head's measure is a share of the reading column, so a plate pulled out
+     into the gutter still stopped 40px short of the right edge and showed its
+     own corner against the world. The measure is the frame here. */
+  .chapter-head {
+    max-width: none;
+  }
+
+  /* The small mono labels are the binding constraint on how transparent a card
+     may be, and they bind through their colour rather than their size: the
+     accent is darker than the body text, so over the world's brightest pixel
+     it needs a card at 0.72 where white needs 0.55 — which is the difference
+     between seeing the world and not. The bright accent needs 0.62 and is the
+     same hue, so the labels move and the cards stay open. */
+  .note,
+  .dept-need,
+  .fit-role {
+    color: var(--accent-bright);
+  }
+
+  .hero-copy {
+    padding-block: 20px;
   }
 
   /* The footer's two gradients are built for a wide frame, where the world

@@ -199,8 +199,23 @@ rather than a fallback from somebody else's.
 **A chapter's breathing room is written as a share of the frame's height.** On a
 laptop `13vh` is a proportionate margin; on a phone it is a quarter of the
 screen spent on the gap between two chapters, on a frame with a third of the
-width to fill. Below 900px it is `7vh`, which takes the page from 13.6 to 12.2
-frames of scrolling.
+width to fill. Below 900px it is `5.5vh`.
+
+**A gap written for two columns becomes a row gap when they fold**, and its
+floor was set so a narrowing desktop never went under it — which forces a phone
+up to 32px where its own `5vw` asks for 19. The cover, the orbit chapters and
+the footer stack below 900px and take a stack's gap there.
+
+**The page is 11.8 frames of scrolling, and the remaining length is content
+rather than spacing.** Measured at 390px: 7434px of it is text and cards, which
+is 8.8 frames before a single margin is added, against 3334px of section
+padding, element margins and grid gaps. Two more passes over the spacing took
+13.6 frames to 12.2 and then to 11.8; the next pass trades legibility for
+length, and folding the short-card families to two columns saves nothing —
+`.cap` carries 425 characters a card and `.dept` 130, so halving the width
+doubles the lines and the total height does not move. Ten frames needs about
+1500px of copy to go, which is a decision about what the page says rather than
+about how it is spaced.
 
 **A card's padding and its radius are written against a card, not against a
 frame.** Both were the wide frame's: 48px of horizontal padding and a 12px
@@ -209,13 +224,24 @@ radius on a box 350px across, which is 90% of the frame — half the height of a
 at that width. Below 900px the padding is 16px and 14px and the radius is 16px,
 so what the card carries is the words.
 
-**The cover's copy had no ground under it.** Every chapter has a scrim; the cover
-had none, and it is the one screen where the world is at its brightest directly
-behind the text. It takes a plate rather than a wash down the whole cover, so
-the copy gets a ground without dimming the screen the world is the subject of;
-the plate reaches into the gutter through a negative margin, so the copy stays
-aligned with every chapter below it. The alphas are `#SITE-DEC-04`'s, and
-`A11Y-001/T6` is the bound they are tuned against.
+**The ground is a wash, and the copy carries its own plate.** A phone puts the
+world behind the argument rather than beside it, so the chapter's ground and
+the world are in direct competition: darken it enough for every word and the
+world is gone, because the layers multiply rather than add. So the chapter's
+ground stops being a ground — it is a wash at 0.28 that no text stands on — and
+each block of copy that is inside no card takes a plate of its own. Only two
+layers ever sit over the world, and the plate is glass rather than paint: a
+blurred backdrop removes the detail that fights a letterform while keeping the
+colour and the light, which buys the same legibility at far less opacity.
+
+The set of plated blocks is not a guess. It is the blocks that hold text and are
+inside no card — the chapter heads, the loose statements and tags, the cover's
+copy, and the footer's columns — read off the running page rather than inferred
+from the markup. Each reaches into the gutter through a negative margin, so its
+ground runs the width of the frame while its copy stays aligned with the cards
+below it. `#SITE-DEC-04` carries the figures and `A11Y-001/T6` the bound they
+are tuned against: 27% of the world behind a card, 42% under a plate, 72% on the
+bare wash, and no run of copy below AA.
 
 ## 4. Integration
 

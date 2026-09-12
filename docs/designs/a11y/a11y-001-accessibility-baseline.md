@@ -50,6 +50,29 @@ opaque enough that the planet never reads through the right-hand side of a
 paragraph, and why a label carries the near-black card ground rather than the
 lighter glass.
 
+**Grounds multiply, and a legible page can still be a page with nothing behind
+it.** Every layer between the reader and the world passes `(1 − alpha)` of it,
+so a scrim and a panel leave the product of the two: 0.74 over 0.72 is five per
+cent, which reads as solid black and passes every contrast check ever run
+against it. Tuning the layers as though they added is how a surface arrives at
+AA with the thing it was supposed to show gone. **A contrast bound is a
+constraint, never the goal** — so both are stated here: every run at AA, and a
+named share of the world reaching the eye. The way to hold both is to stop
+stacking: the chapter's ground is a wash no text stands on, and each block of
+copy carries its own plate, so the world is behind two layers and never three.
+
+**A plate is glass, not paint.** What fights a letterform is the world's detail
+rather than its brightness — a cloud edge crossing a stem puts a near-white
+pixel against a near-white glyph — so blurring the backdrop removes the edge,
+keeps the colour and the light, and buys the same legibility at far less
+opacity.
+
+**The smallest label binds the largest surface, and it binds through colour.**
+The accent is darker than the body text, so over the world's brightest pixel a
+twelve-pixel accent label needs a card at 0.72 where white needs 0.55 — the
+difference between a world seen and a world hidden, decided by the least text
+on the page. The labels take the bright accent instead, which is the same hue.
+
 **A ground is a geometry before it is an alpha, and the geometry is what fails
 silently.** An alpha that is wrong is wrong everywhere and somebody sees it; a
 ground that does not reach is right where it is looked at and absent where it

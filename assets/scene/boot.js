@@ -564,13 +564,40 @@ function buildOrbits() {
   });
 }
 
-/* The header covers the top of the frame, so the middle of what a reader can
-   actually see sits half a header below the middle of the window. Everything
-   the scene places vertically is measured from there — the world, and with it
-   the star it is lit by, since the sun is placed from the world. */
+/* How far below the middle of the window the scene's vertical origin sits.
+
+   On a wide frame the header covers the top, so the middle of what a reader
+   can actually see is half a header down — measuring from the window left the
+   world about thirty pixels high at every size. On a phone the world is the
+   subject rather than the setting: it holds one station and the copy stands on
+   it, so it takes the frame's own centre, where the eye goes. The header there
+   is a bar over the top of the composition rather than a wall it sits under.
+
+   The world, the star it is lit by and the orbit layers are all placed from
+   this one value. It used to exist twice — once here for the star and the
+   orbits, once as `var(--hdr) / 2` inside the world's own transform — and two
+   copies of a vertical origin disagree the moment one of them is tuned, which
+   puts the star and the rings half a header off the disc they belong to
+   (`SCENE-R02`). Cached against the frame width, since a computed-style read
+   forces style resolution and this runs once a frame. */
+let originWidth = -1;
+let originValue = 0;
+function centreOffsetY() {
+  const vw = window.innerWidth;
+  if (vw !== originWidth) {
+    if (vw <= NARROW) {
+      originValue = 0;
+    } else {
+      const hdr = parseFloat(getComputedStyle(root).getPropertyValue('--hdr'));
+      originValue = isNaN(hdr) ? 0 : hdr / 2;
+    }
+    originWidth = vw;
+  }
+  return originValue;
+}
+
 function sceneCentreY(vh) {
-  const hdr = parseFloat(getComputedStyle(root).getPropertyValue('--hdr'));
-  return vh / 2 + (isNaN(hdr) ? 0 : hdr / 2);
+  return vh / 2 + centreOffsetY();
 }
 
 /* How far the world is drawn down from full strength. The stylesheet owns it,
@@ -771,7 +798,8 @@ function place(now) {
 
   container.style.transform =
     `translate(calc(-50% + ${floatX.toFixed(1)}px + ${driftVW.toFixed(2)}vw),` +
-    ` calc(-50% + var(--hdr) / 2 + ${floatY.toFixed(1)}px + ${offsetVH.toFixed(2)}vh))`;
+    ` calc(-50% + ${centreOffsetY().toFixed(1)}px + ${floatY.toFixed(1)}px` +
+    ` + ${offsetVH.toFixed(2)}vh))`;
   container.style.opacity = (introOpacity * worldDim()).toFixed(3);
 
   /* The star, placed from the planet rather than from the frame. Its bearing

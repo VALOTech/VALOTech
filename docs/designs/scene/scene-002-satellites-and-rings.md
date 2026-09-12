@@ -131,3 +131,4 @@ until one of the two is tuned.
 
 - `SCENE-002/T1` — Three bodies on one shared period, arriving in the order the story does
 - `SCENE-002/T2` — One drawn ring per body, revealed with the body that rides it
+- `SCENE-002/T3` — On a phone the bodies clear the sphere they orbit, and stay inside the frame
