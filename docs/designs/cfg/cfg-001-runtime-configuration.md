@@ -7,7 +7,7 @@ depends_on: [ADMIN-002, SEC-002]
 depended_by: []
 layers_touched: [data, domain, service, api, frontend, ui]
 cross_cutting_rules: [SEC-R04, SEC-R05, DATA-R02, A11Y-R01, I18N-R01]
-status: in-progress
+status: implemented
 ---
 
 # `CFG-001` — Runtime configuration
@@ -54,6 +54,20 @@ rather than an accident of what has been built.
 `mail.enabled` is the one that justifies the feature: when something is going
 wrong with sending, the person who needs to stop it is not in a position to
 deploy.
+
+### The screen
+
+    GET /admin/config
+
+The list is the **registry**, not the table: a key nobody has changed appears
+showing the default the application is reading. Listing the rows instead would
+show only what somebody had already touched, and the setting an operator needs
+at three in the morning is usually the one nobody has.
+
+Each key carries the sentence explaining it from the registry rather than from
+the page, so a key and its meaning cannot drift apart. Beside the value in force
+the screen says what the default is, what a revert would restore, and who last
+moved it.
 
 ### Changing
 

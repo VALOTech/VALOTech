@@ -1,0 +1,187 @@
+/* The settings screen (CFG-001/T8), on the console's tokens rather than a palette
+   of its own: the chrome sets --admin-ink, --admin-line, --admin-rail and
+   --admin-link, and everything here is drawn from them (ADMIN-002, ADMIN-DEC-04). */
+
+.lead {
+  margin: 0 0 1.5rem;
+  max-width: 42rem;
+  line-height: 1.5;
+  opacity: 0.8;
+}
+
+.settings {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 42rem;
+}
+
+/* One card per setting, because the three are unrelated and a table would
+   suggest they are read across. */
+.setting {
+  padding: 1rem 1.15rem 1.15rem;
+  border: 1px solid var(--admin-line);
+  border-radius: 0.5rem;
+}
+
+.key {
+  margin: 0;
+  font-size: 0.95rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+.what {
+  margin: 0.35rem 0 0.9rem;
+  line-height: 1.5;
+  opacity: 0.8;
+}
+
+.label {
+  display: block;
+  margin-bottom: 0.3rem;
+  padding: 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.field {
+  display: block;
+}
+
+.field input {
+  width: 100%;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid var(--admin-line);
+  border-radius: 0.375rem;
+  background: #fff;
+  color: inherit;
+  font: inherit;
+}
+
+.field input:focus-visible {
+  outline: 2px solid var(--admin-link);
+  outline-offset: 1px;
+  border-color: var(--admin-link);
+}
+
+/* A kill switch reads as two states that say what each does, not as a checkbox
+   whose meaning has to be inferred from the key's name (A11Y-R02). */
+.states {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.state {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.25rem 0;
+  cursor: pointer;
+}
+
+.state:focus-within {
+  outline: 2px solid var(--admin-link);
+  outline-offset: 2px;
+  border-radius: 0.25rem;
+}
+
+.meta {
+  margin: 0.6rem 0 0;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  opacity: 0.7;
+}
+
+.blank {
+  font-style: italic;
+  opacity: 0.75;
+}
+
+.never {
+  opacity: 0.85;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem 0.75rem;
+  margin-top: 0.9rem;
+}
+
+.primary {
+  padding: 0.4rem 0.85rem;
+  border: 1px solid var(--admin-link);
+  border-radius: 0.375rem;
+  background: var(--admin-link);
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.primary:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--admin-link) 85%, #000);
+}
+
+/* Reverting is the safe direction, so it is a quieter control beside the save
+   rather than a second emphatic one. */
+.secondary {
+  padding: 0.4rem 0.85rem;
+  border: 1px solid var(--admin-line);
+  border-radius: 0.375rem;
+  background: #fff;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.secondary:hover:not(:disabled) {
+  border-color: var(--admin-link);
+  color: var(--admin-link);
+}
+
+.primary:focus-visible,
+.secondary:focus-visible {
+  outline: 2px solid var(--admin-link);
+  outline-offset: 3px;
+}
+
+.primary:disabled,
+.secondary:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+/* A standing line rather than a toast: an operator who looked away still sees
+   that what they typed is not in force yet. */
+.unsaved {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--admin-warn-ink);
+}
+
+.done,
+.refused {
+  margin: 0.9rem 0 0;
+  padding: 0.55rem 0.75rem;
+  border-radius: 0.375rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+/* Both outcomes carry a rule on the left, so neither rests on hue alone. */
+.done {
+  border-left: 3px solid var(--admin-link);
+  background: color-mix(in srgb, var(--admin-link) 7%, transparent);
+}
+
+.refused {
+  border-left: 3px solid var(--admin-warn-ink);
+  background: var(--admin-warn-bg);
+  color: var(--admin-warn-ink);
+}

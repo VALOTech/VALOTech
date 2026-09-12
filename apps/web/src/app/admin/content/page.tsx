@@ -33,7 +33,8 @@ const AUDIENCE_LABEL: Readonly<Record<string, string>> = {
  * into each of it.
  *
  * Two cells lead somewhere and they lead to different places: the title opens
- * the editor, and the languages cell opens the translation grid (`CMS-005`).
+ * the item's own screen, where a draft becomes something a reader sees
+ * (`CMS-004`), and the languages cell opens the translation grid (`CMS-005`).
  * Everything else on the row is there to choose between rows.
  *
  * **Published and drafted are two facts rather than one word.** An item can be
@@ -80,7 +81,7 @@ export default async function ContentPage(): Promise<ReactElement> {
             {items.map((item) => (
               <tr key={item.id}>
                 <th scope="row" className={styles.titleCell}>
-                  <a href={`/admin/content/${item.id}/edit`}>{item.title}</a>
+                  <a href={`/admin/content/${item.id}`}>{item.title}</a>
                   <span className={styles.slug}>{item.slug}</span>
                 </th>
                 <td>

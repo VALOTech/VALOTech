@@ -34,6 +34,13 @@ type SettingType = 'text' | 'bool';
 interface SettingSpec {
   readonly type: SettingType;
   readonly fallback: string | boolean;
+  /**
+   * What the value does, in the words the console shows beside it. It lives
+   * here rather than on the screen because a key and the sentence explaining it
+   * are one thing: a registry that carried only the key would let the two drift,
+   * and the drift would be invisible until somebody changed the wrong setting.
+   */
+  readonly what: string;
   /** For a `text` key: the longest value a change accepts. */
   readonly maxLength?: number;
 }
@@ -45,9 +52,23 @@ interface SettingSpec {
  * `string | number | boolean`.
  */
 export const SETTINGS = {
-  'room.banner': { type: 'text', fallback: '', maxLength: 280 },
-  'room.signin_message': { type: 'text', fallback: '', maxLength: 280 },
-  'mail.enabled': { type: 'bool', fallback: true },
+  'room.banner': {
+    type: 'text',
+    fallback: '',
+    maxLength: 280,
+    what: 'A line at the top of the investor room. Empty shows nothing.',
+  },
+  'room.signin_message': {
+    type: 'text',
+    fallback: '',
+    maxLength: 280,
+    what: 'A line on the sign-in page — planned maintenance, say. Empty shows nothing.',
+  },
+  'mail.enabled': {
+    type: 'bool',
+    fallback: true,
+    what: 'Whether mail is sent at all. Turning it off stops sending without a deploy and without touching the credential.',
+  },
 } as const satisfies Record<string, SettingSpec>;
 
 export type SettingKey = keyof typeof SETTINGS;
@@ -133,6 +154,62 @@ export function getSettings(): Settings {
     shared = new Settings();
   }
   return shared;
+}
+
+/** One setting as the console shows it (`CFG-001/T8`). */
+export interface ConsoleSetting {
+  readonly key: SettingKey;
+  readonly type: SettingType;
+  readonly what: string;
+  /** The value in force, which is the declared default when no row exists. */
+  readonly value: string;
+  /** The declared default, so a screen can say what changing it moved away from. */
+  readonly fallback: string;
+  /** What a revert would restore, or `null` when there is nothing to go back to. */
+  readonly previousValue: string | null;
+  /** Who last changed it, or `null` for a default nobody has moved or an erased account. */
+  readonly changedBy: string | null;
+  readonly changedAt: Date | null;
+}
+
+/**
+ * Every setting, in the registry's own order, with what is in force and what a
+ * revert would restore (`CFG-001/T8`).
+ *
+ * The registry is the list, not the table: a key with no row has never been
+ * changed and shows its declared default, which is exactly what the application
+ * reads. Listing the table instead would show only the keys somebody had already
+ * touched, and the one an operator needs at three in the morning is usually the
+ * one nobody has.
+ *
+ * A staff read behind the admin gate, so it composes no audience predicate. The
+ * changer is left-joined by name, so a setting outlives the erasure of whoever
+ * changed it (`DATA-002`) while naming nobody.
+ */
+export async function settingsForConsole(): Promise<ConsoleSetting[]> {
+  const rows = await getDb()
+    .selectFrom('config')
+    .leftJoin('accounts', 'accounts.id', 'config.changed_by')
+    .select(['config.key', 'config.value', 'config.previous_value', 'config.changed_at', 'accounts.name'])
+    .execute();
+
+  const stored = new Map(rows.map((row) => [row.key, row]));
+
+  return (Object.keys(SETTINGS) as SettingKey[]).map((key) => {
+    const row = stored.get(key);
+    const fallback = String(SETTINGS[key].fallback);
+
+    return {
+      key,
+      type: SETTINGS[key].type,
+      what: SETTINGS[key].what,
+      value: row?.value ?? fallback,
+      fallback,
+      previousValue: row?.previous_value ?? null,
+      changedBy: row?.name ?? null,
+      changedAt: row?.changed_at ?? null,
+    };
+  });
 }
 
 /** A change: accepted with the value as it will be stored, or refused with a reason. */

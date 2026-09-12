@@ -24,6 +24,8 @@ import { recordAudit } from '../audit/record';
 import { getDb } from '../db/index';
 import type { ContentType, Database } from '../db/types';
 
+import { LOCALES } from '../i18n/locales';
+
 import { validateBlocks } from './blocks';
 import type { ContentItem } from './items';
 
@@ -75,6 +77,123 @@ async function versionForPublish(
     .executeTakeFirstOrThrow();
 
   return { version: next };
+}
+
+/** What publishing this revision would do, for the confirmation (`CMS-004/T4`). */
+export interface PublishConsequences {
+  /** The revision a reader sees today, or `null` when nothing is published yet. */
+  readonly replacing: { readonly revisionId: string; readonly publishedAt: Date } | null;
+  /** Languages reviewed on the revision about to be published, so servable with it. */
+  readonly reviewedLocales: number;
+  /** Languages a reader will be served the authored English for instead. */
+  readonly fallbackLocales: number;
+}
+
+/**
+ * What an author is about to do, so the confirmation can say it (`CMS-004/T4`).
+ *
+ * Publishing does not require every locale (`I18N-DEC-01`) and nothing here
+ * blocks it. The point is that the author is *told*: a translation that is not
+ * reviewed is served to nobody (`CMS-R05`), so publishing with two of twenty
+ * reviewed means eighteen languages read the English, and an author who did not
+ * know that would find out from an investor.
+ *
+ * The count is of the revision being published rather than of the item, because
+ * locale rows belong to a revision and a new revision starts with none
+ * (`CMS-005` section 3) — counting the item's would report a translation of text
+ * nobody is about to be shown.
+ *
+ * `null` for `replacing` and a first publication are the same thing said once:
+ * there is no revision a reader sees today.
+ */
+export async function publishConsequences(
+  itemId: string,
+  revisionId: string,
+): Promise<PublishConsequences> {
+  const item = await getDb()
+    .selectFrom('content_items')
+    .select('current_revision_id')
+    .where('id', '=', itemId)
+    .executeTakeFirst();
+
+  const currentId = item?.current_revision_id ?? null;
+  const current =
+    currentId === null
+      ? undefined
+      : await getDb()
+          .selectFrom('content_revisions')
+          .select(['id', 'published_at'])
+          .where('id', '=', currentId)
+          .executeTakeFirst();
+
+  const reviewed = await getDb()
+    .selectFrom('content_locales')
+    .select((eb) => eb.fn.countAll<string>().as('count'))
+    .where('revision_id', '=', revisionId)
+    .where('state', '=', 'reviewed')
+    .executeTakeFirst();
+
+  const reviewedLocales = Number(reviewed?.count ?? 0);
+
+  return {
+    replacing:
+      current === undefined || current.published_at === null
+        ? null
+        : { revisionId: current.id, publishedAt: current.published_at },
+    reviewedLocales,
+    // The authored language is not a translation and never falls back to itself.
+    fallbackLocales: LOCALES.length - 1 - reviewedLocales,
+  };
+}
+
+/**
+ * The revision withdrawing would return to, or `null` when there is none
+ * (`CMS-004/T4`).
+ *
+ * Withdrawing carries no confirmation dialogue, because it is the reversible
+ * direction (`CMS-004` section 3). That is only honest if the control says what
+ * it will do *before* it is pressed, and the two outcomes are different enough
+ * to matter: returning to an earlier version a reader has seen before, or
+ * leaving the item invisible to every reader. This is what lets the screen say
+ * which, in those words, rather than offering one word for both.
+ */
+export async function withdrawReturnsTo(
+  itemId: string,
+): Promise<{ readonly revisionId: string; readonly publishedAt: Date } | null> {
+  const item = await getDb()
+    .selectFrom('content_items')
+    .select('current_revision_id')
+    .where('id', '=', itemId)
+    .executeTakeFirst();
+
+  const currentId = item?.current_revision_id ?? null;
+  if (currentId === null) {
+    return null;
+  }
+
+  const current = await getDb()
+    .selectFrom('content_revisions')
+    .select('published_at')
+    .where('id', '=', currentId)
+    .executeTakeFirst();
+
+  if (current?.published_at == null) {
+    return null;
+  }
+
+  const earlier = await getDb()
+    .selectFrom('content_revisions')
+    .select(['id', 'published_at'])
+    .where('item_id', '=', itemId)
+    .where('published_at', 'is not', null)
+    .where('published_at', '<', current.published_at)
+    .orderBy('published_at', 'desc')
+    .limit(1)
+    .executeTakeFirst();
+
+  return earlier === undefined || earlier.published_at === null
+    ? null
+    : { revisionId: earlier.id, publishedAt: earlier.published_at };
 }
 
 /**

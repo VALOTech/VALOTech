@@ -97,6 +97,22 @@ audit row survives it.
 - It does not rebuild anything. Reads go to the database; a public item carries a
   short cache lifetime and a purge on publish.
 
+### The item's own screen
+
+    GET /admin/content/<id>
+
+The hub the content list opens (`CMS-002/T8`), and the home of both controls.
+It states what a reader sees today, what is waiting unpublished, and leads on
+to the editor and the translation grid rather than duplicating either.
+
+**The confirmation states two things a publish decides**, and neither is
+derivable from the screen without it: the version being replaced, which stays
+readable in the archive, and how many languages are reviewed against how many
+will read the English. The language count is of the revision being published
+and not of the item, because locale rows belong to a revision and a new one
+starts with none (`CMS-005` §3) — counting the item’s would report a translation
+of text nobody is about to be shown.
+
 ### One action back
 
 The withdraw control is the single-action undo `CMS-004` promises, and it is
@@ -104,6 +120,12 @@ reachable from the item's own screen without a confirmation dialogue that has to
 be read — it is reversible in the same way, so a mistaken withdraw costs one
 click. The dangerous direction is publishing, and that is the one with the
 confirmation.
+
+It still says what it will do **before** it is pressed, because its two outcomes
+differ behind one word: returning readers to the version published immediately
+before, or leaving nothing visible to any reader at all. One step back is what
+an operator needs; a jump to the oldest version would be a different act wearing
+the same name.
 
 ## 4. Integration
 
