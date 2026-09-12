@@ -10,17 +10,6 @@ An entry is filed the moment the choice surfaces, not when it is answered. Nothi
 
 ## Open decisions
 
-<a id="AUTH-DEC-02"></a>
-### `AUTH-DEC-02` — Is the session cookie signed with `SESSION_SECRET` — OPEN
-
-- **Decision:** The session cookie carries a random token whose hash the `sessions` row stores (`AUTH-002` §3). Is that token additionally signed with `SESSION_SECRET`, so a tampered cookie is rejected before the row lookup and rotating the secret signs every live session out — or is the cookie the bare token, with `SESSION_SECRET` used for nothing on this path?
-- **Options:** **A** Sign it — the cookie is `<token>.<HMAC(SESSION_SECRET, token)>`; rotating `SESSION_SECRET` becomes a real emergency sign-out lever and a tampered cookie fails before it reaches the database · **B** Leave it bare — validity is the `token_hash` lookup alone, `SESSION_SECRET` has no consumer on the session path, and the emergency lever is deleting the session rows (`AUTH-004`'s `session.invalidate_all`).
-- **Recommendation:** **A**. It makes the emergency lever `env.example` and `CRED-001` document real, adds tamper rejection before a database round-trip, and gives `SESSION_SECRET` — a required credential — an actual consumer rather than leaving it orphaned. **B** is simpler but orphans a required credential and turns a documented security lever into a false statement, which is the defect this entry was opened on.
-- **Decision owner:** user
-- **Blocks:** — none —
-- **Revises:** AUTH-002/T1, AUTH-002/T3 — the cookie ships the bare-token safe default and the gate resolves it by lookup alone; a resolution to **A** signs the token with `SESSION_SECRET` on issue and verifies the HMAC in the gate before the lookup
-- **Status:** OPEN. Safe default: the store validates by `token_hash` lookup and `SESSION_SECRET` is unused on the session path; `env.example` and `config` name the lever that works today — deleting the session rows — rather than claiming rotation signs sessions out, so no fail-open lever is documented while this waits.
-
 <a id="OPS-DEC-02"></a>
 ### `OPS-DEC-02` — Which `X-Forwarded-For` hop is the client, for the sign-in rate limit — OPEN
 
@@ -54,31 +43,39 @@ An entry is filed the moment the choice surfaces, not when it is answered. Nothi
 - **Revises:** ADMIN-001/T2, ADMIN-001/T3, ADMIN-001/T7 — all ship the safe default: `T3` and `T7` refuse before mutating when the subject is the actor, or the last admin who can sign in, counted `active` rather than by role alone — a suspended admin cannot sign in to undo anything, and reinstating one is itself an admin act, so counting the role would let a room with one active and one suspended admin be stranded (the count is race-safe under a `SELECT … WHERE role = 'admin' AND state = 'active' ORDER BY id FOR UPDATE` taken inside the transaction); and `T2`'s page hides the suspend control on the actor's own account rather than offer one the service would refuse. A resolution to **B** relaxes the self rule and lets the page offer that control.
 - **Status:** OPEN. Safe default: `suspendAccount` and `changeRole` refuse when the subject is the last active admin or is the actor, returning the same `false` a no-op returns, so no single act can leave the room with no admin who can sign in or let an admin act on their own access — fail-closed, since the alternative is a one-click unrecoverable lockout behind an ordinary control.
 
+---
+
+## Resolved decisions
+
+<a id="AUTH-DEC-02"></a>
+### `AUTH-DEC-02` — Is the session cookie signed with `SESSION_SECRET` — RESOLVED 2026-09-12
+
+- **Decision:** The session cookie carries a random token whose hash the `sessions` row stores (`AUTH-002` §3). Is that token additionally signed with `SESSION_SECRET`, so a tampered cookie is rejected before the row lookup and rotating the secret signs every live session out — or is the cookie the bare token, with `SESSION_SECRET` used for nothing on this path?
+- **Options:** **A** Sign it — the cookie is `<token>.<HMAC(SESSION_SECRET, token)>`; rotating `SESSION_SECRET` becomes a real emergency sign-out lever and a tampered cookie fails before it reaches the database · **B** Leave it bare — validity is the `token_hash` lookup alone, `SESSION_SECRET` has no consumer on the session path, and the emergency lever is deleting the session rows (`AUTH-004`'s `session.invalidate_all`).
+- **Recommendation:** **A**. It makes the emergency lever `env.example` and `CRED-001` document real, adds tamper rejection before a database round-trip, and gives `SESSION_SECRET` — a required credential — an actual consumer rather than leaving it orphaned. **B** is simpler but orphans a required credential and turns a documented security lever into a false statement, which is the defect this entry was opened on.
+- **Decision owner:** user
+- **Settled by:** user
+- **Status:** RESOLVED 2026-09-12 — **A**, the cookie is signed. `AUTH-002/T1` and `AUTH-002/T3` shipped the bare-token safe default (the store validates by `token_hash` lookup, `SESSION_SECRET` unused on the session path); the owner's choice revises them, so a future dev1 iteration signs the token with `SESSION_SECRET` on issue and verifies the HMAC in the gate before the row lookup — giving `SESSION_SECRET` a real consumer and making rotating it an emergency sign-out lever. That build is filed as `AUTH-002/T5`; the shipped tasks stay closed and no code lands in this documentation pass.
+
 <a id="ADMIN-DEC-02"></a>
-### `ADMIN-DEC-02` — Is the account list sortable by a control, or served already sorted by last sign-in — OPEN
+### `ADMIN-DEC-02` — Is the account list sortable by a control, or served already sorted by last sign-in — RATIFIED 2026-09-12
 
 - **Decision:** `ADMIN-001` §3 says the list is "sortable by last sign-in, because that column is what makes a stale account visible." The list ships served in that order — stalest first, the never-signed-in above them (`ADMIN-001/T1`). Does "sortable" ask for a control the admin re-sorts with, or is a fixed order by last sign-in — which puts exactly what the column is for at the top — what the word asks for here?
 - **Options:** **A** The served order, as shipped — the design names one sort key and one reason, the fixed order serves that reason directly, and with six to fifty accounts (§6) the whole list is one screen; a control would re-sort a list that already answers its one question · **B** A column-header control that re-sorts — the plain reading of "sortable," and once there is one it plausibly sorts the other columns too, at the cost of client interactivity on a server-rendered page and sort keys the design names no reason for.
 - **Recommendation:** **A**. The design gives the column one purpose — making a stale account visible — and the served order delivers it with the stalest account above the fold; a re-sort control over a list already ordered by its one stated key adds a mechanism without adding an answer, and §1.10 cautions against building it with no second sort reason named. **B** is the literal reading of the word, which is why this is filed rather than decided silently: a re-sort would be a `searchParams` sort the existing `/admin` pages already shape, with no schema or API change.
 - **Decision owner:** user
-- **Blocks:** — none —
-- **Revises:** ADMIN-001/T1 — the list ships the fixed served order; a resolution to **B** adds a re-sort control to the page
-- **Status:** OPEN. Safe default: the list is served `last_sign_in asc nulls first`, tie-broken by address, so the stalest and never-signed-in accounts are at the top and the design's stated reason for the column is met without a control — not fail-open in any sense, and superseded by a `searchParams` sort with no migration if **B** is chosen.
+- **Settled by:** user
+- **Status:** RATIFIED 2026-09-12 — **A**, the fixed served order stands. `ADMIN-001/T1` serves the list `last_sign_in asc nulls first`, tie-broken by address, so the stalest and never-signed-in accounts are at the top — the design's one stated purpose for the column, met without a re-sort control (`§1.10`). Nothing changes and no task is filed.
 
 <a id="ADMIN-DEC-03"></a>
-### `ADMIN-DEC-03` — Is an admin's resend or reset an audited act, and is the reset control offered before its mail exists — OPEN
+### `ADMIN-DEC-03` — Is an admin's resend or reset an audited act, and is the reset control offered before its mail exists — RESOLVED 2026-09-12
 
 - **Decision:** The person page (`ADMIN-001/T2`) lets an admin resend an invitation and start a password reset, and neither writes an audit row — the `audit.action` CHECK names no value for them, and `SEC-R04`'s enumerated set is create, suspend, role-change, delete and grant. Resend is narrowed to an `invited` account and hands back a single-use link; once `AUTH-003/T4` builds the page that accepts it, an admin could open that link and set the account's password — the takeover `ADMIN-001` §3 names — while the trail shows only the original `account.create`. Two questions on one surface: should resend (and reset) be audited; and should the reset control be offered before `AUTH-003/T3` mails the link, when the press reaches nobody yet?
 - **Options:** **A** Audit the resend as a new `audit.action` value folded into the CHECK (the `ADMIN-001/T8` precedent folded `account.reinstate` in), with a `recordAudit` call inside `resendInvitation`'s transaction, and keep the reset control with the sentence it already carries. **B** Leave both unaudited, consistent with the letter of `SEC-R04`, and either keep or withhold the reset control until its mail exists.
 - **Recommendation:** **A**. A link that can set a password is a privileged write the trail should hold; the narrowing to `invited` bounds the takeover but does not record it, and the fold is a known move. Reset is lower weight — it hands back nothing, so no capability is misattributed — but auditing it alongside costs one more CHECK value. Keep the reset control offered: the sentence it carries names exactly what did and did not happen, which is more honest than an absent control that leaves the admin guessing whether the console can reset at all.
 - **Decision owner:** user
-- **Blocks:** — none —
-- **Revises:** ADMIN-001/T2 — the page ships the safe default (resend and reset unaudited, resend narrowed to `invited`, the reset control offered with a sentence naming the gap); a resolution to **A** folds a new `audit.action` value and adds the `recordAudit` call inside `resendInvitation`'s transaction.
-- **Status:** OPEN. Safe default: resend and reset write no audit row, `resendInvitation` acts only on an `invited` account so no existing password is overwritten, and the takeover is unreachable until `AUTH-003/T4` builds the accept page; the reset link is never handed to the admin — `requestReset` discards the plaintext token as it mints it — so there is no capability to misattribute today. The fold that would audit a resend waits on this decision.
-
----
-
-## Resolved decisions
+- **Settled by:** user
+- **Status:** RESOLVED 2026-09-12 — **A**, resend and reset are audited. `ADMIN-001/T2` shipped them unaudited (a link that can set a password left only the original `account.create` in the trail); the owner's choice revises it, so a future dev1 iteration folds a new `audit.action` value (a migration — Critical tier) and adds the `recordAudit` call inside `resendInvitation`'s transaction, keeping the reset control offered with its sentence. That build is filed as `ADMIN-001/T9`; the shipped person page (`ADMIN-001/T2`) stays closed and no code lands in this documentation pass.
 
 <a id="AUTH-DEC-05"></a>
 ### `AUTH-DEC-05` — Self-service password reset, or admin-initiated only — RESOLVED 2026-09-12

@@ -155,6 +155,13 @@ invalidation whenever it suspends or re-roles an account.
   and a register entry, not a silent substitution. The build found the session
   model a poor fit and chose the hand-rolled store; the reasoning is
   `AUTH-DEC-01`.
+- **Signing the cookie.** The cookie ships as the bare token, its validity the
+  `token_hash` lookup alone (§3), which leaves `SESSION_SECRET` with no consumer
+  on this path. Signing it — `<token>.<HMAC(SESSION_SECRET, token)>`, verified
+  before the lookup — is decided (**A**, `AUTH-DEC-02`): it gives the required
+  credential a real consumer and makes rotating it an emergency sign-out lever.
+  Built by `AUTH-002/T5`; until then the bare token is the safe default and the
+  documented rotation lever is deleting the session rows (`AUTH-004`).
 
 ## 7. Task list
 
@@ -162,3 +169,4 @@ invalidation whenever it suspends or re-roles an account.
 - `AUTH-002/T2` — Server-side invalidation, so a stolen cookie dies on sign-out
 - `AUTH-002/T3` — Role gate at the query, not the template; a helper that cannot be forgotten
 - `AUTH-002/T4` — Isolation test: an investor request for another investor's deck returns nothing, not a redirect
+- `AUTH-002/T5` — Sign the session cookie with SESSION_SECRET, and verify the signature before the row lookup

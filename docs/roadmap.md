@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_295 tasks in the plan, 192 closed, 103 outstanding._
+_297 tasks in the plan, 192 closed, 105 outstanding._
 
 ---
 
@@ -35,7 +35,7 @@ _46/48 closed (95%) · 2 outstanding — 0 buildable now · 0 waiting on the own
 
 _Who may read what, and what records that they did. Everything above reads through the gate this wave builds, so a shortcut here is a shortcut in every feature after it. Sign-out precedes invitation deliberately: a session that cannot be ended server-side is a defect that grows with every account created. The scene sits here too, one layer above the page it moves behind._
 
-_65/69 closed (94%) · 4 outstanding — 3 buildable now · 0 waiting on the owner · 1 external residue · 0 parked to a later wave._
+_65/70 closed (92%) · 5 outstanding — 4 buildable now · 0 waiting on the owner · 1 external residue · 0 parked to a later wave._
 
 - **AUTH-001** · Sign-in — 5/5 closed
 - **DATA-003** · Backup and restore — 5/5 closed
@@ -45,7 +45,9 @@ _65/69 closed (94%) · 4 outstanding — 3 buildable now · 0 waiting on the own
   - `[ ] SEC-002/T4` — Only changed fields are recorded, and no personal data reaches the trail
   - `[!] SEC-002/T2` — The application role holds no UPDATE or DELETE on it  · _external_ · **Blocked by:** pending-external: the REVOKE runs where the database is deployed, against the role in DATABASE_URL, and is documented at docs/operator-checklist.md#A…
 
-- **AUTH-002** · Session and role gate — 4/4 closed
+- **AUTH-002** · Session and role gate — 4/5 closed · depth 3
+  - `[ ] AUTH-002/T5` — Sign the session cookie with SESSION_SECRET, and verify the signature before the row lookup
+
 - **AUTH-003** · Invitation and password reset — 6/7 closed · depth 3
   - `[ ] AUTH-003/T3` — The mail that carries the link, in the invitee's locale
 
@@ -64,9 +66,11 @@ _65/69 closed (94%) · 4 outstanding — 3 buildable now · 0 waiting on the own
 
 _The machinery every kind of writing shares — the editor, the media, the locale states, the audience rule, publishing, search — plus the account, configuration and logging surfaces an operator needs before anything is published. Building it once is the whole reason a report, an update and a deck are three navigations over one system rather than three systems._
 
-_53/63 closed (84%) · 10 outstanding — 9 buildable now · 0 waiting on the owner · 0 external residue · 1 parked to a later wave._
+_53/64 closed (82%) · 11 outstanding — 10 buildable now · 0 waiting on the owner · 0 external residue · 1 parked to a later wave._
 
-- **ADMIN-001** · Account management — 8/8 closed
+- **ADMIN-001** · Account management — 8/9 closed · depth 5
+  - `[ ] ADMIN-001/T9` — Audit resend-invitation and reset-password: a new audit.action value, and a recordAudit inside the resend transaction
+
 - **CFG-001** · Runtime configuration — 6/6 closed
 - **CMS-003** · Media library — 6/7 closed · depth 5
   - `[ ] CMS-003/T2` — Raster images are re-encoded, so EXIF and its location do not survive

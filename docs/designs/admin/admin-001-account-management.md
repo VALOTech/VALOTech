@@ -163,6 +163,12 @@ action. **`DATA-002`** is the erasure design this implements the admin half of.
   `author_id` and the document keeps its text. A "transferred to" field would be
   more informative and would be a place to record a person after they were
   erased.
+- **Resend and reset are audited.** The person page's resend-invitation and
+  reset-password acts ship writing no audit row — `SEC-R04`'s set names neither.
+  Because a resent or reset link can set a password, auditing them is decided
+  (**A**, `ADMIN-DEC-03`): a new `audit.action` value folded into the CHECK (the
+  `account.reinstate` precedent) and a `recordAudit` inside the resend
+  transaction, with the reset control kept as it is. Built by `ADMIN-001/T9`.
 
 ## 7. Task list
 
@@ -174,3 +180,4 @@ action. **`DATA-002`** is the erasure design this implements the admin half of.
 - `ADMIN-001/T6` — Creation issues an invitation; no admin ever sets another person's password
 - `ADMIN-001/T7` — A role change ends every session and is audited
 - `ADMIN-001/T8` — Reinstating a suspended account restores it to active and is audited
+- `ADMIN-001/T9` — Audit resend-invitation and reset-password: a new audit.action value, and a recordAudit inside the resend transaction
