@@ -143,8 +143,8 @@ because an investor navigates each of them differently.
 | `INV-001` | Investor room shell | design | What a signed-in investor lands on: the update stream first, with the progress board, the current report, the deck and the gated chapters reachable from it |
 | `INV-002` | Gated gateway chapters, served | design | The two chapters and the seven mechanisms, delivered by the server to an authorised reader and to nobody else — this is what replaces the CSS demonstration |
 | `INV-003` | Portfolio progress | design | Where each of the six products stands, and the milestones ahead of it — the thing an investor opens the room to check when they have no time to read |
-| `MAIL-001` | Investor mail | blocked | An admin sends a message to selected investors; every send is recorded — carrier at `docs/decisions-log.md#MAIL-DEC-01` |
-| `MAIL-002` | Mail log and unsubscribe | blocked | What was sent, to whom, when; a working unsubscribe that stops non-transactional mail — `docs/decisions-log.md#MAIL-DEC-01` |
+| `MAIL-001` | Investor mail | blocked | An admin sends a message to selected investors; every send is recorded — SMTP carrier settled (`docs/decisions-log.md#MAIL-DEC-01`), waits on the `SMTP_URL` credential and the `MAIL-001/T8` adapter |
+| `MAIL-002` | Mail log and unsubscribe | blocked | What was sent, to whom, when; a working unsubscribe that stops non-transactional mail — waits on the mail send path (`MAIL-001`) |
 
 ### 5.5 Platform — `DATA`, `SEC`, `CFG`, `OPS`, `INFRA`, `CRED`
 
@@ -156,7 +156,7 @@ because an investor navigates each of them differently.
 | `SEC-001` | Security baseline | design | CSP, HSTS, secure cookies, parameterised queries, dependency and secret scanning in CI |
 | `SEC-002` | Audit log | design | Append-only record of every privileged write |
 | `CFG-001` | Runtime configuration | design | The values an admin may change without a deploy, each with its prior value and a single-action undo |
-| `OPS-001` | Hosting and deploy | blocked | Where the app runs, and how valotech.org points at it — see `docs/decisions-log.md#INFRA-DEC-03` |
+| `OPS-001` | Hosting and deploy | design | Where the app runs, and how valotech.org points at it — AWS, ECS on Fargate (`docs/decisions-log.md#INFRA-DEC-05`), built last |
 | `OPS-002` | Logging and monitoring | design | Structured logs with a request id, no personal data, and an alert an operator can act on |
 | `INFRA-001` | Local development stack | design | One command brings up PostgreSQL and the app against it |
 | `CRED-001` | Credential handling | design | SMTP and database credentials from the environment; a missing one degrades its feature and leaves the system up |
@@ -167,7 +167,7 @@ because an investor navigates each of them differently.
 |---|---|---|---|
 | `LEGAL-SG-001` | PDPA posture | design | Consent for the stated purpose, access and correction, breach notification, a named DPO |
 | `LEGAL-GLOBAL-001` | GDPR posture for EU investors | design | Lawful basis, subject rights, and what crosses a border |
-| `LEGAL-GLOBAL-002` | Cookie and analytics posture | blocked | Whether the site measures anything about visitors at all — see `docs/decisions-log.md#OPS-DEC-01` |
+| `LEGAL-GLOBAL-002` | Cookie and analytics posture | design | Whether the site measures anything about visitors — settled at `docs/decisions-log.md#OPS-DEC-01` (permitted, off by default); the pages and banner are `SITE-006` |
 
 ---
 

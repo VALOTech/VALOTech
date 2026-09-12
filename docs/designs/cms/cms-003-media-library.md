@@ -48,11 +48,15 @@ referencing it, and applies `CMS-006`'s predicate. No match is a `404`.
    out, produced by the encoder, which strips EXIF — including the GPS
    coordinates of wherever the screenshot was taken (`DATA-R02`) — and drops
    anything a decoder would have treated as payload.
-4. **SVG is refused** (`CMS-DEC-03`). An SVG is a document that can carry script
+4. **Strip a PDF's metadata** through a library (`CMS-DEC-05`) before it is
+   stored — the Info dictionary's author and producer, the XMP packet, local
+   file paths, and the metadata of images embedded in it — so a PDF leaks no more
+   than a re-encoded raster does (`DATA-R02`).
+5. **SVG is refused** (`CMS-DEC-03`). An SVG is a document that can carry script
    and external references, and there is no sanitiser here to trust: it is not an
-   accepted type, so it is turned away like any other. A logo arrives as PNG.
-5. Cap at 10 MB, stated in the control before the file is chosen.
-6. Store under `sha256`; a duplicate returns the existing row.
+   accepted type, so it is turned away like any other. A logo arrives as a raster.
+6. Cap at 10 MB, stated in the control before the file is chosen.
+7. Store under `sha256`; a duplicate returns the existing row.
 
 ### Serving
 
@@ -99,7 +103,8 @@ not a copy. **`SEC-001`** owns the upload validation rules this design applies.
 - **`CMS-R06`** — media inherits the audience of what references it, by join.
 - **`SEC-R01`** — the check is at the server, on every request, including the
   ones a CDN would otherwise answer.
-- **`DATA-R02`** — EXIF, and the location in it, does not survive upload.
+- **`DATA-R02`** — EXIF in a raster and metadata in a PDF, and the location in
+  either, do not survive upload (`CMS-DEC-03`, `CMS-DEC-05`).
 - **`A11Y-R02`** — the description lives with the use, and `CMS-002` requires
   it.
 
@@ -122,8 +127,9 @@ not a copy. **`SEC-001`** owns the upload validation rules this design applies.
 
 - `CMS-003/T1` — Upload sniffs the type from the bytes, and refuses anything outside the accepted set
 - `CMS-003/T2` — Raster images are re-encoded, so EXIF and its location do not survive
-- `CMS-003/T3` — SVG is parsed and stripped to shape and text, or refused
+- `CMS-003/T3` — SVG is refused rather than sanitised
 - `CMS-003/T4` — Storage keyed by content hash, so a duplicate upload is one row
 - `CMS-003/T5` — Serving joins through references and composes the audience predicate, answering `404` on no match
 - `CMS-003/T6` — Cache headers follow the audience; nothing gated is cacheable
 - `CMS-003/T7` — Deletion is refused while a reference exists, and is audited when it is not
+- `CMS-003/T8` — An uploaded PDF's metadata is stripped before storage

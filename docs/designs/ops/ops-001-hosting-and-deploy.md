@@ -25,7 +25,11 @@ The host is **AWS** ([`INFRA-DEC-03`](../../decisions-log.md#INFRA-DEC-03)), the
 same ground the products run on, and the shape inside AWS is **ECS Fargate with
 RDS PostgreSQL** ([`INFRA-DEC-05`](../../decisions-log.md#INFRA-DEC-05)) — the
 smallest arrangement that is genuinely AWS, genuinely managed, and genuinely
-operable by one person. There is no EKS cluster to join today; when the
+operable by one person. Whether that Fargate service is hand-rolled (the ALB,
+target groups and security groups in the Terraform below) or uses Amazon ECS
+Express Mode — which provisions those for you and stays ECS, so the EKS bridge
+holds — is chosen at build, Express Mode the front-runner
+([`INFRA-DEC-05`](../../decisions-log.md#INFRA-DEC-05)). There is no EKS cluster to join today; when the
 ecosystem provisions one for another product, moving onto it is a deployment
 change and not an application change, because nothing above this design knows
 what runs it.
@@ -54,6 +58,7 @@ held is that the static site stays deployable until well after the switch.
 | **Secrets Manager** | `DATABASE_URL`, `SESSION_SECRET`, `SMTP_URL` | Injected as task environment at start (`CRED-001`). Never in the image, never in the task definition as plaintext |
 | **S3** | The backup target (`DATA-003`) | Versioned, lifecycle-expired, and in a different account path from the database |
 | **CloudWatch Logs** | Where `OPS-002`'s JSON lines land | Fargate's default driver; a log group with a retention, not an unbounded one |
+| **VPC egress** | How a task in a private subnet reaches ECR, Secrets Manager, CloudWatch and SMTP | A Fargate task with no public address reaches nothing AWS without it: VPC interface endpoints (priced per endpoint, no hourly NAT) or one NAT gateway, chosen for cost at build — and provisioned for you under ECS Express Mode |
 
 **Two availability zones for the subnets and one task.** The zones cost nothing
 and are what let the task be rescheduled when one zone is unwell; a second
@@ -61,6 +66,19 @@ running task would double the bill to protect a page with a dozen readers and
 would need the session store to be shared, which it is (`sessions` is a table),
 but the trade still is not worth taking until somebody is inconvenienced by the
 single task restarting.
+
+### Caching and the client address
+
+Two consequences were settled elsewhere and raised for this task; this is where
+they land. Every route renders per request to reach the CSP nonce (`SEC-DEC-02`),
+so **Cloudflare caches the assets and never the documents** — a cached document is
+one reader's answer served to the next — and `/_global-error`, which Next serves
+static with a year's `s-maxage` and no nonce, is the page Cloudflare must not
+answer from cache above all. The sign-in rate limit keys on the client address,
+which arrives through Cloudflare and the ALB in `X-Forwarded-For`; which hop is the
+real client is [`OPS-DEC-02`](../../decisions-log.md#OPS-DEC-02), answerable once
+this deploy fixes the chain — Cloudflare in front of the ALB is two hops from the
+right. Until then the per-account limit is the binding protection.
 
 ### Terraform, and what is not in it
 
@@ -177,3 +195,4 @@ created here. **`DATA-003`**'s S3 bucket and its lifecycle are created here.
 - `OPS-001/T5` — The six post-deploy checks, run against the real deployment through Cloudflare
 - `OPS-001/T6` — A staging service carrying `APP_ENV=staging`, so the console says which one it is
 - `OPS-001/T7` — RDS unreachable from outside the VPC, proved by attempting it rather than by reading the security group
+- `OPS-001/T8` — Private-subnet egress, and Cloudflare caching that never holds a document

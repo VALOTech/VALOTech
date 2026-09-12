@@ -34,10 +34,11 @@ completely: what can this person reach, and what would happen if I removed them.
 
 ### The list
 
-Name, address, role, state, when they last signed in. Sortable by last sign-in,
-because that column is what makes a stale account visible — an investor who has
-not signed in for a year is either a person who lost interest or an account
-nobody remembered to close.
+Name, address, role, state, when they last signed in, served stalest-first by
+last sign-in — which [`ADMIN-DEC-02`](../../decisions-log.md#ADMIN-DEC-02) ratified
+as the fixed order rather than an interactive control. That column is what makes a
+stale account visible — an investor who has not signed in for a year is either a
+person who lost interest or an account nobody remembered to close.
 
 ### The person
 

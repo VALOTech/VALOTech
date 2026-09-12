@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_297 tasks in the plan, 192 closed, 105 outstanding._
+_300 tasks in the plan, 192 closed, 108 outstanding._
 
 ---
 
@@ -66,17 +66,20 @@ _65/70 closed (92%) · 5 outstanding — 4 buildable now · 0 waiting on the own
 
 _The machinery every kind of writing shares — the editor, the media, the locale states, the audience rule, publishing, search — plus the account, configuration and logging surfaces an operator needs before anything is published. Building it once is the whole reason a report, an update and a deck are three navigations over one system rather than three systems._
 
-_53/64 closed (82%) · 11 outstanding — 10 buildable now · 0 waiting on the owner · 0 external residue · 1 parked to a later wave._
+_53/66 closed (80%) · 13 outstanding — 12 buildable now · 0 waiting on the owner · 0 external residue · 1 parked to a later wave._
 
 - **ADMIN-001** · Account management — 8/9 closed · depth 5
   - `[ ] ADMIN-001/T9` — Audit resend-invitation and reset-password: a new audit.action value, and a recordAudit inside the resend transaction
 
-- **CFG-001** · Runtime configuration — 6/6 closed
-- **CMS-003** · Media library — 6/7 closed · depth 5
+- **CFG-001** · Runtime configuration — 6/7 closed · depth 5
+  - `[ ] CFG-001/T7` — Remove the session-lifetime and sign-in-rate keys from the registry; the environment owns both
+
+- **CMS-003** · Media library — 6/8 closed · depth 5
   - `[ ] CMS-003/T2` — Raster images are re-encoded, so EXIF and its location do not survive
+  - `[ ] CMS-003/T8` — An uploaded PDF's metadata is stripped before storage
 
 - **CMS-005** · Locale variants and translation state — 4/6 closed · depth 5
-  - `[ ] CMS-005/T3` — Drafting translates block text and reassembles marks by span, never by offset arithmetic
+  - `[ ] CMS-005/T3` — Drafting seeds the locale with the source blocks, marks intact, for the reviewer to translate
   - `[ ] CMS-005/T4` — The review screen shows source beside translation, editable, marked one locale at a time
 
 - **CMS-006** · Audience and access — 6/6 closed
@@ -158,7 +161,7 @@ _25/59 closed (42%) · 34 outstanding — 34 buildable now · 0 waiting on the o
 
 _The reading surfaces, the room they sit in, and the gateway served by the application — which is what finally makes the gate on the two hidden chapters real rather than a stylesheet. This wave ends with the product complete and still unpublished; what publishes it is outside the waves, waiting on the owner._
 
-_3/56 closed (5%) · 53 outstanding — 53 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_3/57 closed (5%) · 54 outstanding — 54 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
 
 - **DECK-003** · Deck reading — 0/5 closed · depth 9
   - `[ ] DECK-003/T1` — One column with sections in order, the version and date on the page
@@ -200,7 +203,7 @@ _3/56 closed (5%) · 53 outstanding — 53 buildable now · 0 waiting on the own
   - `[ ] SITE-005/T3` — Node-for-node comparison of the rendered page against the static one, at three viewports
   - `[ ] SITE-005/T4` — Edge caching for anonymous readers, `Vary` on the session cookie, verified through the CDN with and without one
   - `[ ] SITE-005/T5` — First paint measured before and after, at the same viewport on the same machine
-  - `[ ] SITE-005/T6` — `main` stays deployable as the fallback until the owner answers `INFRA-DEC-03`
+  - `[ ] SITE-005/T6` — `main` stays deployable as the fallback through the cutover and for a month after
 
 - **INV-002** · Gated gateway chapters, served — 0/6 closed · depth 10
   - `[ ] INV-002/T2` — A test requests the page with no cookie and proves a gated sentence is absent from the body
@@ -216,7 +219,7 @@ _3/56 closed (5%) · 53 outstanding — 53 buildable now · 0 waiting on the own
   - `[ ] INV-003/T4` — All six always render, including paused, with an absent row filled rather than dropped
   - `[ ] INV-003/T5` — Stage is carried by a word as well as by colour, and the board states when it last changed
 
-- **OPS-001** · Hosting and deploy — 0/7 closed · depth 10
+- **OPS-001** · Hosting and deploy — 0/8 closed · depth 10
   - `[ ] OPS-001/T1` — Terraform under `deploy/`: VPC, ECS Fargate, ALB, RDS in private subnets, ECR, Route 53, ACM, with remote state and a l…
   - `[ ] OPS-001/T2` — The deploy sequence: migrate as a one-off task on the same image, then the new task set, health-checked before it takes…
   - `[ ] OPS-001/T3` — A short DNS TTL set a day before the cutover, and `main` left deployable for a month after
@@ -224,6 +227,7 @@ _3/56 closed (5%) · 53 outstanding — 53 buildable now · 0 waiting on the own
   - `[ ] OPS-001/T5` — The six post-deploy checks, run against the real deployment through Cloudflare
   - `[ ] OPS-001/T6` — A staging service carrying `APP_ENV=staging`, so the console says which one it is
   - `[ ] OPS-001/T7` — RDS unreachable from outside the VPC, proved by attempting it rather than by reading the security group
+  - `[ ] OPS-001/T8` — Private-subnet egress, and Cloudflare caching that never holds a document
 
 - **SITE-006** · Legal pages and the consent surface — 0/6 closed · depth 10
   - `[ ] SITE-006/T1` — Three legal pages in twenty locales, through the parity gate, linked in a footer row of their own

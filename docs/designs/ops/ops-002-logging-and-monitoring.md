@@ -25,8 +25,8 @@ reads.
 ## 2. Layer walkthrough
 
 **Down.** One logger. JSON lines to stdout, because the process is in a container
-somewhere and stdout is the one output that works whatever the somewhere turns
-out to be (`INFRA-DEC-03`).
+somewhere and stdout is the one output that works whatever runs the container —
+CloudWatch Logs reads it on AWS (`INFRA-DEC-03`, `OPS-001`).
 
 **Up.** Three alerts, each with an action written beside it.
 
@@ -113,8 +113,9 @@ other.
 
 ## 6. Open questions and trade-offs
 
-- **Where the lines go is unanswered.** `INFRA-DEC-03`. JSON to stdout works
-  with every option, which is why it is chosen before the decision.
+- **Where the lines go.** CloudWatch Logs on AWS (`INFRA-DEC-03`, `OPS-001`); JSON
+  to stdout was chosen before the host was, because it works with every option and
+  CloudWatch reads it unchanged.
 - **No tracing and no metrics backend.** One application, one database, and a
   request id that ties a request's lines together answers what a trace would, at
   this size. A metrics stack is a second system to run and to alert on.

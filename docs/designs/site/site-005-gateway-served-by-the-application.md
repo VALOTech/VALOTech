@@ -122,4 +122,4 @@ the record (`SCENE-R01`). **`INV-002`** is the feature that needs this.
 - `SITE-005/T3` — Node-for-node comparison of the rendered page against the static one, at three viewports
 - `SITE-005/T4` — Edge caching for anonymous readers, `Vary` on the session cookie, verified through the CDN with and without one
 - `SITE-005/T5` — First paint measured before and after, at the same viewport on the same machine
-- `SITE-005/T6` — `main` stays deployable as the fallback until the owner answers `INFRA-DEC-03`
+- `SITE-005/T6` — `main` stays deployable as the fallback through the cutover and for a month after

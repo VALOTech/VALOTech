@@ -46,8 +46,6 @@ a deploy to change *and* somebody would plausibly want to change it in a hurry.
 | `room.banner` | A line at the top of the investor room, or empty | empty |
 | `room.signin_message` | A line on the sign-in page — planned maintenance, say | empty |
 | `mail.enabled` | A kill switch for sending, independent of the credential | true |
-| `session.max_age_days` | How long a session lives | 30 |
-| `signin.rate_per_hour` | Attempts per account per hour | 10 |
 
 **Everything else is code or environment.** A setting is a value with no test
 pinning it and no review before it changes, so the list being short is the design
@@ -61,11 +59,10 @@ deploy.
 
     PUT /admin/config/<key>   { value }
 
-Validated against the key's own type and bounds — `session.max_age_days` an
-integer between 1 and 90, `signin.rate_per_hour` between 1 and 1000, and the two
-text lines at most 280 characters — and a value outside its range is refused with
-the range rather than accepted and clamped. Silent clamping is how a setting
-comes to disagree with what the screen says.
+Validated against the key's own type — the two text lines at most 280 characters,
+`mail.enabled` one of two words — and a value outside it is refused with the reason
+rather than accepted and clamped. Silent clamping is how a setting comes to
+disagree with what the screen says.
 
 In one transaction: write `previous_value` from the current one, write the new
 value, audit `config.change` with both (`SEC-R04`).
@@ -99,7 +96,7 @@ database, and putting a key in it would be putting a secret in it.
 
 **`ADMIN-002`** is the console page. **`SEC-002`** records every change and is
 the history this table does not keep. **`MAIL-001`** honours `mail.enabled`.
-**`AUTH-002`** reads the session lifetime; **`SEC-001`** reads the rate limit.
+The session lifetime and the sign-in rate are not settings but environment values (`SESSION_TTL_SECONDS`, `AUTH_MAX_ATTEMPTS`/`AUTH_WINDOW_SECONDS`), because changing either is a security change for a deploy review rather than a runtime toggle (`CFG-DEC-01`).
 
 ## 5. Cross-cutting compliance
 
@@ -124,6 +121,11 @@ the history this table does not keep. **`MAIL-001`** honours `mail.enabled`.
   string in the product that does not come from the dictionary, and the field
   says so. The honest alternative — twenty locale fields on a banner used twice a
   year — is a form nobody would fill in, so the banner would not get used.
+- **The session lifetime and the sign-in rate are not here.** Both were briefly
+  in this registry and read by nothing while the live values came from the
+  environment; they are environment-owned (`CFG-DEC-01`), because the registry is
+  for a value an admin changes in a hurry and a security parameter changed without
+  a deploy review is not one of those.
 
 ## 7. Task list
 
@@ -133,3 +135,4 @@ the history this table does not keep. **`MAIL-001`** honours `mail.enabled`.
 - `CFG-001/T4` — Revert is one action with no confirmation, and is itself recorded
 - `CFG-001/T5` — One cached accessor with a short refresh; an empty table yields a working application
 - `CFG-001/T6` — The accessor refuses a secret-shaped key
+- `CFG-001/T7` — Remove the session-lifetime and sign-in-rate keys from the registry; the environment owns both

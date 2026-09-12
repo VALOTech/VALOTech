@@ -19,7 +19,7 @@ message.
 | Variable | Who produces it | Why it exists |
 |---|---|---|
 | `DATABASE_URL` | `docker compose up` locally; the host, in production | Everything the investor room stores |
-| `SESSION_SECRET` | the owner, generated locally | Signs the session cookie. Rotating it signs every live session out — the intended emergency lever |
+| `SESSION_SECRET` | the owner, generated locally | Will sign the session cookie once `AUTH-002/T5` lands (`AUTH-DEC-02`); until then it is unused on the session path, and the lever that ends every session is deleting the session rows (`AUTH-004`) |
 | the mail carrier's key | unanswered — [`MAIL-DEC-01`](../docs/decisions-log.md#MAIL-DEC-01) | Carries an invitation and an investor message. Until the decision lands, no mail is sent and no key exists |
 
 Three, and two of them the owner makes rather than buys. That is why this
@@ -36,8 +36,11 @@ analytics; closing the tab loses everything in it, which is the point.
 
 ## When a credential leaks
 
-Rotate first, investigate second. `SESSION_SECRET` is rotated by setting a new
-value and restarting, which ends every session. `DATABASE_URL` is rotated by
-changing the database password. A mail key is revoked at the provider. Then file
+Rotate first, investigate second. Ending every live session today means deleting
+the session rows — `AUTH-004`'s end-everywhere control, or truncating `sessions` —
+because `SESSION_SECRET` does not yet sign the cookie; once `AUTH-002/T5` signs it
+(`AUTH-DEC-02`), rotating the secret and restarting becomes that lever.
+`DATABASE_URL` is rotated by changing the database password. A mail key is revoked
+at the provider. Then file
 what happened as a `REVIEW` row in [`docs/tasks.md`](../docs/tasks.md), because
 the interesting question is never the key — it is how it got out.

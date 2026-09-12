@@ -1,6 +1,6 @@
 # Security Policy
 
-VALO Tech is a static marketing site — hand-authored HTML, CSS, and vanilla JavaScript served from GitHub Pages at [valotech.org](https://valotech.org). It has no application backend, no accounts, and collects no visitor data; the repository is the deployed artifact. The attack surface is therefore the published site and this repository itself, and we take a report about either one seriously.
+VALO Tech is a static marketing site — hand-authored HTML, CSS, and vanilla JavaScript served from GitHub Pages at [valotech.org](https://valotech.org). It has no application backend, no accounts, and collects no visitor data; the site served from `main` is the deployed artifact. The attack surface is therefore the published site and this repository itself, and we take a report about either one seriously.
 
 ## Reporting a vulnerability
 

@@ -17,13 +17,15 @@ status: design-ready
 The same content in another language, and the state that says whether a person
 has read it. Realizes `CMS-005` and carries `CMS-R05`.
 
-`I18N-DEC-01` settles the question this design implements: a machine draft is
-produced, is shown to nobody, and becomes servable only when an admin has read
-that locale and marked it reviewed. Until then the reader gets the authored
-language. The decision reconciles two principles that appeared to conflict —
-`P-05`'s twenty languages and `I18N-R04`'s English fallback — by observing that a
-machine draft is not a translation, so publishing one would breach the first
-while showing the source language is exactly what the second describes.
+Two decisions settle what this design implements. `I18N-DEC-01` fixes what a
+reader sees: a locale becomes servable only when an admin has reviewed it, and
+until then the reader gets the authored language — reconciling `P-05`'s twenty
+languages with `I18N-R04`'s fallback, because an unreviewed draft is not a
+translation and showing the source language is exactly what the fallback
+describes. `CMS-DEC-04` fixes what a draft is: the room runs no translation
+service, so drafting **seeds** the target locale with the source blocks, marks
+intact, and the admin writes the translation in the review screen. Nothing
+machine-made is ever produced or served.
 
 ## 2. Layer walkthrough
 
@@ -47,30 +49,30 @@ cell one of three colours.
 | `machine` | yes | **never** |
 | `reviewed` | yes | yes |
 
-There is no fourth state and no partial one. A locale is either a person has read
-it or it is not shown, because the failure this prevents is a machine sentence
-that reads grammatically and lifelessly on the company's material — and no
-mechanical check in this repository can tell the difference. The eleven locales
-still open at `I18N-001/T4` exist for precisely that reason.
+There is no fourth state and no partial one: a locale is either reviewed by a
+person or it is not shown. The pre-review row — `machine` in the schema, a name
+the source seed outgrew (`CMS-DEC-04`) — holds the source blocks a human has not
+yet translated, and serving it would claim a translation exists where none does.
+The eleven locales still open at `I18N-001/T4` are the same caution on the
+gateway.
 
 ### Translating
 
     POST /admin/content/<id>/locales/<locale>/draft
 
-Takes the revision's blocks, sends the **text of each block** for translation, and
-writes the result back into the same block structure. The structure is never
-translated — a `heading` stays a `heading`, an `image`'s `media_id` is untouched,
-a paragraph's marks keep their offsets recomputed against the new text.
+Seeds the locale: copies the revision's blocks into a new `content_locales` row
+with their text and **marks intact** (`CMS-DEC-04`), so a `heading` stays a
+`heading`, an `image`'s `media_id` is untouched, and a paragraph's marks keep
+their offsets over the source text the reviewer is about to replace. The seed is
+the source language under the target locale's label, in the pre-review state,
+served to nobody.
 
-That last point is where this breaks if it is done casually: marks are offsets
-over the source string (`CMS-001`), and a translation has different lengths. A
-mark is carried by translating the marked span as a unit and reassembling, not by
-translating the whole paragraph and guessing where the emphasis went.
-
-The carrier is a self-hosted translation service or an admin pasting a draft in.
-Which one is not settled here and does not need to be: the state machine is the
-same either way, and no external general-purpose model is used in the product
-(PRD §1.6 in `.claude/CLAUDE.md`).
+The admin writes the translation in the review screen, editing the text within
+each mark rather than re-deriving it. The span-by-span reassembly a programmatic
+translator would need — translating a marked span as a unit so the emphasis lands
+on the right words — is the self-hosted-service path `CMS-DEC-04` did not take;
+under the seed-and-review path the human keeps the marks the seed carried and
+changes only the words. No external general-purpose model is used in the product.
 
 ### Reviewing
 
@@ -147,7 +149,7 @@ list, the twenty codes, and the interface strings around the content.
 
 - `CMS-005/T1` — Locale rows per revision, with a state a query filters on rather than infers
 - `CMS-005/T2` — A `machine` row is never reachable by any reader path
-- `CMS-005/T3` — Drafting translates block text and reassembles marks by span, never by offset arithmetic
+- `CMS-005/T3` — Drafting seeds the locale with the source blocks, marks intact, for the reviewer to translate
 - `CMS-005/T4` — The review screen shows source beside translation, editable, marked one locale at a time
 - `CMS-005/T5` — Serving falls back to the authored language and says so to the reader
 - `CMS-005/T6` — A new revision starts with no locale rows, and the grid shows it

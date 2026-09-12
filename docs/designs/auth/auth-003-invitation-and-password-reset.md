@@ -148,6 +148,14 @@ on-screen link `inviteAccount` returns is the whole delivery mechanism.
   the fail-closed default that a reset acts only on an `active` account, so an
   invited account's invitation stands; whether the two token kinds are separated
   in the schema is [`AUTH-DEC-04`](../../decisions-log.md#AUTH-DEC-04).
+- **Self-service reset, not admin-only.** The public `/forgot` above is the
+  design's choice, ratified at [`AUTH-DEC-05`](../../decisions-log.md#AUTH-DEC-05)
+  against an admin-initiated-only alternative. It waits on mail delivery
+  (`AUTH-003/T3` over `MAIL-001/T8`), so until the page ships the reset-request
+  rate limit (`SEC-001/T4`) stays pending; and because the SMTP carrier reports no
+  bounce ([`MAIL-DEC-01`](../../decisions-log.md#MAIL-DEC-01)), a reset mail that
+  never arrives signals nobody, so the admin resetting from the person page
+  (`ADMIN-001/T2`) is the fallback.
 
 ## 7. Task list
 
