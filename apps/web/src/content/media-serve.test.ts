@@ -28,6 +28,8 @@ import { runner } from 'node-pg-migrate';
 import { Pool } from 'pg';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
+import { Jimp } from 'jimp';
+
 import { GET } from '../app/media/[id]/route';
 import type { Actor } from '../auth/gate';
 import { issue, sessionCookieName } from '../auth/session';
@@ -77,9 +79,28 @@ async function recreateIsolatedDatabase(): Promise<void> {
 const PNG = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
 
 /** Distinct bytes per fixture, so a body assertion tells the files apart. */
-const bytesFor = (marker: string): Buffer => Buffer.concat([PNG, Buffer.from(marker)]);
+/** A distinct real image per marker: the store decodes what it is handed. */
+const bytesFor = async (marker: string, mime: AcceptedMime): Promise<Buffer> =>
+  mime === 'application/pdf'
+    ? Buffer.concat([Buffer.from('%PDF-1.7\n'), Buffer.from(marker)])
+    : new Jimp({
+        width: 8,
+        height: 6,
+        color: (marker.split('').reduce((n, c) => n * 31 + c.charCodeAt(0), 7) % 0xffffff) * 0x100 + 0xff,
+      }).getBuffer(mime === 'image/jpeg' ? 'image/jpeg' : 'image/png');
 
 const heading = (text: string): Block[] => [{ type: 'heading', level: 2, text }];
+
+/** What a row actually holds, which after the re-encode is not what was sent. */
+async function storedBytes(id: string): Promise<Buffer> {
+  const row = await getDb()
+    .selectFrom('media')
+    .select('bytes')
+    .where('id', '=', id)
+    .executeTakeFirstOrThrow();
+
+  return Buffer.from(row.bytes);
+}
 
 /** A stored file and the facts a serve assertion reads about it. */
 interface Fixture {
@@ -102,7 +123,7 @@ describe.skipIf(!HAS_DATABASE)('GET /media/[id] serves by audience (CMS-003/T5, 
   const fx: Record<'public' | 'investor' | 'granted' | 'draft' | 'unplaced', Fixture> = {
     public: { mediaId: '', bytes: Buffer.alloc(0), mime: 'image/png' },
     investor: { mediaId: '', bytes: Buffer.alloc(0), mime: 'application/pdf' },
-    granted: { mediaId: '', bytes: Buffer.alloc(0), mime: 'image/webp' },
+    granted: { mediaId: '', bytes: Buffer.alloc(0), mime: 'image/jpeg' },
     draft: { mediaId: '', bytes: Buffer.alloc(0), mime: 'image/png' },
     unplaced: { mediaId: '', bytes: Buffer.alloc(0), mime: 'image/jpeg' },
   };
@@ -135,12 +156,14 @@ describe.skipIf(!HAS_DATABASE)('GET /media/[id] serves by audience (CMS-003/T5, 
       await publish(item.id, revision.id, admin.id);
     }
 
-    const bytes = bytesFor(key);
+    const bytes = await bytesFor(key, fixture.mime);
     const { id } = await storeMedia(bytes, fixture.mime, uploader.id);
     await getDb().insertInto('media_refs').values({ media_id: id, item_id: item.id }).execute();
 
     fixture.mediaId = id;
-    fixture.bytes = bytes;
+    // What the row holds, not what was uploaded: a raster is re-encoded on the
+    // way in (`CMS-003/T2`), and what a serve hands back is the stored file.
+    fixture.bytes = await storedBytes(id);
 
     if (key === 'granted') {
       await addGrant(item.id, investorA.id, admin.id);
@@ -173,10 +196,10 @@ describe.skipIf(!HAS_DATABASE)('GET /media/[id] serves by audience (CMS-003/T5, 
     await placedFile('granted', 'granted', true);
     await placedFile('draft', 'public', false);
 
-    const unplacedBytes = bytesFor('unplaced');
+    const unplacedBytes = await bytesFor('unplaced', fx.unplaced.mime);
     const { id: unplacedId } = await storeMedia(unplacedBytes, fx.unplaced.mime, uploader.id);
     fx.unplaced.mediaId = unplacedId;
-    fx.unplaced.bytes = unplacedBytes;
+    fx.unplaced.bytes = await storedBytes(unplacedId);
   }, 120_000);
 
   afterAll(closeDb);

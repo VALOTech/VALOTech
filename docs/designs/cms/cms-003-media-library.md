@@ -7,7 +7,7 @@ depends_on: [CMS-001, SEC-001]
 depended_by: [CMS-002, DECK-001, POST-001, RPT-001]
 layers_touched: [data, domain, service, api, frontend, ui]
 cross_cutting_rules: [CMS-R06, SEC-R01, DATA-R02, A11Y-R02]
-status: design-ready
+status: in-progress
 ---
 
 # `CMS-003` — Media library
@@ -42,12 +42,17 @@ referencing it, and applies `CMS-006`'s predicate. No match is a `404`.
 1. Read the bytes. **Sniff the type from the bytes**, never from the filename
    and never from the declared content type — both are supplied by whoever is
    uploading (`SEC-001`).
-2. Accept only `image/png`, `image/jpeg`, `image/webp` and `application/pdf`.
-   Anything else is refused by type, not by extension.
+2. Accept only `image/png`, `image/jpeg` and `application/pdf`. Anything else is
+   refused by type, not by extension — including WebP, for as long as no encoder
+   here can rewrite one ([`CMS-DEC-06`](../../decisions-log.md#CMS-DEC-06)).
 3. **Re-encode raster images** through `jimp` (`CMS-DEC-03`). A PNG in is a PNG
    out, produced by the encoder, which strips EXIF — including the GPS
    coordinates of wherever the screenshot was taken (`DATA-R02`) — and drops
-   anything a decoder would have treated as payload.
+   anything a decoder would have treated as payload. It happens **inside**
+   `storeMedia`, before the bytes are hashed, so the stored file, the `sha256`
+   it is keyed by and what a serve returns are one thing and no caller can
+   reach around it. Bytes that sniffed as a raster and then will not decode are
+   refused rather than stored unread.
 4. **Strip a PDF's metadata** through a library (`CMS-DEC-05`) before it is
    stored — the Info dictionary's author and producer, the XMP packet, local
    file paths, and the metadata of images embedded in it — so a PDF leaks no more
@@ -55,6 +60,9 @@ referencing it, and applies `CMS-006`'s predicate. No match is a `404`.
 5. **SVG is refused** (`CMS-DEC-03`). An SVG is a document that can carry script
    and external references, and there is no sanitiser here to trust: it is not an
    accepted type, so it is turned away like any other. A logo arrives as a raster.
+   **WebP is refused too**, for the opposite reason — not what it can carry but
+   what cannot be done to it: `jimp` decodes none, so accepting one would store
+   the single format step 3 does not reach (`CMS-DEC-06`).
 6. Cap at 10 MB, stated in the control before the file is chosen.
 7. Store under `sha256`; a duplicate returns the existing row.
 

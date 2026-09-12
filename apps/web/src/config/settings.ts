@@ -29,14 +29,11 @@ import { sql } from 'kysely';
 import { recordAudit } from '../audit/record';
 import { getDb } from '../db/index';
 
-type SettingType = 'text' | 'int' | 'bool';
+type SettingType = 'text' | 'bool';
 
 interface SettingSpec {
   readonly type: SettingType;
-  readonly fallback: string | number | boolean;
-  /** For an `int` key: the inclusive range a change is validated against (`CFG-001/T2`). */
-  readonly min?: number;
-  readonly max?: number;
+  readonly fallback: string | boolean;
   /** For a `text` key: the longest value a change accepts. */
   readonly maxLength?: number;
 }
@@ -51,8 +48,6 @@ export const SETTINGS = {
   'room.banner': { type: 'text', fallback: '', maxLength: 280 },
   'room.signin_message': { type: 'text', fallback: '', maxLength: 280 },
   'mail.enabled': { type: 'bool', fallback: true },
-  'session.max_age_days': { type: 'int', fallback: 30, min: 1, max: 90 },
-  'signin.rate_per_hour': { type: 'int', fallback: 10, min: 1, max: 1000 },
 } as const satisfies Record<string, SettingSpec>;
 
 export type SettingKey = keyof typeof SETTINGS;
@@ -74,17 +69,10 @@ export function isSecretShaped(key: string): boolean {
 
 /** Parse one stored string into the key's declared type. */
 function parse<K extends SettingKey>(key: K, raw: string): SettingValue<K> {
-  const { type } = SETTINGS[key];
-  if (type === 'bool') {
+  if (SETTINGS[key].type === 'bool') {
     return (raw === 'true') as SettingValue<K>;
   }
-  if (type === 'int') {
-    const parsed = Number(raw);
-    // A row outside the type is a write that bypassed validation (`CFG-001/T2`);
-    // the default is the fail-safe, so a corrupt row degrades to the declared
-    // value rather than handing a caller a NaN.
-    return (Number.isInteger(parsed) ? parsed : SETTINGS[key].fallback) as SettingValue<K>;
-  }
+
   return raw as SettingValue<K>;
 }
 
@@ -171,18 +159,6 @@ export function validateSetting<K extends SettingKey>(key: K, raw: string): Chan
     return raw === 'true' || raw === 'false'
       ? { ok: true, stored: raw }
       : { ok: false, reason: `${key} is true or false` };
-  }
-
-  if (spec.type === 'int') {
-    const parsed = Number(raw);
-    if (raw.trim() === '' || !Number.isInteger(parsed)) {
-      return { ok: false, reason: `${key} is a whole number` };
-    }
-    const min = spec.min ?? Number.MIN_SAFE_INTEGER;
-    const max = spec.max ?? Number.MAX_SAFE_INTEGER;
-    return parsed >= min && parsed <= max
-      ? { ok: true, stored: String(parsed) }
-      : { ok: false, reason: `${key} is a whole number between ${min} and ${max}` };
   }
 
   const max = spec.maxLength ?? Number.MAX_SAFE_INTEGER;

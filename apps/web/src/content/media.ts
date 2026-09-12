@@ -13,15 +13,26 @@
  * cascades from `media` — a file deleted out from under a published document
  * would take its references with it rather than be refused.
  *
- * What is not here: the re-encode that strips EXIF from a raster (`CMS-003/T2`)
- * waits on its library — `CMS-DEC-03` settled it to `jimp`, pure JavaScript, run
- * before `storeMedia` once the upload route exists, so a file with its EXIF
- * intact never reaches storage. SVG is not accepted at all (`CMS-003/T3`): the
- * same decision refused it rather than trust a sanitiser, so an `<svg>` document
- * sniffs to `null` and the upload turns it away like any other unaccepted type.
+ * A raster is re-encoded on the way in (`CMS-003/T2`): `storeMedia` decodes and
+ * re-encodes it through `jimp` (`CMS-DEC-03`) before it hashes anything, so what
+ * is stored is the encoder's own output and the EXIF — including the GPS of
+ * wherever a screenshot was taken — is not in it (`DATA-R02`). The re-encode is
+ * inside the store rather than in front of it because there is no upload route
+ * yet to put it in front of, and a guarantee that depends on a caller arriving
+ * later and remembering is not one.
+ *
+ * SVG is not accepted at all (`CMS-003/T3`): `CMS-DEC-03` refused it rather than
+ * trust a sanitiser, so an `<svg>` document sniffs to `null` and the upload turns
+ * it away like any other unaccepted type. WebP is turned away for a different
+ * reason and only until somebody decides otherwise — `jimp` cannot decode it, so
+ * accepting it would store the one format whose metadata nothing here strips.
+ * Which way that goes is `CMS-DEC-06`; refusing is the fail-closed answer this
+ * ships in the meantime.
  */
 
 import { createHash } from 'node:crypto';
+
+import { Jimp } from 'jimp';
 
 import type { Actor } from '../auth/gate';
 import { recordAudit } from '../audit/record';
@@ -33,12 +44,14 @@ import { visibleTo } from './access';
  * The types the library accepts, by what the bytes are and not what they are
  * called (`CMS-003` §3). Anything else is refused.
  */
-export const ACCEPTED_MIME = [
-  'image/png',
-  'image/jpeg',
-  'image/webp',
-  'application/pdf',
-] as const;
+export const ACCEPTED_MIME = ['image/png', 'image/jpeg', 'application/pdf'] as const;
+
+/**
+ * The accepted types the encoder can produce, which is what makes them safe to
+ * accept: a file of one of these is stored as `jimp`'s own output rather than as
+ * the bytes somebody uploaded.
+ */
+const REENCODED_MIME = ['image/png', 'image/jpeg'] as const;
 
 export type AcceptedMime = (typeof ACCEPTED_MIME)[number];
 
@@ -52,8 +65,7 @@ function startsWith(bytes: Uint8Array, signature: readonly number[]): boolean {
 
 /**
  * The accepted type of a file, sniffed from its bytes, or `null` when it is none
- * of them (`CMS-003/T1`). The raster and document types have a fixed signature;
- * WebP is a RIFF container whose form appears four bytes in.
+ * of them (`CMS-003/T1`). Each accepted type has a fixed signature at the front.
  */
 export function sniffType(bytes: Uint8Array): AcceptedMime | null {
   if (startsWith(bytes, [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])) {
@@ -62,18 +74,12 @@ export function sniffType(bytes: Uint8Array): AcceptedMime | null {
   if (startsWith(bytes, [0xff, 0xd8, 0xff])) {
     return 'image/jpeg';
   }
-  if (
-    startsWith(bytes, [0x52, 0x49, 0x46, 0x46]) &&
-    bytes.length >= 12 &&
-    startsWith(bytes.subarray(8), [0x57, 0x45, 0x42, 0x50])
-  ) {
-    return 'image/webp';
-  }
   if (startsWith(bytes, [0x25, 0x50, 0x44, 0x46])) {
     return 'application/pdf';
   }
-  // SVG is refused rather than sanitised (`CMS-DEC-03`): an `<svg>` document is
-  // none of the accepted types, so it sniffs to null and the upload turns it away.
+  // SVG is refused rather than sanitised (`CMS-DEC-03`), and a WebP is refused
+  // because no encoder here can rewrite it (`CMS-DEC-06`). Neither is an accepted
+  // type, so both sniff to null and the upload turns them away like anything else.
   return null;
 }
 
@@ -84,21 +90,67 @@ export interface StoredMedia {
 }
 
 /**
+ * A file whose bytes the decoder could not read.
+ *
+ * It is a refusal and not a pass-through: bytes that sniffed as a raster and
+ * then would not decode are not a picture, and storing them unread would store
+ * exactly the payload the re-encode exists to drop.
+ */
+export class UndecodableImageError extends Error {
+  readonly mime: string;
+
+  constructor(mime: string) {
+    super(`the bytes sniffed as ${mime} and could not be decoded`);
+    this.name = 'UndecodableImageError';
+    this.mime = mime;
+  }
+}
+
+/**
+ * A raster as the encoder writes it, which is the only form of it that is
+ * stored (`CMS-003/T2`, `CMS-DEC-03`).
+ *
+ * Decoding to pixels and encoding again is what makes this work: EXIF, XMP, a
+ * colour profile and any trailing bytes a decoder would have treated as payload
+ * are all outside the pixels, so none of them survives being thrown away and
+ * written fresh. A PNG in is a PNG out — the type is not converted, because an
+ * admin who uploads a screenshot should get the format back that they chose.
+ */
+async function reencoded(bytes: Uint8Array, mime: AcceptedMime): Promise<Buffer> {
+  if (!(REENCODED_MIME as readonly string[]).includes(mime)) {
+    return Buffer.from(bytes);
+  }
+
+  try {
+    const image = await Jimp.read(Buffer.from(bytes));
+
+    return await image.getBuffer(mime as (typeof REENCODED_MIME)[number]);
+  } catch {
+    // The decoder's own message can carry the file's bytes, so it is not passed
+    // on; what a caller needs is the type it claimed to be (`DATA-R02`).
+    throw new UndecodableImageError(mime);
+  }
+}
+
+/**
  * Store bytes under their SHA-256, returning the row's id (`CMS-003/T4`). The
  * same bytes stored twice are one row: the insert yields to an existing `sha256`
  * rather than failing, so two uploads of one file racing each other settle on
  * the same row instead of one erroring. `deduped` tells the caller whether it
  * created the row, which the upload route reports as "already here".
  *
- * The bytes are stored as given; any re-encoding (`CMS-003/T2`) has happened
- * before this is called.
+ * A raster is re-encoded first and the hash is taken of what that produced, so
+ * the stored bytes, the `sha256` they are keyed by and the file a serve hands
+ * back are all the same encoder output (`CMS-003/T2`). Two uploads of one
+ * screenshot that differ only in their EXIF therefore land on one row, because
+ * after the re-encode they are one file.
  */
 export async function storeMedia(
   bytes: Uint8Array,
   mime: AcceptedMime,
   uploaderId: string,
 ): Promise<StoredMedia> {
-  const buffer = Buffer.from(bytes);
+  const buffer = await reencoded(bytes, mime);
   const sha256 = createHash('sha256').update(buffer).digest('hex');
 
   const inserted = await getDb()

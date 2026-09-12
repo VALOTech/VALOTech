@@ -155,7 +155,7 @@ because an investor navigates each of them differently.
 | `DATA-003` | Backup and restore | live | A restore that has been performed, not merely configured |
 | `SEC-001` | Security baseline | design | CSP, HSTS, secure cookies, parameterised queries, dependency and secret scanning in CI |
 | `SEC-002` | Audit log | design | Append-only record of every privileged write |
-| `CFG-001` | Runtime configuration | design | The values an admin may change without a deploy, each with its prior value and a single-action undo |
+| `CFG-001` | Runtime configuration | live | The values an admin may change without a deploy, each with its prior value and a single-action undo |
 | `OPS-001` | Hosting and deploy | design | Where the app runs, and how valotech.org points at it — AWS, ECS on Fargate (`docs/decisions-log.md#INFRA-DEC-05`), built last |
 | `OPS-002` | Logging and monitoring | live | Structured logs with a request id, no personal data, and an alert an operator can act on |
 | `INFRA-001` | Local development stack | live | One command brings up PostgreSQL and the app against it |

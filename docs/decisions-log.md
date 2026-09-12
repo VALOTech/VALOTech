@@ -81,7 +81,32 @@ An entry is filed the moment the choice surfaces, not when it is answered. Nothi
 - **Status:** OPEN. Safe default: the convention as practised, with `make migrate-roundtrip` proving the down-migration on a fresh database and the shared development database recreated by hand after each such edit. The exposure ends at `OPS-001`, which freezes migrations against a database nobody can recreate.
 
 ---
+<a id="CMS-DEC-06"></a>
+### `CMS-DEC-06` — Whether the library still accepts WebP, which its encoder cannot rewrite — OPEN
+
+- **Decision:** `CMS-DEC-03` settled the raster re-encode on `jimp`, pure JavaScript and no native build. `jimp` decodes PNG, JPEG, BMP, GIF and TIFF and **no WebP**, while `CMS-003` §3 accepts `image/webp`. So the one accepted format the encoder cannot rewrite is the one whose metadata nothing strips: a WebP would keep its EXIF, and the GPS in it, all the way into storage (`DATA-R02`). Does the library keep WebP and gain a decoder for it, or stop accepting it?
+- **Options:** **A** Refuse WebP, as SVG is refused — no dependency, and the cost is that a WebP is turned away and arrives as a PNG or a JPEG instead · **B** Keep WebP and add a decoder — `sharp` (native libvips, the build cost `CMS-DEC-03` declined) or a WebAssembly codec, which keeps the pure-JavaScript posture at the cost of a second image library · **C** Keep WebP and store it unre-encoded, which ships the leak knowingly.
+- **Recommendation:** **A**. It is the move `CMS-DEC-03` already made for the format it could not handle safely, it adds nothing to the dependency tree, and the cost falls on an admin who can export a PNG. **B** is right only if WebP uploads turn out to be a real need — the room’s images come from screenshots and design tools, and both export PNG. **C** is refused for the reason `CMS-DEC-03` refused the same shape: it ships a `DATA-R02` leak in the one format nobody would think to check.
+- **Decision owner:** user
+- **Blocks:** — none —
+- **Revises:** CMS-003/T1 — the sniff accepted a WebP when it shipped; the answer decides whether it does again
+- **Status:** OPEN. Safe default: WebP is not an accepted type, so it sniffs to `null` and the upload turns it away like anything else — fail-closed, because the alternative is storing the one file whose metadata nothing here removes. Restoring it is one signature and one entry in the accepted set, once a decoder exists.
+
+---
 ## Resolved decisions
+
+<a id="ADMIN-DEC-04"></a>
+### `ADMIN-DEC-04` — What standard the admin console’s front-end is held to — RESOLVED 2026-09-13
+
+- **Decision:** `ADMIN-002` describes the console’s chrome and every admin surface describes what it must contain, and none of them says how good the front-end has to be. A staff tool is exactly where that silence gets read as permission: the surfaces are internal, the audience is two people, and each screen is easy to ship as a bare form that works. What standard do they hold?
+- **Options:** **A** The quality bar is VALO Ads’ — its forms, buttons, motion and interaction patterns are the reference the console is built to, in VALO Tech’s own visual identity rather than its skin · **B** Functional-internal — correct, accessible, unstyled beyond the design tokens, on the grounds that two admins do not need polish.
+- **Recommendation:** **A**, and this is the owner’s own instruction rather than a reading the loop derived.
+- **Decision owner:** user
+- **Settled by:** user
+- **Status:** RESOLVED 2026-09-13 — **A**. The console is built to VALO Ads’ level of finish and learns its craft from that repository — how a form is composed and validated, how a button reads in each of its states, how motion is used and when it is not — which is readable in the VALO Ads checkout beside this one, under its web app's component tree and the animations stylesheet next to it. Those paths are that repository's and not this one's; nothing here is copied from them. What is borrowed is the method, never the identity: the console stays VALO Tech’s, on this repository’s own theme and tokens (`assets/site.css`, the brand kit the `check-brand` gate holds), so the two products do not become one another. Makeshift is the failure this names: a surface that works and looks unfinished does not meet the bar and is not done. `A11Y-R01` through `A11Y-R03` bind as they always did — finish is never bought with a control that cannot be reached by keyboard or a contrast that fails against the painted pixel — and `ADMIN-002/T5` keeps the console in English. The same bar governs the investor-facing surfaces from the other direction: `INV-DEC-01` says what those must show, this says how well the staff surfaces must be made.
+
+---
+
 
 <a id="INV-DEC-01"></a>
 ### `INV-DEC-01` — What standard the investor-facing surfaces hold their presentation to — RESOLVED 2026-09-13
@@ -395,7 +420,7 @@ An entry is filed the moment the choice surfaces, not when it is answered. Nothi
 - **Options:** **A** Hold one station at the centre of the visible frame and hold the scale, keep the self-rotation and keep the lunar-to-Earth scrub on scroll · **B** Hold the station and the rotation but drop the scrub, so the phone shows a living world from the first screen · **C** Freeze it entirely — a still image, no rotation and no scrub.
 - **Decision owner:** user
 - **Settled by:** user
-- **Status:** RESOLVED 2026-09-13 — **A**, with the world drawn at 0.7 of full strength so the copy standing on it reads first. The disc holds 50% across and 54% down — 54 rather than 50 because the scene measures from the centre of what a reader can see and the header covers the top of the frame — at a drawn radius of 122px on a 390px frame, measured identical across thirteen frames of the page. The idle drift is a wide-frame gesture and is off below 900px: measured at 0.00px over twelve samples with no scrolling, which is what `SCENE-R03` asks of a held station. **C** was refused because it contradicts `SCENE-R04`, and **B** because the scrub is the argument the page is built to make.
+- **Status:** RESOLVED 2026-09-13 — **A**, with the world drawn at 0.7 of full strength so the copy standing on it reads first. The disc holds **50% across and 50% down**, at a drawn radius of 122px on a 390px frame, measured identical at every point of the page and at 360 x 800 as well. A wide frame keeps its origin half a header below the window's centre, because the header covers the top of a composition the world stands beside; a phone takes the frame's own centre, because there the world is the subject and the header is a bar over it. The two are now one value in the scene rather than two — the world's transform and the star's placement each carried their own copy, and a vertical origin kept twice puts the star and the rings half a header off the disc the moment one is tuned (`SCENE-R02`). The idle drift is a wide-frame gesture and is off below 900px: measured at 0.00px over twelve samples with no scrolling, which is what `SCENE-R03` asks of a held station. **C** was refused because it contradicts `SCENE-R04`, and **B** because the scrub is the argument the page is built to make.
 
 <a id="SITE-DEC-04"></a>
 ### `SITE-DEC-04` — How much of the world shows through the phone's grounds — RESOLVED 2026-09-13

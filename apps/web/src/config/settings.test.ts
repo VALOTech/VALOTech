@@ -69,41 +69,49 @@ describe('the registry and the secret-guard (CFG-001/T1, T6)', () => {
   });
 });
 
-describe('validation against type and bounds (CFG-001/T2)', () => {
-  it('accepts a value within the range and normalises an integer to store', () => {
-    expect(validateSetting('session.max_age_days', '45')).toEqual({ ok: true, stored: '45' });
+describe('what the registry holds (CFG-001/T7)', () => {
+  it('holds only the three values an admin changes at runtime', () => {
+    // The session lifetime and the sign-in rate are the environment's, where a
+    // change is reviewed and deployed (`CFG-DEC-01`). A security parameter that
+    // can be widened from a web form at runtime is the failure this excludes,
+    // and the list being short is the design rather than an accident of what has
+    // been built (`CFG-001` §3).
+    expect(Object.keys(SETTINGS).sort()).toEqual([
+      'mail.enabled',
+      'room.banner',
+      'room.signin_message',
+    ]);
+  });
+});
+
+describe('validation against type and length (CFG-001/T2)', () => {
+  it('accepts a value each key type admits, and stores it as written', () => {
     expect(validateSetting('mail.enabled', 'false')).toEqual({ ok: true, stored: 'false' });
+    expect(validateSetting('mail.enabled', 'true')).toEqual({ ok: true, stored: 'true' });
     expect(validateSetting('room.banner', 'Closed for the weekend')).toEqual({
       ok: true,
       stored: 'Closed for the weekend',
     });
   });
 
-  it('refuses an out-of-range integer with the range rather than clamping it', () => {
-    const tooLow = validateSetting('session.max_age_days', '0');
-    const tooHigh = validateSetting('session.max_age_days', '91');
-    // The range is in the refusal, because a clamp would disagree with what the
-    // caller typed and what the screen then shows.
-    expect(tooLow).toEqual({
+  it('refuses an over-long text with the limit rather than truncating it', () => {
+    // The limit is in the refusal, because a silent truncation would disagree
+    // with what the caller typed and what the screen then shows.
+    expect(validateSetting('room.banner', 'x'.repeat(281))).toEqual({
       ok: false,
-      reason: 'session.max_age_days is a whole number between 1 and 90',
+      reason: 'room.banner is at most 280 characters',
     });
-    expect(tooHigh).toEqual({
-      ok: false,
-      reason: 'session.max_age_days is a whole number between 1 and 90',
-    });
-    expect(validateSetting('signin.rate_per_hour', '0').ok).toBe(false);
-    expect(validateSetting('session.max_age_days', '1').ok).toBe(true);
-    expect(validateSetting('session.max_age_days', '90').ok).toBe(true);
+    expect(validateSetting('room.banner', 'x'.repeat(280)).ok).toBe(true);
+    expect(validateSetting('room.signin_message', 'x'.repeat(281)).ok).toBe(false);
   });
 
-  it('refuses a non-integer, a non-boolean, and an over-long text', () => {
-    expect(validateSetting('session.max_age_days', 'ten').ok).toBe(false);
-    expect(validateSetting('session.max_age_days', '').ok).toBe(false);
-    expect(validateSetting('session.max_age_days', '4.5').ok).toBe(false);
-    expect(validateSetting('mail.enabled', 'maybe').ok).toBe(false);
-    expect(validateSetting('room.banner', 'x'.repeat(281)).ok).toBe(false);
-    expect(validateSetting('room.banner', 'x'.repeat(280)).ok).toBe(true);
+  it('refuses a value that is neither of the two words a bool admits', () => {
+    expect(validateSetting('mail.enabled', 'maybe')).toEqual({
+      ok: false,
+      reason: 'mail.enabled is true or false',
+    });
+    expect(validateSetting('mail.enabled', '').ok).toBe(false);
+    expect(validateSetting('mail.enabled', 'TRUE').ok).toBe(false);
   });
 });
 
@@ -144,30 +152,29 @@ describe.skipIf(!HAS_DATABASE)('the cached accessor (CFG-001/T5)', () => {
     const settings = new Settings();
 
     expect(await settings.get('room.banner')).toBe('');
+    expect(await settings.get('room.signin_message')).toBe('');
     expect(await settings.get('mail.enabled')).toBe(true);
-    expect(await settings.get('session.max_age_days')).toBe(30);
-    expect(await settings.get('signin.rate_per_hour')).toBe(10);
   });
 
   it('parses a stored value into the key declared type', async () => {
     await put('room.banner', 'Closed for maintenance');
     await put('mail.enabled', 'false');
-    await put('session.max_age_days', '45');
 
     const settings = new Settings();
 
-    // A string, a boolean and a number — the type is the key's, not the column's.
+    // A string and a boolean — the type is the key's, not the column's.
     expect(await settings.get('room.banner')).toBe('Closed for maintenance');
     expect(await settings.get('mail.enabled')).toBe(false);
-    expect(await settings.get('session.max_age_days')).toBe(45);
   });
 
-  it('falls back to the default when a stored integer is corrupt', async () => {
-    await put('session.max_age_days', 'not-a-number');
+  it('reads a corrupt bool row as off, which is the safe direction for a kill switch', async () => {
+    await put('mail.enabled', 'not-a-boolean');
 
-    // A row outside the type is a write that bypassed validation; the default is
-    // the fail-safe, not a NaN handed to a caller.
-    expect(await new Settings().get('session.max_age_days')).toBe(30);
+    // A row outside the type is a write that bypassed validation (`CFG-001/T2`).
+    // Only the exact word admits sending, so the value that survives a corrupt
+    // row is the one that sends nothing rather than the declared default, which
+    // would resume sending on a row nobody can account for.
+    expect(await new Settings().get('mail.enabled')).toBe(false);
   });
 
   it('caches within the refresh window and reloads after it', async () => {
@@ -235,13 +242,13 @@ describe.skipIf(!HAS_DATABASE)('the cached accessor (CFG-001/T5)', () => {
     it('writes the value, captures the default as previous, and audits the act', async () => {
       const actor = await anAdmin();
 
-      expect((await changeSetting('session.max_age_days', '45', actor)).ok).toBe(true);
+      expect((await changeSetting('mail.enabled', 'false', actor)).ok).toBe(true);
 
-      const row = await readRow('session.max_age_days');
-      expect(row?.value).toBe('45');
+      const row = await readRow('mail.enabled');
+      expect(row?.value).toBe('false');
       // The previous value is the declared default, so reverting the first change
       // restores it rather than a null.
-      expect(row?.previous_value).toBe('30');
+      expect(row?.previous_value).toBe('true');
       expect(row?.changed_by).toBe(actor);
 
       const changes = await changesBy(actor);
@@ -253,8 +260,8 @@ describe.skipIf(!HAS_DATABASE)('the cached accessor (CFG-001/T5)', () => {
 
       expect(await movesBy(actor)).toEqual([
         {
-          before: { key: 'session.max_age_days', value: '30' },
-          after: { key: 'session.max_age_days', value: '45' },
+          before: { key: 'mail.enabled', value: 'true' },
+          after: { key: 'mail.enabled', value: 'false' },
         },
       ]);
     });
@@ -280,20 +287,20 @@ describe.skipIf(!HAS_DATABASE)('the cached accessor (CFG-001/T5)', () => {
     it('captures the prior stored value as previous on a second change', async () => {
       const actor = await anAdmin();
 
-      await changeSetting('session.max_age_days', '45', actor);
-      await changeSetting('session.max_age_days', '60', actor);
+      await changeSetting('room.signin_message', 'Back at nine', actor);
+      await changeSetting('room.signin_message', 'Back at ten', actor);
 
-      const row = await readRow('session.max_age_days');
-      expect(row?.value).toBe('60');
-      expect(row?.previous_value).toBe('45');
+      const row = await readRow('room.signin_message');
+      expect(row?.value).toBe('Back at ten');
+      expect(row?.previous_value).toBe('Back at nine');
     });
 
     it('writes nothing and records nothing when the value is refused', async () => {
       const actor = await anAdmin();
 
-      expect((await changeSetting('session.max_age_days', '91', actor)).ok).toBe(false);
+      expect((await changeSetting('room.banner', 'x'.repeat(281), actor)).ok).toBe(false);
 
-      expect(await readRow('session.max_age_days')).toBeUndefined();
+      expect(await readRow('room.banner')).toBeUndefined();
       expect(await changesBy(actor)).toHaveLength(0);
     });
 
@@ -327,10 +334,10 @@ describe.skipIf(!HAS_DATABASE)('the cached accessor (CFG-001/T5)', () => {
     it('reverts a first change back to the declared default', async () => {
       const actor = await anAdmin();
 
-      await changeSetting('session.max_age_days', '7', actor);
-      expect(await revertSetting('session.max_age_days', actor)).toBe(true);
+      await changeSetting('mail.enabled', 'false', actor);
+      expect(await revertSetting('mail.enabled', actor)).toBe(true);
 
-      expect((await readRow('session.max_age_days'))?.value).toBe('30');
+      expect((await readRow('mail.enabled'))?.value).toBe('true');
     });
 
     it('is a no-op for a key that has never changed, writing nothing', async () => {

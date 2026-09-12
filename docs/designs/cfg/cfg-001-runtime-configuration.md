@@ -7,7 +7,7 @@ depends_on: [ADMIN-002, SEC-002]
 depended_by: []
 layers_touched: [data, domain, service, api, frontend, ui]
 cross_cutting_rules: [SEC-R04, SEC-R05, DATA-R02, A11Y-R01, I18N-R01]
-status: design-ready
+status: implemented
 ---
 
 # `CFG-001` — Runtime configuration

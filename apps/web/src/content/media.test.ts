@@ -16,13 +16,14 @@ import { createHash, randomUUID } from 'node:crypto';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { Jimp } from 'jimp';
 import { sql } from 'kysely';
 import { runner } from 'node-pg-migrate';
 import { Pool } from 'pg';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
 import { closeDb, getDb } from '../db/index';
-import { deleteMedia, sniffType, storeMedia } from './media';
+import { deleteMedia, sniffType, storeMedia, UndecodableImageError } from './media';
 
 const RAW_DATABASE_URL = (process.env.DATABASE_URL ?? '').trim();
 const HAS_DATABASE = RAW_DATABASE_URL !== '';
@@ -60,14 +61,42 @@ async function recreateIsolatedDatabase(): Promise<void> {
 const PNG = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0, 0, 0, 0]);
 const BOM = String.fromCharCode(0xfeff);
 
+/**
+ * A real image of the given colour. The store decodes what it is handed, so a
+ * fixture has to be a picture rather than a signature with a marker after it.
+ */
+async function imageOf(colour: number, mime: 'image/png' | 'image/jpeg' = 'image/png') {
+  return new Jimp({ width: 8, height: 6, color: colour }).getBuffer(mime);
+}
+
+/**
+ * The same image carrying an `APP1` segment of the kind a camera writes, with a
+ * payload a test can look for. The segment sits where a decoder expects it —
+ * immediately after the start-of-image marker — so the file is a valid JPEG that
+ * happens to say where it was taken.
+ */
+function withExif(jpeg: Buffer, payload: string): Buffer {
+  const body = Buffer.from(`Exif\u0000\u0000${payload}`);
+  const length = Buffer.alloc(2);
+  length.writeUInt16BE(body.length + 2);
+
+  return Buffer.concat([jpeg.subarray(0, 2), Buffer.from([0xff, 0xe1]), length, body, jpeg.subarray(2)]);
+}
+
 describe('sniffType reads the type from the bytes (CMS-003/T1)', () => {
-  it('recognises png, jpeg, webp and pdf by their signatures', () => {
+  it('recognises png, jpeg and pdf by their signatures', () => {
     expect(sniffType(PNG)).toBe('image/png');
     expect(sniffType(Buffer.from([0xff, 0xd8, 0xff, 0xe0, 0x00, 0x10]))).toBe('image/jpeg');
+    expect(sniffType(Buffer.from('%PDF-1.7\n%âãÏÓ\n'))).toBe('application/pdf');
+  });
+
+  it('refuses a webp, which no encoder here can rewrite (CMS-DEC-06)', () => {
+    // A well-formed WebP, refused for what cannot be done to it rather than for
+    // what it is: `jimp` decodes no WebP, so accepting one would store the single
+    // format whose metadata nothing strips.
     expect(
       sniffType(Buffer.from([0x52, 0x49, 0x46, 0x46, 0, 0, 0, 0, 0x57, 0x45, 0x42, 0x50, 0, 0])),
-    ).toBe('image/webp');
-    expect(sniffType(Buffer.from('%PDF-1.7\n%âãÏÓ\n'))).toBe('application/pdf');
+    ).toBeNull();
   });
 
   it('refuses an svg in every form, since SVG is not accepted (CMS-DEC-03=A, CMS-003/T3)', () => {
@@ -139,12 +168,25 @@ describe.skipIf(!HAS_DATABASE)('the media store against a real database', () => 
     await Promise.all(Array.from({ length: count }, () => sql`select 1`.execute(getDb())));
   }
 
-  const bytesFor = (marker: string): Buffer => Buffer.concat([PNG, Buffer.from(marker)]);
+  /** A distinct real PNG per marker, so two markers are two files. */
+  const bytesFor = async (marker: string): Promise<Buffer> =>
+    imageOf((marker.split('').reduce((n, c) => n * 31 + c.charCodeAt(0), 7) % 0xffffff) * 0x100 + 0xff);
+
+  /** What a row actually holds, which after the re-encode is not what was sent. */
+  async function storedBytes(id: string): Promise<Buffer> {
+    const row = await getDb()
+      .selectFrom('media')
+      .select('bytes')
+      .where('id', '=', id)
+      .executeTakeFirstOrThrow();
+
+    return Buffer.from(row.bytes);
+  }
 
   describe('storing by content hash (CMS-003/T4)', () => {
     it('stores the bytes under their sha256, with the type and uploader', async () => {
       const uploader = await anAccount();
-      const bytes = bytesFor('one');
+      const bytes = await bytesFor('one');
 
       const { id, deduped } = await storeMedia(bytes, 'image/png', uploader);
       expect(deduped).toBe(false);
@@ -155,15 +197,18 @@ describe.skipIf(!HAS_DATABASE)('the media store against a real database', () => 
         .where('id', '=', id)
         .executeTakeFirstOrThrow();
 
-      expect(row.sha256).toBe(createHash('sha256').update(bytes).digest('hex'));
+      // The hash is of what is stored, which is the encoder's output rather than
+      // the upload: the row, its key and what a serve hands back are one file.
+      const stored = await storedBytes(id);
+      expect(row.sha256).toBe(createHash('sha256').update(stored).digest('hex'));
       expect(row.mime).toBe('image/png');
-      expect(row.byte_size).toBe(String(bytes.length));
+      expect(row.byte_size).toBe(String(stored.length));
       expect(row.uploaded_by).toBe(uploader);
     });
 
     it('returns the existing row for the same bytes, a duplicate being one row', async () => {
       const uploader = await anAccount();
-      const bytes = bytesFor('dup');
+      const bytes = await bytesFor('dup');
 
       const first = await storeMedia(bytes, 'image/png', uploader);
       const second = await storeMedia(bytes, 'image/png', await anAccount());
@@ -175,8 +220,8 @@ describe.skipIf(!HAS_DATABASE)('the media store against a real database', () => 
 
     it('keeps different bytes as different rows', async () => {
       const uploader = await anAccount();
-      const a = await storeMedia(bytesFor('a'), 'image/png', uploader);
-      const b = await storeMedia(bytesFor('b'), 'image/png', uploader);
+      const a = await storeMedia(await bytesFor('a'), 'image/png', uploader);
+      const b = await storeMedia(await bytesFor('b'), 'image/png', uploader);
 
       expect(a.id).not.toBe(b.id);
       expect(await getDb().selectFrom('media').select('id').execute()).toHaveLength(2);
@@ -184,7 +229,7 @@ describe.skipIf(!HAS_DATABASE)('the media store against a real database', () => 
 
     it('settles on one row when the same bytes are stored at once', async () => {
       const uploader = await anAccount();
-      const bytes = bytesFor('race');
+      const bytes = await bytesFor('race');
       await warmConnections(2);
 
       const [a, b] = await Promise.all([
@@ -194,6 +239,84 @@ describe.skipIf(!HAS_DATABASE)('the media store against a real database', () => 
 
       expect(a.id).toBe(b.id);
       expect(await getDb().selectFrom('media').select('id').execute()).toHaveLength(1);
+    });
+  });
+
+  describe('a raster is re-encoded before it is stored (CMS-003/T2)', () => {
+    const MARK = 'GPS 51.5074N 0.1278W';
+
+    it('stores a JPEG without the EXIF it arrived with', async () => {
+      const uploader = await anAccount();
+      const clean = await imageOf(0x88aa44ff, 'image/jpeg');
+      const carrying = withExif(clean, MARK);
+
+      // The fixture is the thing being tested, so it is checked first: a test
+      // that silently stopped carrying the mark would pass for the wrong reason.
+      expect(carrying.includes(MARK)).toBe(true);
+
+      const { id } = await storeMedia(carrying, 'image/jpeg', uploader);
+      const stored = await storedBytes(id);
+
+      expect(stored.includes(MARK)).toBe(false);
+      // Still a JPEG, and still the picture: the re-encode drops what is around
+      // the pixels and keeps the pixels (`CMS-003` §3).
+      expect(sniffType(stored)).toBe('image/jpeg');
+      const decoded = await Jimp.read(stored);
+      expect([decoded.bitmap.width, decoded.bitmap.height]).toEqual([8, 6]);
+    });
+
+    it('lands the same photo with and without its EXIF on one row', async () => {
+      const uploader = await anAccount();
+      const clean = await imageOf(0x2255bbff, 'image/jpeg');
+      const carrying = withExif(clean, MARK);
+
+      expect(carrying.equals(clean)).toBe(false);
+
+      const first = await storeMedia(carrying, 'image/jpeg', uploader);
+      const second = await storeMedia(clean, 'image/jpeg', uploader);
+
+      // The strongest statement the store can make about the strip: the two
+      // uploads differed only in the metadata, and after the re-encode they are
+      // the same file. A strip that left any of it behind would be two rows.
+      expect(second.id).toBe(first.id);
+      expect(second.deduped).toBe(true);
+    });
+
+    it('refuses bytes that sniff as a raster and do not decode, storing nothing', async () => {
+      const uploader = await anAccount();
+      const before = await getDb().selectFrom('media').select('id').execute();
+
+      // A PNG signature with nothing behind it is not a picture. Storing it
+      // unread would store exactly the payload the re-encode exists to drop, so
+      // the store refuses rather than passing it through (`DATA-R02`).
+      await expect(storeMedia(PNG, 'image/png', uploader)).rejects.toThrow(UndecodableImageError);
+
+      expect(await getDb().selectFrom('media').select('id').execute()).toHaveLength(before.length);
+    });
+
+    it('names the type and never the bytes when it refuses', async () => {
+      const uploader = await anAccount();
+      const secret = 'a-caption-nobody-should-repeat';
+      const bytes = Buffer.concat([PNG, Buffer.from(secret)]);
+
+      const refusal = storeMedia(bytes, 'image/png', uploader);
+
+      await expect(refusal).rejects.toThrow(/image\/png/);
+      // A refusal is reported and what is reported is logged, so the file's own
+      // content must not be in the message (`DATA-R02`).
+      await expect(refusal).rejects.not.toThrow(new RegExp(secret));
+    });
+
+    it('stores a PDF as it arrived, which CMS-003/T8 is what changes', async () => {
+      const uploader = await anAccount();
+      const pdf = Buffer.from('%PDF-1.7\n/Author (Ada Lovelace)\n');
+
+      const { id } = await storeMedia(pdf, 'application/pdf', uploader);
+
+      // The re-encode is the raster path's, and a PDF is not a raster. Its own
+      // scrub is `CMS-003/T8`; until then this records what is true rather than
+      // what is wanted.
+      expect((await storedBytes(id)).equals(pdf)).toBe(true);
     });
   });
 
@@ -208,7 +331,7 @@ describe.skipIf(!HAS_DATABASE)('the media store against a real database', () => 
 
     it('deletes an unreferenced file and audits it', async () => {
       const actor = await anAccount();
-      const { id } = await storeMedia(bytesFor('del'), 'image/png', actor);
+      const { id } = await storeMedia(await bytesFor('del'), 'image/png', actor);
 
       expect(await deleteMedia(id, actor)).toEqual({ ok: true });
 
@@ -224,7 +347,7 @@ describe.skipIf(!HAS_DATABASE)('the media store against a real database', () => 
     it('refuses while a reference exists, naming the items, and writes nothing', async () => {
       const actor = await anAccount();
       const item = await aContentItem();
-      const { id } = await storeMedia(bytesFor('ref'), 'image/png', actor);
+      const { id } = await storeMedia(await bytesFor('ref'), 'image/png', actor);
       await getDb().insertInto('media_refs').values({ media_id: id, item_id: item }).execute();
 
       expect(await deleteMedia(id, actor)).toEqual({ ok: false, referencedBy: [item] });
@@ -245,7 +368,7 @@ describe.skipIf(!HAS_DATABASE)('the media store against a real database', () => 
     it('never deletes a file while a reference for it is being added', async () => {
       const actor = await anAccount();
       const item = await aContentItem();
-      const { id } = await storeMedia(bytesFor('race-del'), 'image/png', actor);
+      const { id } = await storeMedia(await bytesFor('race-del'), 'image/png', actor);
       await warmConnections(2);
 
       // One adds a reference; the other deletes. The FOR UPDATE lock serialises

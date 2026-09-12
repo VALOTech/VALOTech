@@ -110,6 +110,10 @@ inside it. **`MAIL-001`** uses the typed confirmation.
   every confirmation.
 - **`A11Y-R03`** — the destructive colour meets contrast, and never carries
   meaning alone.
+- **Finish.** Every surface under this shell is built to the standard
+  [`ADMIN-DEC-04`](../../decisions-log.md#ADMIN-DEC-04) sets — VALO Ads’ level of
+  craft in forms, buttons and motion, in VALO Tech’s own identity. A staff tool
+  that works and looks unfinished is not finished.
 
 ## 6. Open questions and trade-offs
 
