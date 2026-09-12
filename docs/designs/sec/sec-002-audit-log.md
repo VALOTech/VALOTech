@@ -81,7 +81,7 @@ the trail, because there is no action under which a caller could offer one.
 | `account.suspend`, `account.reinstate`, `account.delete`, `account.object_read_tracking` | — | the action names the change |
 | `account.role_change` | `role`, `state` | the role is what a role change moves, and what its row records; `state` stands beside it because the decision names both, and a row carries only the fields the act moved |
 | `account.invitation_resend`, `account.password_reset_request` | — | the act is the whole fact; what changes is which token is live, and a token is never written down |
-| `grant.add`, `grant.remove` | — | the subject is the grant |
+| `grant.add`, `grant.remove` | — | the subject written is the account whose access changed; that the row cannot name the item is open at `SEC-DEC-04` |
 | `content.publish`, `content.withdraw` | `revision_id` | `CMS-R07`: audited with what was replaced |
 | `content.audience_change` | `audience` | without both values the trail cannot tell a narrowing from a widening |
 | `media.delete` | — | a filename can carry personal data |

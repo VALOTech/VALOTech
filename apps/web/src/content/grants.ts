@@ -18,8 +18,11 @@
  * write (`SEC-R04`): the audit row and the grant commit or roll back together,
  * which is why `recordAudit` takes the transaction. The subject is the account
  * whose access changed — a grant is a permission on an account, the way a role
- * change is — and which item it was for is a field the trail will record once
- * `SEC-DEC-01` settles what `before`/`after` may hold (`CMS-006/T6`).
+ * change is — and the row does not say which item it was for: `SEC-DEC-01`
+ * settled the allow-list without a field for it, so a revocation is recorded as
+ * having happened and the item it took away is readable only from the
+ * `content_grants` row the revocation deletes. Whether the trail should name the
+ * item is `SEC-DEC-04`.
  */
 
 import { recordAudit } from '../audit/record';

@@ -602,8 +602,9 @@ export async function resendInvitation(
  * it for themselves is not (`ADMIN-DEC-03`). The trail holds privileged writes —
  * one account reaching into another's access (`SEC-R04`) — and a request the
  * account's own holder makes is neither privileged nor anybody else's, so
- * recording it would put the fact that a named person forgot their password
- * into a table kept seven years past their erasure (`DATA-R02`). So the row is
+ * nothing in `SEC-R04` asks the trail to hold it. What an admin's row holds is
+ * there for the opposite reason: somebody reached into another person's access,
+ * which is the act the trail exists for. So the row is
  * keyed on **who is asking**: an admin arrives carrying an actor and the account
  * it is the subject for, the public form carries neither, and nothing here reads
  * the database to decide between them. That is what keeps the shape above

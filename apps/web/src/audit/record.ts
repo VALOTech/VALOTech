@@ -143,6 +143,14 @@ function refuseUnrecordable(action: AuditAction, fields: AuditFields | undefined
  * The cast is from a bound parameter, so the value reaches the column parsed
  * rather than stored as a JSON string, and no field name or value is ever
  * concatenated into SQL.
+ *
+ * `jsonb` cannot hold `U+0000` or an unpaired surrogate, and `JSON.stringify`
+ * emits both as the escape the parser rejects, so a value carrying either makes
+ * PostgreSQL refuse the row and roll the caller's write back. Nothing reaches
+ * here with one today — the two free-text fields are written by admins through
+ * surfaces that do not exist yet — and the refusal is fail-closed rather than a
+ * corrupt row, but the first caller that parses JSON from a request body is
+ * where that becomes an unexplained 500.
  */
 function asJsonb(fields: AuditFields | undefined): RawBuilder<Json> | null {
   return fields === undefined ? null : sql<Json>`${JSON.stringify(fields)}::jsonb`;

@@ -30,10 +30,11 @@
  * leaving the row `queued`, because recording an accepted message as `failed`
  * would let a later re-send deliver it a second time.
  *
- * The audit row carries who sent and that a send happened, and nothing else. The
- * subject and the count an admin sees belong in `before`/`after`, which
- * `SEC-DEC-01` has not settled; an address belongs in neither, so the recipients
- * reach the trail only as the `mail_log` rows' `account_id` (`DATA-R02`).
+ * The audit row carries who sent, what the subject said and how many people it
+ * went to — the two fields `mail.send` may record (`SEC-DEC-01`). An address is
+ * on no action's list, so the recipients reach the trail only as the `mail_log`
+ * rows' `account_id`, which is kept two years and erased with the account rather
+ * than seven and outliving it (`DATA-R02`).
  *
  * Recipients arrive already resolved and confirmed (`MAIL-001/T2`), and the route
  * re-resolves them immediately before calling this and refuses the send if the
