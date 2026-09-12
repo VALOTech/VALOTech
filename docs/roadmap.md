@@ -35,15 +35,15 @@ _46/48 closed (95%) · 2 outstanding — 0 buildable now · 0 waiting on the own
 
 _Who may read what, and what records that they did. Everything above reads through the gate this wave builds, so a shortcut here is a shortcut in every feature after it. Sign-out precedes invitation deliberately: a session that cannot be ended server-side is a defect that grows with every account created. The scene sits here too, one layer above the page it moves behind._
 
-_65/69 closed (94%) · 4 outstanding — 2 buildable now · 1 waiting on the owner · 1 external residue · 0 parked to a later wave._
+_65/69 closed (94%) · 4 outstanding — 3 buildable now · 0 waiting on the owner · 1 external residue · 0 parked to a later wave._
 
 - **AUTH-001** · Sign-in — 5/5 closed
 - **DATA-003** · Backup and restore — 5/5 closed
 - **I18N-002** · Served-copy parity gate — 2/2 closed
 - **SCENE-001** · The world and its journey — 6/6 closed
 - **SEC-002** · Audit log — 3/5 closed · depth 2
+  - `[ ] SEC-002/T4` — Only changed fields are recorded, and no personal data reaches the trail
   - `[!] SEC-002/T2` — The application role holds no UPDATE or DELETE on it  · _external_ · **Blocked by:** pending-external: the REVOKE runs where the database is deployed, against the role in DATABASE_URL, and is documented at docs/operator-checklist.md#A…
-  - `[!] SEC-002/T4` — Only changed fields are recorded, and no personal data reaches the trail  · _pending-decision_ · **Blocked by:** pending-decision: SEC-DEC-01 — whether a changed field records its name or an allow-listed value is the trail's personal-data policy, and it is the u…
 
 - **AUTH-002** · Session and role gate — 4/4 closed
 - **AUTH-003** · Invitation and password reset — 6/7 closed · depth 3
@@ -64,17 +64,17 @@ _65/69 closed (94%) · 4 outstanding — 2 buildable now · 1 waiting on the own
 
 _The machinery every kind of writing shares — the editor, the media, the locale states, the audience rule, publishing, search — plus the account, configuration and logging surfaces an operator needs before anything is published. Building it once is the whole reason a report, an update and a deck are three navigations over one system rather than three systems._
 
-_52/63 closed (82%) · 11 outstanding — 7 buildable now · 3 waiting on the owner · 0 external residue · 1 parked to a later wave._
+_52/63 closed (82%) · 11 outstanding — 10 buildable now · 0 waiting on the owner · 0 external residue · 1 parked to a later wave._
 
 - **ADMIN-001** · Account management — 8/8 closed
 - **CFG-001** · Runtime configuration — 6/6 closed
 - **CMS-003** · Media library — 5/7 closed · depth 5
-  - `[!] CMS-003/T2` — Raster images are re-encoded, so EXIF and its location do not survive  · _pending-decision_ · **Blocked by:** pending-decision: CMS-DEC-03 — re-encoding needs an image library, and which one is a new dependency the owner chooses; the safe default refuses rast…
-  - `[!] CMS-003/T3` — SVG is parsed and stripped to shape and text, or refused  · _pending-decision_ · **Blocked by:** pending-decision: CMS-DEC-03 — sanitising SVG needs a library, or the design's refuse-outright fallback; the choice is the owner's, and the safe defa…
+  - `[ ] CMS-003/T2` — Raster images are re-encoded, so EXIF and its location do not survive
+  - `[ ] CMS-003/T3` — SVG is parsed and stripped to shape and text, or refused
 
 - **CMS-005** · Locale variants and translation state — 4/6 closed · depth 5
+  - `[ ] CMS-005/T3` — Drafting translates block text and reassembles marks by span, never by offset arithmetic
   - `[ ] CMS-005/T4` — The review screen shows source beside translation, editable, marked one locale at a time
-  - `[!] CMS-005/T3` — Drafting translates block text and reassembles marks by span, never by offset arithmetic  · _pending-decision_ · **Blocked by:** pending-decision: CMS-DEC-04 — the mark reassembly by span needs a programmatic per-span translator, so which carrier drafts a locale (a self-hosted…
 
 - **CMS-006** · Audience and access — 6/6 closed
 - **OPS-002** · Logging and monitoring — 6/6 closed
@@ -95,7 +95,7 @@ _52/63 closed (82%) · 11 outstanding — 7 buildable now · 3 waiting on the ow
 
 _The three content types, and the compliance posture that governs what is held about the people reading them. Updates come before decks, and not only because they are the simpler shape of the same problem: they are what the room is for. An investor signs in to find out what has happened since they last looked._
 
-_25/59 closed (42%) · 34 outstanding — 33 buildable now · 1 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_25/59 closed (42%) · 34 outstanding — 34 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
 
 - **DECK-001** · Deck authoring — 2/5 closed · depth 7
   - `[ ] DECK-001/T2` — An overview of section cards in order, showing heading, first line and what each carries
@@ -114,7 +114,7 @@ _25/59 closed (42%) · 34 outstanding — 33 buildable now · 1 waiting on the o
   - `[ ] MAIL-001/T4` — The send requires the recipient count to be typed, and re-resolves every recipient first
   - `[ ] MAIL-001/T7` — With no credential the composer works, the list resolves, and the send control is disabled with the reason
   - `[ ] MAIL-001/T8` — One SMTP connection per send, TLS required, and a connection that cannot be secured fails rather than falling back
-  - `[!] MAIL-001/T6` — Retry sends only to the ones that failed  · _pending-decision_ · **Blocked by:** pending-decision: MAIL-DEC-02 — a retry must never reach a recipient who already received the message, and `mail_log` never supersedes an earlier att…
+  - `[!] MAIL-001/T6` — Retry sends only to the ones that failed  · _in-graph_ · **Blocked by:** MAIL-001/T8 — a retry needs a send path, and the SMTP adapter (T8) with its credential (MAIL-DEC-01 SMTP) is unbuilt, so there is nothing to re-send…
 
 - **POST-001** · Update authoring — 0/6 closed · depth 7
   - `[ ] POST-001/T1` — A composer that opens with the cursor in the body and fits without scrolling
