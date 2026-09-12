@@ -44,8 +44,11 @@ const VALID: Block[] = [
   },
   { type: 'list', ordered: true, items: ['one', 'two'] },
   { type: 'quote', text: 'a quote', attribution: null },
-  { type: 'image', mediaId: randomUUID(), alt: 'a labelled picture', caption: null },
-  { type: 'figure', mediaId: randomUUID(), caption: 'a chart', data: ['10', '20'] },
+  // No file is chosen on either: this document is about the validator and
+  // about the jsonb round-trip, and a block that names a file has to name one
+  // the library actually holds (`CMS-001/T7`).
+  { type: 'image', mediaId: '', alt: 'a labelled picture', caption: null },
+  { type: 'figure', mediaId: '', caption: 'a chart', data: ['10', '20'] },
   { type: 'divider' },
 ];
 

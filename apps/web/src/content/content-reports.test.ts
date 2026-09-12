@@ -216,7 +216,7 @@ describe.skipIf(!HAS_DATABASE)('a report against a period (RPT-001/T1, RPT-002/T
         { type: 'heading', level: 2, text: 'Recent overview' },
         { type: 'paragraph', text: 'body that should not carry forward', marks: [] },
         { type: 'heading', level: 2, text: 'Recent numbers' },
-        { type: 'figure', mediaId: randomUUID(), caption: null, data: ['10'] },
+        { type: 'figure', mediaId: '', caption: null, data: ['10'] },
       ]);
 
       expect(await prefillStructureFor('5000-Q3', admin())).toEqual([

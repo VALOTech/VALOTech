@@ -7,7 +7,7 @@ depends_on: [ADMIN-002, CMS-001, CMS-003]
 depended_by: [DECK-001, POST-001, RPT-001]
 layers_touched: [service, api, frontend, ui]
 cross_cutting_rules: [CMS-R04, A11Y-R01, A11Y-R02, A11Y-R03, I18N-R01]
-status: implemented
+status: in-progress
 ---
 
 # `CMS-002` — Authoring surface
@@ -136,3 +136,4 @@ previewed and published — this surface never publishes.
 - `CMS-002/T5` — Paste imports plain text plus recognised structure and nothing else
 - `CMS-002/T6` — Explicit save, a visible unsaved state, and a local copy offered back after a closed tab
 - `CMS-002/T7` — One schema module validates in the browser and on the server, and the server's error names the block and the field
+- `CMS-002/T8` — The console lists an admin's content, so the editor and the translations have a way in

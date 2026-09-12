@@ -7,10 +7,7 @@ depends_on: [CMS-001, SEC-001]
 depended_by: [CMS-002, DECK-001, POST-001, RPT-001]
 layers_touched: [data, domain, service, api, frontend, ui]
 cross_cutting_rules: [CMS-R06, SEC-R01, DATA-R02, A11Y-R02]
-status: in-progress
-inert_until:
-  reason: A file can be uploaded, listed, deleted, and served under the audience of the item referencing it. Nothing yet writes that reference, so every stored file serves a 404 and the library reports every one of them as used by nothing.
-  unblocks_when: CMS-001/T7
+status: implemented
 ---
 
 # `CMS-003` — Media library

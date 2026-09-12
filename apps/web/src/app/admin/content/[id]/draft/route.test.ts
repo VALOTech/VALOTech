@@ -4,9 +4,10 @@
  * The route delegates validation to `saveDraft` and surfaces its refusal, so
  * what this suite pins is the surface: an admin's valid body is stored and can
  * be read back; an invalid one is answered `422` with the block index and field
- * named — never `200`, and never a `500`; a non-admin and a signed-out caller
- * are refused before anything is written; and a cross-origin post is refused
- * first of all.
+ * named — never `200`, and never a `500`; a body naming a file the library does
+ * not hold is answered `422` with that id (`CMS-001/T7`); a non-admin and a
+ * signed-out caller are refused before anything is written; and a cross-origin
+ * post is refused first of all.
  *
  * It sets up items through `createItem` and reads them back through `forAuthor`
  * rather than touching the store directly, because those are the reader-scoped
@@ -16,6 +17,7 @@
  * writes accounts and sessions and deletes them again.
  */
 
+import { randomUUID } from 'node:crypto';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -200,6 +202,26 @@ describe.skipIf(!HAS_DATABASE)('POST /admin/content/<id>/draft', () => {
       const body = (await response.json()) as { detail?: string };
       expect(body.detail).toContain('blocks[0]');
       expect(body.detail).toContain('unknown block type');
+      expect(await forAuthor(itemId, adminActor)).toBeNull();
+    });
+
+    it('answers 422 naming the file the library does not hold, writing nothing', async () => {
+      const itemId = await freshItem();
+      const absent = randomUUID();
+
+      const response = await callPost(
+        itemId,
+        { blocks: [{ type: 'image', mediaId: absent, alt: 'a picture', caption: null }] },
+        { cookie: adminCookie },
+      );
+
+      expect(response.status).toBe(422);
+      const body = (await response.json()) as { error?: string; mediaIds?: string[] };
+      expect(body.error).toBe('unknown_media');
+      // The id comes back so the editor can point at the block. It is the
+      // caller's own value, and a file that is not stored identifies nobody.
+      expect(body.mediaIds).toEqual([absent]);
+
       expect(await forAuthor(itemId, adminActor)).toBeNull();
     });
   });

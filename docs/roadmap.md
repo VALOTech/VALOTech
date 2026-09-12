@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_308 tasks in the plan, 205 closed, 103 outstanding._
+_309 tasks in the plan, 208 closed, 101 outstanding._
 
 ---
 
@@ -35,7 +35,7 @@ _48/50 closed (96%) · 2 outstanding — 0 buildable now · 0 waiting on the own
 
 _Who may read what, and what records that they did. Everything above reads through the gate this wave builds, so a shortcut here is a shortcut in every feature after it. Sign-out precedes invitation deliberately: a session that cannot be ended server-side is a defect that grows with every account created. The scene sits here too, one layer above the page it moves behind._
 
-_70/74 closed (94%) · 4 outstanding — 3 buildable now · 0 waiting on the owner · 1 external residue · 0 parked to a later wave._
+_71/74 closed (95%) · 3 outstanding — 2 buildable now · 0 waiting on the owner · 1 external residue · 0 parked to a later wave._
 
 - **AUTH-001** · Sign-in — 5/5 closed
 - **DATA-003** · Backup and restore — 5/5 closed
@@ -54,9 +54,7 @@ _70/74 closed (94%) · 4 outstanding — 3 buildable now · 0 waiting on the own
 - **SCENE-006** · The mapping stage — 2/2 closed
 - **ADMIN-002** · Admin console shell — 5/5 closed
 - **AUTH-004** · Sign-out — 5/5 closed
-- **CMS-001** · Content model and revisions — 6/7 closed · depth 4
-  - `[ ] CMS-001/T7` — Saving a revision syncs `media_refs` to the blocks naming a file, so a referenced image is servable and a dropped one i…
-
+- **CMS-001** · Content model and revisions — 7/7 closed
 - **SCENE-004** · Annotation chips — 3/3 closed
 - **SEC-001** · Security baseline — 4/5 closed · depth 4
   - `[~] SEC-001/T4` — Rate limits on sign-in, reset and invitation, per account and per address, refusing identically  · **Note:** Two of the three surfaces are rate-limited. Sign-in is limited per account and per address (apps/web/src/app/api/auth/sign-in/route.ts, AUTH-001), an…
@@ -65,18 +63,17 @@ _70/74 closed (94%) · 4 outstanding — 3 buildable now · 0 waiting on the own
 
 _The machinery every kind of writing shares — the editor, the media, the locale states, the audience rule, publishing, search — plus the account, configuration and logging surfaces an operator needs before anything is published. Building it once is the whole reason a report, an update and a deck are three navigations over one system rather than three systems._
 
-_59/68 closed (86%) · 9 outstanding — 8 buildable now · 0 waiting on the owner · 0 external residue · 1 parked to a later wave._
+_61/69 closed (88%) · 8 outstanding — 7 buildable now · 0 waiting on the owner · 0 external residue · 1 parked to a later wave._
 
 - **ADMIN-001** · Account management — 9/9 closed
 - **CFG-001** · Runtime configuration — 7/7 closed
 - **CMS-003** · Media library — 10/10 closed
-- **CMS-005** · Locale variants and translation state — 4/6 closed · depth 5
-  - `[ ] CMS-005/T3` — Drafting seeds the locale with the source blocks, marks intact, for the reviewer to translate
-  - `[ ] CMS-005/T4` — The review screen shows source beside translation, editable, marked one locale at a time
-
+- **CMS-005** · Locale variants and translation state — 6/6 closed
 - **CMS-006** · Audience and access — 6/6 closed
 - **OPS-002** · Logging and monitoring — 6/6 closed
-- **CMS-002** · Authoring surface — 7/7 closed
+- **CMS-002** · Authoring surface — 7/8 closed · depth 6
+  - `[ ] CMS-002/T8` — The console lists an admin's content, so the editor and the translations have a way in
+
 - **CMS-004** · Preview, publish and withdraw — 2/6 closed · depth 6
   - `[ ] CMS-004/T1` — Preview renders through the reader's own components and evaluates the audience rule as the chosen role
   - `[ ] CMS-004/T2` — Preview is admin-only, with no token and no shareable link

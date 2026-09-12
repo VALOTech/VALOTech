@@ -75,8 +75,10 @@ const EVERY_FIELD: Block[] = [
   },
   { type: 'list', ordered: false, items: ['xraylist', 'plainitem'] },
   { type: 'quote', text: 'whiskeyquote', attribution: null },
-  { type: 'figure', mediaId: randomUUID(), caption: 'victorcaption', data: ['romeodata', '20'] },
-  { type: 'image', mediaId: randomUUID(), alt: 'unicornalt', caption: null },
+  // The file itself is not searched, and a named one would have to be stored
+  // (`CMS-001/T7`); what these two contribute is a caption, a datum and an alt.
+  { type: 'figure', mediaId: '', caption: 'victorcaption', data: ['romeodata', '20'] },
+  { type: 'image', mediaId: '', alt: 'unicornalt', caption: null },
 ];
 
 const heading = (text: string): Block[] => [{ type: 'heading', level: 2, text }];

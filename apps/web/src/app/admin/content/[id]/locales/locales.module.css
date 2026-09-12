@@ -75,6 +75,20 @@
   font-variant: all-small-caps;
 }
 
+/* The cell's own word is the link, so the target is the whole state rather
+   than a second word beside it; the underline is what says it leads somewhere,
+   because the cell's colour already means something else here. */
+.open {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.open:focus-visible {
+  outline: 2px solid var(--admin-link, #2b3a8c);
+  outline-offset: 2px;
+}
+
 /* Four states, each a word and a colour, never a colour alone (A11Y-R03). */
 .authored {
   background: #eef1fb;

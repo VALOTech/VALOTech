@@ -7,7 +7,7 @@ depends_on: [AUTH-002, DATA-001]
 depended_by: [CMS-002, CMS-003, CMS-004, CMS-005, CMS-006, CMS-007]
 layers_touched: [data, domain, service]
 cross_cutting_rules: [CMS-R01, CMS-R04, DATA-R05, SEC-R04]
-status: in-progress
+status: implemented
 ---
 
 # `CMS-001` — Content model and revisions
@@ -92,6 +92,19 @@ is what keeps a form from being an injection surface.
 than accumulating one revision per keystroke. A revision is created per editing
 session, not per save, and the boundary is the author leaving the editor. The
 archive people care about is the published one.
+
+The save is also where the document and the rows that depend on it are made to
+agree, in the transaction that writes it. **A block naming a file the library
+does not hold is refused** — the schema validator is a pure function, so it can
+say a `media_id` is a string and never whether anything is stored under it, and a
+block pointing at nothing renders nothing for a reader the author will never hear
+from. An unchosen file names nothing and is not refused, because a draft is work
+in progress. The files the item does name become its `media_refs` rows
+(`CMS-003`), taken over every revision rather than over the draft just written:
+withdrawing can restore an earlier published revision, so a file dropped from
+today’s draft is still the file that document would show if it came back. And the
+revision’s translations go (`CMS-005`), because they were made from words that
+have just moved.
 
 ### Reading
 

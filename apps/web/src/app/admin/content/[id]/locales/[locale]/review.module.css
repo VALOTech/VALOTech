@@ -1,0 +1,221 @@
+/* The review screen, on the console's tokens rather than a palette of its own:
+   the chrome sets --admin-ink, --admin-line, --admin-rail and --admin-link, and
+   everything here is drawn from them so a theme pass reaches this page too
+   (ADMIN-002, ADMIN-DEC-04). */
+
+.head {
+  margin-bottom: 1.25rem;
+}
+
+.head h1 {
+  margin: 0 0 0.35rem;
+  font-size: 1.4rem;
+}
+
+.crumb {
+  display: inline-block;
+  margin-bottom: 0.75rem;
+  font-size: 0.85rem;
+  color: var(--admin-link);
+}
+
+.subject {
+  margin: 0;
+  max-width: 44rem;
+  line-height: 1.5;
+  opacity: 0.8;
+}
+
+/* The state is a word as well as a hue, because a colour alone says nothing to
+   a reader who cannot separate the two (A11Y-R03). */
+.state {
+  display: inline-block;
+  margin-top: 0.5rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.pending {
+  background: #fef3c7;
+  color: #854d0e;
+}
+
+.done {
+  background: #dcfce7;
+  color: #166534;
+}
+
+/* Starting a translation is one paragraph and one button: the paragraph is what
+   makes the button honest, since what it does is copy English. */
+.start {
+  margin-top: 1.25rem;
+  padding: 1.25rem;
+  max-width: 40rem;
+  border: 1px solid var(--admin-line);
+  border-radius: 0.5rem;
+  background: color-mix(in srgb, var(--admin-rail) 55%, transparent);
+}
+
+.start p {
+  margin: 0 0 1rem;
+  line-height: 1.5;
+}
+
+.primary {
+  padding: 0.5rem 0.9rem;
+  border: 1px solid var(--admin-link);
+  border-radius: 0.375rem;
+  background: var(--admin-link);
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.primary:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--admin-link) 85%, #000);
+}
+
+.primary:focus-visible {
+  outline: 2px solid var(--admin-link);
+  outline-offset: 3px;
+}
+
+.primary:disabled {
+  cursor: progress;
+  opacity: 0.65;
+}
+
+/* The one thing a reviewer has to know before they start typing, standing rather
+   than in a toast that is gone before they look up. */
+.standing {
+  margin: 0 0 1.25rem;
+  padding: 0.6rem 0.8rem;
+  max-width: 44rem;
+  border-left: 3px solid var(--admin-warn-ink);
+  background: var(--admin-warn-bg);
+  color: var(--admin-warn-ink);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.blocks {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.block {
+  padding: 0.9rem 0;
+  border-top: 1px solid var(--admin-line);
+}
+
+.block:first-child {
+  border-top: 0;
+}
+
+.nothing {
+  margin: 0;
+  font-size: 0.85rem;
+  opacity: 0.6;
+}
+
+/* Two columns where there is room and one where there is not, so a narrow
+   window stacks the English above its field rather than squeezing both. */
+.pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem 1.25rem;
+  margin-bottom: 0.9rem;
+}
+
+@media (max-width: 60rem) {
+  .pair {
+    grid-template-columns: 1fr;
+  }
+}
+
+.fieldLabel {
+  display: block;
+  margin-bottom: 0.3rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+/* The English is set in the reading face at reading size: it is the thing being
+   translated, not a hint, and a reviewer reads it as prose. */
+.sourceText {
+  margin: 0;
+  padding: 0.5rem 0.65rem;
+  border-radius: 0.375rem;
+  background: var(--admin-rail);
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+
+.blank {
+  opacity: 0.55;
+  font-style: italic;
+}
+
+.field {
+  width: 100%;
+  padding: 0.5rem 0.65rem;
+  border: 1px solid var(--admin-line);
+  border-radius: 0.375rem;
+  background: #fff;
+  color: inherit;
+  font: inherit;
+  line-height: 1.55;
+  resize: vertical;
+}
+
+.field:focus-visible {
+  outline: 2px solid var(--admin-link);
+  outline-offset: 1px;
+  border-color: var(--admin-link);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1rem;
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--admin-line);
+}
+
+.note {
+  margin: 0;
+  max-width: 32rem;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  opacity: 0.75;
+}
+
+.saved,
+.failed {
+  margin-top: 0.9rem;
+  padding: 0.6rem 0.8rem;
+  max-width: 44rem;
+  border-radius: 0.375rem;
+  font-size: 0.95rem;
+}
+
+/* Both outcomes carry a rule on the left, so neither rests on hue alone. */
+.saved {
+  border-left: 3px solid var(--admin-link);
+  background: color-mix(in srgb, var(--admin-link) 7%, transparent);
+}
+
+.failed {
+  border-left: 3px solid var(--admin-warn-ink);
+  background: var(--admin-warn-bg);
+  color: var(--admin-warn-ink);
+}

@@ -8,6 +8,9 @@ depended_by: [CMS-004, DECK-003, RPT-003]
 layers_touched: [data, domain, service, api, frontend, ui]
 cross_cutting_rules: [CMS-R05, I18N-R01, I18N-R02, I18N-R04, I18N-R05]
 status: in-progress
+inert_until:
+  reason: A reader is served a reviewed translation and told when they are reading the authored language instead. An admin can start a translation and mark one reviewed, and nothing in the console links to an item, so they reach those screens only by typing a URL that carries the item’s id.
+  unblocks_when: CMS-002/T8
 ---
 
 # `CMS-005` — Locale variants and translation state
@@ -37,7 +40,10 @@ a null timestamp.
 **Up.** A reader gets their locale when it is reviewed, and the authored language
 otherwise, with a quiet line saying which language they are reading and why. An
 admin sees a grid: twenty locales down, the item's revisions across, and every
-cell one of three colours.
+cell one of four states: the authored language, not started, a pre-review seed,
+or reviewed. A cell in the newest column opens that language for translation and
+the columns behind it are history, because only the latest revision can be
+translated.
 
 ## 3. Contracts
 
@@ -63,9 +69,22 @@ gateway.
 Seeds the locale: copies the revision's blocks into a new `content_locales` row
 with their text and **marks intact** (`CMS-DEC-04`), so a `heading` stays a
 `heading`, an `image`'s `media_id` is untouched, and a paragraph's marks keep
-their offsets over the source text the reviewer is about to replace. The seed is
-the source language under the target locale's label, in the pre-review state,
-served to nobody.
+their offsets over the source text the reviewer is about to replace. The copy is
+made by the database, from one row into the other, so what lands is the document
+byte for byte rather than a re-serialisation of it. The seed is the source
+language under the target locale's label, in the pre-review state, served to
+nobody.
+
+**The revision seeded is the latest** — the open draft while one is open, and
+otherwise the newest published. That is the revision an admin is working on; an
+earlier published one is reachable only by withdrawing back to it, and a
+translation of it would be a translation of text the room is not showing. The
+grid says so by offering the act on its newest column alone.
+
+**A locale already started is refused rather than re-seeded.** The row may hold
+hours of somebody's translation, and a second press of the same control would
+replace it with the English it came from. Starting over is a delete this design
+does not offer.
 
 The admin writes the translation in the review screen, editing the text within
 each mark rather than re-deriving it. The span-by-span reassembly a programmatic
@@ -82,7 +101,26 @@ Sets `state = 'reviewed'`, `reviewed_by`, `reviewed_at`. The admin screen shows
 the source and the translation side by side and lets the text be edited before it
 is marked. **Marking is a deliberate act on one locale.** There is no "mark all
 reviewed" control, because that control's only function is to make the state
-lie.
+lie. Marking is also the save: the words a reviewer wrote and their approval of
+them arrive together, so no row is ever marked reviewed holding something nobody
+read.
+
+**The body carries strings, not blocks** — one array of values per source block —
+and the document is rebuilt on the server from the source. The structure, the
+order and the file an image names are the document's, so no body can give one
+language a shape the others do not have; nothing downstream would notice, because
+no reader compares two languages.
+
+**A marked span is translated as a unit.** A paragraph is cut at its mark
+boundaries and each piece — plain run, bold phrase, linked phrase — is offered as
+its own field, and the offsets are rebuilt from the translated pieces. Carrying
+the offsets across instead was measured and is worse: the editor's own
+offset-maintenance reads a wholly replaced paragraph as one edited run and grows
+every mark to cover it, so a link over two English words becomes a link over the
+whole translation. That behaviour is right under a cursor moving through text
+somebody is typing, and a translation is the case it cannot read. This is what
+the paragraph above means by a translator keeping the marks and changing only the
+words.
 
 ### Serving
 
@@ -106,6 +144,16 @@ revision has no locale rows.** The translations do not carry forward, because a
 translation of the previous text is a translation of something the reader is no
 longer being shown. The admin grid makes that visible immediately: a new
 revision starts with one language and nineteen empty cells.
+
+The same holds when a draft is edited in place. `saveDraft` replaces the open
+draft rather than adding a revision (`CMS-001`), so a translation of it would
+otherwise keep its revision id and its `reviewed` state over words that have
+moved — and a reviewed row is served. **Saving a draft therefore drops that
+revision's locale rows**, every time rather than only when something changed: an
+author reaches the save by pressing it, and keeping a translation that might be
+stale costs a reader the truth while dropping one that was still current costs a
+re-seed. The grid shows the loss immediately, so it is never silent in the
+direction that matters.
 
 This is expensive and it is correct. The alternative — carrying locales forward
 and marking them stale — produces a state where a reviewed-but-stale row is

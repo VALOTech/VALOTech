@@ -39,6 +39,12 @@ const STATE_LABEL: Record<CellState, string> = {
  * that nothing is ready yet — most of all that a new revision starts with no
  * locale rows, one authored language and nineteen not-started cells.
  *
+ * It is also the way in to a translation (`CMS-005/T3`, `T4`): a cell in the
+ * **latest** column opens that language's review screen, and every other column
+ * is history. Only the latest revision can be translated — an earlier published
+ * one is reachable only by withdrawing back to it, and translating it would be
+ * translating text the room is not showing.
+ *
  * The state is carried by a word as well as a colour (`A11Y-R03`). The `/admin`
  * segment layout has already resolved the admin (`ADMIN-002`), and this read is
  * not reader-scoped, so the page needs no actor of its own.
@@ -63,7 +69,7 @@ export default async function LocalesPage({
       <h1>Translations</h1>
       <p className={styles.intro}>
         Which languages each version of this content is ready in. A machine draft is shown to no reader until an admin
-        has reviewed it.
+        has reviewed it. Open a language in the newest column to translate it; the columns behind it are history.
       </p>
 
       {revisions.length === 0 ? (
@@ -91,14 +97,23 @@ export default async function LocalesPage({
                     <span className={styles.language}>{LANGUAGE_NAMES.of(bcp47(locale)) ?? locale}</span>
                     <span className={styles.code}>{locale}</span>
                   </th>
-                  {revisions.map((revision) => {
+                  {revisions.map((revision, column) => {
                     const state: CellState =
                       locale === AUTHORED
                         ? 'authored'
                         : ((revision.localeStates[locale] as CellState | undefined) ?? 'not-started');
+                    // `localeGrid` orders newest first, so the first column is
+                    // the revision a translation can be made of.
+                    const openable = column === 0 && locale !== AUTHORED;
                     return (
                       <td key={revision.revisionId} className={cellClass[state]}>
-                        {STATE_LABEL[state]}
+                        {openable ? (
+                          <a className={styles.open} href={`/admin/content/${id}/locales/${locale}`}>
+                            {STATE_LABEL[state]}
+                          </a>
+                        ) : (
+                          STATE_LABEL[state]
+                        )}
                       </td>
                     );
                   })}

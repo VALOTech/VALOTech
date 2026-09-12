@@ -12,6 +12,11 @@
  * an actionable error rather than "invalid document", and nothing of the
  * submitted body beyond the path and reason the validator itself reports.
  *
+ * A block naming a file the library does not hold is the second refusal, and it
+ * is a 422 for the same reason: the document is wrong and the author can fix it.
+ * The ids come back so the editor can say which block to look at — they are the
+ * caller's own values, and a file that is not stored identifies nobody.
+ *
  * A route handler inherits no segment layout, so the `/admin` layout's admin
  * check (`ADMIN-002`) does not run here: this handler asks the gate itself
  * (`requireAdmin`), which answers a non-admin the same `404` the pages give and
@@ -28,7 +33,7 @@
 import { requireAdmin } from '../../../../../auth/gate';
 import { getConfig } from '../../../../../config/index';
 import { BlockValidationError } from '../../../../../content/blocks';
-import { saveDraft } from '../../../../../content/items';
+import { UnknownMediaError, saveDraft } from '../../../../../content/items';
 import { withRequestId } from '../../../../../ops/request-context';
 
 const JSON_HEADERS: Readonly<Record<string, string>> = {
@@ -72,12 +77,14 @@ async function handleDraftSave(request: Request, itemId: string): Promise<Respon
     const revision = await saveDraft(itemId, blocks, actor.id);
     return json(200, JSON.stringify({ revisionId: revision.id }));
   } catch (error) {
-    // The one expected refusal is an invalid body, and it is a 422 carrying the
-    // validator's own message — never a 500, which would read as the server
-    // breaking rather than the document being wrong. Any other error is
-    // unexpected and propagates.
+    // Both expected refusals are a 422 carrying what the author has to change —
+    // never a 500, which would read as the server breaking rather than the
+    // document being wrong. Any other error is unexpected and propagates.
     if (error instanceof BlockValidationError) {
       return json(422, JSON.stringify({ error: 'invalid_blocks', detail: error.message }));
+    }
+    if (error instanceof UnknownMediaError) {
+      return json(422, JSON.stringify({ error: 'unknown_media', mediaIds: error.mediaIds }));
     }
     throw error;
   }
