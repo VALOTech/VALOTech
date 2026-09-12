@@ -99,3 +99,54 @@
     transition: none;
   }
 }
+
+/* The library table takes the account list's shape, because two tables in one
+   console that scan differently make the reader learn twice. */
+.library {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  margin-top: 0.75rem;
+}
+
+.library th,
+.library td {
+  text-align: left;
+  padding: 0.45rem 0.6rem;
+  border-bottom: 1px solid var(--admin-line);
+  vertical-align: top;
+}
+
+.library th {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* A column read down rather than across — sizes, timestamps and counts — lines
+   up digit under digit so the eye finds the odd one out. */
+.figure {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+/* The header over the delete column is a word for a screen reader as much as a
+   label: the column holds controls, and a blank header leaves them unnamed. */
+.actionHead {
+  font-weight: 600;
+}
+
+.empty {
+  margin-top: 0.75rem;
+  opacity: 0.75;
+}
+
+/* A refusal beside the row it belongs to, narrow enough to stay in its cell. */
+.library .refused {
+  margin-top: 0.5rem;
+  max-width: 22rem;
+}
+
+.library .refused ul {
+  margin: 0.35rem 0 0;
+  padding-left: 1.1rem;
+}

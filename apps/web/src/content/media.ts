@@ -320,6 +320,89 @@ export async function isReferencedByVisibleItem(
   return referenced !== undefined;
 }
 
+/** One stored file, as the library lists it for an admin. */
+export interface LibraryFile {
+  readonly id: string;
+  /**
+   * The stored type as the column holds it. `string` rather than `AcceptedMime`
+   * because the column carries no CHECK: `storeMedia` is the only writer and it
+   * takes an accepted type, but that is a property of the code and not of the
+   * row, and a read should not assert what the schema does not hold.
+   */
+  readonly mime: string;
+  readonly byteSize: number;
+  readonly uploadedAt: Date;
+  /** The uploader’s name, or `null` once their account is erased (`DATA-002`). */
+  readonly uploadedBy: string | null;
+  /** How many content items point at it, which is what decides whether it can go. */
+  readonly usedBy: number;
+}
+
+/**
+ * Everything in the library, newest first (`CMS-003/T10`).
+ *
+ * A staff read rather than a reader’s: it composes no audience predicate,
+ * because the question it answers is what the library holds and not what any
+ * one person may see. Only the console reaches it, and the console is behind
+ * the admin gate (`ADMIN-002/T1`).
+ *
+ * There is no filename here because the store never had one — a file is keyed by
+ * its bytes (`CMS-003/T4`), and two uploads of one picture under different names
+ * are one row. So a file is identified by what it is, how big, when it arrived
+ * and who brought it, and the reference count is the fact that matters most:
+ * it is the one that decides whether the file can be deleted at all.
+ */
+export async function libraryContents(): Promise<LibraryFile[]> {
+  const rows = await getDb()
+    .selectFrom('media')
+    .leftJoin('accounts', 'accounts.id', 'media.uploaded_by')
+    .select((eb) => [
+      'media.id as id',
+      'media.mime as mime',
+      'media.byte_size as byteSize',
+      'media.created_at as uploadedAt',
+      'accounts.name as uploadedBy',
+      eb
+        .selectFrom('media_refs')
+        .select((inner) => inner.fn.countAll<string>().as('count'))
+        .whereRef('media_refs.media_id', '=', 'media.id')
+        .as('usedBy'),
+    ])
+    .orderBy('media.created_at', 'desc')
+    .execute();
+
+  return rows.map((row) => ({
+    id: row.id,
+    mime: row.mime,
+    byteSize: Number(row.byteSize),
+    uploadedAt: row.uploadedAt,
+    uploadedBy: row.uploadedBy,
+    usedBy: Number(row.usedBy ?? 0),
+  }));
+}
+
+/**
+ * The titles of the items still using a file, for the sentence a refused delete
+ * shows (`CMS-003` §3).
+ *
+ * `deleteMedia` refuses with item ids, which is the right currency for a
+ * decision made inside a transaction and the wrong one for a person reading the
+ * refusal: an admin cannot tell from a uuid which document they would have
+ * broken. Resolving the titles afterwards is a display concern and is kept out
+ * of the transaction that refused.
+ */
+export async function itemsUsing(mediaId: string): Promise<string[]> {
+  const rows = await getDb()
+    .selectFrom('media_refs')
+    .innerJoin('content_items', 'content_items.id', 'media_refs.item_id')
+    .select('content_items.title as title')
+    .where('media_refs.media_id', '=', mediaId)
+    .orderBy('content_items.title', 'asc')
+    .execute();
+
+  return rows.map((row) => row.title);
+}
+
 /** The outcome of a delete: done, or refused with the items that still use it. */
 export type DeleteResult = { readonly ok: true } | { readonly ok: false; readonly referencedBy: string[] };
 

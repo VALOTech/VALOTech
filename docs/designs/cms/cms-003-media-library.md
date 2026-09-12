@@ -8,6 +8,9 @@ depended_by: [CMS-002, DECK-001, POST-001, RPT-001]
 layers_touched: [data, domain, service, api, frontend, ui]
 cross_cutting_rules: [CMS-R06, SEC-R01, DATA-R02, A11Y-R02]
 status: in-progress
+inert_until:
+  reason: A file can be uploaded, listed, deleted, and served under the audience of the item referencing it. Nothing yet writes that reference, so every stored file serves a 404 and the library reports every one of them as used by nothing.
+  unblocks_when: CMS-001/T7
 ---
 
 # `CMS-003` — Media library
@@ -106,10 +109,35 @@ served by the CDN to the next person who asks.
 
 ### Deleting
 
-Refused while any `media_refs` row exists. The admin is shown which items use it.
-A file with no references can be deleted, and the deletion is audited
+Refused while any `media_refs` row exists, and the refusal names the items by
+their **titles**: the store refuses with ids, which is the right currency inside
+a transaction and the wrong one for somebody deciding what they nearly broke. A
+file with no references can be deleted, and the deletion is audited
 (`media.delete`) because it can break a published document if the reference
 count was wrong.
+
+The act runs through the console's one destructive control (`ADMIN-002/T3`),
+which asks for the subject's name typed because deleting a file is among the
+three acts nothing undoes. The name it asks for is the file's **id**, since a
+file here has no other: the store is keyed by the bytes, so two uploads of one
+picture under different names are one row and no filename is kept. The typed
+name is checked again at the route, because a posted body is whatever the caller
+sent and the control holding Confirm off is a courtesy rather than the gate.
+
+### The library, listed
+
+An admin sees what is stored: the kind, the size, when it arrived, who brought
+it, and how many items point at it. The last column is the one that decides
+anything, because a file nothing points at can go and a file something points at
+cannot. It is a staff read and composes no audience predicate — the question is
+what the library holds, not what any one person may see — and only the console
+reaches it.
+
+**No thumbnail.** Showing the picture would be the better page, and it would
+mean serving a file to an admin who neither uploaded it nor can reach an item
+that references it — which is exactly the predicate above. Widening who may read
+a stored file is not a layout decision, so the list says what a file is rather
+than showing it, and the question stays open rather than answered by a page.
 
 ### Alternative text
 
@@ -143,6 +171,12 @@ not a copy. **`SEC-001`** owns the upload validation rules this design applies.
   set would cut bytes on a phone; it is not built because the volume is a few
   dozen images and generating variants is a pipeline with its own failure
   modes. The upload control states a sensible maximum width instead.
+- **The library lists files rather than showing them.** A thumbnail would be the
+  better page and it would mean serving a stored file to an admin who may reach no
+  item that references it, which is `CMS-006`’s question about who may read one
+  rather than a layout choice. The kind, the size, the date and the uploader
+  distinguish a few dozen files; reopen with a staff-scoped serve path when they
+  no longer do.
 - **SVG is not accepted, and that was a judgement call** (`CMS-DEC-03`). It is
   the right format for a logo and the format most likely to carry something
   unpleasant, and for a few dozen admin uploads there is no sanitiser here worth

@@ -7,7 +7,7 @@ depends_on: [AUTH-002, DATA-001]
 depended_by: [CMS-002, CMS-003, CMS-004, CMS-005, CMS-006, CMS-007]
 layers_touched: [data, domain, service]
 cross_cutting_rules: [CMS-R01, CMS-R04, DATA-R05, SEC-R04]
-status: implemented
+status: in-progress
 ---
 
 # `CMS-001` — Content model and revisions
@@ -106,11 +106,15 @@ rather than a leak.
 
 **`DATA-001`** declares the tables. **`AUTH-002`** supplies the reader whose role
 these functions take. **`CMS-002`** is the editor that produces blocks and the
-validator that rejects an unknown one. **`CMS-004`** is the preview and the
-admin surface that invokes `publish` and `withdraw`; the audit row each writes is
-written in the same transaction as the pointer move (`SEC-R04`), since only the
-function that moves the pointer can record the move atomically with it. **`CMS-005`** attaches locale rows to a
-revision. **`CMS-006`** is where `audience` becomes a query predicate.
+validator that rejects an unknown one. **`CMS-003`** stores the files a block
+names, and the `media_refs` row tying a file to the item using it is written from
+here rather than from there: only the function that saves a revision knows which
+blocks the item carries now and which it dropped, so only it can end a reference
+as well as begin one. **`CMS-004`** is the preview and the admin surface that
+invokes `publish` and `withdraw`; the audit row each writes is written in the same
+transaction as the pointer move (`SEC-R04`), since only the function that moves
+the pointer can record the move atomically with it. **`CMS-005`** attaches locale
+rows to a revision. **`CMS-006`** is where `audience` becomes a query predicate.
 **`RPT-001`**, **`POST-001`** and **`DECK-001`** are three authoring surfaces
 over this one model.
 
@@ -150,3 +154,4 @@ over this one model.
 - `CMS-001/T4` — `saveDraft` replaces the open draft rather than accumulating a revision per save
 - `CMS-001/T5` — `publish` and `withdraw` as pointer moves, with the previous revision intact
 - `CMS-001/T6` — Every read function takes the reader; none exists that does not
+- `CMS-001/T7` — Saving a revision syncs `media_refs` to the blocks naming a file, so a referenced image is servable and a dropped one is deletable

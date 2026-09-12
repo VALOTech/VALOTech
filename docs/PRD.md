@@ -116,7 +116,7 @@ translated, previewed, published, withdrawn or audited.
 
 | Code | Feature | Status | What it is |
 |---|---|---|---|
-| `CMS-001` | Content model and revisions | live | One storage model behind every kind of content: an item, its type, its ordered revisions, the revision that is published, and the audience it is published to. Nothing is edited in place — an edit is a new revision, so what an investor read last month is still recoverable |
+| `CMS-001` | Content model and revisions | building | One storage model behind every kind of content: an item, its type, its ordered revisions, the revision that is published, and the audience it is published to. Nothing is edited in place — an edit is a new revision, so what an investor read last month is still recoverable |
 | `CMS-002` | Authoring surface | live | The editor an admin writes in: structured blocks — heading, paragraph, list, quote, image, figure — never raw markup from a form, because markup from a form is both an injection surface and a way to break a layout nobody can fix from the admin screen |
 | `CMS-003` | Media library | building | The images and files content references: uploaded once, re-used, served under the same audience rule as the item that references them. An investor-only screenshot must not be readable by URL |
 | `CMS-004` | Preview, publish and withdraw | building | An admin sees a draft exactly as an investor will, publishes a revision deliberately, and can return to the previously published revision in one action. A draft is visible to nobody else, ever |
