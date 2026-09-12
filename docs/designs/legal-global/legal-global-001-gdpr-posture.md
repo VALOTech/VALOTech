@@ -7,7 +7,7 @@ depends_on: [DATA-002, LEGAL-SG-001]
 depended_by: [LEGAL-GLOBAL-002]
 layers_touched: [service, frontend, ui]
 cross_cutting_rules: [DATA-R01, DATA-R02, DATA-R03, DATA-R04, I18N-R01]
-status: design-ready
+status: in-progress
 ---
 
 # `LEGAL-GLOBAL-001` — GDPR posture for EU investors

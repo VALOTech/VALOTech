@@ -7,7 +7,7 @@ depends_on: [CMS-002, CMS-003]
 depended_by: [DECK-002]
 layers_touched: [domain, service, api, frontend, ui]
 cross_cutting_rules: [CMS-R01, CMS-R04, SEC-R04, I18N-R01, A11Y-R02]
-status: design-ready
+status: in-progress
 ---
 
 # `DECK-001` — Deck authoring

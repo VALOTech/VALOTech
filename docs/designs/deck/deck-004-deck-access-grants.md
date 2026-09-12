@@ -7,7 +7,7 @@ depends_on: [ADMIN-001, CMS-006, DECK-002]
 depended_by: []
 layers_touched: [data, domain, service, api, frontend, ui]
 cross_cutting_rules: [CMS-R03, SEC-R04, DATA-R05, DATA-R01, A11Y-R01, I18N-R01]
-status: design-ready
+status: in-progress
 ---
 
 # `DECK-004` — Deck access grants

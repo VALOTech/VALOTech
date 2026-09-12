@@ -7,7 +7,7 @@ depends_on: [CMS-004, DECK-001]
 depended_by: [DECK-003, DECK-004]
 layers_touched: [data, domain, service, api, frontend, ui]
 cross_cutting_rules: [CMS-R01, CMS-R02, CMS-R07, SEC-R04, DATA-R05]
-status: design-ready
+status: in-progress
 ---
 
 # `DECK-002` — Deck versioning and publishing

@@ -7,7 +7,7 @@ depends_on: [CMS-004, CMS-006, RPT-001]
 depended_by: [INV-001, RPT-003]
 layers_touched: [data, domain, service, api, frontend, ui]
 cross_cutting_rules: [CMS-R03, SEC-R04, DATA-R05, A11Y-R01, I18N-R01]
-status: design-ready
+status: in-progress
 ---
 
 # `RPT-002` — Report periods and archive

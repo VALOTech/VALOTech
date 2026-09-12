@@ -196,13 +196,19 @@ Adding a domain means updating this table and the PRD Feature Catalogue.
     depended_by: [INV-001, DECK-001]
     layers_touched: [data, domain, service, api, frontend, ui]
     cross_cutting_rules: [SEC-R01, I18N-R01, A11Y-R02]
-    status: draft | under-review | design-ready | implemented | deprecated | pending-external | pending-decision
+    status: draft | under-review | design-ready | in-progress | implemented | deprecated | pending-external | pending-decision
+inert_until:             # required when status=in-progress and every task row has closed
+  reason: <what the feature delivers today — the core value that is built but not operating>
+  unblocks_when: <a named blocker — <CODE>/T<N>, <DOMAIN>-DEC-NN, or credential|vendor|legal|threshold (§1.8)>
     external_blocker: { kind: credential|vendor|legal|threshold, ref: <anchor>, unblocks_when: <signal> }
     decision_required: <one line — the entry is decisions-log.md#CODE>
     decision_owner: user | BA | legal
     ---
 
 `status: deferred` is not allowed; re-class it as `pending-external`, `pending-decision`, `design-ready` or `deprecated`.
+
+
+`status: in-progress` is the honest state between `design-ready` (nothing built) and `implemented` (built *and* running). It covers a build genuinely underway — some task rows closed with others open — **and** the case where every row has closed while the core value is still inert because something it needs is unwired: a worker nothing starts, a handler nothing mounts, a dependency that has not landed. A feature is `implemented` only when its rows are all closed **and** what it delivers is actually running; an all-closed-but-inert feature is `in-progress`, never `implemented`, because calling an inert build "operating" is the §1.7 honesty violation the token exists to prevent. An all-closed `in-progress` design is indistinguishable from one somebody simply forgot to advance, so it declares `inert_until.{reason, unblocks_when}` — the reason naming what the feature delivers today, the blocker following the §1.8 grammar so something can check it; silence fails the gate, which keeps the escape from being taken by omission. `scripts/validate-designs.py` holds every direction: `implemented` with an open row, `design-ready` with every row closed, `design-ready` with some rows closed and others open, and an all-closed `in-progress` declaring no `inert_until`, each fail.
 
 ### 3.5 Design template — seven sections, logic not code
 

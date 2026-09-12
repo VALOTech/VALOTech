@@ -7,7 +7,7 @@ depends_on: [CMS-004, CMS-006, POST-001]
 depended_by: [INV-001, SITE-005]
 layers_touched: [data, domain, service, api, frontend, ui]
 cross_cutting_rules: [CMS-R03, SEC-R01, DATA-R05, SEC-R04, I18N-R01, A11Y-R01]
-status: design-ready
+status: in-progress
 ---
 
 # `POST-002` — Update publishing and audience

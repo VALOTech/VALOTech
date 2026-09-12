@@ -40,7 +40,7 @@ DESIGNS_DIR = ROOT / "docs" / "designs"
 # A design in one of these states is part of the plan and takes a wave. The
 # others -- pending-external, pending-decision, deprecated -- are excluded, so
 # a feature waiting on the owner cannot hold a wave open.
-ROADMAP_STATUSES = {"draft", "under-review", "design-ready", "implemented"}
+ROADMAP_STATUSES = {"draft", "under-review", "design-ready", "in-progress", "implemented"}
 EXCLUDED_STATUSES = {"pending-external", "pending-decision", "deprecated"}
 
 # The domain grammar is `[A-Z][A-Z0-9-]*` and not `[A-Z]+`: a letters-only

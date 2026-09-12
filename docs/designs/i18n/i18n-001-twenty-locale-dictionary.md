@@ -7,7 +7,7 @@ depends_on: [SITE-001]
 depended_by: [CMS-005, I18N-002]
 layers_touched: [frontend, ui]
 cross_cutting_rules: [I18N-R01, I18N-R02, I18N-R04, I18N-R05, P-05]
-status: design-ready
+status: in-progress
 ---
 
 # `I18N-001` — Twenty-locale runtime dictionary

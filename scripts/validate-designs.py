@@ -29,7 +29,7 @@ CHECKLIST = os.path.join(ROOT, "docs", "operator-checklist.md")
 TASKS = os.path.join(ROOT, "docs", "tasks.md")
 
 LAYERS = {"scene", "infra", "data", "domain", "service", "api", "frontend", "ui"}
-STATUSES = {"draft", "under-review", "design-ready", "implemented", "deprecated",
+STATUSES = {"draft", "under-review", "design-ready", "in-progress", "implemented", "deprecated",
             "pending-external", "pending-decision"}
 BLOCKER_KINDS = {"credential", "vendor", "legal", "threshold"}
 
@@ -44,10 +44,14 @@ DEC = re.compile(r"^[A-Z][A-Z0-9-]*-DEC-\d{2}$")
 # a task filed in another section still counts against its own design.
 TASK_ROW = re.compile(
     r"^\s*-\s*\[([ ~!x])\]\s+([A-Z][A-Z0-9-]*(?:-\d{3})?/T\d+(?:[a-z]\d*)?)\s+[\u2014-]")
-LEDGER_TRACKED = {"under-review", "design-ready", "implemented"}
+LEDGER_TRACKED = {"under-review", "design-ready", "in-progress", "implemented"}
+# `under-review` is the design document under review rather than a build claim,
+# so it answers only the all-closed direction, never the mid-build one.
+NOT_BUILT = {"under-review", "design-ready"}
 # `blocked` is a designed feature waiting on something real -- a credential, a
 # dependency -- so it reads as a legitimate PRD cell for a design-ready design.
-PRD_CELLS_FOR_STATUS = {"implemented": {"live"}, "design-ready": {"design", "blocked"}}
+PRD_CELLS_FOR_STATUS = {"implemented": {"live"}, "design-ready": {"design", "blocked"},
+                        "in-progress": {"building", "blocked"}}
 
 
 def read(path):
@@ -140,7 +144,7 @@ def main():
 
         status = str(meta.get("status", ""))
         if status not in STATUSES:
-            problems.append("%s: status '%s' is not one of the seven" % (rel, status))
+            problems.append("%s: status '%s' is not one of the eight" % (rel, status))
         if status == "deferred":
             problems.append("%s: 'deferred' is not a status; re-class it" % rel)
 
@@ -206,10 +210,10 @@ def main():
     # of the wave is what the roadmap deliberately does not do -- so the check is
     # scoped to the two statuses that claim a design exists.
     catalogue = re.findall(
-        r"^\|\s*`([A-Z][A-Z0-9-]*-\d{3})`\s*\|[^|]*\|\s*(live|design|planned|blocked)\s*\|",
+        r"^\|\s*`([A-Z][A-Z0-9-]*-\d{3})`\s*\|[^|]*\|\s*(live|building|design|planned|blocked)\s*\|",
         prd, re.M)
     for code, status in catalogue:
-        if status in ("live", "design") and code not in designs:
+        if status in ("live", "building", "design") and code not in designs:
             problems.append("docs/PRD.md: %s is %s and has no design" % (code, status))
 
     # A design's status and the task ledger are two answers to one question --
@@ -233,14 +237,24 @@ def main():
         if status not in LEDGER_TRACKED or code not in total:
             continue
         done, all_of = closed.get(code, 0), total[code]
-        if done == all_of and status != "implemented":
+        if done == all_of and status in NOT_BUILT:
             problems.append("%s: status '%s' but all %d '%s' task rows are closed -- "
-                            "advance it to 'implemented' here and to 'live' on the PRD row, "
+                            "advance it to 'implemented' (built and running, PRD 'live') or "
+                            "'in-progress' (built, core value still inert, PRD 'building'), "
                             "or re-open the row that is not really done"
                             % (rel, status, all_of, code))
+        elif done and done != all_of and status == "design-ready":
+            problems.append("%s: status 'design-ready' but %d of %d '%s' task rows are "
+                            "closed -- 'design-ready' reads NO CODE WRITTEN; a build underway "
+                            "is 'in-progress' here and 'building' on the PRD row"
+                            % (rel, done, all_of, code))
+        elif done == all_of and status == "in-progress" and not meta.get("inert_until"):
+            problems.append("%s: status 'in-progress' with all %d '%s' task rows closed but "
+                            "no inert_until -- built-and-inert is indistinguishable from "
+                            "forgotten unless the design says which" % (rel, all_of, code))
         elif done != all_of and status == "implemented":
             problems.append("%s: status 'implemented' but %d of %d '%s' task rows are still "
-                            "open -- drop back to 'design-ready' here and to 'design' on the "
+                            "open -- drop back to 'in-progress' here and to 'building' on the "
                             "PRD row until they close" % (rel, all_of - done, all_of, code))
         want = PRD_CELLS_FOR_STATUS.get(status)
         if want and prd_cell.get(code) and prd_cell[code] not in want:
@@ -256,7 +270,7 @@ def main():
         return 1
 
     if designs:
-        shipped = sum(1 for c, st in catalogue if st in ("live", "design"))
+        shipped = sum(1 for c, st in catalogue if st in ("live", "building", "design"))
         print("designs: %d read, every code, layer, rule and edge resolves; "
               "%d of %d shipped-or-designed PRD codes covered."
               % (len(designs), shipped, shipped))

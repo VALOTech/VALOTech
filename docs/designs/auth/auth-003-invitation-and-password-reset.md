@@ -7,7 +7,7 @@ depends_on: [AUTH-001, CRED-001, DATA-001]
 depended_by: [ADMIN-001]
 layers_touched: [data, domain, service, api, frontend, ui]
 cross_cutting_rules: [SEC-R03, SEC-R05, DATA-R01, DATA-R02, I18N-R01, A11Y-R01, A11Y-R02]
-status: design-ready
+status: in-progress
 ---
 
 # `AUTH-003` — Invitation and password reset

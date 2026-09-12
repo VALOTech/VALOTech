@@ -10,7 +10,7 @@
 
 A feature code never changes and never moves to another subject. A design under `docs/designs/<domain>/` expands one code; a task in `docs/tasks.md` implements one design; a test pins one task. That chain is what §5 of `.claude/CLAUDE.md` calls coherence, and a break anywhere in it is a defect whether or not anything is visibly wrong.
 
-**Status** in the catalogue means: `live` — shipped and serving visitors today · `design` — the design is written, no code · `planned` — named, not yet designed · `blocked` — waiting on a decision or an external actor, with the blocker named.
+**Status** in the catalogue means: `live` — shipped and serving visitors today · `design` — the design is written, no code · `building` — the build is underway, some of it shipped and some of it not · `planned` — named, not yet designed · `blocked` — waiting on a decision or an external actor, with the blocker named.
 
 ---
 
@@ -80,7 +80,7 @@ A third role — an editor who may draft but not publish, an analyst who may rea
 | Code | Feature | Status | What it is |
 |---|---|---|---|
 | `SITE-001` | The gateway page | live | One page, nine chapters, a fixed scene behind them, a sign-in entry, and a contact close |
-| `SITE-002` | Public and investor chapter split | design | Two chapters and the mechanism detail under seven claims are hidden from a visitor; the nav names the hidden pair only to a signed-in reader |
+| `SITE-002` | Public and investor chapter split | building | Two chapters and the mechanism detail under seven claims are hidden from a visitor; the nav names the hidden pair only to a signed-in reader |
 | `SITE-003` | Chapter sequence | live | Problem, Answer, Your people, Why, Workforce, ValoStack, Yours-not-ours, Contact — the designer's order |
 | `SITE-004` | Contact close | live | A short call, an e-mail CTA, and the reason pricing is not published |
 | `SCENE-001` | The world and its journey | live | A lunar sphere that becomes Earth across the page; stations per chapter |
@@ -89,7 +89,7 @@ A third role — an editor who may draft but not publish, an analyst who may rea
 | `SCENE-004` | Annotation chips | live | Fifteen labels across five chapters, each pinned to one body |
 | `SCENE-005` | Orbit stages | live | Two chapters whose cards ride an ellipse about the world |
 | `SCENE-006` | Mapping stage | live | The centre chapter, where five pairs arrive one at a time |
-| `I18N-001` | Twenty-locale runtime dictionary | design | 303 keys per locale, authored translations, swapped without a reload |
+| `I18N-001` | Twenty-locale runtime dictionary | building | 303 keys per locale, authored translations, swapped without a reload |
 | `I18N-002` | Served-copy parity gate | live | `scripts/sync-static-copy.mjs --check` refuses a push where markup and dictionary disagree |
 | `SITE-005` | The gateway served by the application | design | The same page, the same twenty locales and the same measured scene, served by the app instead of GitHub Pages — with the gated chapters resolved server-side rather than hidden by a stylesheet |
 | `SITE-006` | Legal pages and the consent surface | design | `legal/privacy`, `legal/cookies` and `legal/terms` in twenty locales, and the ecosystem's three-category consent banner with the non-essential categories off |
@@ -101,7 +101,7 @@ A third role — an editor who may draft but not publish, an analyst who may rea
 |---|---|---|---|
 | `AUTH-001` | Sign-in | live | E-mail and password against a server-side account; failures indistinguishable and rate-limited |
 | `AUTH-002` | Session and role gate | live | httpOnly cookie, rotation on privilege change, server-side invalidation; every gated read scoped by role at the query |
-| `AUTH-003` | Invitation and password reset | design | An admin invites; the invitee sets their own password from a single-use, expiring link |
+| `AUTH-003` | Invitation and password reset | building | An admin invites; the invitee sets their own password from a single-use, expiring link |
 | `AUTH-004` | Sign-out | live | Session destroyed server-side, not merely cleared client-side |
 | `ADMIN-001` | Account management | live | Create, suspend and delete investor accounts; grant and revoke deck access; audited |
 | `ADMIN-002` | Admin console shell | live | The staff surface the other admin features live in |
@@ -118,11 +118,11 @@ translated, previewed, published, withdrawn or audited.
 |---|---|---|---|
 | `CMS-001` | Content model and revisions | live | One storage model behind every kind of content: an item, its type, its ordered revisions, the revision that is published, and the audience it is published to. Nothing is edited in place — an edit is a new revision, so what an investor read last month is still recoverable |
 | `CMS-002` | Authoring surface | live | The editor an admin writes in: structured blocks — heading, paragraph, list, quote, image, figure — never raw markup from a form, because markup from a form is both an injection surface and a way to break a layout nobody can fix from the admin screen |
-| `CMS-003` | Media library | design | The images and files content references: uploaded once, re-used, served under the same audience rule as the item that references them. An investor-only screenshot must not be readable by URL |
-| `CMS-004` | Preview, publish and withdraw | design | An admin sees a draft exactly as an investor will, publishes a revision deliberately, and can return to the previously published revision in one action. A draft is visible to nobody else, ever |
-| `CMS-005` | Locale variants and translation state | design | Per item, per locale: not started, machine draft, reviewed. A machine draft is never shown to a reader; an unreviewed locale falls back to the authored language — `docs/decisions-log.md#I18N-DEC-01` |
+| `CMS-003` | Media library | building | The images and files content references: uploaded once, re-used, served under the same audience rule as the item that references them. An investor-only screenshot must not be readable by URL |
+| `CMS-004` | Preview, publish and withdraw | building | An admin sees a draft exactly as an investor will, publishes a revision deliberately, and can return to the previously published revision in one action. A draft is visible to nobody else, ever |
+| `CMS-005` | Locale variants and translation state | building | Per item, per locale: not started, machine draft, reviewed. A machine draft is never shown to a reader; an unreviewed locale falls back to the authored language — `docs/decisions-log.md#I18N-DEC-01` |
 | `CMS-006` | Audience and access | live | Public, every investor, or named investors. Enforced in the query that fetches the item, never in the template that renders it — the template is where this rule has historically been broken |
-| `CMS-007` | Search and filter in the room | design | Find an item by kind, by product, by period, or by its words. A room with two years of updates and no search is an archive nobody reads |
+| `CMS-007` | Search and filter in the room | building | Find an item by kind, by product, by period, or by its words. A room with two years of updates and no search is an archive nobody reads |
 
 ### 5.4 What is written — `RPT`, `POST`, `DECK`, `INV`, `MAIL`
 
@@ -131,18 +131,18 @@ because an investor navigates each of them differently.
 
 | Code | Feature | Status | What it is |
 |---|---|---|---|
-| `RPT-001` | Investor report authoring | design | A report for a named period — a quarter, a month — composed in sections. This is the document an investor expects on a schedule and files when it arrives |
-| `RPT-002` | Report periods and archive | design | One published report per period, navigable by date, with the current one surfaced and the rest reachable. A period cannot carry two published reports, because "the Q3 report" must name one document |
+| `RPT-001` | Investor report authoring | building | A report for a named period — a quarter, a month — composed in sections. This is the document an investor expects on a schedule and files when it arrives |
+| `RPT-002` | Report periods and archive | building | One published report per period, navigable by date, with the current one surfaced and the rest reachable. A period cannot carry two published reports, because "the Q3 report" must name one document |
 | `RPT-003` | Report reading | design | The investor's view: sequential, readable on a phone, printable, and stating the period and publication date on the page itself |
 | `POST-001` | Update authoring | design | A short update, of a stated kind: an announcement, an achievement, or a progress note. Kinds exist because the three are read differently and an investor scanning for one should not have to read the other two |
-| `POST-002` | Update publishing and audience | design | An update is public, investor-only, or draft; audience is enforced at the query, and the stream is ordered newest first |
-| `DECK-001` | Deck authoring | design | An admin composes a presentation as ordered sections |
-| `DECK-002` | Deck versioning and publishing | design | A deck is published as a version; an investor reads the version they were granted; a draft is never visible |
+| `POST-002` | Update publishing and audience | building | An update is public, investor-only, or draft; audience is enforced at the query, and the stream is ordered newest first |
+| `DECK-001` | Deck authoring | building | An admin composes a presentation as ordered sections |
+| `DECK-002` | Deck versioning and publishing | building | A deck is published as a version; an investor reads the version they were granted; a draft is never visible |
 | `DECK-003` | Deck reading | design | The investor's view: sequential, readable on a phone, printable |
-| `DECK-004` | Deck access grants | design | Which investor may read which deck, granted and revoked by an admin, audited |
+| `DECK-004` | Deck access grants | building | Which investor may read which deck, granted and revoked by an admin, audited |
 | `INV-001` | Investor room shell | design | What a signed-in investor lands on: the update stream first, with the progress board, the current report, the deck and the gated chapters reachable from it |
 | `INV-002` | Gated gateway chapters, served | design | The two chapters and the seven mechanisms, delivered by the server to an authorised reader and to nobody else — this is what replaces the CSS demonstration |
-| `INV-003` | Portfolio progress | design | Where each of the six products stands, and the milestones ahead of it — the thing an investor opens the room to check when they have no time to read |
+| `INV-003` | Portfolio progress | building | Where each of the six products stands, and the milestones ahead of it — the thing an investor opens the room to check when they have no time to read |
 | `MAIL-001` | Investor mail | blocked | An admin sends a message to selected investors; every send is recorded — SMTP carrier settled (`docs/decisions-log.md#MAIL-DEC-01`), waits on the `SMTP_URL` credential and the `MAIL-001/T8` adapter |
 | `MAIL-002` | Mail log and unsubscribe | blocked | What was sent, to whom, when; a working unsubscribe that stops non-transactional mail — waits on the mail send path (`MAIL-001`) |
 
@@ -153,8 +153,8 @@ because an investor navigates each of them differently.
 | `DATA-001` | Schema and migrations | live | Accounts, sessions, decks, deck sections, deck grants, posts, mail log, audit, configuration |
 | `DATA-002` | Erasure and retention | live | A real delete for an investor's personal data; audit retained minimally; retention windows stated |
 | `DATA-003` | Backup and restore | live | A restore that has been performed, not merely configured |
-| `SEC-001` | Security baseline | design | CSP, HSTS, secure cookies, parameterised queries, dependency and secret scanning in CI |
-| `SEC-002` | Audit log | design | Append-only record of every privileged write |
+| `SEC-001` | Security baseline | building | CSP, HSTS, secure cookies, parameterised queries, dependency and secret scanning in CI |
+| `SEC-002` | Audit log | building | Append-only record of every privileged write |
 | `CFG-001` | Runtime configuration | live | The values an admin may change without a deploy, each with its prior value and a single-action undo |
 | `OPS-001` | Hosting and deploy | design | Where the app runs, and how valotech.org points at it — AWS, ECS on Fargate (`docs/decisions-log.md#INFRA-DEC-05`), built last |
 | `OPS-002` | Logging and monitoring | live | Structured logs with a request id, no personal data, and an alert an operator can act on |
@@ -166,7 +166,7 @@ because an investor navigates each of them differently.
 | Code | Feature | Status | What it is |
 |---|---|---|---|
 | `LEGAL-SG-001` | PDPA posture | design | Consent for the stated purpose, access and correction, breach notification, a named DPO |
-| `LEGAL-GLOBAL-001` | GDPR posture for EU investors | design | Lawful basis, subject rights, and what crosses a border |
+| `LEGAL-GLOBAL-001` | GDPR posture for EU investors | building | Lawful basis, subject rights, and what crosses a border |
 | `LEGAL-GLOBAL-002` | Cookie and analytics posture | design | Whether the site measures anything about visitors — settled at `docs/decisions-log.md#OPS-DEC-01` (permitted, off by default); the pages and banner are `SITE-006` |
 
 ---
