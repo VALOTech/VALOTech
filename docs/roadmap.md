@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_295 tasks in the plan, 190 closed, 105 outstanding._
+_295 tasks in the plan, 191 closed, 104 outstanding._
 
 ---
 
@@ -64,7 +64,7 @@ _65/69 closed (94%) · 4 outstanding — 2 buildable now · 1 waiting on the own
 
 _The machinery every kind of writing shares — the editor, the media, the locale states, the audience rule, publishing, search — plus the account, configuration and logging surfaces an operator needs before anything is published. Building it once is the whole reason a report, an update and a deck are three navigations over one system rather than three systems._
 
-_51/63 closed (80%) · 12 outstanding — 8 buildable now · 3 waiting on the owner · 0 external residue · 1 parked to a later wave._
+_52/63 closed (82%) · 11 outstanding — 7 buildable now · 3 waiting on the owner · 0 external residue · 1 parked to a later wave._
 
 - **ADMIN-001** · Account management — 8/8 closed
 - **CFG-001** · Runtime configuration — 6/6 closed
@@ -78,9 +78,7 @@ _51/63 closed (80%) · 12 outstanding — 8 buildable now · 3 waiting on the ow
 
 - **CMS-006** · Audience and access — 6/6 closed
 - **OPS-002** · Logging and monitoring — 6/6 closed
-- **CMS-002** · Authoring surface — 6/7 closed · depth 6
-  - `[ ] CMS-002/T5` — Paste imports plain text plus recognised structure and nothing else
-
+- **CMS-002** · Authoring surface — 7/7 closed
 - **CMS-004** · Preview, publish and withdraw — 2/6 closed · depth 6
   - `[ ] CMS-004/T1` — Preview renders through the reader's own components and evaluates the audience rule as the chosen role
   - `[ ] CMS-004/T2` — Preview is admin-only, with no token and no shareable link

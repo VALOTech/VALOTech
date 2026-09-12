@@ -14,11 +14,12 @@
  * through `content/marks.ts`, never a rendered node.
  */
 
-import type { ReactElement } from 'react';
+import type { ClipboardEvent, ReactElement } from 'react';
 import { useId, useRef, useState } from 'react';
 
 import type { Block, BlockType, Mark, MarkType } from '../../../../../content/blocks';
 import { applyMark, remapMarks, removeMark } from '../../../../../content/marks';
+import { isStructured, pasteToBlocks } from '../../../../../content/paste';
 
 import styles from './editor.module.css';
 
@@ -111,7 +112,15 @@ const MARK_LABELS: Readonly<Record<MarkType, string>> = {
 /** The three emphasis marks the toolbar toggles; a link is separate, since it needs a target. */
 const EMPHASIS: readonly MarkType[] = ['strong', 'em', 'code'];
 
-function ParagraphFields({ block, onChange }: { block: Narrow<'paragraph'>; onChange: (b: Block) => void }): ReactElement {
+function ParagraphFields({
+  block,
+  onChange,
+  onPaste,
+}: {
+  block: Narrow<'paragraph'>;
+  onChange: (b: Block) => void;
+  onPaste: (blocks: Block[]) => void;
+}): ReactElement {
   const id = useId();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [selection, setSelection] = useState<{ start: number; end: number }>({ start: 0, end: 0 });
@@ -141,6 +150,21 @@ function ParagraphFields({ block, onChange }: { block: Narrow<'paragraph'>; onCh
     setHref('');
   }
 
+  // A paste carrying structure -- a heading, a list, more than one paragraph, or
+  // a link -- is imported as blocks and nothing else (CMS-002/T5); plain inline
+  // text falls through to the textarea's own insertion, so a pasted word lands at
+  // the cursor and its offsets are remapped by changeText. text/html is read when
+  // the clipboard offers it, which is how a pasted link survives as a mark.
+  function handlePaste(event: ClipboardEvent<HTMLTextAreaElement>): void {
+    const html = event.clipboardData.getData('text/html');
+    const text = event.clipboardData.getData('text/plain');
+    const blocks = pasteToBlocks(html.length > 0 ? html : null, text);
+    if (isStructured(blocks)) {
+      event.preventDefault();
+      onPaste(blocks);
+    }
+  }
+
   return (
     <div className={styles.paragraph}>
       <label className={styles.field} htmlFor={id}>
@@ -152,6 +176,7 @@ function ParagraphFields({ block, onChange }: { block: Narrow<'paragraph'>; onCh
           value={block.text}
           onChange={(e) => changeText(e.target.value)}
           onSelect={rememberSelection}
+          onPaste={handlePaste}
         />
       </label>
 
@@ -411,12 +436,20 @@ function ListFields({ block, onChange }: { block: Narrow<'list'>; onChange: (b: 
 }
 
 /** Dispatch to the fields for this block's type. */
-export function BlockFields({ block, onChange }: { block: Block; onChange: (b: Block) => void }): ReactElement {
+export function BlockFields({
+  block,
+  onChange,
+  onPaste,
+}: {
+  block: Block;
+  onChange: (b: Block) => void;
+  onPaste: (blocks: Block[]) => void;
+}): ReactElement {
   switch (block.type) {
     case 'heading':
       return <HeadingFields block={block} onChange={onChange} />;
     case 'paragraph':
-      return <ParagraphFields block={block} onChange={onChange} />;
+      return <ParagraphFields block={block} onChange={onChange} onPaste={onPaste} />;
     case 'list':
       return <ListFields block={block} onChange={onChange} />;
     case 'quote':

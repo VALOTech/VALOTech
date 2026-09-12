@@ -211,6 +211,29 @@ export function Editor({ itemId, initialBlocks }: { itemId: string; initialBlock
     );
   }
 
+  // A paste that carries structure (CMS-002/T5) arrives as blocks rather than
+  // text: replace the block pasted into when it is an empty paragraph, otherwise
+  // keep it and insert the pasted blocks after it. Focus the last one landed.
+  function pasteBlocks(key: string, blocks: Block[]): void {
+    if (blocks.length === 0) {
+      return;
+    }
+    const index = items.findIndex((item) => item.key === key);
+    if (index < 0) {
+      return;
+    }
+    const current = items[index];
+    const replace =
+      current !== undefined &&
+      current.block.type === 'paragraph' &&
+      current.block.text.trim() === '' &&
+      current.block.marks.length === 0;
+    const made = blocks.map((block) => makeItem(block));
+    const head = replace ? items.slice(0, index) : items.slice(0, index + 1);
+    const tail = items.slice(index + 1);
+    change([...head, ...made, ...tail], made[made.length - 1]?.key ?? null);
+  }
+
   function onBlockKeyDown(key: string, event: ReactKeyboardEvent<HTMLLIElement>): void {
     // Only when the block row itself holds focus — a keystroke inside a field
     // keeps its native meaning.
@@ -391,7 +414,11 @@ export function Editor({ itemId, initialBlocks }: { itemId: string; initialBlock
                 </button>
               </div>
             </div>
-            <BlockFields block={item.block} onChange={(block) => update(item.key, block)} />
+            <BlockFields
+              block={item.block}
+              onChange={(block) => update(item.key, block)}
+              onPaste={(blocks) => pasteBlocks(item.key, blocks)}
+            />
           </li>
         ))}
       </ul>

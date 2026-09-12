@@ -117,6 +117,16 @@ previewed and published — this surface never publishes.
   read-only with who has it open, which is a lock rather than a merge and is
   honest about being one.
 
+- **A paste of styled content logs a blocked inline style, which is the policy
+  working.** The paste parser reads a pasted HTML fragment with the browser's own
+  `DOMParser`, and a fragment carrying a `style` attribute — most pastes from a
+  word processor do — makes the browser evaluate that style against the page's
+  `style-src 'self'` (`SEC-001`) and block it, with a console note. The block
+  changes nothing the author sees: the parser keeps only text, headings, lists
+  and links (`CMS-002/T5`), so a foreign style never reaches a stored block
+  whether the browser blocked it at parse time or not. A paste with no inline
+  style is silent, which is what confirms the note is the CSP and not the editor.
+
 ## 7. Task list
 
 - `CMS-002/T1` — A block list the author operates by keyboard, with each block's type visible
