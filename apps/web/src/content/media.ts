@@ -13,10 +13,12 @@
  * cascades from `media` — a file deleted out from under a published document
  * would take its references with it rather than be refused.
  *
- * What is not here: the re-encode that strips EXIF from a raster and the SVG
- * sanitiser (`CMS-003/T2`, `T3`) wait on [`CMS-DEC-03`](../../docs/decisions-log.md#CMS-DEC-03);
- * until the upload route exists it re-encodes before it calls `storeMedia`, so a
- * file with its EXIF intact never reaches storage.
+ * What is not here: the re-encode that strips EXIF from a raster (`CMS-003/T2`)
+ * waits on its library — `CMS-DEC-03` settled it to `jimp`, pure JavaScript, run
+ * before `storeMedia` once the upload route exists, so a file with its EXIF
+ * intact never reaches storage. SVG is not accepted at all (`CMS-003/T3`): the
+ * same decision refused it rather than trust a sanitiser, so an `<svg>` document
+ * sniffs to `null` and the upload turns it away like any other unaccepted type.
  */
 
 import { createHash } from 'node:crypto';
@@ -35,7 +37,6 @@ export const ACCEPTED_MIME = [
   'image/png',
   'image/jpeg',
   'image/webp',
-  'image/svg+xml',
   'application/pdf',
 ] as const;
 
@@ -47,17 +48,6 @@ function startsWith(bytes: Uint8Array, signature: readonly number[]): boolean {
     return false;
   }
   return signature.every((byte, index) => bytes[index] === byte);
-}
-
-/**
- * An SVG is XML, so it has no single magic number; it is recognised by an `<svg>`
- * root reachable past an optional byte-order mark, an XML declaration and
- * comments, and nothing else before it. This only decides the *type* — the parse
- * that strips script and external references, or refuses, is `CMS-003/T3`.
- */
-function looksLikeSvg(bytes: Uint8Array): boolean {
-  const head = Buffer.from(bytes.subarray(0, 1024)).toString('utf8');
-  return /^\s*(<\?xml\b[^>]*\?>\s*)?(<!--[\s\S]*?-->\s*)*<svg[\s/>]/i.test(head);
 }
 
 /**
@@ -82,9 +72,8 @@ export function sniffType(bytes: Uint8Array): AcceptedMime | null {
   if (startsWith(bytes, [0x25, 0x50, 0x44, 0x46])) {
     return 'application/pdf';
   }
-  if (looksLikeSvg(bytes)) {
-    return 'image/svg+xml';
-  }
+  // SVG is refused rather than sanitised (`CMS-DEC-03`): an `<svg>` document is
+  // none of the accepted types, so it sniffs to null and the upload turns it away.
   return null;
 }
 

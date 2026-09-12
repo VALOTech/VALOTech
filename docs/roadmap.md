@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_295 tasks in the plan, 191 closed, 104 outstanding._
+_295 tasks in the plan, 192 closed, 103 outstanding._
 
 ---
 
@@ -64,13 +64,12 @@ _65/69 closed (94%) · 4 outstanding — 3 buildable now · 0 waiting on the own
 
 _The machinery every kind of writing shares — the editor, the media, the locale states, the audience rule, publishing, search — plus the account, configuration and logging surfaces an operator needs before anything is published. Building it once is the whole reason a report, an update and a deck are three navigations over one system rather than three systems._
 
-_52/63 closed (82%) · 11 outstanding — 10 buildable now · 0 waiting on the owner · 0 external residue · 1 parked to a later wave._
+_53/63 closed (84%) · 10 outstanding — 9 buildable now · 0 waiting on the owner · 0 external residue · 1 parked to a later wave._
 
 - **ADMIN-001** · Account management — 8/8 closed
 - **CFG-001** · Runtime configuration — 6/6 closed
-- **CMS-003** · Media library — 5/7 closed · depth 5
+- **CMS-003** · Media library — 6/7 closed · depth 5
   - `[ ] CMS-003/T2` — Raster images are re-encoded, so EXIF and its location do not survive
-  - `[ ] CMS-003/T3` — SVG is parsed and stripped to shape and text, or refused
 
 - **CMS-005** · Locale variants and translation state — 4/6 closed · depth 5
   - `[ ] CMS-005/T3` — Drafting translates block text and reassembles marks by span, never by offset arithmetic

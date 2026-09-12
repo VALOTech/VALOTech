@@ -70,21 +70,21 @@ describe('sniffType reads the type from the bytes (CMS-003/T1)', () => {
     expect(sniffType(Buffer.from('%PDF-1.7\n%âãÏÓ\n'))).toBe('application/pdf');
   });
 
-  it('recognises an svg past an xml declaration, comments, whitespace and a BOM', () => {
-    expect(sniffType(Buffer.from('<svg xmlns="http://www.w3.org/2000/svg"></svg>'))).toBe(
-      'image/svg+xml',
-    );
-    expect(sniffType(Buffer.from('<?xml version="1.0"?>\n<svg></svg>'))).toBe('image/svg+xml');
-    expect(sniffType(Buffer.from('  \n<!-- a note -->\n<svg />'))).toBe('image/svg+xml');
-    expect(sniffType(Buffer.from(`${BOM}<svg></svg>`))).toBe('image/svg+xml');
+  it('refuses an svg in every form, since SVG is not accepted (CMS-DEC-03=A, CMS-003/T3)', () => {
+    // SVG is refused rather than sanitised: none of these sniff to an accepted
+    // type, whatever declaration, comment, whitespace or BOM precedes the <svg>,
+    // and an <svg> that is not the document root was never a file either.
+    expect(sniffType(Buffer.from('<svg xmlns="http://www.w3.org/2000/svg"></svg>'))).toBeNull();
+    expect(sniffType(Buffer.from('<?xml version="1.0"?>\n<svg></svg>'))).toBeNull();
+    expect(sniffType(Buffer.from('  \n<!-- a note -->\n<svg />'))).toBeNull();
+    expect(sniffType(Buffer.from(`${BOM}<svg></svg>`))).toBeNull();
+    expect(sniffType(Buffer.from('<html><body><svg></svg></body></html>'))).toBeNull();
   });
 
   it('refuses anything outside the accepted set', () => {
     expect(sniffType(Buffer.from([0x47, 0x49, 0x46, 0x38, 0x39, 0x61]))).toBeNull(); // GIF89a
     expect(sniffType(Buffer.from('just some prose, not a file'))).toBeNull();
     expect(sniffType(Buffer.from([]))).toBeNull();
-    // An <svg> that is not the document root is not an SVG file.
-    expect(sniffType(Buffer.from('<html><body><svg></svg></body></html>'))).toBeNull();
   });
 });
 

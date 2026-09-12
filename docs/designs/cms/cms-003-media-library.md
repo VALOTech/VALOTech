@@ -42,17 +42,15 @@ referencing it, and applies `CMS-006`'s predicate. No match is a `404`.
 1. Read the bytes. **Sniff the type from the bytes**, never from the filename
    and never from the declared content type — both are supplied by whoever is
    uploading (`SEC-001`).
-2. Accept only `image/png`, `image/jpeg`, `image/webp`, `image/svg+xml` and
-   `application/pdf`. Anything else is refused by type, not by extension.
-3. **Re-encode raster images.** A PNG in is a PNG out, produced by the encoder,
-   which strips EXIF — including the GPS coordinates of wherever the screenshot
-   was taken (`DATA-R02`) — and drops anything a decoder would have treated as
-   payload.
-4. **SVG is sanitised or refused.** An SVG is a document that can carry script
-   and external references; it is parsed, stripped to shape and text elements,
-   and refused if anything survives that should not. If that turns out to be
-   fragile in practice, the honest move is to stop accepting SVG rather than to
-   trust the sanitiser.
+2. Accept only `image/png`, `image/jpeg`, `image/webp` and `application/pdf`.
+   Anything else is refused by type, not by extension.
+3. **Re-encode raster images** through `jimp` (`CMS-DEC-03`). A PNG in is a PNG
+   out, produced by the encoder, which strips EXIF — including the GPS
+   coordinates of wherever the screenshot was taken (`DATA-R02`) — and drops
+   anything a decoder would have treated as payload.
+4. **SVG is refused** (`CMS-DEC-03`). An SVG is a document that can carry script
+   and external references, and there is no sanitiser here to trust: it is not an
+   accepted type, so it is turned away like any other. A logo arrives as PNG.
 5. Cap at 10 MB, stated in the control before the file is chosen.
 6. Store under `sha256`; a duplicate returns the existing row.
 
@@ -114,10 +112,11 @@ not a copy. **`SEC-001`** owns the upload validation rules this design applies.
   set would cut bytes on a phone; it is not built because the volume is a few
   dozen images and generating variants is a pipeline with its own failure
   modes. The upload control states a sensible maximum width instead.
-- **Accepting SVG at all is a judgement call.** It is the right format for a
-  logo and it is the format most likely to carry something unpleasant. The
-  position here is to sanitise and to be willing to drop support entirely rather
-  than to keep patching a sanitiser.
+- **SVG is not accepted, and that was a judgement call** (`CMS-DEC-03`). It is
+  the right format for a logo and the format most likely to carry something
+  unpleasant, and for a few dozen admin uploads there is no sanitiser here worth
+  trusting — so the honest move is the one this takes: refuse it, and let a logo
+  arrive as PNG. Reopen for a sanitiser if a real SVG need arrives.
 
 ## 7. Task list
 
