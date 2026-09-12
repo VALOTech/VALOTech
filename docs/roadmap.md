@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_309 tasks in the plan, 208 closed, 101 outstanding._
+_311 tasks in the plan, 210 closed, 101 outstanding._
 
 ---
 
@@ -35,7 +35,7 @@ _48/50 closed (96%) · 2 outstanding — 0 buildable now · 0 waiting on the own
 
 _Who may read what, and what records that they did. Everything above reads through the gate this wave builds, so a shortcut here is a shortcut in every feature after it. Sign-out precedes invitation deliberately: a session that cannot be ended server-side is a defect that grows with every account created. The scene sits here too, one layer above the page it moves behind._
 
-_71/74 closed (95%) · 3 outstanding — 2 buildable now · 0 waiting on the owner · 1 external residue · 0 parked to a later wave._
+_71/74 closed (95%) · 3 outstanding — 1 buildable now · 0 waiting on the owner · 1 external residue · 1 parked to a later wave._
 
 - **AUTH-001** · Sign-in — 5/5 closed
 - **DATA-003** · Backup and restore — 5/5 closed
@@ -46,7 +46,7 @@ _71/74 closed (95%) · 3 outstanding — 2 buildable now · 0 waiting on the own
 
 - **AUTH-002** · Session and role gate — 5/5 closed
 - **AUTH-003** · Invitation and password reset — 6/7 closed · depth 3
-  - `[ ] AUTH-003/T3` — The mail that carries the link, in the invitee's locale
+  - `[!] AUTH-003/T3` — The mail that carries the link, in the invitee's locale  · _cross-wave-parked_ · **Blocked by:** MAIL-001/T8 — the `Mailer` port apps/web/src/mail/mailer.ts provides has no adapter, so a composed message has nothing to carry it, and AUTH-003 §4 s…
 
 - **SCENE-002** · Satellites and their rings — 3/3 closed
 - **SCENE-003** · The sky — 3/3 closed
@@ -63,17 +63,17 @@ _71/74 closed (95%) · 3 outstanding — 2 buildable now · 0 waiting on the own
 
 _The machinery every kind of writing shares — the editor, the media, the locale states, the audience rule, publishing, search — plus the account, configuration and logging surfaces an operator needs before anything is published. Building it once is the whole reason a report, an update and a deck are three navigations over one system rather than three systems._
 
-_61/69 closed (88%) · 8 outstanding — 7 buildable now · 0 waiting on the owner · 0 external residue · 1 parked to a later wave._
+_63/71 closed (88%) · 8 outstanding — 7 buildable now · 0 waiting on the owner · 0 external residue · 1 parked to a later wave._
 
 - **ADMIN-001** · Account management — 9/9 closed
-- **CFG-001** · Runtime configuration — 7/7 closed
+- **CFG-001** · Runtime configuration — 7/8 closed · depth 5
+  - `[ ] CFG-001/T8` — The console's settings screen, so a value can be changed and reverted
+
 - **CMS-003** · Media library — 10/10 closed
 - **CMS-005** · Locale variants and translation state — 6/6 closed
 - **CMS-006** · Audience and access — 6/6 closed
 - **OPS-002** · Logging and monitoring — 6/6 closed
-- **CMS-002** · Authoring surface — 7/8 closed · depth 6
-  - `[ ] CMS-002/T8` — The console lists an admin's content, so the editor and the translations have a way in
-
+- **CMS-002** · Authoring surface — 9/9 closed
 - **CMS-004** · Preview, publish and withdraw — 2/6 closed · depth 6
   - `[ ] CMS-004/T1` — Preview renders through the reader's own components and evaluates the audience rule as the chosen role
   - `[ ] CMS-004/T2` — Preview is admin-only, with no token and no shareable link

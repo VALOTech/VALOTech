@@ -71,6 +71,103 @@ export async function createItem(input: NewItem): Promise<ContentItem> {
     .executeTakeFirstOrThrow();
 }
 
+/** One item as the console lists it (`CMS-002/T8`). */
+export interface ConsoleItem {
+  readonly id: string;
+  readonly type: ContentType;
+  readonly title: string;
+  readonly slug: string;
+  readonly audience: ContentAudience;
+  readonly kind: ContentUpdateKind | null;
+  readonly period: string | null;
+  /** True when a reader would see something today. */
+  readonly published: boolean;
+  /** True when later work exists that no reader has been shown. */
+  readonly hasOpenDraft: boolean;
+  /** Languages reviewed on the latest revision — the number a reader can be served. */
+  readonly reviewedLocales: number;
+  readonly changedAt: Date;
+}
+
+/**
+ * Everything an admin has written, most recently changed first (`CMS-002/T8`).
+ *
+ * A staff read, and deliberately not a reader-scoped one: the question is what
+ * the room holds rather than what any one person may see, so it composes no
+ * audience predicate and only the console reaches it, behind the admin gate
+ * (`ADMIN-002/T1`). Every read that answers a *reader* still takes that reader
+ * and composes `visibleTo` (`CMS-001/T6`).
+ *
+ * **Published and drafted are two facts, not one word.** An item can be published
+ * and carry later work nobody has seen, and that is exactly the state an author
+ * needs to find; a single status column would have to choose one of them and
+ * would hide the other.
+ *
+ * The order is performed here rather than by the page, as the account list's is:
+ * the most recently changed row is what somebody came back for. `changed_at` is
+ * the newest revision's, falling back to the item's own `updated_at` for an item
+ * with nothing written yet, so a fresh item does not sort as if it were ancient.
+ */
+export async function itemsForConsole(): Promise<ConsoleItem[]> {
+  const rows = await getDb()
+    .selectFrom('content_items')
+    .select((eb) => [
+      'content_items.id',
+      'content_items.type',
+      'content_items.title',
+      'content_items.slug',
+      'content_items.audience',
+      'content_items.kind',
+      'content_items.period',
+      'content_items.current_revision_id',
+      sql<Date>`greatest(
+        content_items.updated_at,
+        coalesce(
+          (select max(r.created_at) from content_revisions r where r.item_id = content_items.id),
+          content_items.updated_at
+        )
+      )`.as('changed_at'),
+      eb
+        .exists(
+          eb
+            .selectFrom('content_revisions')
+            .select((revision) => revision.lit(1).as('one'))
+            .whereRef('content_revisions.item_id', '=', 'content_items.id')
+            .where('content_revisions.published_at', 'is', null),
+        )
+        .as('has_open_draft'),
+      sql<number>`(
+        select count(*) from content_locales l
+        where l.state = 'reviewed'
+          and l.revision_id = (
+            select r.id from content_revisions r
+            where r.item_id = content_items.id
+            order by r.created_at desc, r.id
+            limit 1
+          )
+      )`.as('reviewed_locales'),
+    ])
+    .orderBy('changed_at', 'desc')
+    .orderBy('content_items.id')
+    .execute();
+
+  return rows.map((row) => ({
+    id: row.id,
+    type: row.type,
+    title: row.title,
+    slug: row.slug,
+    audience: row.audience,
+    kind: row.kind,
+    period: row.period,
+    published: row.current_revision_id !== null,
+    // Kysely types an EXISTS as `number | boolean` because a driver may hand back
+    // either; PostgreSQL answers a real boolean here.
+    hasOpenDraft: row.has_open_draft === true,
+    reviewedLocales: Number(row.reviewed_locales ?? 0),
+    changedAt: row.changed_at,
+  }));
+}
+
 /**
  * Save a draft of an item's body, validating the blocks first so an invalid
  * document is refused rather than stored (`CMS-R04`).

@@ -1,0 +1,77 @@
+/* The content list (CMS-002/T8), on the account list's shape: two tables in one
+   console that scan differently make the reader learn twice. The tokens are the
+   console's own (--admin-line, --admin-link), so a theme pass reaches this page
+   too (ADMIN-002, ADMIN-DEC-04). */
+
+.content {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  margin-top: 1rem;
+}
+
+.content th,
+.content td {
+  text-align: left;
+  padding: 0.4rem 0.6rem;
+  border-bottom: 1px solid var(--admin-line, #e4e4ea);
+  vertical-align: top;
+}
+
+.content thead th {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* The title is the row's name and its way into the editor, so it is the row
+   header as well as the link — a screen reader then announces which item every
+   other cell belongs to. */
+.titleCell {
+  font-weight: 600;
+}
+
+.slug {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 0.75rem;
+  font-weight: 400;
+  opacity: 0.65;
+}
+
+/* What a type demands beside it: a report's period, an update's kind. */
+.qualifier {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 0.75rem;
+  opacity: 0.7;
+}
+
+/* A column read down rather than across lines up digit under digit, so the eye
+   finds the odd one out. */
+.figure {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Three states, each a word first and a colour second, never a colour alone
+   (A11Y-R03). */
+.yes {
+  color: #166534;
+  font-weight: 600;
+}
+
+.no {
+  opacity: 0.6;
+}
+
+.pending {
+  color: #854d0e;
+  font-weight: 600;
+}
+
+.empty {
+  margin-top: 1rem;
+  max-width: 40rem;
+  line-height: 1.5;
+  opacity: 0.8;
+}

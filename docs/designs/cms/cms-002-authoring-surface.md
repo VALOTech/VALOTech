@@ -7,7 +7,7 @@ depends_on: [ADMIN-002, CMS-001, CMS-003]
 depended_by: [DECK-001, POST-001, RPT-001]
 layers_touched: [service, api, frontend, ui]
 cross_cutting_rules: [CMS-R04, A11Y-R01, A11Y-R02, A11Y-R03, I18N-R01]
-status: in-progress
+status: implemented
 ---
 
 # `CMS-002` — Authoring surface
@@ -34,6 +34,38 @@ is stated — an editor that autosaves silently is one where an author cannot te
 whether their work is safe.
 
 ## 3. Contracts
+
+### The way in
+
+    GET  /admin/content
+    GET  /admin/content/new
+    POST /admin/content/create   { type, title, slug, audience, kind?, period? }
+
+The console lists what an admin has written: the title, its type, who may read
+it, whether a reader sees anything today, how many languages are ready, and when
+it last changed. **Most recently changed first**, because the thing somebody
+touched last is the thing they came back for; the order is performed by the read
+rather than by the page, as the account list does.
+
+Two cells are the way onwards and they lead to different places: the **title**
+opens the editor, and the **languages** cell opens the translation grid
+(`CMS-005`). A media file reaches a document through an `image` block, so the
+library has its own console destination and is not listed here.
+
+The state a row shows is two independent facts rather than one word, because an
+item can be published and also have unsaved later work: whether a published
+revision exists, and whether an open draft does. Collapsing them loses exactly
+the case an author needs to see.
+
+**Starting one** is on this page and nowhere else. An item begins with no
+revision, so nothing is visible to any reader until something is written and
+published — creating is not publishing, and the surface says so. The type is
+chosen first because it decides what else is demanded: an `update` carries a
+kind, a `report` carries a period in `YYYY-Qn` or `YYYY-MM`, and a `deck`
+carries neither (`CMS-001`). The **slug** is offered filled in from the title
+and stays editable, because it is an address a reader will see (`CMS-006` §6)
+and an author is the one who should choose it; a slug already taken is refused
+by name rather than by a constraint error.
 
 ### The blocks, as controls
 
@@ -137,3 +169,4 @@ previewed and published — this surface never publishes.
 - `CMS-002/T6` — Explicit save, a visible unsaved state, and a local copy offered back after a closed tab
 - `CMS-002/T7` — One schema module validates in the browser and on the server, and the server's error names the block and the field
 - `CMS-002/T8` — The console lists an admin's content, so the editor and the translations have a way in
+- `CMS-002/T9` — An item is started from that list, with the type deciding what else it demands

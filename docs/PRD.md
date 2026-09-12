@@ -117,10 +117,10 @@ translated, previewed, published, withdrawn or audited.
 | Code | Feature | Status | What it is |
 |---|---|---|---|
 | `CMS-001` | Content model and revisions | live | One storage model behind every kind of content: an item, its type, its ordered revisions, the revision that is published, and the audience it is published to. Nothing is edited in place — an edit is a new revision, so what an investor read last month is still recoverable |
-| `CMS-002` | Authoring surface | building | The editor an admin writes in: structured blocks — heading, paragraph, list, quote, image, figure — never raw markup from a form, because markup from a form is both an injection surface and a way to break a layout nobody can fix from the admin screen |
+| `CMS-002` | Authoring surface | live | The editor an admin writes in: structured blocks — heading, paragraph, list, quote, image, figure — never raw markup from a form, because markup from a form is both an injection surface and a way to break a layout nobody can fix from the admin screen |
 | `CMS-003` | Media library | live | The images and files content references: uploaded once, re-used, served under the same audience rule as the item that references them. An investor-only screenshot must not be readable by URL |
 | `CMS-004` | Preview, publish and withdraw | building | An admin sees a draft exactly as an investor will, publishes a revision deliberately, and can return to the previously published revision in one action. A draft is visible to nobody else, ever |
-| `CMS-005` | Locale variants and translation state | building | Per item, per locale: not started, machine draft, reviewed. A machine draft is never shown to a reader; an unreviewed locale falls back to the authored language — `docs/decisions-log.md#I18N-DEC-01` |
+| `CMS-005` | Locale variants and translation state | live | Per item, per locale: not started, machine draft, reviewed. A machine draft is never shown to a reader; an unreviewed locale falls back to the authored language — `docs/decisions-log.md#I18N-DEC-01` |
 | `CMS-006` | Audience and access | live | Public, every investor, or named investors. Enforced in the query that fetches the item, never in the template that renders it — the template is where this rule has historically been broken |
 | `CMS-007` | Search and filter in the room | building | Find an item by kind, by product, by period, or by its words. A room with two years of updates and no search is an archive nobody reads |
 
@@ -155,7 +155,7 @@ because an investor navigates each of them differently.
 | `DATA-003` | Backup and restore | live | A restore that has been performed, not merely configured |
 | `SEC-001` | Security baseline | building | CSP, HSTS, secure cookies, parameterised queries, dependency and secret scanning in CI |
 | `SEC-002` | Audit log | building | Append-only record of every privileged write |
-| `CFG-001` | Runtime configuration | live | The values an admin may change without a deploy, each with its prior value and a single-action undo |
+| `CFG-001` | Runtime configuration | building | The values an admin may change without a deploy, each with its prior value and a single-action undo |
 | `OPS-001` | Hosting and deploy | design | Where the app runs, and how valotech.org points at it — AWS, ECS on Fargate (`docs/decisions-log.md#INFRA-DEC-05`), built last |
 | `OPS-002` | Logging and monitoring | live | Structured logs with a request id, no personal data, and an alert an operator can act on |
 | `INFRA-001` | Local development stack | live | One command brings up PostgreSQL and the app against it |

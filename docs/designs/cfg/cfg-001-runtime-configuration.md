@@ -7,7 +7,7 @@ depends_on: [ADMIN-002, SEC-002]
 depended_by: []
 layers_touched: [data, domain, service, api, frontend, ui]
 cross_cutting_rules: [SEC-R04, SEC-R05, DATA-R02, A11Y-R01, I18N-R01]
-status: implemented
+status: in-progress
 ---
 
 # `CFG-001` — Runtime configuration
@@ -136,3 +136,4 @@ The session lifetime and the sign-in rate are not settings but environment value
 - `CFG-001/T5` — One cached accessor with a short refresh; an empty table yields a working application
 - `CFG-001/T6` — The accessor refuses a secret-shaped key
 - `CFG-001/T7` — Remove the session-lifetime and sign-in-rate keys from the registry; the environment owns both
+- `CFG-001/T8` — The console's settings screen, so a value can be changed and reverted

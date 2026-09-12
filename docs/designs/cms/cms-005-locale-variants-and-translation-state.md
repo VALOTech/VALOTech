@@ -7,10 +7,7 @@ depends_on: [CMS-001, I18N-001]
 depended_by: [CMS-004, DECK-003, RPT-003]
 layers_touched: [data, domain, service, api, frontend, ui]
 cross_cutting_rules: [CMS-R05, I18N-R01, I18N-R02, I18N-R04, I18N-R05]
-status: in-progress
-inert_until:
-  reason: A reader is served a reviewed translation and told when they are reading the authored language instead. An admin can start a translation and mark one reviewed, and nothing in the console links to an item, so they reach those screens only by typing a URL that carries the item’s id.
-  unblocks_when: CMS-002/T8
+status: implemented
 ---
 
 # `CMS-005` — Locale variants and translation state
