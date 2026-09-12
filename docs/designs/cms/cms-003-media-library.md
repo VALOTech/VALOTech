@@ -37,7 +37,12 @@ referencing it, and applies `CMS-006`'s predicate. No match is a `404`.
 
 ### Upload
 
-    POST /admin/media    multipart, one file
+    POST /admin/media/upload    multipart, one file
+
+The route is a path of its own rather than the segment's, because the segment
+carries the page the control lives on and a segment holds one or the other. It
+is the console's own shape: `ADMIN-001`'s invite route sits beside its form the
+same way.
 
 1. Read the bytes. **Sniff the type from the bytes**, never from the filename
    and never from the declared content type — both are supplied by whoever is
@@ -74,7 +79,9 @@ referencing it, and applies `CMS-006`'s predicate. No match is a `404`.
    **WebP is refused too**, for the opposite reason — not what it can carry but
    what cannot be done to it: `jimp` decodes none, so accepting one would store
    the single format step 3 does not reach (`CMS-DEC-06`).
-6. Cap at 10 MB, stated in the control before the file is chosen.
+6. Cap at 10 MB, stated in the control before the file is chosen, and refused
+   again on the server from the bytes that arrived rather than from a
+   `Content-Length` the uploader also writes.
 7. Store under `sha256`; a duplicate returns the existing row.
 
 ### Serving
@@ -153,3 +160,4 @@ not a copy. **`SEC-001`** owns the upload validation rules this design applies.
 - `CMS-003/T7` — Deletion is refused while a reference exists, and is audited when it is not
 - `CMS-003/T8` — An uploaded PDF's metadata is stripped before storage
 - `CMS-003/T9` — The upload route and the admin control that posts to it, capped at 10 MB and refusing by sniffed type
+- `CMS-003/T10` — The library lists what is stored, and deleting from it names the items using a file when it refuses

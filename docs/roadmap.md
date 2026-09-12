@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_306 tasks in the plan, 203 closed, 103 outstanding._
+_307 tasks in the plan, 204 closed, 103 outstanding._
 
 ---
 
@@ -63,12 +63,12 @@ _70/73 closed (95%) · 3 outstanding — 2 buildable now · 0 waiting on the own
 
 _The machinery every kind of writing shares — the editor, the media, the locale states, the audience rule, publishing, search — plus the account, configuration and logging surfaces an operator needs before anything is published. Building it once is the whole reason a report, an update and a deck are three navigations over one system rather than three systems._
 
-_57/67 closed (85%) · 10 outstanding — 9 buildable now · 0 waiting on the owner · 0 external residue · 1 parked to a later wave._
+_58/68 closed (85%) · 10 outstanding — 9 buildable now · 0 waiting on the owner · 0 external residue · 1 parked to a later wave._
 
 - **ADMIN-001** · Account management — 9/9 closed
 - **CFG-001** · Runtime configuration — 7/7 closed
-- **CMS-003** · Media library — 8/9 closed · depth 5
-  - `[ ] CMS-003/T9` — The upload route and the admin control that posts to it, capped at 10 MB and refusing by sniffed type
+- **CMS-003** · Media library — 9/10 closed · depth 5
+  - `[ ] CMS-003/T10` — The library lists what is stored, and deleting from it names the items using a file when it refuses
 
 - **CMS-005** · Locale variants and translation state — 4/6 closed · depth 5
   - `[ ] CMS-005/T3` — Drafting seeds the locale with the source blocks, marks intact, for the reviewer to translate
