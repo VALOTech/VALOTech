@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_318 tasks in the plan, 247 closed, 71 outstanding._
+_318 tasks in the plan, 248 closed, 70 outstanding._
 
 ---
 
@@ -81,7 +81,7 @@ _69/73 closed (94%) · 4 outstanding — 0 buildable now · 1 waiting on the own
 
 _The three content types, and the compliance posture that governs what is held about the people reading them. Updates come before decks, and not only because they are the simpler shape of the same problem: they are what the room is for. An investor signs in to find out what has happened since they last looked._
 
-_53/63 closed (84%) · 10 outstanding — 3 buildable now · 1 waiting on the owner · 3 external residue · 3 parked to a later wave._
+_54/63 closed (85%) · 9 outstanding — 2 buildable now · 1 waiting on the owner · 3 external residue · 3 parked to a later wave._
 
 - **DECK-001** · Deck authoring — 6/6 closed
 - **LEGAL-SG-001** · PDPA posture — 4/8 closed · depth 7
@@ -96,9 +96,8 @@ _53/63 closed (84%) · 10 outstanding — 3 buildable now · 1 waiting on the ow
 - **DECK-002** · Deck versioning and publishing — 5/6 closed · depth 8
   - `[!] DECK-002/T3` — An unpinned reader is told once when the version changed, with what changed by section  · _cross-wave-parked_ · **Blocked by:** DECK-003/T1 (the deck reading view) — DECK-002 §3 puts the notice in the reading view itself, where an unpinned reader whose deck has moved is told o…
 
-- **LEGAL-GLOBAL-001** · GDPR posture for EU investors — 3/6 closed · depth 8
+- **LEGAL-GLOBAL-001** · GDPR posture for EU investors — 4/6 closed · depth 8
   - `[ ] LEGAL-GLOBAL-001/T1` — The notice carries the additional GDPR statements, in twenty locales
-  - `[ ] LEGAL-GLOBAL-001/T5` — A one-page record of processing, and a written statement of what is deliberately not claimed
   - `[!] LEGAL-GLOBAL-001/T6` — The GDPR articles this design rests on are in the tree, and every claim cites one  · _external_ · **Blocked by:** pending-external: legal — the article text is obtained by the owner or counsel, at docs/operator-checklist.md#COMPLIANCE-SOURCES. The operational rul…
 
 - **MAIL-002** · Mail log and unsubscribe — 6/6 closed
