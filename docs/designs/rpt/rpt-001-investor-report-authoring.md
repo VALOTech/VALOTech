@@ -8,6 +8,17 @@ depended_by: [RPT-002]
 layers_touched: [domain, service, api, frontend, ui]
 cross_cutting_rules: [CMS-R01, CMS-R04, SEC-R04, I18N-R01, A11Y-R02]
 status: in-progress
+inert_until:
+  reason: An admin composes a report end to end and publishes it. The period is
+    fixed at creation, a new report opens prefilled with the previous one's
+    structure and none of its text, metrics carry their numbers as data, the
+    progress board sits beside the section that narrates it, and making one
+    public states in words what that means. **No investor reads any of it.**
+    A published report reaches a person through the room, and the room's
+    reading surfaces are not built — so what exists today is a complete
+    authoring surface writing into a product nobody can open. Calling that
+    `implemented` would be the honesty violation the token exists to prevent.
+  unblocks_when: RPT-003/T1
 ---
 
 # `RPT-001` — Investor report authoring
@@ -94,7 +105,14 @@ by anyone including a competitor.
 and the archive. **`INV-003`**'s progress board is the state that the "where each
 product stands" section narrates — the two should agree, and the authoring
 surface shows the board's current values beside that section so a discrepancy is
-visible while writing rather than after publishing.
+visible while writing rather than after publishing. It **shows and does not
+check**: there is no claim that the prose and the board agree, because nothing
+here can read a paragraph and say whether it narrates a stage correctly, and a
+surface that matched product names in the text would be asserting an agreement
+it had not established. The author compares; this puts both in one place so the
+comparison is possible. A report whose author deleted or reworded that heading
+still gets the board, with a sentence saying so, because a panel that vanished
+when a heading changed would read as a fault rather than as an answer.
 
 One consumer sits outside the report surfaces and is named here because nobody
 editing `apps/web/src/content/reports.ts` would otherwise find it: **`POST-001`**'s

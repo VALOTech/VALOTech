@@ -138,3 +138,4 @@ obligations are stricter and mostly the same in shape.
 - `LEGAL-SG-001/T5` — A breach runbook with the assessment steps and both notification paths
 - `LEGAL-SG-001/T6` — The backup window disclosed in the notice rather than omitted
 - `LEGAL-SG-001/T7` — The cross-border transfer assessment, now that the hosting and the mail carrier are both settled
+- `LEGAL-SG-001/T8` — The PDPA sections this design rests on are in the tree, and every claim cites one

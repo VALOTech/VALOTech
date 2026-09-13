@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_316 tasks in the plan, 240 closed, 76 outstanding._
+_318 tasks in the plan, 243 closed, 75 outstanding._
 
 ---
 
@@ -81,27 +81,25 @@ _69/73 closed (94%) · 4 outstanding — 0 buildable now · 1 waiting on the own
 
 _The three content types, and the compliance posture that governs what is held about the people reading them. Updates come before decks, and not only because they are the simpler shape of the same problem: they are what the room is for. An investor signs in to find out what has happened since they last looked._
 
-_46/61 closed (75%) · 15 outstanding — 14 buildable now · 1 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_49/63 closed (77%) · 14 outstanding — 10 buildable now · 1 waiting on the owner · 3 external residue · 0 parked to a later wave._
 
 - **DECK-001** · Deck authoring — 6/6 closed
-- **LEGAL-SG-001** · PDPA posture — 4/7 closed · depth 7
+- **LEGAL-SG-001** · PDPA posture — 4/8 closed · depth 7
   - `[~] LEGAL-SG-001/T2` — The notice is linked from the sign-in page and the room's footer  · **Note:** the sign-in half ships. apps/web/src/app/sign-in/page.tsx carries the link below the card, in the reader’s own language (privacy.link in all twenty l…
-  - `[ ] LEGAL-SG-001/T4` — A named DPO recorded, and published in the notice
+  - `[!] LEGAL-SG-001/T4` — A named DPO recorded, and published in the notice  · _external_ · **Blocked by:** pending-external: legal — the owner names the individual, at docs/operator-checklist.md#DPO-CONTACT. The mechanism is built and needs no deploy to us…
   - `[!] LEGAL-SG-001/T7` — The cross-border transfer assessment, now that the hosting and the mail carrier are both settled  · _pending-decision_ · **Blocked by:** pending-decision: OPS-DEC-03 ([docs/decisions-log.md#OPS-DEC-03](decisions-log.md#OPS-DEC-03)) — the assessment is about whether personal data leaves…
+  - `[!] LEGAL-SG-001/T8` — The PDPA sections this design rests on are in the tree, and every claim cites one  · _external_ · **Blocked by:** pending-external: legal — the statute text is obtained by the owner or counsel, at docs/operator-checklist.md#COMPLIANCE-SOURCES. Nobody here can sup…
 
 - **MAIL-001** · Investor mail — 8/8 closed
 - **POST-001** · Update authoring — 6/6 closed
-- **RPT-001** · Investor report authoring — 4/5 closed · depth 7
-  - `[ ] RPT-001/T4` — The progress board's current values are shown beside the section that narrates them
-
-- **DECK-002** · Deck versioning and publishing — 4/6 closed · depth 8
+- **RPT-001** · Investor report authoring — 5/5 closed
+- **DECK-002** · Deck versioning and publishing — 5/6 closed · depth 8
   - `[ ] DECK-002/T3` — An unpinned reader is told once when the version changed, with what changed by section
-  - `[ ] DECK-002/T5` — The publish confirmation names every investor who will see the new version
 
-- **LEGAL-GLOBAL-001** · GDPR posture for EU investors — 2/5 closed · depth 8
+- **LEGAL-GLOBAL-001** · GDPR posture for EU investors — 3/6 closed · depth 8
   - `[ ] LEGAL-GLOBAL-001/T1` — The notice carries the additional GDPR statements, in twenty locales
-  - `[ ] LEGAL-GLOBAL-001/T4` — The breach runbook uses the 72-hour clock for everyone
   - `[ ] LEGAL-GLOBAL-001/T5` — A one-page record of processing, and a written statement of what is deliberately not claimed
+  - `[!] LEGAL-GLOBAL-001/T6` — The GDPR articles this design rests on are in the tree, and every claim cites one  · _external_ · **Blocked by:** pending-external: legal — the article text is obtained by the owner or counsel, at docs/operator-checklist.md#COMPLIANCE-SOURCES. The operational rul…
 
 - **MAIL-002** · Mail log and unsubscribe — 2/6 closed · depth 8
   - `[ ] MAIL-002/T2` — An unsubscribe that works in one click without signing in, and a preference inside the room

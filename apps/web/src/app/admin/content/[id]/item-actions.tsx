@@ -5,7 +5,8 @@
  *
  * **The two directions are shaped differently on purpose** (`CMS-004` §3).
  * Publishing is the dangerous one and carries the confirmation: it names the
- * draft being published, the version it replaces, and how many languages will be
+ * draft being published, the version it replaces, who will read it when the item
+ * is a deck (`DECK-002/T5`), and how many languages will be
  * served against how many will read the English. Withdrawing is the reversible
  * one and carries none — the revision never leaves the database and
  * re-publishing moves the pointer forward again — so a mistaken withdraw costs
@@ -55,6 +56,20 @@ type Outcome =
 const FAILED = 'Nothing changed. Try again in a moment.';
 const LAPSED = 'Your session has ended. Open the page again to sign in.';
 
+/**
+ * Who a deck publish reaches (`DECK-002/T5`).
+ *
+ * Names rather than a count, because the point of the sentence is that the
+ * admin recognises the people in it. A deck's audience is short and known by
+ * construction — it is granted one person at a time — so a list is readable
+ * where an audience of "every investor" would not be.
+ */
+export interface DeckAudienceFacts {
+  readonly readers: readonly { readonly accountId: string; readonly name: string; readonly invited: boolean }[];
+  /** Grants held to an older version, which this publish does not reach. */
+  readonly pinned: number;
+}
+
 /** What withdrawing does to the archive, for a published report (`RPT-002/T5`). */
 export interface ReportWithdrawalFacts {
   readonly period: string;
@@ -67,6 +82,7 @@ export interface ReportWithdrawalFacts {
 export function ItemActions({
   itemId,
   asReport,
+  asDeck,
   publishable,
   published,
   withdrawReturnsTo,
@@ -74,6 +90,8 @@ export function ItemActions({
   readonly itemId: string;
   /** The archive consequences, for a published report; `null` for anything else. */
   readonly asReport: ReportWithdrawalFacts | null;
+  /** Who the publish reaches, for a deck; `null` for anything else. */
+  readonly asDeck: DeckAudienceFacts | null;
   /** The draft that can be published, or `null` when there is nothing newer. */
   readonly publishable: PublishFacts | null;
   /** Whether a reader sees anything today; withdrawing is offered only then. */
@@ -148,6 +166,28 @@ export function ItemActions({
                 ? `No translation is reviewed, so all ${publishable.fallbackLocales} other languages will read the English.`
                 : `${publishable.reviewedLocales} ${publishable.reviewedLocales === 1 ? 'language is' : 'languages are'} reviewed and will be served; ${publishable.fallbackLocales} will read the English.`}
             </li>
+            {asDeck === null ? null : (
+              <li>
+                {asDeck.readers.length === 0 ? (
+                  asDeck.pinned === 0 ? (
+                    'Nobody is granted this deck, so this publish reaches no reader yet.'
+                  ) : (
+                    /* The trap this sentence exists for: publish v4, and every
+                       reader in a diligence process stays on the version their
+                       grant pins them to. Silence would read as "nobody cares". */
+                    `Nobody will see it: all ${asDeck.pinned} ${asDeck.pinned === 1 ? 'grant is' : 'grants are'} pinned to an earlier version.`
+                  )
+                ) : (
+                  <>
+                    {`${asDeck.readers.length} ${asDeck.readers.length === 1 ? 'investor sees' : 'investors see'} it on their next visit`}
+                    {asDeck.pinned === 0 ? '' : `, and ${asDeck.pinned} pinned ${asDeck.pinned === 1 ? 'grant does' : 'grants do'} not`}
+                    {': '}
+                    {asDeck.readers.map((reader) => reader.name + (reader.invited ? ' (not accepted yet)' : '')).join(', ')}
+                    {'.'}
+                  </>
+                )}
+              </li>
+            )}
           </ul>
           <div className={styles.row}>
             <button

@@ -34,12 +34,12 @@ import {
   CONTENT_TYPES,
   CONTENT_UPDATE_KINDS,
   type ContentAudience,
-  type ContentProductTag,
   type ContentType,
   type ContentUpdateKind,
 } from '../../../../db/types';
 
 import { slugFrom } from '../../../../content/derive';
+import { PRODUCT_LABEL } from '../../../../portfolio/labels';
 
 import styles from './new.module.css';
 
@@ -59,16 +59,6 @@ const KIND_LABEL: Readonly<Record<ContentUpdateKind, string>> = {
   announcement: 'Announcement',
   achievement: 'Achievement',
   progress: 'Progress',
-};
-
-const PRODUCT_LABEL: Readonly<Record<ContentProductTag, string>> = {
-  'valo-ads': 'VALO Ads',
-  'valo-pocket': 'VALO Pocket',
-  shimmra: 'Shimmra',
-  amavo: 'Amavo',
-  farola: 'Farola',
-  verdiq: 'Verdiq',
-  company: 'The company',
 };
 
 const AUDIENCE_LABEL: Readonly<Record<ContentAudience, string>> = {

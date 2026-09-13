@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import type { ReactElement } from 'react';
 
 import { audienceOptions } from '../../../../content/audience';
+import { deckAudience } from '../../../../content/decks';
 import { itemsForConsole } from '../../../../content/items';
 import { localeGrid } from '../../../../content/locales';
 import { publishConsequences, withdrawReturnsTo } from '../../../../content/publish';
@@ -72,6 +73,13 @@ export default async function ItemPage({
   // for anything that is not a published report, which is every other item here.
   const asReport = item.published ? await reportWithdrawal(id) : null;
 
+  // A deck is the one publish with a named audience, and naming it is the whole
+  // difference between publishing and sending (`DECK-002/T5`). Read only when a
+  // draft could actually be published, because that is the only state in which
+  // the confirmation this feeds is ever shown.
+  const asDeck =
+    item.type === 'deck' && openDraft !== undefined ? await deckAudience(id) : null;
+
   // The audience panel offers all three, so all three are read at once.
   const audiences = await audienceOptions(id);
 
@@ -137,6 +145,20 @@ export default async function ItemPage({
         published={item.published}
         withdrawReturnsTo={returnsTo === null ? null : WHEN(returnsTo.publishedAt)}
         asReport={asReport}
+        asDeck={
+          asDeck === null
+            ? null
+            : {
+                readers: asDeck.readers.map((reader) => ({
+                  accountId: reader.accountId,
+                  name: reader.name,
+                  // The surface asks one question of the state and gets a boolean,
+                  // so a fourth account state could never reach it as a raw word.
+                  invited: reader.state === 'invited',
+                })),
+                pinned: asDeck.pinned,
+              }
+        }
         publishable={
           openDraft === undefined || consequences === null
             ? null

@@ -38,20 +38,7 @@ import { visibleTo } from './access';
 import { type Block, validateBlocks } from './blocks';
 import type { ContentItem } from './items';
 import { withdrawReturnsTo } from './publish';
-
-/**
- * The headings a first report opens with (`RPT-001` §3): a starting point, not a
- * schema. Each is an ordinary level-2 heading, and an author may delete or
- * reorder any of them.
- */
-export const DEFAULT_REPORT_STRUCTURE: readonly Block[] = [
-  { type: 'heading', level: 2, text: 'The period in one paragraph' },
-  { type: 'heading', level: 2, text: 'Where each product stands' },
-  { type: 'heading', level: 2, text: 'What shipped' },
-  { type: 'heading', level: 2, text: 'Numbers' },
-  { type: 'heading', level: 2, text: 'What we are working on next' },
-  { type: 'heading', level: 2, text: 'Asks' },
-];
+import { DEFAULT_REPORT_STRUCTURE } from './report-structure';
 
 /**
  * The heading blocks a new report for `period` opens with: the previous published

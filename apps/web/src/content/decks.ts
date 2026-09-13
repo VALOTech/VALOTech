@@ -27,6 +27,7 @@ import { sql } from 'kysely';
 
 import type { Actor } from '../auth/gate';
 import { getDb } from '../db/index';
+import type { AccountState } from '../db/types';
 
 import { visibleTo } from './access';
 import { withoutSpeakerContext } from './blocks';
@@ -189,6 +190,79 @@ export async function decksGrantedButNeverOpened(): Promise<UnopenedDeckGrant[]>
     accountName: row.accountName,
     grantedAt: row.grantedAt,
   }));
+}
+
+/** One investor a deck's next published version will reach. */
+export interface UnpinnedReader {
+  readonly accountId: string;
+  readonly name: string;
+  /**
+   * `invited` for somebody who has not accepted yet. They are listed because the
+   * grant is real and the version will be theirs the moment they sign in, and
+   * marked because "on their next visit" is not true of them today.
+   */
+  readonly state: AccountState;
+}
+
+/** Who a deck's next published version reaches, and who a pin holds back. */
+export interface DeckAudience {
+  /** By name, in name order. Everyone here sees the new version. */
+  readonly readers: UnpinnedReader[];
+  /**
+   * How many grants are pinned to a version and so are **not** reached.
+   *
+   * Carried because an empty `readers` has two very different causes and the
+   * confirmation must not blur them: nobody is granted this deck at all, or
+   * everybody who is has been pinned. The second is the trap ’ an admin
+   * publishes v4, every diligence reader stays on v3, and nothing said so.
+   */
+  readonly pinned: number;
+}
+
+/**
+ * Who a deck's next published version reaches, by name (`DECK-002/T5`).
+ *
+ * **Publishing a deck is the one publish in this product with a named audience**,
+ * and knowing who is about to see something different is the difference between
+ * publishing and sending (`DECK-002` §3). Every other publish moves a pointer on
+ * a document people may or may not come back to; this one changes what a
+ * specific, short, known list of people read next time they open it.
+ *
+ * **Unpinned only, among the reached.** A grant pinned to a version is a promise
+ * that the document under discussion does not move (`DECK-002/T2`), so a pinned
+ * reader is exactly who this publish will *not* reach, and naming them under
+ * "will see this" would invert the sentence. They are counted instead.
+ *
+ * **Suspended accounts are in neither number** because they have no next visit:
+ * a suspended account cannot sign in, so counting one either way would answer a
+ * question about reach with somebody who has none.
+ *
+ * A staff read with no reader in it, like `reportWithdrawal`: an admin is asking
+ * who will see this, not who they themselves may see. It lives in the content
+ * module because it reads `content_grants` (`CMS-006/T5`’s access boundary), and
+ * it names people, so it is only ever called under the `/admin` gate.
+ */
+export async function deckAudience(deckId: string): Promise<DeckAudience> {
+  const rows = await getDb()
+    .selectFrom('content_grants')
+    .innerJoin('accounts', 'accounts.id', 'content_grants.account_id')
+    .where('content_grants.item_id', '=', deckId)
+    .where('accounts.state', '!=', 'suspended')
+    .select([
+      'accounts.id as accountId',
+      'accounts.name as name',
+      'accounts.state as state',
+      'content_grants.pinned_version as pinnedVersion',
+    ])
+    .orderBy('accounts.name')
+    .execute();
+
+  return {
+    readers: rows
+      .filter((row) => row.pinnedVersion === null)
+      .map((row) => ({ accountId: row.accountId, name: row.name, state: row.state })),
+    pinned: rows.filter((row) => row.pinnedVersion !== null).length,
+  };
 }
 
 /** One deck an account may read: which deck, any pin it holds them to, when it was granted, and when they last opened it. */

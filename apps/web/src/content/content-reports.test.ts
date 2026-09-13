@@ -28,7 +28,8 @@ import { closeDb, getDb } from '../db/index';
 import { type Block } from './blocks';
 import { createItem, saveDraft } from './items';
 import { PeriodTakenError, publish, withdraw } from './publish';
-import { DEFAULT_REPORT_STRUCTURE, markReportRead, prefillStructureFor } from './reports';
+import { DEFAULT_REPORT_STRUCTURE } from './report-structure';
+import { markReportRead, prefillStructureFor } from './reports';
 
 const RAW_DATABASE_URL = (process.env.DATABASE_URL ?? '').trim();
 const HAS_DATABASE = RAW_DATABASE_URL !== '';

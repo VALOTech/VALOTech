@@ -85,6 +85,19 @@ visit. Publishing a deck is the one publish in this product with a named
 audience, and knowing who is about to see something different is the difference
 between publishing and sending.
 
+Three cases are distinguished rather than blurred into a count, because each
+means something different to whoever is about to press the button. A **pinned**
+grant is counted and not named — it is precisely who this publish does not reach.
+An **invited** grantee who has not accepted is named and marked, because the
+grant is real while "their next visit" is not soon. A **suspended** grantee is in
+neither number, because they have no next visit at all.
+
+**Nobody being reached has two causes and they are not the same news**: nobody is
+granted this deck, or everybody who is has been pinned to an earlier version. The
+second is the trap the sentence exists for — a new version published into a
+diligence process where every reader stays exactly where their pin holds them,
+and nothing said so.
+
 ### Withdrawing
 
 Moves the pointer back, as everywhere. A pinned grant to the withdrawn version

@@ -38,6 +38,25 @@ item leaves this file when its signal is true — not when it feels handled.
 - **Done when:** the name and address are recorded here and published in the privacy notice.
 - **Until then:** no investor account exists, so no personal data is held.
 
+<a id="COMPLIANCE-SOURCES"></a>
+### Obtain the PDPA and GDPR source text
+
+- **What:** `docs/compliance/` holds a README and no sources. Its own rule is that a claim about
+  the law cites a section and the file it was read from, and that `LEGAL-SG-001` and
+  `LEGAL-GLOBAL-001` cannot close on a summary written from recollection. The two files it names
+  are `docs/compliance/sg/pdpa.md` (`LEGAL-SG-001/T8`) and `docs/compliance/global/gdpr.md`
+  (`LEGAL-GLOBAL-001/T6`).
+- **Who:** the owner, or counsel. Nobody here can supply statute text from memory, and a
+  paraphrase that reads authoritative is the expensive kind of wrong.
+- **Done when:** both files hold the sections the two designs rely on — consent, access and
+  correction, breach notification and the DPO obligation for the PDPA; the articles that apply to
+  an investor in the EU for the GDPR — and every legal claim in a design or runbook cites one.
+- **Until then:** the operational rules stand, because each is a decision this repository made
+  rather than a statute it quoted: `LEGAL-GLOBAL-001` decided that breach notification runs on
+  **one 72-hour clock for every person** and `docs/runbooks/legal-sg-001-breach.md` implements
+  that decision, citing the design rather than an article. What cannot happen until this lands
+  is either design being called complete, or any document here naming a section number.
+
 <a id="DB-EXTENSIONS"></a>
 ### Ensure the database role can install `citext`, or pre-install it
 

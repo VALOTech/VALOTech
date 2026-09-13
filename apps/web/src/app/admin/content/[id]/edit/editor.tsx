@@ -31,9 +31,12 @@ import { useEffect, useRef, useState } from 'react';
 import type { KeyboardEvent as ReactKeyboardEvent, ReactElement } from 'react';
 
 import { type Block, BLOCK_TYPES, BlockValidationError, validateBlocks } from '../../../../../content/blocks';
+import { standsSectionAt } from '../../../../../content/report-structure';
 import type { ContentType } from '../../../../../db/types';
+import type { Standing } from '../../../../../portfolio/board';
 
 import { BlockFields, defaultBlock, TYPE_LABELS } from './block-fields';
+import { StandingBoard } from './standing-board';
 import styles from './editor.module.css';
 
 interface Item {
@@ -66,11 +69,18 @@ export function Editor({
   itemId,
   type,
   initialBlocks,
+  board,
 }: {
   itemId: string;
   /** What is being written, so a field only one type uses appears only there. */
   type: ContentType | null;
   initialBlocks: Block[];
+  /**
+   * The progress board, for a report, and empty for everything else
+   * (`RPT-001/T4`). Emptiness is what decides whether the panel exists at all,
+   * so nothing here asks the type a second time and the two cannot disagree.
+   */
+  board: readonly Standing[];
 }): ReactElement {
   const [items, setItems] = useState<Item[]>(() =>
     initialBlocks.map((block, index) => ({ key: `b${index}`, block })),
@@ -330,6 +340,12 @@ export function Editor({
     setRestore(null);
   }
 
+  // Recomputed on every render rather than held in state, because the section
+  // moves whenever a block is added or deleted above it and a remembered
+  // position would put the board beside the wrong heading. The derivation walks
+  // an array of tens of blocks once, which is not worth memoising around.
+  const standsAt = board.length === 0 ? null : standsSectionAt(blocksOf(items));
+
   return (
     <div className={styles.editor}>
       <h1>Edit content</h1>
@@ -373,6 +389,13 @@ export function Editor({
       </div>
 
       {items.length === 0 ? <p className={styles.empty}>No blocks yet. Add one below.</p> : null}
+
+      {/* The board is shown even when the section it belongs beside is absent,
+          because an author who reworded or has not yet written that heading is
+          the one most likely to be writing the products from memory. A panel
+          that disappeared instead would read as a fault rather than as an
+          answer, and the one sentence it carries says which case this is. */}
+      {board.length > 0 && standsAt === null ? <StandingBoard board={board} beside={false} /> : null}
 
       <ul className={styles.blocks}>
         {items.map((item, index) => (
@@ -430,6 +453,7 @@ export function Editor({
               onChange={(block) => update(item.key, block)}
               onPaste={(blocks) => pasteBlocks(item.key, blocks)}
             />
+            {index === standsAt ? <StandingBoard board={board} beside /> : null}
           </li>
         ))}
       </ul>

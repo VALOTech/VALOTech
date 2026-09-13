@@ -49,16 +49,11 @@ import { useMemo, useState } from 'react';
 import type { FormEvent, ReactElement } from 'react';
 
 import { MAX_TITLE_LENGTH, titleFromBody } from '../../../content/derive';
-import type { PortfolioStage } from '../../../db/types';
 import type { Standing } from '../../../portfolio/board';
 import { standingOf } from '../../../portfolio/board';
+import { PRODUCT_LABEL, STAGE_LABEL } from '../../../portfolio/labels';
 import { blocksFromText } from '../../../content/paste';
-import {
-  CONTENT_PRODUCT_TAGS,
-  CONTENT_UPDATE_KINDS,
-  type ContentProductTag,
-  type ContentUpdateKind,
-} from '../../../db/types';
+import { CONTENT_PRODUCT_TAGS, CONTENT_UPDATE_KINDS, type ContentUpdateKind } from '../../../db/types';
 
 import styles from './compose.module.css';
 
@@ -80,16 +75,6 @@ const KIND_NOTE: Readonly<Record<ContentUpdateKind, string>> = {
   progress: 'A number that moved, or a milestone reached on a product. Not news.',
 };
 
-const PRODUCT_LABEL: Readonly<Record<ContentProductTag, string>> = {
-  'valo-ads': 'VALO Ads',
-  'valo-pocket': 'VALO Pocket',
-  shimmra: 'Shimmra',
-  amavo: 'Amavo',
-  farola: 'Farola',
-  verdiq: 'Verdiq',
-  company: 'The company',
-};
-
 /**
  * Where an update stops being an update (`POST-001` §3).
  *
@@ -99,18 +84,6 @@ const PRODUCT_LABEL: Readonly<Record<ContentProductTag, string>> = {
  * but that they wrote it in the wrong place.
  */
 const LONG_UPDATE_WORDS = 200;
-
-/**
- * How the four stage words read to an admin. The vocabulary is closed
- * (`INV-003` §3), and this is keyed by it rather than by `string` so a fifth
- * stage stops the build here instead of reaching a screen as a raw token.
- */
-const STAGE_LABEL: Readonly<Record<PortfolioStage, string>> = {
-  building: 'Building',
-  'in private use': 'In private use',
-  'in market': 'In market',
-  paused: 'Paused',
-};
 
 const CHANGED = new Intl.DateTimeFormat('en', {
   day: 'numeric',

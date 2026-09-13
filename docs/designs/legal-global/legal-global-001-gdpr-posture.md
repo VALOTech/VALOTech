@@ -43,7 +43,7 @@ requires.
 | **Objection to legitimate interests** | The read-tracking basis can be objected to. Honouring it means the account keeps working and the read records stop being written and are deleted |
 | **International transfer** | Data sits in Singapore, or wherever `INFRA-DEC-03` puts it. The transfer needs a lawful mechanism — Standard Contractual Clauses in the ordinary case |
 | **Records of processing** | One page, because there is one processing activity |
-| **72-hour breach notification** | Stricter than the PDPA's. The runbook uses the stricter clock for everyone |
+| **72-hour breach notification** | One clock, 72 hours from awareness, for every person wherever they are. Which regime is stricter is not asserted here: that is a comparison of two statutes and `LEGAL-GLOBAL-001/T6` owes the text |
 
 ### Portability, concretely
 
@@ -67,11 +67,26 @@ that the person chose.
 The flag is a right being honoured, so it is an admin action recorded in the
 audit, and it is stated in the notice as something a person may ask for.
 
-### The stricter clock everywhere
+### One clock everywhere
 
 Breach notification runs on **72 hours** for every person, not only for those in
-the EU. Two clocks in one runbook is a runbook that uses the wrong one at four in
-the morning.
+the EU, counted from the moment anybody here becomes aware rather than from the
+moment the assessment concludes. Two clocks in one runbook is a runbook that uses
+the wrong one at four in the morning, by somebody who has been awake since two
+and does not yet know which residences are involved.
+
+**This is a decision taken here, not a statute quoted.** An earlier draft of this
+design called 72 hours the stricter of the two clocks; that is a comparison of
+two regimes, and `docs/compliance/` holds no source text to compare them from.
+`docs/compliance/README.md` is explicit that a rule paraphrased from memory is
+the expensive kind of wrong, so the number is carried as this design's choice and
+`docs/runbooks/legal-sg-001-breach.md` cites the design rather than an article.
+`LEGAL-GLOBAL-001/T6` is the row that lands the text; until it does, nothing here
+names a section number.
+
+The clock is a ceiling and never a schedule: both regimes ask for notice without
+undue delay, so a breach understood on the first morning is notified that
+morning.
 
 ### What is not claimed
 
@@ -118,3 +133,4 @@ mechanism applies.
 - `LEGAL-GLOBAL-001/T3` — An objection flag that stops read-tracking and deletes the existing rows
 - `LEGAL-GLOBAL-001/T4` — The breach runbook uses the 72-hour clock for everyone
 - `LEGAL-GLOBAL-001/T5` — A one-page record of processing, and a written statement of what is deliberately not claimed
+- `LEGAL-GLOBAL-001/T6` — The GDPR articles this design rests on are in the tree, and every claim cites one

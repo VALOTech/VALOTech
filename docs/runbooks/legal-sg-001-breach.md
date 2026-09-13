@@ -17,6 +17,29 @@ without undue delay, and — where the breach is likely to result in **significa
 harm** to the individuals — notice to **those individuals** as well. Two paths,
 assessed separately, and the first does not wait on the second.
 
+## The clock is 72 hours, and it is the only one
+
+**From the moment anybody here becomes aware of it, not from the moment the
+assessment finishes.** Awareness is the earlier of the two and it is the one to
+count from, because the assessment is work that happens inside the window
+rather than before it starts.
+
+This one clock applies to **every** affected person, wherever they are
+(`LEGAL-GLOBAL-001`). An investor in the EU brings a deadline of their own, and
+the answer is not to run two: a runbook holding one clock for some people and a
+different clock for others is a runbook that uses the wrong one at four in the
+morning, by somebody who has been awake since two and does not yet know which
+residences are involved. Running the shorter one for everybody costs a few
+hours of margin and removes a decision from the worst moment to be making one.
+
+**72 hours is a ceiling and not a schedule.** Both regimes ask for notice
+without undue delay, so a breach understood on the first morning is notified
+that morning. The number is what you have, never what you take.
+
+If the 72 hours will be missed, that is a fact to state in the notification
+with its reason, not a reason to keep working in silence until the notice is
+perfect.
+
 **The population is small enough to notify individually.** That is this system's
 one advantage at this size and it is worth saying out loud, because the reflex
 under pressure is a public announcement, and a public announcement about a
@@ -57,8 +80,10 @@ it.
 5. **Rotate what leaked.** If a credential or `BACKUP_KEY` is implicated, rotate
    it before anything else — a live key is an ongoing breach, not a past one.
 
-Write down the time of each act as you do it. The notification needs a timeline
-and reconstructing one afterwards from memory is how the timeline becomes wrong.
+Write down the time of each act as you do it, in UTC, starting with the moment
+you became aware — that one starts the 72 hours and is the only timestamp the
+notification is measured against. The notification needs a timeline and
+reconstructing one afterwards from memory is how the timeline becomes wrong.
 
 ## Assess — is it notifiable
 
@@ -83,10 +108,10 @@ decision that has to be defensible later, and the record is the defence.
 
 ## Notify the PDPC
 
-Without undue delay once the assessment concludes it is notifiable. The
-notification carries: what happened and when it was discovered, what data and how
-many individuals, what has been done to contain it, and what is being done to
-stop it recurring.
+Within the 72 hours above, and without undue delay once the assessment concludes
+it is notifiable — whichever comes first. The notification carries: what happened
+and when it was discovered, what data and how many individuals, what has been
+done to contain it, and what is being done to stop it recurring.
 
 Prepare all four before filing rather than filing a first version and correcting
 it — a corrected count is the detail that gets read.

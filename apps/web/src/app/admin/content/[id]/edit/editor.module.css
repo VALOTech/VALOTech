@@ -302,3 +302,60 @@
 .markItem .button {
   flex: 0 0 auto;
 }
+
+/* The progress board beside the section that narrates it (`RPT-001/T4`). Set
+   apart from the block it sits under rather than styled as one, because it is
+   not part of the document: nothing here is saved, and an author must not have
+   to work out which of the two they are editing. */
+.standing {
+  margin: 0.75rem 0 0;
+  padding: 0.75rem 0.9rem;
+  border-left: 3px solid var(--edit-accent);
+  background: #f6f6fa;
+  font-size: 0.9rem;
+}
+
+.standingIntro {
+  margin: 0 0 0.5rem;
+  color: var(--edit-muted);
+}
+
+.standingList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.standingRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.standingProduct {
+  font-weight: 600;
+  min-width: 8rem;
+}
+
+.standingStage {
+  color: var(--edit-ink);
+}
+
+.standingHeadline {
+  color: var(--edit-muted);
+}
+
+.standingChanged {
+  color: var(--edit-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* An absent row is shown as absent rather than as `building`, because the stage
+   this application assumes is not something anybody said (`INV-003`). */
+.standingUnset {
+  color: var(--edit-muted);
+  font-style: italic;
+}

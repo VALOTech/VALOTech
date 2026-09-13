@@ -24,6 +24,7 @@ import { closeDb, getDb } from '../db/index';
 
 import type { Block } from './blocks';
 import {
+  deckAudience,
   deckRevisionFor,
   decksGrantedButNeverOpened,
   grantedDecksForAccount,
@@ -533,6 +534,102 @@ describe.skipIf(!HAS_DATABASE)('a deck publication version (DECK-002/T1)', () =>
 
     it('answers an empty list for an account holding no grant at all', async () => {
       expect(await grantedDecksForAccount(await grantee())).toEqual([]);
+    });
+  });
+
+  describe('who a publish reaches (DECK-002/T5)', () => {
+    /** An investor in a given state, granted nothing yet. */
+    async function person(name: string, state: 'active' | 'invited' | 'suspended'): Promise<string> {
+      const row = await getDb()
+        .insertInto('accounts')
+        // A suspended account cannot be granted anything, so it is created active
+        // and suspended afterwards — which is also the only way it happens in
+        // life: somebody held a grant and then lost their access.
+        .values({ email: `${randomUUID()}@example.test`, name, role: 'investor', state: 'active' })
+        .returning('id')
+        .executeTakeFirstOrThrow();
+
+      if (state !== 'active') {
+        await getDb().updateTable('accounts').set({ state }).where('id', '=', row.id).execute();
+      }
+
+      return row.id;
+    }
+
+    it('names every unpinned reader, in name order rather than grant order', async () => {
+      const deck = await aDeck();
+      const zoe = await person('Zoe', 'active');
+      const adam = await person('Adam', 'active');
+
+      await addGrant(deck, zoe, authorId);
+      await addGrant(deck, adam, authorId);
+
+      const audience = await deckAudience(deck);
+
+      expect(audience.readers.map((reader) => reader.name)).toEqual(['Adam', 'Zoe']);
+      expect(audience.pinned).toBe(0);
+    });
+
+    it('counts a pinned grant rather than naming it, because the publish does not reach it', async () => {
+      const deck = await aDeck();
+      const unpinned = await person('Unpinned', 'active');
+      const pinned = await person('Pinned', 'active');
+
+      await addGrant(deck, unpinned, authorId);
+      await addGrant(deck, pinned, authorId, 1);
+
+      const audience = await deckAudience(deck);
+
+      expect(audience.readers.map((reader) => reader.name)).toEqual(['Unpinned']);
+      expect(audience.pinned).toBe(1);
+    });
+
+    it('marks a reader who has not accepted their invitation, because their next visit is not soon', async () => {
+      const deck = await aDeck();
+      await addGrant(deck, await person('Accepted', 'active'), authorId);
+      await addGrant(deck, await person('Waiting', 'invited'), authorId);
+
+      const audience = await deckAudience(deck);
+
+      expect(audience.readers.map((reader) => [reader.name, reader.state])).toEqual([
+        ['Accepted', 'active'],
+        ['Waiting', 'invited'],
+      ]);
+    });
+
+    it('leaves a suspended grantee out of both numbers, because they have no next visit', async () => {
+      const deck = await aDeck();
+      const gone = await person('Gone', 'active');
+      await addGrant(deck, gone, authorId);
+      await getDb().updateTable('accounts').set({ state: 'suspended' }).where('id', '=', gone).execute();
+
+      const audience = await deckAudience(deck);
+
+      expect(audience.readers).toEqual([]);
+      expect(audience.pinned).toBe(0);
+    });
+
+    it('separates nobody granted from everybody pinned, which are different situations', async () => {
+      const ungranted = await aDeck();
+      expect(await deckAudience(ungranted)).toEqual({ readers: [], pinned: 0 });
+
+      const allPinned = await aDeck();
+      await addGrant(allPinned, await person('One', 'active'), authorId, 1);
+      await addGrant(allPinned, await person('Two', 'active'), authorId, 2);
+
+      // The trap: publish v3 and nobody sees it, because every reader is held to
+      // the version their diligence process is discussing.
+      expect(await deckAudience(allPinned)).toEqual({ readers: [], pinned: 2 });
+    });
+
+    it('answers for the deck it was asked about and not for another', async () => {
+      const mine = await aDeck();
+      const other = await aDeck();
+      await addGrant(mine, await person('Mine', 'active'), authorId);
+      await addGrant(other, await person('Theirs', 'active'), authorId);
+
+      expect((await deckAudience(mine)).readers.map((reader) => reader.name)).toEqual(['Mine']);
+      expect((await deckAudience(other)).readers.map((reader) => reader.name)).toEqual(['Theirs']);
     });
   });
 });

@@ -1,8 +1,9 @@
 import type { ReactElement } from 'react';
 
+import { requireAdminPage } from '../../../../../auth/page-guard';
 import { validateBlocks } from '../../../../../content/blocks';
 import { forAuthor } from '../../../../../content/read';
-import { requireAdminPage } from '../../../../../auth/page-guard';
+import { standing } from '../../../../../portfolio/board';
 
 import { Editor } from './editor';
 
@@ -29,8 +30,17 @@ export default async function EditContentPage({
   const view = await forAuthor(id, actor);
   const initialBlocks = view === null ? [] : validateBlocks(view.revision.blocks);
 
+  // A report is the one type with a section the application also holds the state
+  // for, so it is the one whose editor shows that state beside the writing
+  // (`RPT-001/T4`). The read happens here because the editor is a client
+  // component; an empty board is how every other type says it has none, so the
+  // panel needs no second way to ask what is being written.
+  const board = view?.item.type === 'report' ? await standing() : [];
+
   // A deck is the one type that is presented as well as read, so it is the one
   // whose headings carry a speaker note (`DECK-001/T6`). The editor is told the
   // type rather than shown every field every type could have.
-  return <Editor itemId={id} type={view?.item.type ?? null} initialBlocks={initialBlocks} />;
+  return (
+    <Editor itemId={id} type={view?.item.type ?? null} initialBlocks={initialBlocks} board={board} />
+  );
 }
