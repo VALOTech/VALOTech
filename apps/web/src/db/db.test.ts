@@ -190,6 +190,7 @@ const SELECTABLE_SAMPLES: { readonly [T in keyof Database]: Selectable<Database[
     slug: '2026-q3',
     title: 'Third quarter 2026',
     kind: null,
+    product: null,
     period: '2026-Q3',
     audience: 'investor',
     current_revision_id: null,

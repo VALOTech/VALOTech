@@ -29,9 +29,11 @@ import { getConfig } from '../../../../config/index';
 import { createItem } from '../../../../content/items';
 import {
   CONTENT_AUDIENCES,
+  CONTENT_PRODUCT_TAGS,
   CONTENT_TYPES,
   CONTENT_UPDATE_KINDS,
   type ContentAudience,
+  type ContentProductTag,
   type ContentType,
   type ContentUpdateKind,
 } from '../../../../db/types';
@@ -67,6 +69,7 @@ type Draft = {
   readonly slug: string;
   readonly audience: ContentAudience;
   readonly kind: ContentUpdateKind | null;
+  readonly product: ContentProductTag | null;
   readonly period: string | null;
 };
 
@@ -75,7 +78,7 @@ function read(body: unknown): Draft | Refusal {
     return { field: 'body', reason: 'The request was not an object.' };
   }
 
-  const { type, title, slug, audience, kind, period } = body as Record<string, unknown>;
+  const { type, title, slug, audience, kind, product, period } = body as Record<string, unknown>;
 
   if (!isOneOf(CONTENT_TYPES, type)) {
     return { field: 'type', reason: 'Choose a report, an update or a deck.' };
@@ -100,6 +103,22 @@ function read(body: unknown): Draft | Refusal {
     return { field: 'kind', reason: 'Only an update carries a kind.' };
   }
 
+  // Optional wherever it is allowed, so absent, null and empty all pass: an
+  // author who did not say what an update is about has given a real answer, and
+  // it is not the same as saying it is about the company.
+  if (
+    type === 'update' &&
+    product !== undefined &&
+    product !== null &&
+    product !== '' &&
+    !isOneOf(CONTENT_PRODUCT_TAGS, product)
+  ) {
+    return { field: 'product', reason: 'A tag is one of the six products, or the company.' };
+  }
+  if (type !== 'update' && product !== undefined && product !== null && product !== '') {
+    return { field: 'product', reason: 'Only an update carries a product.' };
+  }
+
   if (type === 'report' && (typeof period !== 'string' || !PERIOD.test(period))) {
     return { field: 'period', reason: 'A report is filed under a period such as 2026-Q3 or 2026-07.' };
   }
@@ -113,6 +132,7 @@ function read(body: unknown): Draft | Refusal {
     slug,
     audience,
     kind: type === 'update' ? (kind as ContentUpdateKind) : null,
+    product: isOneOf(CONTENT_PRODUCT_TAGS, product) ? product : null,
     period: type === 'report' ? (period as string) : null,
   };
 }

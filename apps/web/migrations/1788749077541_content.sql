@@ -22,12 +22,23 @@ CREATE TABLE content_items (
   slug                text UNIQUE NOT NULL,
   title               text NOT NULL,
   kind                text CHECK (kind IS NULL OR kind IN ('announcement', 'achievement', 'progress')),
+  -- What an update is about (POST-001/T3): one of the six products, or the
+  -- company itself. Optional, and null is its own answer -- the author did not
+  -- say, which is a different statement from 'this is about the company' and is
+  -- kept as one. It is a column rather than something inside the document
+  -- because CMS-007 filters on it: a tag a query cannot narrow by is a tag an
+  -- investor cannot follow a product with.
+  product             text CHECK (product IS NULL OR product IN ('valo-ads', 'valo-pocket', 'shimmra', 'amavo', 'farola', 'verdiq', 'company')),
   period              text,
   audience            text NOT NULL DEFAULT 'investor' CHECK (audience IN ('public', 'investor', 'granted')),
   current_revision_id uuid,
   created_at          timestamptz NOT NULL DEFAULT now(),
   updated_at          timestamptz NOT NULL DEFAULT now(),
   CONSTRAINT content_items_kind_for_update CHECK (type = 'update' OR kind IS NULL),
+  -- Only an update carries a product, for the reason only an update carries a
+  -- kind: a report is filed under a period and a deck under neither, and a tag
+  -- on either would be a value no surface reads and no filter means.
+  CONSTRAINT content_items_product_for_update CHECK (type = 'update' OR product IS NULL),
   CONSTRAINT content_items_period_for_report CHECK (type <> 'report' OR period IS NOT NULL),
   CONSTRAINT content_items_period_format CHECK (period IS NULL OR period ~ '^[0-9]{4}-(Q[1-4]|(0[1-9]|1[0-2]))$')
 );

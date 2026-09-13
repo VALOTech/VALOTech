@@ -30,12 +30,16 @@ import type { FormEvent, ReactElement } from 'react';
 
 import {
   CONTENT_AUDIENCES,
+  CONTENT_PRODUCT_TAGS,
   CONTENT_TYPES,
   CONTENT_UPDATE_KINDS,
   type ContentAudience,
+  type ContentProductTag,
   type ContentType,
   type ContentUpdateKind,
 } from '../../../../db/types';
+
+import { slugFrom } from '../../../../content/derive';
 
 import styles from './new.module.css';
 
@@ -57,20 +61,21 @@ const KIND_LABEL: Readonly<Record<ContentUpdateKind, string>> = {
   progress: 'Progress',
 };
 
+const PRODUCT_LABEL: Readonly<Record<ContentProductTag, string>> = {
+  'valo-ads': 'VALO Ads',
+  'valo-pocket': 'VALO Pocket',
+  shimmra: 'Shimmra',
+  amavo: 'Amavo',
+  farola: 'Farola',
+  verdiq: 'Verdiq',
+  company: 'The company',
+};
+
 const AUDIENCE_LABEL: Readonly<Record<ContentAudience, string>> = {
   public: 'Anyone, including a visitor who has not signed in',
   investor: 'Every investor',
   granted: 'Only investors it is granted to',
 };
-
-/** A title, as an address: lower-case, hyphenated, nothing a URL would escape. */
-function addressFrom(title: string): string {
-  return title
-    .toLowerCase()
-    .normalize('NFKD')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
-}
 
 export default function NewItemPage(): ReactElement {
   const [type, setType] = useState<ContentType>('update');
@@ -78,6 +83,7 @@ export default function NewItemPage(): ReactElement {
   const [slug, setSlug] = useState('');
   const [audience, setAudience] = useState<ContentAudience>('investor');
   const [kind, setKind] = useState<ContentUpdateKind>('progress');
+  const [product, setProduct] = useState<string>('');
   const [period, setPeriod] = useState('');
   const [busy, setBusy] = useState(false);
   const [refusal, setRefusal] = useState<{ field: string; detail: string } | null>(null);
@@ -88,7 +94,7 @@ export default function NewItemPage(): ReactElement {
   function retitle(value: string): void {
     setTitle(value);
     if (!slugIsMine.current) {
-      setSlug(addressFrom(value));
+      setSlug(slugFrom(value));
     }
   }
 
@@ -106,7 +112,7 @@ export default function NewItemPage(): ReactElement {
           title,
           slug,
           audience,
-          ...(type === 'update' ? { kind } : {}),
+          ...(type === 'update' ? { kind, product } : {}),
           ...(type === 'report' ? { period } : {}),
         }),
       });
@@ -208,6 +214,26 @@ export default function NewItemPage(): ReactElement {
               {CONTENT_UPDATE_KINDS.map((option) => (
                 <option key={option} value={option}>
                   {KIND_LABEL[option]}
+                </option>
+              ))}
+            </select>
+          </label>
+        ) : null}
+
+        {type === 'update' ? (
+          <label className={styles.field}>
+            <span className={styles.label}>About</span>
+            <select
+              value={product}
+              onChange={(event) => setProduct(event.target.value)}
+              aria-invalid={invalid('product')}
+            >
+              {/* Empty and first: not saying is a real answer, and a different
+                  one from "the company" (POST-001/T3). */}
+              <option value="">Not said</option>
+              {CONTENT_PRODUCT_TAGS.map((option) => (
+                <option key={option} value={option}>
+                  {PRODUCT_LABEL[option]}
                 </option>
               ))}
             </select>

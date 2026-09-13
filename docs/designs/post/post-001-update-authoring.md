@@ -5,9 +5,9 @@ domain: post
 prd_refs: [POST-001, CMS-R04]
 depends_on: [CMS-002, CMS-003]
 depended_by: [POST-002]
-layers_touched: [domain, service, api, frontend, ui]
+layers_touched: [data, domain, service, api, frontend, ui]
 cross_cutting_rules: [CMS-R01, CMS-R04, SEC-R04, I18N-R01, A11Y-R02]
-status: design-ready
+status: in-progress
 ---
 
 # `POST-001` — Update authoring
@@ -25,8 +25,11 @@ produces a room with four entries a year, which is a room nobody signs in to.
 
 ## 2. Layer walkthrough
 
-**Down.** A `content_items` row with `type = 'update'` and a `kind`. One
-revision, usually one paragraph. No new tables.
+**Down.** A `content_items` row with `type = 'update'`, a `kind`, and an
+optional `product`. One revision, usually one paragraph. No new tables: `kind`
+was already there and `product` is a column beside it, held to the six plus the
+company and, by a table constraint, to updates alone — the same shape `kind`
+has, because it answers the same sort of question about the same sort of row.
 
 **Up.** A composer that opens empty with the cursor in it, three kind buttons,
 and a publish control. The whole surface fits without scrolling.
@@ -57,14 +60,22 @@ assembled from by a person reading the quarter's updates.
 
 ### The composer
 
-    POST /admin/updates    { kind, product?, title, blocks }
+    POST /admin/updates/compose    { kind, product?, title, blocks }
+
+The composer is served at `/admin/updates` and posts to `/admin/updates/compose`,
+because one path in the App Router is either a page or a handler and never
+both. It is the split the item surfaces already make — `/admin/content/new`
+is the form and `/admin/content/create` is what it posts to.
 
 - Opens with the cursor in the body. The title is derived from the first line
   until the author edits it separately — a required title field before any
   writing is where a short update goes to die.
-- The full block vocabulary is available, and the default is a paragraph. An
-  update that wants an image or a figure gets `CMS-002`'s controls; an update
-  that is two sentences never sees them.
+- The body is plain text and becomes a paragraph per blank-line run, which is
+  `CMS-002`'s own paste rule rather than a second one. The full block vocabulary
+  is one navigation on, in the editor: an update that wants an image or a figure
+  goes there and gets `CMS-002`'s controls, and an update that is two sentences
+  never sees them. Putting them on this screen would be the wall of controls the
+  surface exists to avoid.
 - Publish is one control, and it goes through `CMS-004` like everything else —
   the same preview, the same audit, the same withdraw.
 
@@ -94,7 +105,11 @@ product so an update saying a number moved is written beside the number.
 - **`SEC-R04`** — publish and withdraw audited.
 - **`A11Y-R02`** — an image still requires its description; brevity is not an
   exemption.
-- **`I18N-R01`** — the composer's chrome from the dictionary.
+- **`I18N-R01`** — governs what a *visitor* reads. The composer is console
+  chrome and is English, the exception `ADMIN-002/T5` states and the reason it
+  gives: both admins read English, and a translated console is twenty catalogues
+  maintained for two people. What an investor eventually reads of an update is
+  the update's own words, which `CMS-005` translates like any other content.
 
 ## 6. Open questions and trade-offs
 
@@ -106,6 +121,18 @@ product so an update saying a number moved is written beside the number.
   one sitting. Drafts exist because `CMS-001` gives them for free, and they are
   not surfaced as a workflow — a drafts folder is where updates go to be
   forgotten.
+- **The cursor is in the body and the kind is still chosen first.** Those two
+  read as a contradiction and are resolved by placement rather than by force:
+  the kinds sit above the body, nothing is preselected, and the file control
+  refuses without one. Disabling the body until a kind is picked would honour
+  the second sentence and break the first, and the first is the one that
+  decides whether anybody writes anything.
+- **The address is derived silently, and is the one thing here a reader keeps.**
+  An author never sees it before it exists, which is the cost of not asking; the
+  answer shows it, and the item page is where it can be reconsidered. A title
+  with no Latin letters or digits in it yields no address at all, so such an
+  update is filed under `update`, `update-2` and so on — honest, and poor
+  enough to be worth saying out loud rather than discovering.
 
 ## 7. Task list
 

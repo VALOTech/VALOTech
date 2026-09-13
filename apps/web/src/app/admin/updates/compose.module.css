@@ -1,0 +1,171 @@
+/* The update composer (POST-001/T1). The whole surface fits without scrolling,
+   which is the task and not a preference: an update is filed in the seconds
+   somebody has for it, and a screen that has to be scrolled to reach its own
+   submit is a screen with a second decision in it.
+
+   It follows the console's own plainness (ADMIN-002) and carries the care of a
+   surface that is used rather than read: a focus ring on every control, a
+   disabled state that says why by being obviously not-yet, and no colour doing
+   work a word is not also doing (A11Y-R03). */
+
+.composer {
+  --compose-ink: #1a1a2e;
+  --compose-muted: #52525b;
+  --compose-line: #d8d8e0;
+  --compose-accent: #2b3a8c;
+  --compose-refused: #9f1239;
+
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 44rem;
+  margin-top: 1rem;
+  color: var(--compose-ink);
+}
+
+.kinds {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.legend {
+  padding: 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+/* Each kind is a labelled radio drawn as a button. A radio rather than a button
+   because that is what it is -- one of three, exactly one chosen -- and a screen
+   reader should hear a group of three options, not three unrelated controls
+   (A11Y-R02). */
+.choice {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.8rem;
+  border: 1px solid var(--compose-line);
+  border-radius: 999px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.choice:hover {
+  border-color: var(--compose-accent);
+}
+
+/* The chosen one is filled, and the input inside it stays a real radio, so the
+   state is carried by the control as well as by the fill. */
+.choice:has(input:checked) {
+  border-color: var(--compose-accent);
+  background: var(--compose-accent);
+  color: #ffffff;
+}
+
+.choice:has(input:focus-visible) {
+  outline: 2px solid var(--compose-ink);
+  outline-offset: 2px;
+}
+
+.note {
+  margin: 0.5rem 0 0;
+  min-height: 2.5rem;
+  color: var(--compose-muted);
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.label {
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.body,
+.input {
+  font: inherit;
+  color: inherit;
+  padding: 0.55rem 0.65rem;
+  border: 1px solid var(--compose-line);
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.body {
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.body:focus-visible,
+.input:focus-visible {
+  outline: 2px solid var(--compose-accent);
+  outline-offset: 1px;
+  border-color: var(--compose-accent);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.hint {
+  color: var(--compose-muted);
+  font-size: 0.8125rem;
+  line-height: 1.4;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.file {
+  padding: 0.55rem 1.1rem;
+  font: inherit;
+  font-weight: 600;
+  color: #ffffff;
+  background: var(--compose-accent);
+  border: 1px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.file:hover:not(:disabled) {
+  background: #212d6d;
+}
+
+.file:focus-visible {
+  outline: 2px solid var(--compose-ink);
+  outline-offset: 2px;
+}
+
+/* Not-yet rather than broken: the control is plainly inert while the kind is
+   unchosen or the body empty, and the two hints beside it say what is missing. */
+.file:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.refused {
+  margin: 0;
+  color: var(--compose-refused);
+  font-size: 0.9rem;
+  line-height: 1.4;
+}

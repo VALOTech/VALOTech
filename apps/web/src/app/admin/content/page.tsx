@@ -55,8 +55,12 @@ export default async function ContentPage(): Promise<ReactElement> {
     <>
       <h1>Content</h1>
 
+      {/* Two ways in, because they answer different questions. The composer
+          takes a finished update and files it in one act (POST-001); the
+          general form begins an empty item of any type, which is what a
+          report or a deck wants. */}
       <p>
-        <a href="/admin/content/new">Start something new</a>
+        <a href="/admin/updates">Write an update</a> · <a href="/admin/content/new">Start something new</a>
       </p>
 
       {items.length === 0 ? (

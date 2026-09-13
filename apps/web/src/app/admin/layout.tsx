@@ -35,7 +35,11 @@ const DESTINATIONS: ReadonlyArray<{ readonly href: string; readonly label: strin
   { href: '/admin/media', label: 'Media' },
   { href: '/admin/accounts', label: 'Accounts' },
   { href: '/admin/mail', label: 'Mail' },
-  { href: '/admin/portfolio', label: 'Portfolio' },
+  // Portfolio is not here yet, and deliberately so: the board is `INV-003`
+  // and four of its five rows are open, so the entry would be a destination
+  // that answers the not-found page. `INV-003/T4` adds it back with the
+  // surface it points at -- a rail is the one navigation an admin has, and an
+  // entry in it is a promise that something is there.
   { href: '/admin/config', label: 'Settings' },
   { href: '/admin/audit', label: 'Audit' },
 ];

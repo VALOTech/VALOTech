@@ -106,6 +106,19 @@ export const PORTFOLIO_PRODUCTS = [
 
 export type PortfolioProduct = (typeof PORTFOLIO_PRODUCTS)[number];
 
+/**
+ * What an update may be tagged with (`POST-001/T3`): the six products the
+ * portfolio carries, and the company itself.
+ *
+ * Derived from `PORTFOLIO_PRODUCTS` rather than listed again, so a seventh
+ * product reaches this set by being added once. `company` is appended rather
+ * than folded into that constant, because `portfolio` is keyed on it and a row
+ * for a company that is not a product is not a thing the board has a stage for.
+ */
+export const CONTENT_PRODUCT_TAGS = [...PORTFOLIO_PRODUCTS, 'company'] as const;
+
+export type ContentProductTag = (typeof CONTENT_PRODUCT_TAGS)[number];
+
 export const PORTFOLIO_STAGES = ['building', 'in private use', 'in market', 'paused'] as const;
 
 export type PortfolioStage = (typeof PORTFOLIO_STAGES)[number];
@@ -180,6 +193,9 @@ export interface ContentItemsTable {
   slug: string;
   title: string;
   kind: ContentUpdateKind | null;
+  // What an update is about (`POST-001/T3`). Null is its own answer: the author
+  // did not say, which is not the same as saying it is about the company.
+  product: ContentProductTag | null;
   period: string | null;
   audience: Generated<ContentAudience>;
   current_revision_id: string | null;
@@ -420,6 +436,7 @@ export const SCHEMA: Readonly<Record<keyof Database, TableSpec>> = {
       { name: 'slug', type: 'text', notNull: true, hasDefault: false, unique: true },
       { name: 'title', type: 'text', notNull: true, hasDefault: false, unique: false },
       { name: 'kind', type: 'text', notNull: false, hasDefault: false, unique: false },
+      { name: 'product', type: 'text', notNull: false, hasDefault: false, unique: false },
       { name: 'period', type: 'text', notNull: false, hasDefault: false, unique: false },
       { name: 'audience', type: 'text', notNull: true, hasDefault: true, unique: false },
       { name: 'current_revision_id', type: 'uuid', notNull: false, hasDefault: false, unique: false },
@@ -427,7 +444,12 @@ export const SCHEMA: Readonly<Record<keyof Database, TableSpec>> = {
       { name: 'updated_at', type: 'timestamptz', notNull: true, hasDefault: true, unique: false },
     ],
     primaryKey: ['id'],
-    checks: { type: CONTENT_TYPES, kind: CONTENT_UPDATE_KINDS, audience: CONTENT_AUDIENCES },
+    checks: {
+      type: CONTENT_TYPES,
+      kind: CONTENT_UPDATE_KINDS,
+      product: CONTENT_PRODUCT_TAGS,
+      audience: CONTENT_AUDIENCES,
+    },
   },
   content_revisions: {
     migration: '_content.sql',

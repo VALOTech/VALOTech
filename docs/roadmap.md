@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_316 tasks in the plan, 234 closed, 82 outstanding._
+_316 tasks in the plan, 238 closed, 78 outstanding._
 
 ---
 
@@ -72,7 +72,7 @@ _69/73 closed (94%) · 4 outstanding — 0 buildable now · 1 waiting on the own
   - `[!] CMS-004/T6` — A public item's cache is purged on publish and on withdraw  · _pending-decision_ · **Blocked by:** pending-decision: CMS-DEC-07 ([docs/decisions-log.md#CMS-DEC-07](decisions-log.md#CMS-DEC-07)) — OPS-001 §3 settles that Cloudflare caches the assets…
 
 - **CMS-007** · Search and filter in the room — 3/6 closed · depth 6
-  - `[!] CMS-007/T3` — Kind, product, period and type filters, composing into one statement  · _cross-wave-parked_ · **Blocked by:** POST-001/T3 (the optional product tag from the six) — the product filter narrows on a product a content item carries, and no item carries one until t…
+  - `[!] CMS-007/T3` — Kind, product, period and type filters, composing into one statement  · _cross-wave-parked_ · **Blocked by:** INV-001/T1 (the room’s landing surface) — all four dimensions now rest on columns that exist, the product tag among them since POST-001/T3, so what r…
   - `[!] CMS-007/T5` — The empty state names what narrowed the result and offers to widen it  · _cross-wave-parked_ · **Blocked by:** INV-001/T1 (the room’s landing surface) — CMS-007 §2 puts the field and its filters above the stream and §4 names INV-001 as the surface this appears…
   - `[!] CMS-007/T6` — The field is labelled, keyboard-operable, and announces its result count  · _cross-wave-parked_ · **Blocked by:** INV-001/T1 (the room’s landing surface) — the field this labels is the one CMS-007 §2 places above the stream, on the surface §4 names as INV-001, an…
 
@@ -81,7 +81,7 @@ _69/73 closed (94%) · 4 outstanding — 0 buildable now · 1 waiting on the own
 
 _The three content types, and the compliance posture that governs what is held about the people reading them. Updates come before decks, and not only because they are the simpler shape of the same problem: they are what the room is for. An investor signs in to find out what has happened since they last looked._
 
-_40/61 closed (65%) · 21 outstanding — 20 buildable now · 1 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_44/61 closed (72%) · 17 outstanding — 16 buildable now · 1 waiting on the owner · 0 external residue · 0 parked to a later wave._
 
 - **DECK-001** · Deck authoring — 6/6 closed
 - **LEGAL-SG-001** · PDPA posture — 4/7 closed · depth 7
@@ -90,11 +90,7 @@ _40/61 closed (65%) · 21 outstanding — 20 buildable now · 1 waiting on the o
   - `[!] LEGAL-SG-001/T7` — The cross-border transfer assessment, now that the hosting and the mail carrier are both settled  · _pending-decision_ · **Blocked by:** pending-decision: OPS-DEC-03 ([docs/decisions-log.md#OPS-DEC-03](decisions-log.md#OPS-DEC-03)) — the assessment is about whether personal data leaves…
 
 - **MAIL-001** · Investor mail — 8/8 closed
-- **POST-001** · Update authoring — 0/6 closed · depth 7
-  - `[ ] POST-001/T1` — A composer that opens with the cursor in the body and fits without scrolling
-  - `[ ] POST-001/T2` — Kind is required and chosen before writing; three kinds, no more
-  - `[ ] POST-001/T3` — An optional product tag from the six, plus the company
-  - `[ ] POST-001/T4` — The title derives from the first line until it is edited separately
+- **POST-001** · Update authoring — 4/6 closed · depth 7
   - `[ ] POST-001/T5` — A soft length marker that offers to move the text into the current draft report
   - `[ ] POST-001/T6` — The tagged product's current progress value is shown beside the composer
 

@@ -17,12 +17,13 @@
  * now and which it dropped, so only it can end a reference as well as begin one.
  */
 
-import { type Selectable, type Transaction, sql } from 'kysely';
+import { type RawBuilder, type Selectable, type Transaction, sql } from 'kysely';
 
 import { getDb } from '../db/index';
 import type {
   ContentAudience,
   ContentItemsTable,
+  ContentProductTag,
   ContentRevisionsTable,
   ContentType,
   ContentUpdateKind,
@@ -63,6 +64,8 @@ export interface NewItem {
   slug: string;
   title: string;
   kind?: ContentUpdateKind | null;
+  /** What an update is about (`POST-001/T3`); null is the author not having said. */
+  product?: ContentProductTag | null;
   period?: string | null;
   audience?: ContentAudience;
 }
@@ -82,6 +85,7 @@ export async function createItem(input: NewItem): Promise<ContentItem> {
       slug: input.slug,
       title: input.title,
       kind: input.kind ?? null,
+      product: input.product ?? null,
       period: input.period ?? null,
       ...(input.audience === undefined ? {} : { audience: input.audience }),
     })
@@ -338,7 +342,7 @@ function mediaIdsIn(blocks: unknown): string[] {
  * the open draft rather than adding a revision, so that naming is gone from the
  * item entirely, and the file becomes deletable again (`CMS-003/T7`).
  */
-async function syncMediaRefs(trx: Transaction<Database>, itemId: string): Promise<void> {
+export async function syncMediaRefs(trx: Transaction<Database>, itemId: string): Promise<void> {
   const revisions = await trx
     .selectFrom('content_revisions')
     .select('blocks')
@@ -392,7 +396,7 @@ async function refuseUnstored(trx: Transaction<Database>, mediaIds: readonly str
   }
 }
 
-function validateBlocksToJson(blocks: unknown) {
+export function validateBlocksToJson(blocks: unknown): RawBuilder<ContentRevision['blocks']> {
   const validated = validateBlocks(blocks);
   return sql<ContentRevision['blocks']>`${JSON.stringify(validated)}::jsonb`;
 }
