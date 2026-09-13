@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_316 tasks in the plan, 238 closed, 78 outstanding._
+_316 tasks in the plan, 240 closed, 76 outstanding._
 
 ---
 
@@ -81,7 +81,7 @@ _69/73 closed (94%) · 4 outstanding — 0 buildable now · 1 waiting on the own
 
 _The three content types, and the compliance posture that governs what is held about the people reading them. Updates come before decks, and not only because they are the simpler shape of the same problem: they are what the room is for. An investor signs in to find out what has happened since they last looked._
 
-_44/61 closed (72%) · 17 outstanding — 16 buildable now · 1 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_46/61 closed (75%) · 15 outstanding — 14 buildable now · 1 waiting on the owner · 0 external residue · 0 parked to a later wave._
 
 - **DECK-001** · Deck authoring — 6/6 closed
 - **LEGAL-SG-001** · PDPA posture — 4/7 closed · depth 7
@@ -90,10 +90,7 @@ _44/61 closed (72%) · 17 outstanding — 16 buildable now · 1 waiting on the o
   - `[!] LEGAL-SG-001/T7` — The cross-border transfer assessment, now that the hosting and the mail carrier are both settled  · _pending-decision_ · **Blocked by:** pending-decision: OPS-DEC-03 ([docs/decisions-log.md#OPS-DEC-03](decisions-log.md#OPS-DEC-03)) — the assessment is about whether personal data leaves…
 
 - **MAIL-001** · Investor mail — 8/8 closed
-- **POST-001** · Update authoring — 4/6 closed · depth 7
-  - `[ ] POST-001/T5` — A soft length marker that offers to move the text into the current draft report
-  - `[ ] POST-001/T6` — The tagged product's current progress value is shown beside the composer
-
+- **POST-001** · Update authoring — 6/6 closed
 - **RPT-001** · Investor report authoring — 4/5 closed · depth 7
   - `[ ] RPT-001/T4` — The progress board's current values are shown beside the section that narrates them
 

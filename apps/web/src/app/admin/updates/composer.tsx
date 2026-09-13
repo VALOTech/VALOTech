@@ -33,6 +33,15 @@
  * is a navigation away in the editor, where an update that wants a figure goes
  * and an update that is two sentences never looks (`POST-001` §3).
  *
+ * **Two things are shown beside the writing rather than enforced on it.** The
+ * tagged product's standing (`T6`), so an update saying something moved is
+ * written beside what it moved from and the two cannot quietly disagree. And a
+ * marker at around two hundred words (`T5`), which offers to move the text into
+ * the report being drafted — because an update that got long is usually a report
+ * section written in the wrong surface, and cutting it would be the wrong advice.
+ * Neither blocks anything: the marker can be ignored for ever, and there is no
+ * length this refuses.
+ *
  * English console chrome (`ADMIN-002/T5`).
  */
 
@@ -40,6 +49,9 @@ import { useMemo, useState } from 'react';
 import type { FormEvent, ReactElement } from 'react';
 
 import { MAX_TITLE_LENGTH, titleFromBody } from '../../../content/derive';
+import type { PortfolioStage } from '../../../db/types';
+import type { Standing } from '../../../portfolio/board';
+import { standingOf } from '../../../portfolio/board';
 import { blocksFromText } from '../../../content/paste';
 import {
   CONTENT_PRODUCT_TAGS,
@@ -78,10 +90,54 @@ const PRODUCT_LABEL: Readonly<Record<ContentProductTag, string>> = {
   company: 'The company',
 };
 
+/**
+ * Where an update stops being an update (`POST-001` §3).
+ *
+ * Around two hundred words. Nothing is enforced at it — the marker appears and the
+ * author may ignore it for ever — because a limit on an update is a limit on what
+ * somebody had to say, and the interesting case is not that they wrote too much
+ * but that they wrote it in the wrong place.
+ */
+const LONG_UPDATE_WORDS = 200;
+
+/**
+ * How the four stage words read to an admin. The vocabulary is closed
+ * (`INV-003` §3), and this is keyed by it rather than by `string` so a fifth
+ * stage stops the build here instead of reaching a screen as a raw token.
+ */
+const STAGE_LABEL: Readonly<Record<PortfolioStage, string>> = {
+  building: 'Building',
+  'in private use': 'In private use',
+  'in market': 'In market',
+  paused: 'Paused',
+};
+
+const CHANGED = new Intl.DateTimeFormat('en', {
+  day: 'numeric',
+  month: 'short',
+  year: 'numeric',
+  timeZone: 'UTC',
+});
+
 const FAILED = 'Something went wrong. Try again in a moment.';
 const LAPSED = 'Your session has ended. Open the page again to sign in.';
 
-export function Composer(): ReactElement {
+/** The report being written, as much of it as the composer needs to offer a move. */
+export interface DraftReport {
+  readonly id: string;
+  readonly title: string;
+  readonly period: string | null;
+}
+
+export function Composer({
+  board,
+  draft,
+}: {
+  /** All six standings, read once on the server (`POST-001/T6`). */
+  readonly board: readonly Standing[];
+  /** The report an author is drafting, or null when none is (`POST-001/T5`). */
+  readonly draft: DraftReport | null;
+}): ReactElement {
   const [kind, setKind] = useState<ContentUpdateKind | null>(null);
   const [product, setProduct] = useState<string>('');
   const [body, setBody] = useState('');
@@ -93,7 +149,61 @@ export function Composer(): ReactElement {
   // have written one, is kept and never overwritten.
   const derived = useMemo(() => titleFromBody(body), [body]);
   const title = ownTitle ?? derived;
+
+  // Counted rather than measured in characters: two hundred words is the unit
+  // `POST-001` §3 states, and it is the one a person writing prose can feel.
+  const words = useMemo(() => body.trim().split(/\s+/).filter((word) => word !== '').length, [body]);
+  const long = words >= LONG_UPDATE_WORDS;
+
+  // Null for "not said" and for the company, which is not a board row: the board
+  // is where products stand, and the company is not a product.
+  const tagged = product === '' ? null : standingOf(board, product);
   const ready = kind !== null && body.trim() !== '' && title.trim() !== '' && !busy;
+
+  /**
+   * Move what is written into the report being drafted (`POST-001/T5`).
+   *
+   * The destination is not sent: the route asks `draftReport` itself, so this
+   * surface cannot append to anything but the one report an author is writing.
+   * Nothing is cleared on the way out — if the move is refused the words are
+   * still here, which is the whole reason the refusal is worth showing.
+   */
+  async function moveToReport(): Promise<void> {
+    setBusy(true);
+    setRefused(null);
+
+    try {
+      const response = await fetch('/admin/updates/to-report', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ blocks: blocksFromText(body) }),
+      });
+
+      if (response.redirected) {
+        setRefused(LAPSED);
+        setBusy(false);
+        return;
+      }
+
+      const answer = (await response.json().catch(() => null)) as
+        | { reportId?: string; detail?: string }
+        | null;
+
+      if (response.status === 200 && typeof answer?.reportId === 'string') {
+        // To the report's editor, where the moved text now sits at the end and
+        // the author can put it where it belongs. `busy` stays set for the
+        // reason it stays set after filing: the page is leaving.
+        window.location.assign(`/admin/content/${answer.reportId}/edit`);
+        return;
+      }
+
+      setRefused(typeof answer?.detail === 'string' ? answer.detail : FAILED);
+      setBusy(false);
+    } catch {
+      setRefused(FAILED);
+      setBusy(false);
+    }
+  }
 
   async function file(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
@@ -226,6 +336,61 @@ export function Composer(): ReactElement {
           <small className={styles.hint}>Optional. It is how an investor follows one product.</small>
         </label>
       </div>
+
+      {/* Where the tagged product stands, so an update saying something moved is
+          written beside what it moved from (`POST-001/T6`). The stage is a word
+          and not a colour alone (`A11Y-R03`), and a product nobody has written a
+          row for says so rather than showing an assumption as a statement. */}
+      {tagged === null ? null : (
+        <aside className={styles.standing} aria-label="Where this product stands">
+          <p className={styles.standingStage}>
+            <strong>{STAGE_LABEL[tagged.stage]}</strong>
+            {tagged.set && tagged.changedAt !== null ? (
+              <span className={styles.hint}> · last changed {CHANGED.format(tagged.changedAt)}</span>
+            ) : (
+              <span className={styles.hint}> · nobody has set this yet</span>
+            )}
+          </p>
+          {tagged.headline === null ? null : <p className={styles.hint}>{tagged.headline}</p>}
+        </aside>
+      )}
+
+      {/* **The live region is always in the DOM and holds no counter.** A region
+          inserted together with its first content is announced unreliably, and
+          one containing {words} would announce again on every keystroke past the
+          threshold — a metronome for exactly the reader who cannot skim past it.
+          So the announcement is one sentence that changes once, and the count
+          below is visual. */}
+      <p className={styles.announce} role="status">
+        {long ? 'This update is long enough to be a report section.' : ''}
+      </p>
+
+      {/* Not a limit and not an error: nothing is enforced at two hundred words.
+          It is offered because the honest answer to "this got long" is usually
+          that it belongs in the report, not that it should be cut. */}
+      {!long ? null : (
+        <aside className={styles.marker}>
+          <p>
+            <strong>{words} words.</strong> An update this long is usually a report section.
+          </p>
+          {draft === null ? (
+            <p className={styles.hint}>
+              No report is being drafted at the moment, so there is nowhere to move it. Filing it as an
+              update is fine.
+            </p>
+          ) : (
+            <>
+              <button type="button" className={styles.move} disabled={busy} onClick={() => void moveToReport()}>
+                Move it into the {draft.period ?? 'current'} report
+              </button>
+              <small className={styles.hint}>
+                It goes to the end of {draft.title}, still a draft, where you can put it where it
+                belongs. Any translations of that draft are dropped, because its words change.
+              </small>
+            </>
+          )}
+        </aside>
+      )}
 
       <div className={styles.actions}>
         {/* Inert rather than refusing, and it says which thing is missing: a

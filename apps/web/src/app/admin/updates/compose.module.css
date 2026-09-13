@@ -169,3 +169,79 @@
   font-size: 0.9rem;
   line-height: 1.4;
 }
+
+/* Where the tagged product stands, beside the writing rather than above it
+   (POST-001/T6). Quiet on purpose: it is context for what is being written, not
+   a thing to act on, so it reads as a note and never competes with the body. */
+.standing {
+  margin: 0;
+  padding: 0.6rem 0.8rem;
+  border-left: 3px solid var(--compose-line);
+  background: #fafafb;
+}
+
+.standing p {
+  margin: 0;
+}
+
+.standingStage {
+  font-size: 0.9375rem;
+}
+
+/* The length marker (POST-001/T5). It announces itself when it appears, so it is
+   given room; it is not a warning and carries no alarm colour, because nothing
+   here is wrong -- the text is simply in the wrong surface. */
+.marker {
+  margin: 0;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--compose-line);
+  border-radius: 8px;
+  background: #fafafb;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: flex-start;
+}
+
+.marker p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Secondary to the file control: moving is the alternative, not the main act,
+   so it is outlined where "File it" is filled. */
+.move {
+  padding: 0.45rem 0.9rem;
+  font: inherit;
+  font-weight: 600;
+  color: var(--compose-accent);
+  background: #ffffff;
+  border: 1px solid var(--compose-accent);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.move:hover:not(:disabled) {
+  background: #eef1fb;
+}
+
+.move:focus-visible {
+  outline: 2px solid var(--compose-ink);
+  outline-offset: 2px;
+}
+
+.move:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* The live region the length marker announces through. Always present, so the
+   one announcement it exists for is made from a region assistive tech was
+   already watching; empty and unpainted until there is something to say. */
+.announce {
+  margin: 0;
+}
+
+.announce:empty {
+  display: none;
+}

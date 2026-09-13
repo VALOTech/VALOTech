@@ -91,7 +91,16 @@ word carries it for everyone (`A11Y-R02`).
 **`INV-001`** places the board second on the landing surface. **`SEC-002`**
 records every change and is the board's history. **`RPT-001`** shows the current
 values beside the report section that narrates them, so a report and the board
-cannot quietly disagree. **`POST-001`** offers the prefilled update.
+cannot quietly disagree. **`POST-001`** offers the prefilled update, and its
+composer shows the tagged product's standing while an update about it is being
+written (`POST-001/T6`) — the same reason as the report's, one surface earlier.
+
+Neither of those two appears in `depended_by` above, and the omission is
+deliberate rather than an oversight: this design depends on `INV-001`, which
+depends on `POST-002` and `RPT-002`, which depend on `POST-001` and `RPT-001` —
+so declaring either edge would close a cycle, which `§3.4` forbids. They read
+the board; they are not built on it. This paragraph is the record, because an
+operator asking what a stale board affects reads `§4` and not a graph.
 
 ## 5. Cross-cutting compliance
 

@@ -96,6 +96,15 @@ product stands" section narrates — the two should agree, and the authoring
 surface shows the board's current values beside that section so a discrepancy is
 visible while writing rather than after publishing.
 
+One consumer sits outside the report surfaces and is named here because nobody
+editing `apps/web/src/content/reports.ts` would otherwise find it: **`POST-001`**'s
+composer reads `draftReport` and appends to the draft it names, when an update
+grows long enough to be a report section (`POST-001/T5`). It is not in
+`depended_by` above — `depends_on` computes build order and this design shipped
+first, so the edge would state a falsehood and, measured, pushes three designs
+past the last wave band. The relationship is real and runtime; the graph is
+about construction.
+
 ## 5. Cross-cutting compliance
 
 - **`CMS-R01`** — an edit after publication is a new revision.

@@ -7,7 +7,7 @@ depends_on: [CMS-002, CMS-003]
 depended_by: [POST-002]
 layers_touched: [data, domain, service, api, frontend, ui]
 cross_cutting_rules: [CMS-R01, CMS-R04, SEC-R04, I18N-R01, A11Y-R02]
-status: in-progress
+status: implemented
 ---
 
 # `POST-001` — Update authoring
@@ -86,6 +86,20 @@ is probably a report section, with a control that moves it into the current draf
 report — because the honest answer to "this got long" is usually not "make it
 shorter".
 
+    POST /admin/updates/to-report    { blocks }
+
+The request carries the words and **no destination**. `RPT-001`'s own read picks
+the report — the greatest period holding an unpublished revision — because a
+route that took an item id would let an admin append text to any item in the
+room through a surface whose purpose is one. It appends and never replaces, it
+publishes nothing, and it answers `409` when no report is being drafted, which
+is an ordinary state the composer says plainly rather than a failure.
+
+Appending changes the report's words, so `CMS-005` drops that draft's
+translations — the same rule a save obeys. The count comes back and both the
+control and the answer say it, because the person who reviewed those locales is
+rarely the person moving the text.
+
 ### What publishing does not do
 
 It does not mail anybody (`CMS-004`). An update that notifies on publish is an
@@ -127,6 +141,23 @@ product so an update saying a number moved is written beside the number.
   refuses without one. Disabling the body until a kind is picked would honour
   the second sentence and break the first, and the first is the one that
   decides whether anybody writes anything.
+- **Two features are read here and neither is a `depends_on`, for two different
+  reasons.** `depends_on` computes build order, and this was built before either
+  mattered: `T1` to `T4` shipped with neither edge.
+  
+  `INV-003` cannot be declared at all. The composer shows the tagged product's
+  standing (`T6`), which is that design's state, but `INV-003` depends on
+  `INV-001`, which depends on `POST-002`, which depends on this — so the edge
+  would close a cycle, and `§3.4` forbids one outside a declared bootstrap
+  cluster.
+  
+  `RPT-001` could be declared and should not be. `T5` moves a long update into
+  the report being drafted, which uses that design's module, but it is a thing
+  one surface does to another at runtime rather than an order they had to be
+  built in — and declaring it moves three designs into a wave band the policy
+  does not define, which is the graph saying plainly that the claim is wrong.
+  Both relationships are written in prose, here and in `INV-003` `§4`, where an
+  operator asking what a change reaches will actually look.
 - **The address is derived silently, and is the one thing here a reader keeps.**
   An author never sees it before it exists, which is the cost of not asking; the
   answer shows it, and the item page is where it can be reconsidered. A title

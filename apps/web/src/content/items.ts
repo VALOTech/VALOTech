@@ -254,6 +254,118 @@ export async function saveDraft(
 
 
 /**
+ * Raised when an item's stored draft cannot be read back.
+ *
+ * Distinct from `BlockValidationError` because the two name different documents
+ * and ask different people to act. That one means the blocks a caller just
+ * handed over are wrong, and the caller can fix them. This one means the
+ * document already in the database no longer satisfies the validator — a rule
+ * tightened since it was written — and the person holding the fragment can do
+ * nothing about it, because they cannot see the document and may not own it.
+ * Answering them `blocks[7].marks[0]: ...` would point at a block they have not
+ * got.
+ */
+export class UnreadableDraftError extends Error {
+  constructor() {
+    super('that item\u2019s draft cannot be read back; open it in the editor');
+    this.name = 'UnreadableDraftError';
+  }
+}
+
+/**
+ * Add blocks to the end of an item's open draft, keeping what is already there
+ * (`POST-001/T5`).
+ *
+ * `saveDraft` replaces a draft with what an editor is holding, because an editor
+ * *is* holding the whole document. This one is handed a fragment by a surface that
+ * has never seen the rest — the update composer, moving text that got long
+ * enough to be a report section — so replacing would delete a report to file a
+ * paragraph.
+ *
+ * The read and the write are one transaction under the item's own lock, the same
+ * lock `saveDraft` takes, which is what makes "keeping what is already there"
+ * true under concurrency: two appends racing both land, in some order, and
+ * neither overwrites the other. A read-then-write outside a lock would let the
+ * second read the pre-append document and write back a version missing the first.
+ *
+ * Null when the item has no open draft. That is not a failure and not a place to
+ * create one: an item whose latest revision is published is an item nobody is
+ * writing, and quietly opening a draft on it would put an author's paragraph into
+ * a document somebody had finished.
+ *
+ * The combined document is validated whole rather than the fragment alone, so a
+ * block vocabulary that has moved on since the draft was written is caught here
+ * rather than on the next save — and the two validations raise different errors
+ * on purpose, because the fragment is the caller's and the stored draft is not.
+ *
+ * Media refs are brought into step exactly as a save brings them. **Translations
+ * are dropped, and a caller has to say so.** `CMS-005` will not carry a
+ * translation from one text to the next, and appending changes the text, so the
+ * drop is right — but `saveDraft` justifies its own silence by the author being
+ * in the editor where the grid shows the loss, and that reasoning does not reach
+ * here: this is reached by a second person, from a third surface, acting on a
+ * draft they may not own. The count comes back so the surface can tell them.
+ *
+ * `author_id` is deliberately **not** written. A save is handed the whole
+ * document by the person who now owns those words; this is handed a fragment by
+ * somebody who has never seen the rest, and taking authorship of the draft would
+ * move a number `grants.ts:erasureContentCounts` reports to an admin who is
+ * about to delete somebody's data.
+ */
+/** What an append did: the revision it wrote, and the translations it cost. */
+export interface Appended {
+  readonly revision: ContentRevision;
+  /** Reviewed or seeded locale rows the change discarded (`CMS-005` section 3). */
+  readonly translationsDropped: number;
+}
+
+export async function appendToDraft(itemId: string, blocks: unknown): Promise<Appended | null> {
+  const added = validateBlocks(blocks);
+
+  return getDb()
+    .transaction()
+    .execute(async (trx) => {
+      await trx.selectFrom('content_items').select('id').where('id', '=', itemId).forUpdate().execute();
+
+      const open = await trx
+        .selectFrom('content_revisions')
+        .select(['id', 'blocks'])
+        .where('item_id', '=', itemId)
+        .where('published_at', 'is', null)
+        .orderBy('created_at', 'desc')
+        .executeTakeFirst();
+
+      if (open === undefined) {
+        return null;
+      }
+
+      let held;
+      try {
+        held = validateBlocks(open.blocks);
+      } catch {
+        throw new UnreadableDraftError();
+      }
+
+      const combined = validateBlocksToJson([...held, ...added]);
+      const revision = await trx
+        .updateTable('content_revisions')
+        .set({ blocks: combined })
+        .where('id', '=', open.id)
+        .returningAll()
+        .executeTakeFirstOrThrow();
+
+      await syncMediaRefs(trx, itemId);
+
+      const dropped = await trx
+        .deleteFrom('content_locales')
+        .where('revision_id', '=', revision.id)
+        .executeTakeFirst();
+
+      return { revision, translationsDropped: Number(dropped.numDeletedRows) };
+    });
+}
+
+/**
  * Drop the revision's translations, because the text under them just changed
  * (`CMS-005` section 3).
  *

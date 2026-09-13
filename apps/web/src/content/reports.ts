@@ -19,6 +19,12 @@
  * (`RPT-002/T6`) — the one piece of behavioural data the archive needs to answer
  * "have I read this", deleted with the account (`DATA-002`).
  *
+ * `draftReport` is the other staff read: the report of the greatest period with
+ * an unpublished revision, which is what an author means by "the report I am
+ * writing". It composes no audience predicate where `currentReport` does,
+ * because a draft reaches no reader at all and asking who may see one is a
+ * question with no answer (`POST-001/T5`).
+ *
  * `reportWithdrawal` is the exception and is a staff read: it answers what
  * withdrawing a report would do to the archive and to what the room presents as
  * current (`RPT-002/T5`), and the question has no reader in it — an admin is
@@ -94,6 +100,48 @@ export async function currentReport(reader: Actor | null): Promise<ContentItem |
     .where('content_items.type', '=', 'report')
     .where('content_items.current_revision_id', 'is not', null)
     .where(visibleTo(reader))
+    .orderBy('content_items.period', 'desc')
+    .limit(1)
+    .executeTakeFirst();
+
+  return report ?? null;
+}
+
+/**
+ * The report an author is currently drafting: the one of the greatest period that
+ * has an unpublished revision open (`POST-001/T5`).
+ *
+ * A **staff** read, like `reportWithdrawal` and unlike `currentReport`, and the
+ * difference is the question rather than the caller. `currentReport` asks what a
+ * reader is shown and therefore composes `visibleTo`; this asks what is being
+ * written, which is not a thing any reader is shown at all — a draft reaches
+ * nobody until it is published (`CMS-004`). Composing an audience predicate here
+ * would be asking who may read the unpublished, which is a question with no
+ * answer.
+ *
+ * Null when no report has an open draft, and that is an ordinary state rather
+ * than an error: between publishing one report and starting the next there is
+ * nothing being drafted. The caller offers no move then and says so, because a
+ * control that appears and does nothing is worse than one that is honestly
+ * absent.
+ *
+ * By period rather than by when the draft was touched, for `currentReport`'s
+ * reason: the period is what a person means by "the report I am writing", and a
+ * late report drafted after a newer one is still the older period's.
+ */
+export async function draftReport(): Promise<ContentItem | null> {
+  const report = await getDb()
+    .selectFrom('content_items')
+    .selectAll('content_items')
+    .where('content_items.type', '=', 'report')
+    .where(({ exists, selectFrom }) =>
+      exists(
+        selectFrom('content_revisions')
+          .select('content_revisions.id')
+          .whereRef('content_revisions.item_id', '=', 'content_items.id')
+          .where('content_revisions.published_at', 'is', null),
+      ),
+    )
     .orderBy('content_items.period', 'desc')
     .limit(1)
     .executeTakeFirst();
