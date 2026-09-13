@@ -127,7 +127,7 @@ _3/57 closed (5%) · 54 outstanding — 54 buildable now · 0 waiting on the own
   - `[ ] DECK-004/T6` — Bulk grant with the names shown before it commits, and no bulk revoke
 
 - **INV-001** · Investor room shell — 0/5 closed · depth 9
-  - `[ ] INV-001/T1` — The landing surface: what is new, where things stand, the current report, your decks
+  - `[~] INV-001/T1` — The landing surface: what is new, where things stand, the current report, your decks  · **Note:** **the unread count is built and proven; the page is not.** apps/web/src/content/unread.ts:unreadUpdateCount answers the published updates a reader ma…
   - `[ ] INV-001/T2` — Empty and error states are different renderings, each saying which it is
   - `[ ] INV-001/T3` — Flat navigation over four destinations, with the current one marked
   - `[ ] INV-001/T4` — The room's chrome is the gateway's, with no scene
