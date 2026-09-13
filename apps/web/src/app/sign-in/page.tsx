@@ -4,7 +4,7 @@ import type { ReactElement } from 'react';
 import { getTranslations } from 'next-intl/server';
 
 import { SignInForm } from './sign-in-form';
-import styles from './sign-in.module.css';
+import styles from '../auth-card.module.css';
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('signIn');
@@ -20,6 +20,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function SignInPage(): Promise<ReactElement> {
   const t = await getTranslations('signIn');
   const privacy = await getTranslations('privacy');
+  const forgot = await getTranslations('forgot');
 
   return (
     <main className={styles.main}>
@@ -34,6 +35,13 @@ export default async function SignInPage(): Promise<ReactElement> {
           accept an invitation reads it before they have an account, so a notice
           reachable only from inside the room is one they cannot reach
           (`LEGAL-SG-001/T2`). */}
+      <p className={styles.aside}>
+        {/* The way to a reset, from the one page somebody reaches when their
+            password does not work. A reset page nothing links to is a page only
+            an admin knows about, which makes self-service reset
+            (`AUTH-DEC-05`) self-service in name (`SEC-001/T4`). */}
+        <a href="/forgot">{forgot('title')}</a>
+      </p>
       <p className={styles.aside}>
         <a href="/privacy">{privacy('link')}</a>
       </p>

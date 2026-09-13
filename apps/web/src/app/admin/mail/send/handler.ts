@@ -41,6 +41,14 @@
  * address in a response body is an address in a browser cache (`DATA-R02`). It
  * says **accepted**, because a `250` means the company's own mail server took the
  * message and nothing after that is visible to this system.
+ *
+ * **The same route retries the ones that failed** (`MAIL-001/T6`), because every
+ * guard above is a guard a retry needs too: the same admin gate, the same
+ * availability answer, the same re-resolved audience and the same typed count. A
+ * request naming `retryOf` is a retry and names `mail_log` rows rather than
+ * accounts, which is what lets `retry_of` make a claimed failure unrepeatable
+ * ([`MAIL-DEC-02`](../../../../../docs/decisions-log.md)). A second route would
+ * have been a second place to forget one of the four.
  */
 
 import { requireAdmin } from '../../../../auth/gate';
@@ -50,8 +58,9 @@ import {
   type AvailableMail,
   type MailAvailability,
 } from '../../../../mail/availability';
-import { compose } from '../../../../mail/mailer';
+import { compose, type ComposedMessage, type Mailer } from '../../../../mail/mailer';
 import { resolveRecipients } from '../../../../mail/recipients';
+import { resend, resolveRetries, type RetryResult } from '../../../../mail/retry';
 import { send } from '../../../../mail/send';
 import { SmtpUrlError, openSmtpMailer, type MailerSession } from '../../../../mail/smtp';
 
@@ -90,13 +99,27 @@ function invalid(field: string): Response {
   return json(400, { error: 'invalid_request', field });
 }
 
-/** The request as it must arrive; anything else is refused by field. */
-interface SendRequest {
-  readonly recipients: readonly string[];
+/**
+ * The request as it must arrive; anything else is refused by field.
+ *
+ * Two shapes, told apart by which list they carry: `recipients` names accounts
+ * for a first send, `retryOf` names the `mail_log` rows a retry supersedes. The
+ * subject, the body and the typed count are common because the discipline is
+ * common — a retry is a send, and the only question it answers differently is
+ * who is left to reach.
+ */
+type SendRequest =
+  | { readonly kind: 'send'; readonly recipients: readonly string[]; readonly message: MessageFields }
+  | { readonly kind: 'retry'; readonly retryOf: readonly string[]; readonly message: MessageFields };
+
+interface MessageFields {
   readonly subject: string;
   readonly body: string;
   readonly confirmCount: number;
 }
+
+/** A `bigserial` id as the wire carries it: decimal digits, and nothing else. */
+const ROW_ID = /^[1-9][0-9]{0,18}$/;
 
 /**
  * Read the request, or the refusal naming the field that is wrong.
@@ -111,22 +134,13 @@ function readRequest(body: unknown): SendRequest | Response {
     return json(400, { error: 'invalid_request' });
   }
 
-  const { recipients, subject, body: text, confirmCount } = body as {
+  const { recipients, retryOf, subject, body: text, confirmCount } = body as {
     recipients?: unknown;
+    retryOf?: unknown;
     subject?: unknown;
     body?: unknown;
     confirmCount?: unknown;
   };
-
-  if (!Array.isArray(recipients) || recipients.length === 0) {
-    return invalid('recipients');
-  }
-  if (!recipients.every((id): id is string => typeof id === 'string' && UUID.test(id))) {
-    return invalid('recipients');
-  }
-  if (new Set(recipients).size !== recipients.length) {
-    return invalid('recipients');
-  }
 
   if (typeof subject !== 'string' || subject.trim() === '' || subject.length > MAX_SUBJECT) {
     return invalid('subject');
@@ -138,7 +152,44 @@ function readRequest(body: unknown): SendRequest | Response {
     return invalid('confirmCount');
   }
 
-  return { recipients, subject: subject.trim(), body: text, confirmCount };
+  const message: MessageFields = { subject: subject.trim(), body: text, confirmCount };
+
+  // A request may name one list or the other and never both: a body carrying
+  // each would be a caller that has not decided which act it is asking for, and
+  // guessing on its behalf is how a retry becomes a send to everybody.
+  if (retryOf !== undefined) {
+    if (recipients !== undefined) {
+      return invalid('retryOf');
+    }
+    const ids = readIdList(retryOf, ROW_ID);
+
+    return ids === null ? invalid('retryOf') : { kind: 'retry', retryOf: ids, message };
+  }
+
+  const ids = readIdList(recipients, UUID);
+
+  return ids === null ? invalid('recipients') : { kind: 'send', recipients: ids, message };
+}
+
+/**
+ * A non-empty list of distinct ids of the given shape, or null.
+ *
+ * A repeated id is not a harmless duplicate on either list. On a send the resolve
+ * collapses it, so a selection containing one would reach fewer people than the
+ * browser listed and the admin would be typing a count for a list that is not the
+ * one they ticked. On a retry it would ask for one failure to be superseded
+ * twice, which the database refuses anyway — but refusing it here is what keeps
+ * the typed count honest, since the second copy could never have been sent.
+ */
+function readIdList(value: unknown, shape: RegExp): readonly string[] | null {
+  if (!Array.isArray(value) || value.length === 0) {
+    return null;
+  }
+  if (!value.every((id): id is string => typeof id === 'string' && shape.test(id))) {
+    return null;
+  }
+
+  return new Set(value).size === value.length ? value : null;
 }
 
 /**
@@ -181,34 +232,26 @@ export async function handleSend(
     return wanted;
   }
 
-  // Step one of `MAIL-001` §3: the audience as it stands now, not as it stood
-  // when the screen was drawn. An id that resolves to neither a recipient nor an
-  // exclusion belongs to an account that has been erased since — the same class
-  // of change as a suspension, and refused the same way.
-  const resolved = await resolveRecipients(wanted.recipients);
-  const known = new Set([
-    ...resolved.recipients.map((recipient) => recipient.id),
-    ...resolved.excluded.map((account) => account.id),
-  ]);
-  const missing = wanted.recipients.filter((id) => !known.has(id));
+  const message = compose(wanted.message.subject, wanted.message.body);
 
-  if (resolved.excluded.length > 0 || missing.length > 0) {
-    return json(409, {
-      error: 'audience_changed',
-      excluded: resolved.excluded.map((account) => ({ id: account.id, reason: account.reason })),
-      missing,
-    });
+  // Step one of `MAIL-001` §3: the audience as it stands now, not as it stood
+  // when the screen was drawn.
+  const plan =
+    wanted.kind === 'send'
+      ? await planSend(wanted.recipients, actor.id)
+      : await planRetry(wanted.retryOf, message.subject, actor.id);
+
+  if (plan instanceof Response) {
+    return plan;
   }
 
   // Step two: the count as re-resolved, reproduced by hand. Compared against what
   // the audience is now, never against the length of the list the browser sent —
   // a request could carry both, and then the check would be the browser agreeing
   // with itself.
-  if (wanted.confirmCount !== resolved.recipients.length) {
-    return json(409, { error: 'count_mismatch', count: resolved.recipients.length });
+  if (wanted.message.confirmCount !== plan.count) {
+    return json(409, { error: 'count_mismatch', count: plan.count });
   }
-
-  const message = compose(wanted.subject, wanted.body);
 
   // The connection is built before the first row is written and closed however
   // the send ends, so a misconfigured `SMTP_URL` refuses the request instead of
@@ -224,20 +267,102 @@ export async function handleSend(
   }
 
   try {
-    const outcome = await send(resolved.recipients, message, session.mailer, actor.id);
+    const outcome = await plan.run(message, session.mailer);
     const accepted: string[] = [];
-    const failed: { accountId: string; error: string }[] = [];
+    const failed: { accountId: string; logId: string; error: string }[] = [];
 
     for (const result of outcome.results) {
       if (result.state === 'accepted') {
         accepted.push(result.accountId);
       } else {
-        failed.push({ accountId: result.accountId, error: result.error });
+        // The row id travels back with the refusal, because it is what a retry
+        // names (`MAIL-001/T6`). An account id would not do: a person can fail
+        // twice under two different sends, and a retry has to say which of the
+        // two it supersedes.
+        failed.push({ accountId: result.accountId, logId: result.logId, error: result.error });
       }
     }
 
-    return json(200, { accepted, failed });
+    // `alreadyRetried` is named rather than folded into `failed`: nothing was
+    // attempted for these, so calling them failures would say a mail server
+    // refused a message that was never handed to one.
+    return json(200, { accepted, failed, alreadyRetried: outcome.unclaimed });
   } finally {
     session.close();
   }
+}
+
+/**
+ * An audience that passed its checks: how many it is, and how to send to it.
+ *
+ * `run` answers with the retry shape for both acts, because a first send simply
+ * has nothing to put in `unclaimed` -- `queueAndRecord` inserts unconditionally,
+ * so it always reaches everybody it resolved. One shape means the answer below
+ * is assembled once instead of twice.
+ */
+interface Plan {
+  readonly count: number;
+  readonly run: (message: ComposedMessage, mailer: Mailer) => Promise<RetryResult>;
+}
+
+/**
+ * A first send's audience. An id that resolves to neither a recipient nor an
+ * exclusion belongs to an account erased since the screen was drawn — the same
+ * class of change as a suspension, and refused the same way.
+ */
+async function planSend(recipients: readonly string[], actorId: string): Promise<Plan | Response> {
+  const resolved = await resolveRecipients(recipients);
+  const known = new Set([
+    ...resolved.recipients.map((recipient) => recipient.id),
+    ...resolved.excluded.map((account) => account.id),
+  ]);
+  const missing = recipients.filter((id) => !known.has(id));
+
+  if (resolved.excluded.length > 0 || missing.length > 0) {
+    return json(409, {
+      error: 'audience_changed',
+      excluded: resolved.excluded.map((account) => ({ id: account.id, reason: account.reason })),
+      missing,
+    });
+  }
+
+  return {
+    count: resolved.recipients.length,
+    run: async (message, mailer) => ({
+      ...(await send(resolved.recipients, message, mailer, actorId)),
+      unclaimed: [],
+    }),
+  };
+}
+
+/**
+ * A retry's audience: the named failures that are still eligible.
+ *
+ * Refused rather than trimmed, for the same reason a send is. A spent id means
+ * somebody already retried that failure — possibly the admin themselves, on a
+ * page they have pressed twice — and a missing one means the id names no failure
+ * of this message at all, which a changed subject produces. Sending to what is
+ * left would be sending to a list the admin has not seen, and the typed count
+ * would be a count of something else.
+ */
+async function planRetry(
+  retryOf: readonly string[],
+  subject: string,
+  actorId: string,
+): Promise<Plan | Response> {
+  const resolved = await resolveRetries(retryOf, subject);
+
+  if (resolved.excluded.length > 0 || resolved.spent.length > 0 || resolved.missing.length > 0) {
+    return json(409, {
+      error: 'audience_changed',
+      excluded: resolved.excluded.map((account) => ({ id: account.id, reason: account.reason })),
+      spent: resolved.spent,
+      missing: resolved.missing,
+    });
+  }
+
+  return {
+    count: resolved.candidates.length,
+    run: (message, mailer) => resend(resolved.candidates, message, mailer, actorId),
+  };
 }

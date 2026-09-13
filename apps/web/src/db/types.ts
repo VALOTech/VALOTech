@@ -21,6 +21,9 @@
  */
 import type { Generated } from 'kysely';
 
+import { LOCALES } from '../i18n/locales';
+import type { Locale } from '../i18n/locales';
+
 /**
  * The values the migrations' CHECK constraints accept, as arrays rather than
  * bare union types, so the constraint and the type can be compared with each
@@ -146,6 +149,10 @@ export interface AccountsTable {
   // The read-tracking objection (`LEGAL-GLOBAL-001/T3`): `Generated` because the
   // database defaults it to `false`, so an insert may omit it.
   read_tracking_objected: Generated<boolean>;
+  // The language this person is written to in (`AUTH-003/T3`). Null means not
+  // known, which is a different statement from `en` and is why the column is
+  // nullable: the composer falls back rather than recording a guess.
+  locale: Locale | null;
   created_at: Generated<Date>;
   updated_at: Generated<Date>;
 }
@@ -270,6 +277,9 @@ export interface MailLogTable {
   state: MailLogState;
   queue_id: string | null;
   error: string | null;
+  // The failed attempt this row supersedes (`MAIL-001/T6`). Null on every
+  // first attempt; a unique index makes a row supersedable exactly once.
+  retry_of: string | null;
 }
 
 export interface UnsubscribesTable {
@@ -370,11 +380,12 @@ export const SCHEMA: Readonly<Record<keyof Database, TableSpec>> = {
       { name: 'state', type: 'text', notNull: true, hasDefault: true, unique: false },
       { name: 'last_sign_in', type: 'timestamptz', notNull: false, hasDefault: false, unique: false },
       { name: 'read_tracking_objected', type: 'boolean', notNull: true, hasDefault: true, unique: false },
+      { name: 'locale', type: 'text', notNull: false, hasDefault: false, unique: false },
       { name: 'created_at', type: 'timestamptz', notNull: true, hasDefault: true, unique: false },
       { name: 'updated_at', type: 'timestamptz', notNull: true, hasDefault: true, unique: false },
     ],
     primaryKey: ['id'],
-    checks: { role: ACCOUNT_ROLES, state: ACCOUNT_STATES },
+    checks: { role: ACCOUNT_ROLES, state: ACCOUNT_STATES, locale: LOCALES },
   },
   sessions: {
     migration: '_auth_store.sql',
@@ -518,6 +529,7 @@ export const SCHEMA: Readonly<Record<keyof Database, TableSpec>> = {
       { name: 'state', type: 'text', notNull: true, hasDefault: false, unique: false },
       { name: 'queue_id', type: 'text', notNull: false, hasDefault: false, unique: false },
       { name: 'error', type: 'text', notNull: false, hasDefault: false, unique: false },
+      { name: 'retry_of', type: 'bigint', notNull: false, hasDefault: false, unique: false },
     ],
     primaryKey: ['id'],
     checks: { kind: MAIL_LOG_KINDS, state: MAIL_LOG_STATES },

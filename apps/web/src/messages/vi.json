@@ -55,5 +55,34 @@
     "rightsWithdrawal": "Rút lại sự đồng ý của bạn, nghĩa là xóa tài khoản, vì dữ liệu của bạn ở đây chỉ để phục vụ việc truy cập.",
     "title": "Cách phòng này xử lý dữ liệu của bạn",
     "link": "Cách chúng tôi xử lý dữ liệu của bạn"
+  },
+  "invitationMail": {
+    "subject": "Lời mời vào phòng nhà đầu tư VALO Tech",
+    "greeting": "Chào {name},",
+    "intro": "{inviter} đã mời bạn vào phòng nhà đầu tư VALO Tech, nơi công ty công bố các báo cáo của mình cho những người đã đầu tư.",
+    "action": "Mở liên kết này để chọn mật khẩu và đăng nhập:",
+    "expiry": "Liên kết chỉ dùng được một lần và sẽ hết hiệu lực sau {days, plural, other {# ngày}}.",
+    "ignore": "Nếu bạn không mong đợi thư này, bạn có thể bỏ qua nó. Không có gì xảy ra cho đến khi liên kết được mở.",
+    "signature": "VALO Tech"
+  },
+  "resetMail": {
+    "subject": "Đặt lại mật khẩu VALO Tech của bạn",
+    "greeting": "Chào {name},",
+    "intro": "Có người đã yêu cầu đặt lại mật khẩu cho địa chỉ này tại phòng nhà đầu tư VALO Tech.",
+    "action": "Nếu đó là bạn, hãy mở liên kết này để chọn mật khẩu mới:",
+    "expiry": "Liên kết chỉ dùng được một lần và sẽ hết hiệu lực sau {hours, plural, other {# giờ}}.",
+    "ignore": "Nếu đó không phải là bạn, mật khẩu của bạn không thay đổi và bạn không cần làm gì cả.",
+    "signature": "VALO Tech"
+  },
+  "forgot": {
+    "title": "Đặt lại mật khẩu của bạn",
+    "intro": "Nhập địa chỉ email của bạn. Nếu có tài khoản dùng địa chỉ đó, một liên kết để chọn mật khẩu mới sẽ được gửi tới đó.",
+    "email": "Địa chỉ email",
+    "submit": "Gửi liên kết đặt lại",
+    "sent": "Nếu có tài khoản dùng địa chỉ đó, một liên kết đang được gửi đi. Liên kết chỉ dùng được một lần và hết hiệu lực sau một giờ.",
+    "tooManyAttempts": "Quá nhiều lần thử. Hãy đợi một lát rồi thử lại.",
+    "unexpected": "Đã có lỗi xảy ra. Hãy thử lại sau giây lát.",
+    "backToSignIn": "Quay lại đăng nhập",
+    "unavailable": "Hiện không thể tự đặt lại mật khẩu. Hãy liên hệ người đã mời bạn vào phòng nhà đầu tư."
   }
 }

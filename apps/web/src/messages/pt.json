@@ -55,5 +55,34 @@
     "rightsWithdrawal": "Retirar o seu consentimento, o que significa apagar a sua conta, porque os seus dados só aqui estão para lhe dar acesso.",
     "title": "Como esta sala trata os seus dados",
     "link": "Como tratamos os seus dados"
+  },
+  "invitationMail": {
+    "subject": "Um convite para a sala de investidores da VALO Tech",
+    "greeting": "Olá {name},",
+    "intro": "{inviter} convidou-o para a sala de investidores da VALO Tech, onde a empresa publica os seus relatórios para quem investiu nela.",
+    "action": "Abra esta ligação para escolher uma palavra-passe e iniciar sessão:",
+    "expiry": "A ligação só pode ser usada uma vez e deixa de funcionar ao fim de {days, plural, one {# dia} other {# dias}}.",
+    "ignore": "Se não estava à espera desta mensagem, pode ignorá-la. Nada acontece até a ligação ser aberta.",
+    "signature": "VALO Tech"
+  },
+  "resetMail": {
+    "subject": "Redefina a sua palavra-passe da VALO Tech",
+    "greeting": "Olá {name},",
+    "intro": "Alguém pediu a redefinição da palavra-passe deste endereço na sala de investidores da VALO Tech.",
+    "action": "Se foi você, abra esta ligação para escolher uma nova palavra-passe:",
+    "expiry": "A ligação só pode ser usada uma vez e deixa de funcionar ao fim de {hours, plural, one {# hora} other {# horas}}.",
+    "ignore": "Se não foi você, a sua palavra-passe não mudou e não tem nada a fazer.",
+    "signature": "VALO Tech"
+  },
+  "forgot": {
+    "title": "Redefina a sua palavra-passe",
+    "intro": "Introduza o seu endereço de e-mail. Se alguma conta o usar, será enviada para lá uma ligação para escolher uma nova palavra-passe.",
+    "email": "Endereço de e-mail",
+    "submit": "Enviar a ligação",
+    "sent": "Se alguma conta usar esse endereço, uma ligação está a caminho. Só pode ser usada uma vez e deixa de funcionar ao fim de uma hora.",
+    "tooManyAttempts": "Demasiadas tentativas. Aguarde um momento e tente novamente.",
+    "unexpected": "Algo correu mal. Tente novamente daqui a pouco.",
+    "backToSignIn": "Voltar ao início de sessão",
+    "unavailable": "De momento não é possível redefinir a sua própria palavra-passe. Contacte quem o convidou para a sala de investidores."
   }
 }

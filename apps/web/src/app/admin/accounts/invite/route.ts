@@ -8,8 +8,14 @@
  * person did it. The act itself is `inviteAccount`'s, where the account, its
  * single-use token and the `account.create` audit row commit as one (`SEC-R04`);
  * this handler validates the request, refuses a caller who is not an admin, and
- * hands the invite link back for the admin to deliver, because nothing mails it
- * yet (`AUTH-003/T3`).
+ * hands back both the invite link and a sentence saying what became of the
+ * message (`AUTH-003/T3`). The link comes back whether or not the message was
+ * accepted: it is the one copy that exists anywhere, and an admin whose invitee
+ * never receives the mail has no other way to reach them.
+ *
+ * The language is chosen here and stored on the account, because the message is
+ * composed now and read later by somebody this system has never seen. Declining
+ * to choose is a real answer and is kept as one.
  *
  * The caller gate, the origin refusal and the `no-store` answer are the account
  * routes' and for their reasons: a route handler inherits no segment layout, so it
@@ -24,6 +30,7 @@ import { requireAdmin } from '../../../../auth/gate';
 import { EmailTakenError, inviteAccount } from '../../../../auth/invitation';
 import { getConfig } from '../../../../config/index';
 import { ACCOUNT_ROLES, type AccountRole } from '../../../../db/types';
+import { isLocale, type Locale } from '../../../../i18n/locales';
 import { withRequestId } from '../../../../ops/request-context';
 
 const JSON_HEADERS: Readonly<Record<string, string>> = {
@@ -44,6 +51,21 @@ function json(status: number, body: string): Response {
 /** Whether a posted value names one of the two roles; anything else is malformed. */
 function isRole(value: unknown): value is AccountRole {
   return typeof value === 'string' && (ACCOUNT_ROLES as readonly string[]).includes(value);
+}
+
+/**
+ * Whether a posted value names a language the room serves, or declines to name
+ * one (`AUTH-003/T3`).
+ *
+ * Three things pass and they mean the same: the field absent, the field empty,
+ * and the field null. A `<select>` with an unchosen option posts the empty
+ * string, an older client posts nothing, and a caller stating it outright posts
+ * null — all three are "the admin did not say", which the column records as null
+ * rather than as English. Anything else must be one of the twenty, because a
+ * locale the room cannot render is a row whose message has nowhere to come from.
+ */
+function isChosenLocale(value: unknown): value is Locale | '' | null | undefined {
+  return value === undefined || value === null || value === '' || (typeof value === 'string' && isLocale(value));
 }
 
 async function handleInvite(request: Request): Promise<Response> {
@@ -68,7 +90,12 @@ async function handleInvite(request: Request): Promise<Response> {
     return json(400, INVALID_REQUEST);
   }
 
-  const { name, email, role } = body as { name?: unknown; email?: unknown; role?: unknown };
+  const { name, email, role, locale } = body as {
+    name?: unknown;
+    email?: unknown;
+    role?: unknown;
+    locale?: unknown;
+  };
   // A name and an address the invitation can reach, and one of the two roles. The
   // address is only shape-checked here, against the same predicate the correction
   // surface applies (`ADMIN-001/T10`) — `inviteAccount` normalises it and the
@@ -78,20 +105,24 @@ async function handleInvite(request: Request): Promise<Response> {
     name.trim() === '' ||
     typeof email !== 'string' ||
     !isAddressShaped(normaliseAddress(email)) ||
-    !isRole(role)
+    !isRole(role) ||
+    !isChosenLocale(locale)
   ) {
     return json(400, INVALID_REQUEST);
   }
 
   try {
-    const invitation = await inviteAccount({ name: name.trim(), email, role }, actor.id);
+    const invitation = await inviteAccount(
+      { name: name.trim(), email, role, locale: typeof locale === 'string' && locale !== '' ? locale : null },
+      actor.id,
+    );
 
     return json(
       200,
       JSON.stringify({
         accountId: invitation.accountId,
         link: invitation.link,
-        deliverByHand: invitation.deliverByHand,
+        delivery: invitation.delivery,
       }),
     );
   } catch (error) {

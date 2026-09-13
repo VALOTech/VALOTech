@@ -39,7 +39,7 @@ import {
   suspendAccount,
 } from '../../../../../admin/accounts';
 import { requireAdmin } from '../../../../../auth/gate';
-import { requestReset, resendInvitation } from '../../../../../auth/invitation';
+import { requestReset, resendInvitation, resetSentence } from '../../../../../auth/invitation';
 import { getConfig } from '../../../../../config/index';
 import { withRequestId } from '../../../../../ops/request-context';
 
@@ -72,7 +72,7 @@ async function perform(
 
       return invitation === null
         ? { outcome: 'unchanged' }
-        : { outcome: 'changed', link: invitation.link, deliverByHand: invitation.deliverByHand };
+        : { outcome: 'changed', link: invitation.link, delivery: invitation.delivery };
     }
     case 'reset-password':
       // By the address the account holds rather than one a caller supplies: the
@@ -81,9 +81,16 @@ async function perform(
       // travels with that account's id, which is what tells `requestReset` this
       // is an admin's request and not the public form's, and the audit is its
       // own to write inside its own transaction.
-      await requestReset(person.email, { actorId, accountId: person.id });
+      // The message is sent here and awaited, unlike the public form
+      // (`SEC-001/T4`), and the difference is the point: an admin is signed in
+      // and already knows this account exists, so there is no timing to leak and
+      // they are owed the outcome on their screen. A reset link is never handed
+      // to them the way an invitation link is, because one sets the password of
+      // an *active* account (`ADMIN-001` §3), so what the mail does is the whole
+      // of what happened.
+      const delivery = await requestReset(person.email, { actorId, accountId: person.id });
 
-      return { outcome: 'requested' };
+      return { outcome: 'requested', delivery: resetSentence(await delivery.send()) };
     case 'suspend':
       return { outcome: (await suspendAccount(person.id, actorId)) ? 'changed' : 'unchanged' };
     case 'reinstate':

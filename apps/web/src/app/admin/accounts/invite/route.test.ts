@@ -172,11 +172,11 @@ describe.skipIf(!HAS_DATABASE)('POST /admin/accounts/invite', () => {
 
       const response = await callPost({ name: '  Ada Lovelace  ', email, role: 'investor' }, { cookie: admin.cookie, origin: ORIGIN });
       expect(response.status).toBe(200);
-      const answer = (await response.json()) as { accountId: string; link: string; deliverByHand: string };
+      const answer = (await response.json()) as { accountId: string; link: string; delivery: string };
 
       const rows = await accountByEmail(email);
       expect(rows).toEqual([{ id: answer.accountId, name: 'Ada Lovelace', role: 'investor', state: 'invited' }]);
-      expect(answer.deliverByHand.length).toBeGreaterThan(0);
+      expect(answer.delivery.length).toBeGreaterThan(0);
 
       // The returned link is a real, single-use invitation to that account.
       const token = answer.link.split('/invite/')[1] ?? '';

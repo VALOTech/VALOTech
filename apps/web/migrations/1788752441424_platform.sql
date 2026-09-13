@@ -119,8 +119,38 @@ CREATE TABLE mail_log (
   kind       text NOT NULL CHECK (kind IN ('transactional', 'bulk')),
   state      text NOT NULL CHECK (state IN ('queued', 'accepted', 'failed')),
   queue_id   text,
-  error      text
+  error      text,
+  -- Which failed attempt this row is a second try at (MAIL-001/T6,
+  -- decisions-log.md#MAIL-DEC-02). A retry must never reach somebody who already
+  -- received the message, and no row here is ever superseded in place: a failed
+  -- attempt stays 'failed' for ever, because that is what happened. So "the
+  -- recipients whose last attempt failed" cannot be read from state alone, and
+  -- this column is the missing half -- a re-send names the row it retries, and a
+  -- failed row that has been named is spent.
+  --
+  -- ON DELETE CASCADE rather than SET NULL: the two rows always belong to the
+  -- same account, so the account's own cascade takes them together anyway, and a
+  -- retry row whose antecedent is gone would say a failure was retried while
+  -- naming no failure.
+  retry_of   bigint REFERENCES mail_log(id) ON DELETE CASCADE
 );
+
+-- The idempotency guarantee, as a schema property rather than a predicate the
+-- retry path is trusted to apply. One attempt may be superseded once, so two
+-- retries of the same failure racing each other cannot both insert: the second
+-- is refused by the database before a second message reaches the port. Without
+-- it the eligibility read and the insert are two statements, and under READ
+-- COMMITTED both callers read "no successor" and both send.
+--
+-- A chain is still allowed, and is the point. A re-send that fails in its turn
+-- is itself a failed row with no successor, so retrying it names *it* and the
+-- recipient can be tried again without any row being superseded twice.
+--
+-- Partial on retry_of IS NOT NULL because the column is null for every first
+-- attempt, and a plain unique index would admit exactly one of those.
+CREATE UNIQUE INDEX mail_log_one_retry_per_attempt
+  ON mail_log (retry_of)
+  WHERE retry_of IS NOT NULL;
 
 -- The log is read one recipient at a time, and the cascade that runs when an
 -- account is erased reaches these rows the same way -- by account_id, which the

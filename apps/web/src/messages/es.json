@@ -55,5 +55,34 @@
     "rightsWithdrawal": "Retirar su consentimiento, lo que supone eliminar su cuenta, porque sus datos solo están aquí para darle acceso.",
     "title": "Cómo esta sala trata sus datos",
     "link": "Cómo tratamos sus datos"
+  },
+  "invitationMail": {
+    "subject": "Una invitación a la sala de inversores de VALO Tech",
+    "greeting": "Hola {name}:",
+    "intro": "{inviter} le ha invitado a la sala de inversores de VALO Tech, donde la empresa publica sus informes para quienes han invertido en ella.",
+    "action": "Abra este enlace para elegir una contraseña e iniciar sesión:",
+    "expiry": "El enlace puede usarse una sola vez y deja de funcionar después de {days, plural, one {# día} other {# días}}.",
+    "ignore": "Si no esperaba este mensaje, puede ignorarlo. No ocurre nada hasta que se abre el enlace.",
+    "signature": "VALO Tech"
+  },
+  "resetMail": {
+    "subject": "Restablezca su contraseña de VALO Tech",
+    "greeting": "Hola {name}:",
+    "intro": "Alguien ha solicitado restablecer la contraseña de esta dirección en la sala de inversores de VALO Tech.",
+    "action": "Si fue usted, abra este enlace para elegir una contraseña nueva:",
+    "expiry": "El enlace puede usarse una sola vez y deja de funcionar después de {hours, plural, one {# hora} other {# horas}}.",
+    "ignore": "Si no fue usted, su contraseña no ha cambiado y no tiene que hacer nada.",
+    "signature": "VALO Tech"
+  },
+  "forgot": {
+    "title": "Restablezca su contraseña",
+    "intro": "Introduzca su dirección de correo electrónico. Si alguna cuenta la usa, allí se enviará un enlace para elegir una contraseña nueva.",
+    "email": "Dirección de correo electrónico",
+    "submit": "Enviar el enlace",
+    "sent": "Si alguna cuenta usa esa dirección, un enlace va de camino. Puede usarse una sola vez y deja de funcionar al cabo de una hora.",
+    "tooManyAttempts": "Demasiados intentos. Espere un momento y vuelva a intentarlo.",
+    "unexpected": "Algo ha salido mal. Inténtelo de nuevo en un momento.",
+    "backToSignIn": "Volver al inicio de sesión",
+    "unavailable": "En este momento no es posible restablecer su propia contraseña. Escriba a la persona que le invitó a la sala."
   }
 }

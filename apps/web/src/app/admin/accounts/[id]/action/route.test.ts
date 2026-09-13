@@ -182,7 +182,7 @@ function callPost(
 interface Answer {
   readonly outcome?: string;
   readonly link?: string;
-  readonly deliverByHand?: string;
+  readonly delivery?: string;
 }
 
 describe.skipIf(!HAS_DATABASE)('POST /admin/accounts/<id>/action', () => {
@@ -421,7 +421,7 @@ describe.skipIf(!HAS_DATABASE)('POST /admin/accounts/<id>/action', () => {
 
       expect(answer.outcome).toBe('changed');
       expect(answer.link).toContain(`${ORIGIN}/invite/`);
-      expect(answer.deliverByHand).toBeTruthy();
+      expect(answer.delivery).toBeTruthy();
       // Asked of the consumption path rather than of the row count, because that is
       // what the person holding a link actually reaches: the link sent before this
       // one is dead, and the one just handed over opens this account.
@@ -483,6 +483,42 @@ describe.skipIf(!HAS_DATABASE)('POST /admin/accounts/<id>/action', () => {
       expect(await auditFor(subject)).toEqual([
         { action: 'account.password_reset_request', actor_id: admin.id },
       ]);
+    });
+
+    it('says what became of the message, because mail is the only way a reset reaches anybody', async () => {
+      const subject = await newAccount('active');
+
+      const answer = await answerOf(
+        await callPost(subject, { action: 'reset-password' }, { cookie: admin.cookie }),
+      );
+
+      // The load-bearing assertion, and the one whose absence let a defect ship:
+      // `requestReset` hands back the message still to be sent, and a caller that
+      // awaited the promise and dropped the value would mail nothing while every
+      // other assertion in this file still passed. A sentence here can only exist
+      // if `send()` was called.
+      expect(answer.delivery).toBeDefined();
+      expect(answer.delivery).not.toBe('');
+
+      // This suite runs with no SMTP credential, so the honest sentence is that
+      // nothing was sent -- and it says why a link is not offered instead, which
+      // is the difference between a reset and an invitation.
+      expect(answer.delivery).toContain('SMTP_URL');
+      expect(answer.delivery).toContain('nothing was sent');
+      expect(answer.link).toBeUndefined();
+    });
+
+    it('tells the admin that a non-active account had no reset to issue', async () => {
+      const suspended = await newAccount('suspended');
+
+      const answer = await answerOf(
+        await callPost(suspended, { action: 'reset-password' }, { cookie: admin.cookie }),
+      );
+
+      // Not an oracle: an admin is signed in and the account's state is on the
+      // screen beside the button they pressed. Saying nothing here would leave
+      // them believing a link went out.
+      expect(answer.delivery).toContain('not active');
     });
 
     it('writes nothing for an account that cannot sign in, and says no more than before', async () => {

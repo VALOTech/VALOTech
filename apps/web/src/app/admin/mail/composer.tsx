@@ -53,7 +53,14 @@ export interface ComposerExclusion extends ComposerRecipient {
 /** What the outcome of one hand-off looked like, keyed by account. */
 interface Outcome {
   readonly accepted: readonly string[];
-  readonly failed: readonly { readonly accountId: string; readonly error: string }[];
+  /** Failures another retry claimed first: nothing was attempted for these. */
+  readonly alreadyRetried?: readonly string[];
+  readonly failed: readonly {
+    readonly accountId: string;
+    /** The `mail_log` row this refusal is recorded in — what a retry names. */
+    readonly logId: string;
+    readonly error: string;
+  }[];
 }
 
 const LAPSED = 'Your session has ended. Open the page again to sign in.';
@@ -72,6 +79,7 @@ function refusalText(status: number, body: unknown): string {
     count?: unknown;
     excluded?: unknown;
     missing?: unknown;
+    spent?: unknown;
   };
 
   if (answer.error === 'mail_unavailable') {
@@ -81,7 +89,17 @@ function refusalText(status: number, body: unknown): string {
   if (answer.error === 'audience_changed') {
     const excluded = Array.isArray(answer.excluded) ? answer.excluded.length : 0;
     const missing = Array.isArray(answer.missing) ? answer.missing.length : 0;
-    return `The audience changed while this was open: ${excluded + missing} of the people selected can no longer be reached. Nothing was sent. Reload the page and choose again.`;
+    // `spent` arrives only from a retry, and it is the likeliest refusal on that
+    // surface -- the same failures named twice, usually by pressing the control
+    // twice. Counting only the other two would read `0 of the people`, which is
+    // an admin told the audience changed and that nobody changed.
+    const spent = Array.isArray(answer.spent) ? answer.spent.length : 0;
+
+    if (spent > 0 && excluded + missing === 0) {
+      return `${spent} of those failures had already been retried, so nothing was sent a second time. Reload the page to see where they stand.`;
+    }
+
+    return `The audience changed while this was open: ${excluded + missing + spent} of the people selected can no longer be reached. Nothing was sent. Reload the page and choose again.`;
   }
 
   if (answer.error === 'count_mismatch') {
@@ -111,6 +129,7 @@ export function MailComposer({
   const [busy, setBusy] = useState(false);
   const [refused, setRefused] = useState<string | null>(null);
   const [outcome, setOutcome] = useState<Outcome | null>(null);
+  const [typedRetryCount, setTypedRetryCount] = useState('');
 
   const message = useMemo(() => compose(subject, body), [subject, body]);
   const nameOf = useMemo(
@@ -131,7 +150,7 @@ export function MailComposer({
     );
   }
 
-  async function sendNow(): Promise<void> {
+  async function post(payload: Record<string, unknown>): Promise<void> {
     setBusy(true);
     setRefused(null);
 
@@ -139,7 +158,7 @@ export function MailComposer({
       const response = await fetch('/admin/mail/send', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ recipients: selected, subject, body, confirmCount: Number(typedCount) }),
+        body: JSON.stringify({ ...payload, subject, body }),
       });
 
       if (response.redirected) {
@@ -150,7 +169,12 @@ export function MailComposer({
       const answer: unknown = await response.json().catch(() => null);
 
       if (response.status === 200) {
+        // The latest attempt replaces the previous one rather than merging with
+        // it. Merging would need a rule for what an id accepted in one attempt
+        // and refused in another means, and there is no such rule — each attempt
+        // is its own set of rows and its own answer.
         setOutcome(answer as Outcome);
+        setTypedRetryCount('');
         return;
       }
 
@@ -160,6 +184,20 @@ export function MailComposer({
     } finally {
       setBusy(false);
     }
+  }
+
+  async function sendNow(): Promise<void> {
+    await post({ recipients: selected, confirmCount: Number(typedCount) });
+  }
+
+  /**
+   * Try the refusals again, and nobody else. The ids are the `mail_log` rows the
+   * last attempt refused, so the request names failures rather than people: the
+   * database claims each one before a message leaves and will not let a claimed
+   * failure be claimed twice, which is what makes pressing this twice send once.
+   */
+  async function retryFailed(failed: Outcome['failed']): Promise<void> {
+    await post({ retryOf: failed.map((failure) => failure.logId), confirmCount: Number(typedRetryCount) });
   }
 
   return (
@@ -288,21 +326,52 @@ export function MailComposer({
         ) : (
           <div role="status">
             <p className={styles.done}>
-              Accepted for delivery by the mail server: <strong>{outcome.accepted.length}</strong>. That is
-              what the server answered when it took each message; it is not confirmation that anything
-              arrived.
+              Accepted for delivery by the mail server in this attempt:{' '}
+              <strong>{outcome.accepted.length}</strong>. That is what the server answered when it took
+              each message; it is not confirmation that anything arrived.
             </p>
             {outcome.failed.length === 0 ? null : (
               <>
                 <h3 className={styles.subhead}>Not accepted</h3>
                 <ul className={styles.people}>
                   {outcome.failed.map((failure) => (
-                    <li key={failure.accountId}>
+                    <li key={failure.logId}>
                       {nameOf.get(failure.accountId) ?? failure.accountId} — {failure.error}
                     </li>
                   ))}
                 </ul>
+                <p className={styles.quiet}>
+                  A retry goes to these {outcome.failed.length} and to nobody else. Each refusal is
+                  claimed before anything leaves, so nobody who was already accepted can be reached a
+                  second time — including if this is pressed twice.
+                </p>
+                <label className={styles.field} htmlFor="retry-count">
+                  <span>Type {outcome.failed.length} to retry</span>
+                  <input
+                    id="retry-count"
+                    className={styles.confirm}
+                    type="text"
+                    inputMode="numeric"
+                    value={typedRetryCount}
+                    onChange={(event) => setTypedRetryCount(event.target.value)}
+                    autoComplete="off"
+                  />
+                </label>
+                <button
+                  type="button"
+                  className={styles.primary}
+                  disabled={busy || Number(typedRetryCount) !== outcome.failed.length || typedRetryCount.trim() === ''}
+                  onClick={() => void retryFailed(outcome.failed)}
+                >
+                  Retry the ones that failed
+                </button>
               </>
+            )}
+            {outcome.alreadyRetried === undefined || outcome.alreadyRetried.length === 0 ? null : (
+              <p className={styles.quiet} role="status">
+                {outcome.alreadyRetried.length} of the failures named had already been retried by somebody
+                else, so nothing was attempted for them. They are neither above nor below.
+              </p>
             )}
             <p className={styles.quiet}>Reload the page to write another message.</p>
           </div>

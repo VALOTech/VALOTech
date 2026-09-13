@@ -13,11 +13,12 @@ import { useState } from 'react';
 import type { FormEvent, ReactElement } from 'react';
 
 import { ACCOUNT_ROLES } from '../../../../db/types';
+import { languageName, LOCALES } from '../../../../i18n/locales';
 
 import styles from './invite.module.css';
 
 type Result =
-  | { readonly kind: 'link'; readonly name: string; readonly link: string; readonly deliverByHand: string }
+  | { readonly kind: 'link'; readonly name: string; readonly link: string; readonly delivery: string }
   | { readonly kind: 'taken' }
   | { readonly kind: 'invalid' }
   | { readonly kind: 'ended' }
@@ -27,6 +28,7 @@ export default function InvitePage(): ReactElement {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [role, setRole] = useState<string>('investor');
+  const [locale, setLocale] = useState<string>('');
   const [busy, setBusy] = useState(false);
   const [result, setResult] = useState<Result | null>(null);
 
@@ -39,14 +41,14 @@ export default function InvitePage(): ReactElement {
       const response = await fetch('/admin/accounts/invite', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, role }),
+        body: JSON.stringify({ name, email, role, locale }),
       });
 
       if (response.redirected) {
         setResult({ kind: 'ended' });
       } else if (response.status === 200) {
-        const body = (await response.json()) as { link: string; deliverByHand: string };
-        setResult({ kind: 'link', name: name.trim(), link: body.link, deliverByHand: body.deliverByHand });
+        const body = (await response.json()) as { link: string; delivery: string };
+        setResult({ kind: 'link', name: name.trim(), link: body.link, delivery: body.delivery });
         setName('');
         setEmail('');
         setRole('investor');
@@ -69,7 +71,8 @@ export default function InvitePage(): ReactElement {
       <h1>Invite a person</h1>
       <p>
         An account comes to exist by being invited. No password is set here — the person sets their
-        own from the link below, which you deliver to them.
+        own from the link below. The link is shown to you whether or not the invitation reached their
+        inbox, so you always have a way to deliver it yourself.
       </p>
 
       <form className={styles.form} onSubmit={(event) => void submit(event)}>
@@ -91,6 +94,21 @@ export default function InvitePage(): ReactElement {
             ))}
           </select>
         </label>
+        <label className={styles.field}>
+          <span>Language</span>
+          <select value={locale} onChange={(event) => setLocale(event.target.value)}>
+            {/* Empty, first and selected by default, so not choosing is what
+                happens when nobody thinks about it. A list defaulting to English
+                would record a claim about every invitee an admin never considered. */}
+            <option value="">Not known</option>
+            {LOCALES.map((option) => (
+              <option key={option} value={option}>
+                {languageName(option)}
+              </option>
+            ))}
+          </select>
+          <small className={styles.note}>Their invitation is written in this. English when not known.</small>
+        </label>
         <button type="submit" disabled={busy}>
           Invite
         </button>
@@ -107,7 +125,7 @@ function Outcome({ result }: { readonly result: Result }): ReactElement {
       return (
         <div className={styles.outcome} role="status">
           <p>
-            Invited {result.name}. {result.deliverByHand}
+            Invited {result.name}. {result.delivery}
           </p>
           <code className={styles.link}>{result.link}</code>
         </div>

@@ -8,6 +8,15 @@ depended_by: [ADMIN-001]
 layers_touched: [data, domain, service, api, frontend, ui]
 cross_cutting_rules: [SEC-R03, SEC-R05, DATA-R01, DATA-R02, I18N-R01, A11Y-R01, A11Y-R02]
 status: in-progress
+inert_until:
+  reason: Invitation works end to end — an admin invites, the link is shown to them, and the
+    person sets their own password and lands signed in. **Password reset does not.** The mail
+    that carries a reset link is built and cannot be sent, and unlike an invitation the link is
+    never shown to an admin, because one who held it could set an active account's password and
+    sign in as its owner. So an investor who forgets their password has no way back in today,
+    by either path.
+  unblocks_when: credential — SMTP_URL and MAIL_FROM, at
+    docs/operator-checklist.md#SMTP-MAILBOX
 ---
 
 # `AUTH-003` — Invitation and password reset
@@ -113,12 +122,14 @@ one place those two features can contradict each other.
 
 **`AUTH-001`** owns the password hash and the sign-in that follows consumption.
 **`CRED-001`** decides whether mail can be sent at all. **`ADMIN-001`** is the
-surface an admin invites from and where the on-screen link appears; it deletes
-an account's outstanding invitations when it suspends or deletes the account,
-in the same transaction, so a token issued before cannot outlive that access.
-**`MAIL-DEC-01`** settled the carrier as SMTP; the send path is built against
-the `Mailer` port `MAIL-001/T1` provides, and until that port has an adapter the
-on-screen link `inviteAccount` returns is the whole delivery mechanism.
+surface an admin invites from and where the link appears; it deletes an
+account's outstanding invitations when it suspends or deletes the account, in
+the same transaction, so a token issued before cannot outlive that access.
+**`MAIL-001`** owns the port and the one SMTP adapter behind it, which this
+sends through rather than opening a second transport of its own; the message is
+transactional, so `MAIL-002`'s unsubscribe must never suppress it. The link is
+returned to the admin whatever became of the message, because a mail server that
+refuses it must not also take away the only other way to reach the invitee.
 
 ## 5. Cross-cutting compliance
 
@@ -154,12 +165,18 @@ on-screen link `inviteAccount` returns is the whole delivery mechanism.
   in the schema is [`AUTH-DEC-04`](../../decisions-log.md#AUTH-DEC-04).
 - **Self-service reset, not admin-only.** The public `/forgot` above is the
   design's choice, ratified at [`AUTH-DEC-05`](../../decisions-log.md#AUTH-DEC-05)
-  against an admin-initiated-only alternative. It waits on mail delivery
-  (`AUTH-003/T3` over `MAIL-001/T8`), so until the page ships the reset-request
-  rate limit (`SEC-001/T4`) stays pending; and because the SMTP carrier reports no
+  against an admin-initiated-only alternative. Because the SMTP carrier reports no
   bounce ([`MAIL-DEC-01`](../../decisions-log.md#MAIL-DEC-01)), a reset mail that
   never arrives signals nobody, so the admin resetting from the person page
-  (`ADMIN-001/T2`) is the fallback.
+  (`ADMIN-001/T2`) is the fallback and stays reachable for exactly that.
+- **The reset answer is sent before its message is.** The statements that make
+  the two answers identical cost the same either way; handing a message to a mail
+  server does not, and a request that waited for it would answer slowly for an
+  address an account holds. So `/forgot` answers first and sends afterwards. The
+  cost is that a send failing after the answer has gone cannot be reported to the
+  person who asked, which is the same silence `MAIL-DEC-01` already accepts from a
+  carrier that reports no bounce: the refusal is recorded against the recipient's
+  own `mail_log` row, where `MAIL-002` can show it to an admin.
 
 ## 7. Task list
 

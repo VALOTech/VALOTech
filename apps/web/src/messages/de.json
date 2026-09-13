@@ -55,5 +55,34 @@
     "rightsWithdrawal": "Den Widerruf Ihrer Einwilligung, was die Löschung Ihres Kontos bedeutet, denn Ihre Daten dienen hier allein dem Zugang.",
     "title": "Wie dieser Raum mit Ihren Daten umgeht",
     "link": "Wie wir mit Ihren Daten umgehen"
+  },
+  "invitationMail": {
+    "subject": "Eine Einladung in den Investorenbereich von VALO Tech",
+    "greeting": "Hallo {name},",
+    "intro": "{inviter} hat Sie in den Investorenbereich von VALO Tech eingeladen, wo das Unternehmen seine Berichte für die Menschen veröffentlicht, die in es investiert haben.",
+    "action": "Öffnen Sie diesen Link, um ein Passwort zu wählen und sich anzumelden:",
+    "expiry": "Der Link lässt sich einmal verwenden und funktioniert nach {days, plural, one {# Tag} other {# Tagen}} nicht mehr.",
+    "ignore": "Wenn Sie diese Nachricht nicht erwartet haben, können Sie sie ignorieren. Es geschieht nichts, bis der Link geöffnet wird.",
+    "signature": "VALO Tech"
+  },
+  "resetMail": {
+    "subject": "Setzen Sie Ihr VALO-Tech-Passwort zurück",
+    "greeting": "Hallo {name},",
+    "intro": "Jemand hat für diese Adresse im Investorenbereich von VALO Tech ein Zurücksetzen des Passworts angefordert.",
+    "action": "Wenn Sie das waren, öffnen Sie diesen Link, um ein neues Passwort zu wählen:",
+    "expiry": "Der Link lässt sich einmal verwenden und funktioniert nach {hours, plural, one {# Stunde} other {# Stunden}} nicht mehr.",
+    "ignore": "Wenn Sie das nicht waren, hat sich Ihr Passwort nicht geändert und Sie müssen nichts tun.",
+    "signature": "VALO Tech"
+  },
+  "forgot": {
+    "title": "Passwort zurücksetzen",
+    "intro": "Geben Sie Ihre E-Mail-Adresse ein. Wenn ein Konto sie verwendet, wird dorthin ein Link zum Wählen eines neuen Passworts geschickt.",
+    "email": "E-Mail-Adresse",
+    "submit": "Link senden",
+    "sent": "Wenn ein Konto diese Adresse verwendet, ist ein Link unterwegs. Er lässt sich einmal verwenden und funktioniert nach einer Stunde nicht mehr.",
+    "tooManyAttempts": "Zu viele Versuche. Warten Sie einen Moment und versuchen Sie es erneut.",
+    "unexpected": "Etwas ist schiefgegangen. Versuchen Sie es gleich noch einmal.",
+    "backToSignIn": "Zurück zur Anmeldung",
+    "unavailable": "Das Zurücksetzen Ihres Passworts ist derzeit nicht möglich. Wenden Sie sich an die Person, die Sie in den Investorenbereich eingeladen hat."
   }
 }

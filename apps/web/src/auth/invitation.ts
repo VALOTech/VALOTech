@@ -20,10 +20,13 @@
  * The two flows part company in one place: what they hand back. An invitation
  * returns its link, because an admin is standing at the screen and a missing
  * mail credential must degrade delivery rather than stop them adding an
- * investor (`SEC-R05`). A reset returns nothing at all — a token in the answer
- * would be a self-service password reset for anybody who knows an address, and
- * an answer that differed in any respect between an address an account holds
- * and one it does not is the enumeration oracle `SEC-R03` closes.
+ * investor (`SEC-R05`). A reset returns no token and no link — one in the answer
+ * would be a self-service password reset for anybody who knows an address, and a
+ * link handed to an admin would let them set an active account's password and
+ * sign in as its owner (`ADMIN-001` §3). What it returns instead is the message
+ * still to be sent (`ResetDelivery`), because sending it on the request path
+ * would separate the two answers by the length of an SMTP round trip and hand
+ * back the enumeration oracle `SEC-R03` closes.
  */
 
 import { createHash, randomBytes } from 'node:crypto';
@@ -31,9 +34,18 @@ import { createHash, randomBytes } from 'node:crypto';
 import { sql, type RawBuilder, type Transaction } from 'kysely';
 
 import { recordAudit } from '../audit/record';
-import { getConfig, type MailConfig } from '../config/index';
+import { getConfig } from '../config/index';
 import { getDb } from '../db/index';
 import type { AccountRole, Database } from '../db/types';
+import type { Locale } from '../i18n/locales';
+import {
+  deliverByPort,
+  invitationMessage,
+  resetMessage,
+  type Addressee,
+  type Deliver,
+  type TransactionalOutcome,
+} from '../mail/transactional';
 
 import { lockAddress, MAX_EMAIL_LENGTH, normaliseAddress } from './address';
 
@@ -288,11 +300,21 @@ export async function setPasswordWithToken(
     });
 }
 
-/** The person an admin is inviting. `DATA-R01` is the whole of it: a name, an address, a role. */
+/**
+ * The person an admin is inviting. `DATA-R01` is the whole of it: a name, an
+ * address, a role, and the language to write to them in.
+ */
 export interface NewAccount {
   readonly email: string;
   readonly name: string;
   readonly role: AccountRole;
+  /**
+   * The language their invitation is written in (`AUTH-003/T3`). Null when the
+   * admin did not say, which is a different answer from English and is recorded
+   * as such: the composer falls back, and nothing in the row claims to know what
+   * this person reads.
+   */
+  readonly locale: Locale | null;
 }
 
 /** What an admin is left holding after inviting somebody. */
@@ -305,16 +327,18 @@ export interface Invitation {
    */
   readonly link: string;
   /**
-   * Why the admin must deliver `link` themselves, which while the send is
-   * unbuilt (`AUTH-003/T3`) is every invitation, whatever the environment.
+   * What became of delivery, in a sentence the admin can act on: that the message
+   * was accepted for delivery, that a mail server refused it, or why none was
+   * attempted.
    *
-   * A field that went empty as soon as a credential was configured would put
-   * "sent" on the screen for an invitee who received nothing, and `MAIL-DEC-01`
-   * tells operators to configure exactly that credential — so the honest answer
-   * has two spellings of "by hand" rather than one of "by hand" and one of
-   * silence. It becomes nullable when a send exists to make it null.
+   * Always a sentence and never empty, because the one thing this field must not
+   * do is go quiet. An admin reading nothing cannot tell a sent invitation from
+   * an unsent one, and the person waiting for it is the one who pays. "Accepted
+   * for delivery" is also the strongest true thing that can be said here: SMTP
+   * answers once, at hand-off, and what happens after that is invisible to this
+   * system (`MAIL-001` §3).
    */
-  readonly deliverByHand: string;
+  readonly delivery: string;
 }
 
 /**
@@ -333,10 +357,86 @@ export interface ResetRequestedBy {
 }
 
 /**
- * Why an admin carries the link even where mail is configured. The credential
- * says a message *could* be sent; nothing yet says one *was*.
+ * The message a reset request leaves to be sent, handed back rather than sent.
+ *
+ * **This shape exists for one reason: an SMTP round trip is readable from the
+ * outside.** `requestReset` answers identically for an address an account holds
+ * and one it does not, and the statements that make that true cost the same
+ * either way. Sending the message does not. Handing a message to a mail server
+ * takes a network round trip — hundreds of milliseconds against the low
+ * milliseconds everything else here costs — so a request that waited for it
+ * would separate the two answers by a margin nobody needs a statistical attack
+ * to read: one address is slow, the other is fast, and the reset form becomes the
+ * account list. That would undo `AUTH-003/T5` entirely, with no code in it
+ * changed.
+ *
+ * So the caller answers first and calls `send` afterwards, and the public route
+ * does not await it (`SEC-001/T4`). The admin path does await it, and may: an
+ * admin is signed in, already knows the account exists, and is owed the outcome
+ * on their screen.
+ *
+ * `send` is safe to call whatever was found. For an address no active account
+ * holds it answers `null` having done nothing, so the caller takes no branch the
+ * database's answer decides — the branch lives in here, after the answer has
+ * already gone.
  */
-const NO_SEND_YET = 'no message is sent yet; deliver this link by hand';
+export interface ResetDelivery {
+  readonly send: (deliver?: Deliver) => Promise<TransactionalOutcome | null>;
+}
+
+/**
+ * What the admin is told about delivery, from what the port actually answered.
+ *
+ * Three sentences for three different states, because they ask different things
+ * of the person reading them: nothing to do, deliver it yourself because a mail
+ * server refused, or deliver it yourself because nothing was attempted. The link
+ * is on the screen in all three — an invitation exists either way, and an admin
+ * who cannot add an investor while a credential is missing is the stopped system
+ * `SEC-R05` forbids.
+ */
+export function deliverySentence(outcome: TransactionalOutcome): string {
+  if (outcome.state === 'accepted') {
+    return 'the message was accepted for delivery; this link is the one it carries';
+  }
+
+  if (outcome.state === 'failed') {
+    return `the mail server refused the message (${outcome.error}); deliver this link by hand`;
+  }
+
+  return `${outcome.reason} Until then, deliver this link by hand.`;
+}
+
+/**
+ * What the admin is told about a reset they started for somebody else.
+ *
+ * Separate from the sentence above because **a reset link cannot be handed
+ * over**. An invitation link sets the password of an account that has none, so
+ * an admin carrying one takes no capability they did not already have; a reset
+ * link sets the password of an *active* account, and an admin holding one could
+ * sign in as that person while the trail said the person did it — which
+ * `ADMIN-001` §3 refuses them. So mail is the only way this reaches anybody, and
+ * when mail cannot be sent the honest answer is that nobody was reached.
+ *
+ * `null` is the case where nothing was minted: the statements are narrowed to an
+ * `active` account, so pressing reset for an invited or a suspended one writes
+ * no token. Saying so to an authenticated admin looking at that person’s own
+ * page reveals nothing — the state is on the screen beside the button.
+ */
+export function resetSentence(outcome: TransactionalOutcome | null): string {
+  if (outcome === null) {
+    return 'no reset link was issued, because this account is not active; only an active account can have its password reset';
+  }
+
+  if (outcome.state === 'accepted') {
+    return 'the reset message was accepted for delivery to the address this account holds';
+  }
+
+  if (outcome.state === 'failed') {
+    return `the mail server refused the message (${outcome.error}), so nobody was reached; ask for the reset again once it is working`;
+  }
+
+  return `${outcome.reason} A reset link can only reach this person by e-mail — it is not shown here, because an admin holding one could sign in as them — so nothing was sent.`;
+}
 
 /**
  * Raised when the address already belongs to an account.
@@ -382,6 +482,15 @@ function inviteLink(token: string): string {
 }
 
 /**
+ * The link a reset opens. The same token in a different path: `/reset` and
+ * `/invite` render one form over one consumption path (`AUTH-003/T4`), and the
+ * two paths exist so the page can say which of the two brought the person here.
+ */
+function resetLink(token: string): string {
+  return `${getConfig().app.origin}/reset/${token}`;
+}
+
+/**
  * Create an `invited` account and the invitation that lets that person set
  * their own password. The only way an account comes to exist: there is no
  * self-registration, and no admin sets a password on somebody else's behalf.
@@ -398,14 +507,19 @@ function inviteLink(token: string): string {
  * and stating either value again would be a second copy to go stale against the
  * migration that owns it.
  *
- * `mail` defaults to the running configuration and is a parameter so a test can
- * drive the credential-present branch without a second environment; nothing in
- * the application passes it.
+ * The message goes out after the transaction commits, never inside it. An SMTP
+ * round trip inside a transaction holds a row lock open for the length of a
+ * network call to somebody else's server, and a message accepted by a
+ * transaction that then rolls back is an invitation in an inbox for an account
+ * that does not exist — the one direction of this pair that cannot be undone.
+ *
+ * `deliver` is a parameter so a test drives every delivery branch without a mail
+ * server; nothing in the application passes it.
  */
 export async function inviteAccount(
   account: NewAccount,
   invitedBy: string,
-  mail: MailConfig = getConfig().mail,
+  deliver: Deliver = deliverByPort,
 ): Promise<Invitation> {
   const address = normaliseAddress(account.email);
 
@@ -430,7 +544,7 @@ export async function inviteAccount(
       // same person already occupies and create a second account.
       const created = await trx
         .insertInto('accounts')
-        .values({ email: address, name: account.name, role: account.role })
+        .values({ email: address, name: account.name, role: account.role, locale: account.locale })
         .onConflict((oc) => oc.column('email').doNothing())
         .returning('id')
         .executeTakeFirst();
@@ -451,20 +565,40 @@ export async function inviteAccount(
       return { accountId: created.id, token };
     });
 
-  // Deferred: AUTH-003/T3 — send the link to the invitee, in their locale, when
-  // `mail.available`. It waits on the `Mailer` port (`MAIL-001/T1`), which is
-  // the one place an SMTP connection is opened; writing a second sender here
-  // would be a second transport to secure and to keep in step. Unblocks when:
-  // AUTH-003/T3. Next action: call the port with this link and the invitee's
-  // locale, and leave the link returned so the degraded path still has one.
-  // Until then delivery is the admin's in both branches, which is what the
-  // returned link is for — incomplete, and honest about it rather than a call
-  // that goes nowhere.
-  return {
-    accountId: invited.accountId,
-    link: inviteLink(invited.token),
-    deliverByHand: mail.available ? NO_SEND_YET : mail.unavailable,
+  const link = inviteLink(invited.token);
+  const addressee: Addressee = {
+    id: invited.accountId,
+    email: address,
+    name: account.name,
+    locale: account.locale,
   };
+  const outcome = await deliver(addressee, await invitationMessage(addressee, await inviterName(invitedBy), link));
+
+  // The link is returned whatever happened to the message. A send that was
+  // accepted does not make it secret — the admin has just been handed the one
+  // copy that exists anywhere, and a refusal an hour later leaves them with the
+  // only way to reach the person they invited.
+  return { accountId: invited.accountId, link, delivery: deliverySentence(outcome) };
+}
+
+/**
+ * The name the invitation says invited them.
+ *
+ * Read after the transaction rather than carried in by the caller: every caller
+ * holds an actor id and none of them holds a name, so a parameter would make
+ * each route fetch the same row this does. An admin erased between the
+ * invitation and this read leaves the message naming the company rather than a
+ * person, which is the truthful answer and not a failure worth raising to
+ * somebody who has just successfully invited an investor.
+ */
+async function inviterName(actorId: string): Promise<string> {
+  const actor = await getDb()
+    .selectFrom('accounts')
+    .select('name')
+    .where('id', '=', actorId)
+    .executeTakeFirst();
+
+  return actor?.name ?? 'VALO Tech';
 }
 
 /**
@@ -504,6 +638,7 @@ export async function inviteAccount(
 export async function resendInvitation(
   accountId: string,
   actorId: string,
+  deliver: Deliver = deliverByPort,
 ): Promise<Invitation | null> {
   const token = await getDb()
     .transaction()
@@ -536,13 +671,19 @@ export async function resendInvitation(
     return null;
   }
 
-  const { mail } = getConfig();
+  // Read after the mint rather than during it: the transaction above is narrowed
+  // to an `invited` account and has already proved this row exists, and holding
+  // its lock across the composition would hold it across a network call.
+  const person = await getDb()
+    .selectFrom('accounts')
+    .select(['id', 'email', 'name', 'locale'])
+    .where('id', '=', accountId)
+    .executeTakeFirstOrThrow();
 
-  return {
-    accountId,
-    link: inviteLink(token),
-    deliverByHand: mail.available ? NO_SEND_YET : mail.unavailable,
-  };
+  const link = inviteLink(token);
+  const outcome = await deliver(person, await invitationMessage(person, await inviterName(actorId), link));
+
+  return { accountId, link, delivery: deliverySentence(outcome) };
 }
 
 /**
@@ -599,7 +740,7 @@ export async function resendInvitation(
 export async function requestReset(
   email: string,
   requestedBy?: ResetRequestedBy,
-): Promise<void> {
+): Promise<ResetDelivery> {
   const address = normaliseAddress(email);
 
   // Refused before the address is used for anything, and refused for its length
@@ -607,12 +748,21 @@ export async function requestReset(
   // account. An address this long is not one: `AUTH-001` turns the same length
   // away at the door, so no account that could ever sign in holds it.
   if (address.length === 0 || address.length > MAX_EMAIL_LENGTH) {
-    return;
+    // The same shape every other path returns, carrying nothing to send. A
+    // caller that had to tell this case apart would be a caller with a branch,
+    // and the value of one shape for every answer is that there is nowhere to
+    // put one.
+    return { send: async () => null };
   }
 
-  const tokenHash = hashOf(randomBytes(TOKEN_BYTES).toString('base64url'));
+  // The plaintext is kept this time, because the link is what the message
+  // carries. It exists in this value and in no row: the table holds the hash
+  // below, so once `send` has run there is no copy anywhere for anybody —
+  // including this system — to read.
+  const token = randomBytes(TOKEN_BYTES).toString('base64url');
+  const tokenHash = hashOf(token);
 
-  await getDb()
+  const writtenFor = await getDb()
     .transaction()
     .execute(async (trx) => {
       await lockAddress(trx, address);
@@ -644,7 +794,11 @@ export async function requestReset(
       // waiting on, and cannot be told that it failed to. The narrowing is in
       // SQL and keyed by the address, so it matches nothing for a non-active
       // account exactly as it matches nothing for an address no account holds.
-      await trx
+      // RETURNING rather than a second lookup: the statement already knows
+      // whether it wrote a row, and asking again would be the existence test
+      // this shape exists to avoid. It is the same statement in both cases and
+      // answers with a row or with none, exactly as before.
+      const wrote = await trx
         .insertInto('invitations')
         .columns(['account_id', 'token_hash', 'expires_at'])
         .expression((eb) =>
@@ -658,6 +812,7 @@ export async function requestReset(
             .where('email', '=', address)
             .where('state', '=', 'active'),
         )
+        .returning('account_id')
         .execute();
 
       if (requestedBy !== undefined) {
@@ -668,14 +823,27 @@ export async function requestReset(
           subjectId: requestedBy.accountId,
         });
       }
+
+      return wrote[0]?.account_id ?? null;
     });
 
-  // Deferred: AUTH-003/T3 — mail the reset link to the address when a row was
-  // written, which is the one difference the design allows between the two
-  // answers because it reaches an inbox the requester may not control. It waits
-  // on the `Mailer` port (`MAIL-001/T1`). Unblocks when: AUTH-003/T3. Next
-  // action: have the insert return the row it wrote and hand that link to the
-  // port. Until then a reset request records a token nobody is told about, so
-  // the address is neither confirmed nor reachable — incomplete on delivery,
-  // and never a difference the requester can read.
+  return {
+    send: async (deliver: Deliver = deliverByPort): Promise<TransactionalOutcome | null> => {
+      if (writtenFor === null) {
+        return null;
+      }
+
+      const person = await getDb()
+        .selectFrom('accounts')
+        .select(['id', 'email', 'name', 'locale'])
+        .where('id', '=', writtenFor)
+        .executeTakeFirst();
+
+      if (person === undefined) {
+        return null;
+      }
+
+      return deliver(person, await resetMessage(person, resetLink(token)));
+    },
+  };
 }

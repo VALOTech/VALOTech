@@ -43,10 +43,9 @@
  * (`MAIL-001/T3`), never again at send time, so a list derived twice cannot
  * become two lists.
  *
- * Retrying only the recipients that failed is `MAIL-001/T6`, deferred until
- * `MAIL-DEC-02` settles how a re-send stays idempotent — a retry that can reach
- * an already-accepted recipient is how a person receives a message twice. The
- * per-recipient states this loop writes are what that retry will read.
+ * Retrying only the recipients that failed is `retry.ts`, built on the states
+ * this loop writes and on the `retry_of` column that makes a claimed failure
+ * unrepeatable (`MAIL-001/T6`, `MAIL-DEC-02`).
  */
 
 import { recordAudit } from '../audit/record';
@@ -73,7 +72,7 @@ export interface SendOutcome {
 }
 
 /** A recipient and the row written for them before their message was attempted. */
-interface QueuedRecipient {
+export interface QueuedRecipient {
   readonly recipient: Recipient;
   readonly logId: string;
 }
@@ -95,8 +94,13 @@ const MAX_FAILURE_TEXT = 500;
  * datum never lives in an error message). The
  * result is capped, and an empty reply is named rather than left blank so a row
  * never reads `failed` with nothing on it.
+ *
+ * Exported for the transactional send (`AUTH-003/T3`), which stores a refusal in
+ * the same column of the same table and must make it safe to keep the same way.
+ * A second spelling of "what a refusal may leave in a row kept for two years" is
+ * one that can be forgotten when the scrubber learns a new shape.
  */
-function failureText(error: unknown): string {
+export function failureText(error: unknown): string {
   const raw = error instanceof Error ? error.message : String(error);
   const masked = scrub(raw);
   const capped = masked.length > MAX_FAILURE_TEXT ? `${masked.slice(0, MAX_FAILURE_TEXT)}...` : masked;
@@ -180,7 +184,30 @@ export async function send(
     return { results: [] };
   }
 
-  const queued = await queueAndRecord(recipients, message, actorId);
+  return deliverQueued(await queueAndRecord(recipients, message, actorId), message, mailer);
+}
+
+/**
+ * The loop, shared by a first send and a retry of the ones that failed
+ * (`MAIL-001/T6`).
+ *
+ * The two differ entirely in how a row comes to exist — a fresh one per
+ * recipient, or one claiming a named failure — and not at all in what happens
+ * afterwards. Sharing this is what keeps the retry from acquiring its own idea
+ * of when a row becomes `accepted`: a second copy of these two statements is how
+ * one of them comes to record an accepted message as `failed`, and a row that
+ * reads `failed` for a message that has in fact gone is how a later retry
+ * delivers it a second time.
+ *
+ * It is deliberately not a transaction, for the reason the module header gives:
+ * each row moves by its own statement, so a stop halfway leaves a truthful
+ * per-recipient record of what actually happened.
+ */
+export async function deliverQueued(
+  queued: readonly QueuedRecipient[],
+  message: ComposedMessage,
+  mailer: Mailer,
+): Promise<SendOutcome> {
   const db = getDb();
   const results: SendResult[] = [];
 

@@ -42,10 +42,18 @@ export type AccountActionOutcome = 'changed' | 'unchanged' | 'requested';
 
 export interface AccountActionAnswer {
   readonly outcome: AccountActionOutcome;
-  /** A resent invitation's single-use link, which exists in this answer and in no row. */
+  /**
+   * A resent invitation's single-use link, which exists in this answer and in no
+   * row. A reset never carries one: that link sets the password of an active
+   * account, and an admin holding it could sign in as its owner (`ADMIN-001` §3).
+   */
   readonly link?: string;
-  /** Why that link has to be delivered by hand. */
-  readonly deliverByHand?: string;
+  /**
+   * What became of the message, in a sentence — for a resend, why its link may
+   * still need delivering by hand; for a reset, whether anybody was reached at
+   * all, since mail is the only way one can be.
+   */
+  readonly delivery?: string;
 }
 
 /**

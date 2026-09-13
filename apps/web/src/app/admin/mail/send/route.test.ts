@@ -236,7 +236,10 @@ describe.skipIf(!HAS_DATABASE)('POST /admin/mail/send (MAIL-001/T4, T7)', () => 
       );
 
       expect(response.status).toBe(200);
-      expect(await response.json()).toEqual({ accepted: [ada, beth], failed: [] });
+      // `alreadyRetried` is empty and must be: a first send inserts its rows
+      // unconditionally, so it always reaches everybody it resolved. Only a
+      // retry can lose a claim after the count was typed (`MAIL-001/T6`).
+      expect(await response.json()).toEqual({ accepted: [ada, beth], failed: [], alreadyRetried: [] });
       expect(session.handed).toHaveLength(2);
 
       const rows = await logRows();
@@ -292,10 +295,16 @@ describe.skipIf(!HAS_DATABASE)('POST /admin/mail/send (MAIL-001/T4, T7)', () => 
       expect(response.status).toBe(200);
       const answer = (await response.json()) as {
         accepted: string[];
-        failed: { accountId: string; error: string }[];
+        failed: { accountId: string; logId: string; error: string }[];
       };
       expect(answer.accepted).toEqual([kept]);
-      expect(answer.failed).toEqual([{ accountId: refused, error: REFUSAL }]);
+      expect(answer.failed).toHaveLength(1);
+      expect(answer.failed[0]).toMatchObject({ accountId: refused, error: REFUSAL });
+      // The row id travels back with the refusal, because it is what a retry
+      // names (`MAIL-001/T6`): a person can fail twice under two different
+      // sends, so an account id would not say which attempt is being tried
+      // again.
+      expect(Number(answer.failed[0]?.logId)).toBeGreaterThan(0);
       expect(session.closes()).toBe(1);
 
       const rows = await logRows();

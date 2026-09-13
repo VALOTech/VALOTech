@@ -23,6 +23,7 @@
 import { sql } from 'kysely';
 
 import { MAX_EMAIL_LENGTH, normaliseAddress } from '../../../../auth/address';
+import { clientAddress } from '../../../../auth/client-address';
 import { hashPassword, needsRehash, verifyPassword } from '../../../../auth/password';
 import { getRateLimiter } from '../../../../auth/rate-limit';
 import { issue, serializeCookie } from '../../../../auth/session';
@@ -47,24 +48,6 @@ const INVALID_REQUEST = JSON.stringify({ error: 'invalid_request' });
 const INVALID = JSON.stringify({ error: 'invalid' });
 const TOO_MANY_ATTEMPTS = JSON.stringify({ error: 'too_many_attempts' });
 const CROSS_ORIGIN = JSON.stringify({ error: 'cross_origin' });
-
-/**
- * The rate-limit key for a request with no usable forwarded address. Behind
- * the edge (`OPS-001`) every request carries one, so this bucket is
- * essentially unreachable there; when it is reached it holds every
- * header-withholding caller on one counter -- fail-safe against an attacker
- * who drops the header to slip a per-address limit, and a shared lockout for
- * everyone only if the edge ever stops setting it.
- */
-const UNKNOWN_ADDRESS = 'unknown';
-
-/**
- * An IPv6 address with a zone index is at most 45 characters. A first hop
- * longer than that is not an address, and it is a rate-limit key held for a
- * window -- the same unbounded allocation the e-mail bound closes, on the one
- * field an anonymous caller writes with no bound of its own (`OPS-DEC-02`).
- */
-const MAX_ADDRESS_LENGTH = 45;
 
 interface Credentials {
   /** Trimmed and lower-cased, which is both the lookup value and the key. */
@@ -112,34 +95,6 @@ async function readCredentials(request: Request): Promise<Credentials | null> {
   }
 
   return { email: normalised, password };
-}
-
-/**
- * The address the request came from, as the first hop of `X-Forwarded-For`.
- *
- * The header is only as trustworthy as the proxy that sets it: a client that
- * reaches the application directly can write whatever it likes, and one that
- * rotates the value gets a fresh counter each time. That is why the account
- * counter exists and is not optional — it keeps an attacker from walking the
- * account list whatever they claim about their address — and why the edge
- * limits by the address it observed rather than the one it was told
- * (`OPS-001`).
- */
-function clientAddress(request: Request): string {
-  const forwarded = request.headers.get('x-forwarded-for');
-
-  if (forwarded === null) {
-    return UNKNOWN_ADDRESS;
-  }
-
-  const [first = ''] = forwarded.split(',');
-  const address = first.trim();
-
-  if (address === '' || address.length > MAX_ADDRESS_LENGTH) {
-    return UNKNOWN_ADDRESS;
-  }
-
-  return address;
 }
 
 export const POST = withRequestId(async (request: Request): Promise<Response> => {

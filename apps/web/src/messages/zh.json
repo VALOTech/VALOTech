@@ -55,5 +55,34 @@
     "rightsWithdrawal": "撤回您的同意，这意味着删除您的账户，因为您的数据在此只用于访问。",
     "title": "本投资室如何处理您的数据",
     "link": "我们如何处理您的数据"
+  },
+  "invitationMail": {
+    "subject": "VALO Tech 投资人室邀请",
+    "greeting": "{name}，您好：",
+    "intro": "{inviter} 邀请您进入 VALO Tech 投资人室，公司在此向投资人发布其报告。",
+    "action": "打开此链接以设置密码并登录：",
+    "expiry": "此链接仅可使用一次，{days, plural, other {# 天}}后失效。",
+    "ignore": "如果您并未预期收到此邮件，可以忽略它。在链接被打开之前不会发生任何事情。",
+    "signature": "VALO Tech"
+  },
+  "resetMail": {
+    "subject": "重置您的 VALO Tech 密码",
+    "greeting": "{name}，您好：",
+    "intro": "有人请求重置 VALO Tech 投资人室中此邮箱地址的密码。",
+    "action": "如果这是您本人，请打开此链接设置新密码：",
+    "expiry": "此链接仅可使用一次，{hours, plural, other {# 小时}}后失效。",
+    "ignore": "如果这不是您本人，您的密码没有改变，您无需采取任何行动。",
+    "signature": "VALO Tech"
+  },
+  "forgot": {
+    "title": "重置您的密码",
+    "intro": "请输入您的邮箱地址。如果有账户使用该地址，设置新密码的链接将发送到那里。",
+    "email": "邮箱地址",
+    "submit": "发送重置链接",
+    "sent": "如果有账户使用该地址，链接正在发送途中。它仅可使用一次，一小时后失效。",
+    "tooManyAttempts": "尝试次数过多。请稍候再试。",
+    "unexpected": "出了点问题。请稍后再试。",
+    "backToSignIn": "返回登录",
+    "unavailable": "目前无法自行重置密码。请联系邀请您进入投资人室的人。"
   }
 }

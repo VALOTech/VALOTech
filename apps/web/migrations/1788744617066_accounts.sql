@@ -33,6 +33,26 @@ CREATE TABLE accounts (
   -- behavioural column, left out of the updated_at trigger's WHEN below so
   -- exercising the objection does not restamp the account.
   read_tracking_objected boolean NOT NULL DEFAULT false,
+  -- The language this person is written to in (AUTH-003/T3). An invitation, a
+  -- reset link and every transactional message after them are read by one named
+  -- person, and the account is the only place that person's language can live:
+  -- there is no session at the moment an invitation is composed, and the browser
+  -- that will open the link has not been seen yet.
+  --
+  -- Nullable, because the design asks for "the invitee's locale if known and
+  -- English otherwise" and a default of 'en' would make the two cases
+  -- indistinguishable. An admin who knows the person records their language; an
+  -- admin who does not leaves it empty and the composer falls back. A column
+  -- that could not say "not known" would turn every unanswered question into a
+  -- claim about what somebody reads. Like the two above it is left out of the
+  -- updated_at trigger's WHEN below only if it is behavioural -- it is not: it is
+  -- an attribute of the account an admin sets, so a change to it restamps.
+  --
+  -- The CHECK lists the twenty the application serves, the same set
+  -- apps/web/src/i18n/locales.ts exports and the set apps/web/src/db/db.test.ts
+  -- compares this constraint against, so a locale in one and not the other is a
+  -- red test rather than a row whose language has no messages.
+  locale        text CHECK (locale IS NULL OR locale IN ('en', 'zh', 'zt', 'vi', 'th', 'id', 'ms', 'tl', 'hi', 'es', 'ar', 'fr', 'bn', 'pt', 'ru', 'ur', 'de', 'ja', 'tr', 'ko')),
   created_at    timestamptz NOT NULL DEFAULT now(),
   updated_at    timestamptz NOT NULL DEFAULT now()
 );
@@ -59,7 +79,8 @@ CREATE TRIGGER accounts_set_updated_at
   WHEN (OLD.email IS DISTINCT FROM NEW.email
      OR OLD.name IS DISTINCT FROM NEW.name
      OR OLD.role IS DISTINCT FROM NEW.role
-     OR OLD.state IS DISTINCT FROM NEW.state)
+     OR OLD.state IS DISTINCT FROM NEW.state
+     OR OLD.locale IS DISTINCT FROM NEW.locale)
   EXECUTE FUNCTION set_updated_at();
 
 -- Down Migration

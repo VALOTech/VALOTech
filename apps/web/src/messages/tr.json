@@ -55,5 +55,34 @@
     "rightsWithdrawal": "Rızanızı geri çekmek; bu, hesabınızın silinmesi anlamına gelir, çünkü verileriniz burada yalnızca erişim içindir.",
     "title": "Bu oda verilerinizi nasıl işliyor",
     "link": "Verilerinizi nasıl işliyoruz"
+  },
+  "invitationMail": {
+    "subject": "VALO Tech yatırımcı odasına davet",
+    "greeting": "Merhaba {name},",
+    "intro": "{inviter} sizi VALO Tech yatırımcı odasına davet etti; şirket raporlarını burada, kendisine yatırım yapanlar için yayımlıyor.",
+    "action": "Parola belirlemek ve oturum açmak için bu bağlantıyı açın:",
+    "expiry": "Bağlantı yalnızca bir kez kullanılabilir ve {days, plural, one {# gün} other {# gün}} sonra çalışmayı durdurur.",
+    "ignore": "Bu iletiyi beklemiyorduysanız yok sayabilirsiniz. Bağlantı açılana kadar hiçbir şey olmaz.",
+    "signature": "VALO Tech"
+  },
+  "resetMail": {
+    "subject": "VALO Tech parolanızı sıfırlayın",
+    "greeting": "Merhaba {name},",
+    "intro": "Birisi VALO Tech yatırımcı odasında bu adresin parolasının sıfırlanmasını istedi.",
+    "action": "Bu sizseniz, yeni bir parola belirlemek için bu bağlantıyı açın:",
+    "expiry": "Bağlantı yalnızca bir kez kullanılabilir ve {hours, plural, one {# saat} other {# saat}} sonra çalışmayı durdurur.",
+    "ignore": "Bu siz değilseniz parolanız değişmedi ve yapmanız gereken bir şey yok.",
+    "signature": "VALO Tech"
+  },
+  "forgot": {
+    "title": "Parolanızı sıfırlayın",
+    "intro": "E-posta adresinizi girin. Bir hesap bu adresi kullanıyorsa, yeni parola belirlemek için oraya bir bağlantı gönderilir.",
+    "email": "E-posta adresi",
+    "submit": "Sıfırlama bağlantısını gönder",
+    "sent": "Bir hesap bu adresi kullanıyorsa bağlantı yolda. Yalnızca bir kez kullanılabilir ve bir saat sonra çalışmayı durdurur.",
+    "tooManyAttempts": "Çok fazla deneme. Biraz bekleyip yeniden deneyin.",
+    "unexpected": "Bir şeyler ters gitti. Birazdan yeniden deneyin.",
+    "backToSignIn": "Oturum açmaya dön",
+    "unavailable": "Şu anda parolanızı kendiniz sıfırlayamazsınız. Sizi yatırımcı odasına davet eden kişiyle iletişime geçin."
   }
 }

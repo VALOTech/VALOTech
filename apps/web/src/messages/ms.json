@@ -55,5 +55,34 @@
     "rightsWithdrawal": "Menarik balik persetujuan anda, yang bermakna memadam akaun anda, kerana data anda berada di sini semata-mata untuk akses.",
     "title": "Bagaimana bilik ini mengendalikan data anda",
     "link": "Bagaimana kami mengendalikan data anda"
+  },
+  "invitationMail": {
+    "subject": "Jemputan ke bilik pelabur VALO Tech",
+    "greeting": "Helo {name},",
+    "intro": "{inviter} telah menjemput anda ke bilik pelabur VALO Tech, tempat syarikat menerbitkan laporannya kepada mereka yang telah melabur di dalamnya.",
+    "action": "Buka pautan ini untuk memilih kata laluan dan log masuk:",
+    "expiry": "Pautan ini hanya boleh digunakan sekali, dan tamat selepas {days, plural, other {# hari}}.",
+    "ignore": "Jika anda tidak menjangkakan mesej ini, anda boleh mengabaikannya. Tiada apa-apa berlaku sehingga pautan dibuka.",
+    "signature": "VALO Tech"
+  },
+  "resetMail": {
+    "subject": "Tetapkan semula kata laluan VALO Tech anda",
+    "greeting": "Helo {name},",
+    "intro": "Seseorang telah meminta penetapan semula kata laluan bagi alamat ini di bilik pelabur VALO Tech.",
+    "action": "Jika itu anda, buka pautan ini untuk memilih kata laluan baharu:",
+    "expiry": "Pautan ini hanya boleh digunakan sekali, dan tamat selepas {hours, plural, other {# jam}}.",
+    "ignore": "Jika itu bukan anda, kata laluan anda tidak berubah dan tiada apa-apa yang perlu anda lakukan.",
+    "signature": "VALO Tech"
+  },
+  "forgot": {
+    "title": "Tetapkan semula kata laluan anda",
+    "intro": "Masukkan alamat e-mel anda. Jika ada akaun yang menggunakannya, pautan untuk memilih kata laluan baharu akan dihantar ke sana.",
+    "email": "Alamat e-mel",
+    "submit": "Hantar pautan penetapan semula",
+    "sent": "Jika ada akaun yang menggunakan alamat itu, satu pautan sedang dihantar. Ia hanya boleh digunakan sekali dan tamat selepas satu jam.",
+    "tooManyAttempts": "Terlalu banyak percubaan. Tunggu sebentar dan cuba lagi.",
+    "unexpected": "Sesuatu telah berlaku. Cuba lagi sebentar lagi.",
+    "backToSignIn": "Kembali ke log masuk",
+    "unavailable": "Menetapkan semula kata laluan sendiri tidak tersedia buat masa ini. Hubungi orang yang menjemput anda ke bilik pelabur."
   }
 }

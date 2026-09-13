@@ -7,7 +7,7 @@ depends_on: [AUTH-002]
 depended_by: [CMS-003, OPS-001, OPS-002]
 layers_touched: [infra, api, frontend]
 cross_cutting_rules: [SEC-R01, SEC-R02, SEC-R03, SEC-R05, DATA-R02]
-status: in-progress
+status: implemented
 ---
 
 # `SEC-001` — Security baseline
@@ -98,12 +98,18 @@ or their claimed content type, and are re-encoded before storage.
 | Surface | Limit | Why |
 |---|---|---|
 | Sign-in | per account **and** per address | Per-address alone lets a distributed attempt through; per-account alone lets one address lock out every account it knows |
-| Password reset request | per address | The mail it triggers is the cost |
+| Password reset request | per account **and** per address | Per-address alone lets a distributed attempt through, and it does not stop one caller filling one named person's inbox with reset mail |
 | Invitation acceptance | per token | A single-use token brute-forced is an account |
 
 A refusal is a `429` with a `Retry-After`, and it says the same thing whoever
 asks — a limit that tells an attacker which accounts exist is an enumeration
 oracle wearing a rate limit (`SEC-R03`).
+
+Each surface counts on its own keys. Sharing a counter between sign-in and the
+reset request would let an anonymous caller spend a named person's sign-in
+allowance by posting their address at the reset form, which is a lockout of the
+one door into the room, reachable with no password and no session — a denial of
+service built out of two limits that are each correct alone.
 
 ### CI
 

@@ -62,6 +62,25 @@ export function bcp47(locale: Locale): string {
 }
 
 /**
+ * Each language written in itself, for the one screen where a person chooses a
+ * language that is not their own (`AUTH-003/T3`: an admin recording what an
+ * invitee reads).
+ *
+ * The endonym rather than the English name, because the admin is choosing on
+ * somebody else's behalf and "繁體中文" beside "简体中文" is a distinction a
+ * reader can make where "Chinese (Traditional)" beside "Chinese (Simplified)"
+ * invites a mis-click. It is derived rather than listed: twenty hand-written
+ * names would be twenty more strings to keep in step with `LOCALES`, and the
+ * platform already holds them. The locale's own code is the fallback, so a
+ * runtime without the data renders something selectable rather than nothing.
+ */
+export function languageName(locale: Locale): string {
+  const tag = BCP47[locale];
+
+  return new Intl.DisplayNames([tag], { type: 'language' }).of(tag) ?? tag;
+}
+
+/**
  * The locale an `Accept-Language` header asks for, or the default when it asks
  * for none we carry.
  *

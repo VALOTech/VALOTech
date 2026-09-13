@@ -35,7 +35,12 @@ import { scrub } from './scrub';
  * the code which emits it, so a reader can count `db.pool_error` lines without
  * first discovering that the string exists.
  */
-export const LOG_EVENTS = ['db.pool_error', 'log.scrubbed'] as const;
+export const LOG_EVENTS = [
+  'db.pool_error',
+  'log.scrubbed',
+  'mail.transactional_failed',
+  'mail.unavailable',
+] as const;
 
 export type LogEvent = (typeof LOG_EVENTS)[number];
 

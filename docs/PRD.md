@@ -101,7 +101,7 @@ A third role — an editor who may draft but not publish, an analyst who may rea
 |---|---|---|---|
 | `AUTH-001` | Sign-in | live | E-mail and password against a server-side account; failures indistinguishable and rate-limited |
 | `AUTH-002` | Session and role gate | live | httpOnly cookie, rotation on privilege change, server-side invalidation; every gated read scoped by role at the query |
-| `AUTH-003` | Invitation and password reset | building | An admin invites; the invitee sets their own password from a single-use, expiring link |
+| `AUTH-003` | Invitation and password reset | blocked | An admin invites; the invitee sets their own password from a single-use, expiring link — invitation works by hand, reset needs the `SMTP_URL` credential because a reset link may never be shown to an admin |
 | `AUTH-004` | Sign-out | live | Session destroyed server-side, not merely cleared client-side |
 | `ADMIN-001` | Account management | live | Create, suspend and delete investor accounts; correct a person's name and address; grant and revoke deck access; audited |
 | `ADMIN-002` | Admin console shell | live | The staff surface the other admin features live in |
@@ -143,7 +143,7 @@ because an investor navigates each of them differently.
 | `INV-001` | Investor room shell | design | What a signed-in investor lands on: the update stream first, with the progress board, the current report, the deck and the gated chapters reachable from it |
 | `INV-002` | Gated gateway chapters, served | design | The two chapters and the seven mechanisms, delivered by the server to an authorised reader and to nobody else — this is what replaces the CSS demonstration |
 | `INV-003` | Portfolio progress | building | Where each of the six products stands, and the milestones ahead of it — the thing an investor opens the room to check when they have no time to read |
-| `MAIL-001` | Investor mail | blocked | An admin sends a message to selected investors; every send is recorded — SMTP carrier settled (`docs/decisions-log.md#MAIL-DEC-01`), waits on the `SMTP_URL` credential and the `MAIL-001/T8` adapter |
+| `MAIL-001` | Investor mail | blocked | An admin sends a message to selected investors; every send is recorded — built whole — composer, audience, send, retry and the TLS-only SMTP adapter (`docs/decisions-log.md#MAIL-DEC-01`); inert until the `SMTP_URL` credential is supplied |
 | `MAIL-002` | Mail log and unsubscribe | blocked | What was sent, to whom, when; a working unsubscribe that stops non-transactional mail — waits on the mail send path (`MAIL-001`) |
 
 ### 5.5 Platform — `DATA`, `SEC`, `CFG`, `OPS`, `INFRA`, `CRED`
@@ -153,7 +153,7 @@ because an investor navigates each of them differently.
 | `DATA-001` | Schema and migrations | live | Accounts, sessions, decks, deck sections, deck grants, posts, mail log, audit, configuration |
 | `DATA-002` | Erasure and retention | live | A real delete for an investor's personal data; audit retained minimally; retention windows stated |
 | `DATA-003` | Backup and restore | live | A restore that has been performed, not merely configured |
-| `SEC-001` | Security baseline | building | CSP, HSTS, secure cookies, parameterised queries, dependency and secret scanning in CI |
+| `SEC-001` | Security baseline | live | CSP, HSTS, secure cookies, parameterised queries, dependency and secret scanning in CI |
 | `SEC-002` | Audit log | building | Append-only record of every privileged write |
 | `CFG-001` | Runtime configuration | live | The values an admin may change without a deploy, each with its prior value and a single-action undo |
 | `OPS-001` | Hosting and deploy | design | Where the app runs, and how valotech.org points at it — AWS, ECS on Fargate (`docs/decisions-log.md#INFRA-DEC-05`), built last |

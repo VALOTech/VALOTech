@@ -108,19 +108,11 @@ function said(action: AccountAction, answer: AccountActionAnswer, self: boolean)
 
   switch (action) {
     case 'resend-invitation':
-      // Deferred: AUTH-003/T4 — the clause about the link having nowhere to land
-      // comes out when the set-password form exists.
-      // Why: nothing consumes an invitation token yet, so a link handed over today
-      // reaches a page that is not there.
-      // Unblocks when: AUTH-003/T4.
-      // Next action: drop the clause and say what the link opens instead.
-      // Until then the admin is told before they send it rather than after the
-      // investor tells them — honest about the gap, which is the safe default.
       return changed
-        ? 'A fresh invitation link was issued, and the one sent before it has stopped working. The page that accepts the link is not built yet, so it cannot be used until that lands.'
+        ? 'A fresh invitation link was issued, and the one sent before it has stopped working.'
         : 'Nothing was issued: an invitation is resent only to somebody who has not accepted one yet.';
     case 'reset-password':
-      return 'A password reset was asked for, on the address this account holds. The reset flow answers nothing by design, and nothing mails the link yet, so this reaches the person only once the reset mail is built.';
+      return 'A password reset was asked for, on the address this account holds.';
     case 'suspend':
       return changed
         ? 'Suspended. Every live session ended, and an invitation they had not accepted has stopped working.'
@@ -189,7 +181,7 @@ function Outcome({
       <p>{said(action, answer, self)}</p>
       {answer.link === undefined ? null : (
         <>
-          <p className={styles.deliver}>{answer.deliverByHand}</p>
+          <p className={styles.deliver}>{answer.delivery}</p>
           <code className={styles.link}>{answer.link}</code>
         </>
       )}

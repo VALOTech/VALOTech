@@ -27,7 +27,7 @@ item leaves this file when its signal is true — not when it feels handled.
 - **What:** [`MAIL-DEC-01`](decisions-log.md#MAIL-DEC-01) chose SMTP against the company's own mailbox. Set `SMTP_URL` and `MAIL_FROM`, and publish SPF, DKIM and DMARC for `valotech.org` so a message from the application is not treated as forged.
 - **Who:** the owner. It is the company's own mail domain.
 - **Done when:** a message sent from staging arrives in an institutional inbox rather than its spam folder, and a message to a deliberately-invalid address produces a delivery-status notification in the `MAIL_FROM` mailbox.
-- **Until then:** no mail is sent. An invitation is still created and its link is shown to the admin to deliver by hand (`AUTH-003/T7`), so nothing is blocked — only automated.
+- **Until then:** no mail is sent, and the cost is no longer only convenience. An **invitation** is still created and its link is shown to the admin to deliver by hand (`AUTH-003/T7`), so adding an investor is merely manual. A **password reset** is blocked outright: a reset link sets the password of an *active* account, so it is never shown to an admin — one who held it could sign in as its owner (`ADMIN-001` §3) — and mail is therefore the only way it can reach anybody. The public `/forgot` page says so rather than taking an address it cannot act on, the admin's reset control reports that nothing was sent, and each such request writes one `mail.unavailable` line. **An investor who forgets their password cannot get back in until this is set.**
 - **Note:** SMTP reports nothing after hand-off, so the bounce in the second signal above is read by a person. `MAIL-002` says so in those words rather than implying the system noticed.
 
 <a id="DPO-CONTACT"></a>

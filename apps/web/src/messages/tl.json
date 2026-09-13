@@ -55,5 +55,34 @@
     "rightsWithdrawal": "Ang pag-urong ng iyong pahintulot, na nangangahulugang pagtanggal ng iyong account, dahil ang iyong datos ay narito para lamang sa akses.",
     "title": "Paano pinangangasiwaan ng silid na ito ang iyong datos",
     "link": "Paano namin pinangangasiwaan ang iyong datos"
+  },
+  "invitationMail": {
+    "subject": "Isang imbitasyon sa investor room ng VALO Tech",
+    "greeting": "Kumusta {name},",
+    "intro": "Inimbitahan ka ni {inviter} sa investor room ng VALO Tech, kung saan inilalathala ng kumpanya ang mga ulat nito sa mga namuhunan dito.",
+    "action": "Buksan ang link na ito upang pumili ng password at mag-sign in:",
+    "expiry": "Isang beses lang magagamit ang link, at hihinto itong gumana pagkatapos ng {days, plural, other {# araw}}.",
+    "ignore": "Kung hindi mo ito inaasahan, maaari mong balewalain ang mensaheng ito. Walang mangyayari hangga't hindi binubuksan ang link.",
+    "signature": "VALO Tech"
+  },
+  "resetMail": {
+    "subject": "I-reset ang iyong password sa VALO Tech",
+    "greeting": "Kumusta {name},",
+    "intro": "May humiling na i-reset ang password para sa address na ito sa investor room ng VALO Tech.",
+    "action": "Kung ikaw iyon, buksan ang link na ito upang pumili ng bagong password:",
+    "expiry": "Isang beses lang magagamit ang link, at hihinto itong gumana pagkatapos ng {hours, plural, other {# oras}}.",
+    "ignore": "Kung hindi ikaw iyon, hindi nagbago ang iyong password at wala kang kailangang gawin.",
+    "signature": "VALO Tech"
+  },
+  "forgot": {
+    "title": "I-reset ang iyong password",
+    "intro": "Ilagay ang iyong email address. Kung may account na gumagamit nito, ipapadala doon ang link para pumili ng bagong password.",
+    "email": "Email address",
+    "submit": "Ipadala ang reset link",
+    "sent": "Kung may account na gumagamit ng address na iyon, may link na papunta roon. Isang beses lang itong magagamit at hihinto pagkatapos ng isang oras.",
+    "tooManyAttempts": "Masyadong maraming pagsubok. Maghintay saglit at subukang muli.",
+    "unexpected": "May nangyaring mali. Subukang muli mamaya.",
+    "backToSignIn": "Bumalik sa sign-in",
+    "unavailable": "Hindi available sa ngayon ang pag-reset ng sarili mong password. Makipag-ugnayan sa taong nag-imbita sa iyo sa investor room."
   }
 }

@@ -55,5 +55,34 @@
     "rightsWithdrawal": "To withdraw your consent, which means deleting your account, because access is the only thing your data is here for.",
     "title": "How this room handles your data",
     "link": "How we handle your data"
+  },
+  "invitationMail": {
+    "subject": "An invitation to the VALO Tech investor room",
+    "greeting": "Hello {name},",
+    "intro": "{inviter} has invited you to the VALO Tech investor room, where the company publishes its reporting to the people who have invested in it.",
+    "action": "Open this link to choose a password and sign in:",
+    "expiry": "The link can be used once, and it stops working after {days, plural, one {# day} other {# days}}.",
+    "ignore": "If you were not expecting this, you can ignore this message. Nothing happens until the link is opened.",
+    "signature": "VALO Tech"
+  },
+  "resetMail": {
+    "subject": "Reset your VALO Tech password",
+    "greeting": "Hello {name},",
+    "intro": "Somebody asked to reset the password for this address at the VALO Tech investor room.",
+    "action": "If that was you, open this link to choose a new password:",
+    "expiry": "The link can be used once, and it stops working after {hours, plural, one {# hour} other {# hours}}.",
+    "ignore": "If that was not you, your password has not changed and there is nothing you need to do.",
+    "signature": "VALO Tech"
+  },
+  "forgot": {
+    "title": "Reset your password",
+    "intro": "Enter your email address. If an account uses it, a link for choosing a new password is sent there.",
+    "email": "Email address",
+    "submit": "Send the reset link",
+    "sent": "If an account uses that address, a link is on its way. It can be used once and stops working after an hour.",
+    "tooManyAttempts": "Too many attempts. Wait a moment and try again.",
+    "unexpected": "Something went wrong. Try again in a moment.",
+    "backToSignIn": "Back to sign-in",
+    "unavailable": "Resetting your own password is unavailable at the moment. Ask the person who invited you to the room."
   }
 }

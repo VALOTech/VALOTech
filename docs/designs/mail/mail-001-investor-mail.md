@@ -8,6 +8,21 @@ depended_by: [MAIL-002]
 layers_touched: [service, api, frontend, ui]
 cross_cutting_rules: [DATA-R04, DATA-R02, SEC-R04, SEC-R05, I18N-R01, A11Y-R01]
 status: in-progress
+inert_until:
+  reason: An admin composes the message, sees exactly who it would reach and why
+    anybody is excluded, and reads the bytes the send would carry — and the send
+    control is disabled with the reason on it. No investor receives anything,
+    because the process holds no mailbox to hand a message to. **The port this
+    feature owns carries more than investor mail**: AUTH-003's invitation and
+    password-reset messages go through it too, so the same absence leaves an
+    invitation deliverable only by hand and a password reset impossible by any
+    path (AUTH-003's own inert_until says so from that side). That is not a
+    depends_on edge, because MAIL-001 depends on ADMIN-001 which depends on
+    AUTH-003, and declaring it would close a cycle; it is written here because
+    this is the field an operator reads to find out what the missing credential
+    costs.
+  unblocks_when: credential — SMTP_URL and MAIL_FROM, at
+    docs/operator-checklist.md#SMTP-MAILBOX
 ---
 
 # `MAIL-001` — Investor mail
@@ -169,17 +184,34 @@ transactional, so `MAIL-002`'s unsubscribe must never suppress it.
   fine; at five hundred it is a timeout, and a mailbox provider will rate-limit
   it long before that. The trade is deliberate at this size, and the signal to
   change it is a recipient list that does not fit on a screen.
+- **A retry row left `queued` can never be tried again.** If the port call throws after the
+  claim has committed — the process killed between the two — the claimed failure is spent and
+  the new row is `queued`, which the eligibility predicate (`state = 'failed'`) never offers.
+  That recipient cannot be re-reached for that message without a fresh, deliberately
+  re-confirmed send. The trade is deliberate and is the same one the send loop makes: a row
+  that read `failed` for a message that had in fact gone would let a later retry deliver it
+  twice, and being unable to retry is the safe side of that.
+- **Nothing bounds the transactional sends a public surface can start.** `/forgot`
+  (`SEC-001/T4`) starts a send without awaiting it, so once a credential exists each accepted
+  request opens one SMTP connection from an unauthenticated endpoint. The per-address limiter
+  caps probes per address, and `X-Forwarded-For` is written by the client when nothing sits in
+  front — so the real ceiling is `OPS-001`'s edge, which has not landed. Until it does, this is
+  a reason to set the credential and the edge in the same change rather than the credential
+  alone.
 - **No open or click tracking.** A pixel in a message to a named investor is
   surveillance of a person the company is asking for money. Whether they opened
   it is not worth what it costs to know.
-- **How a retry stays idempotent is not yet settled.** Re-sending only the failed
-  (`T6`) must never reach a recipient who already received the message, and
-  `mail_log` records each attempt as its own row without superseding an earlier
-  one — so the mechanism that marks a failed row spent once a later attempt
-  succeeds shapes `MAIL-002`'s table. It is filed at
-  [`MAIL-DEC-02`](../../decisions-log.md#MAIL-DEC-02); until it settles, `T6` is
-  not built and a failed recipient is re-reached only by a fresh, deliberately
-  re-confirmed send.
+- **A retry names failures, not people, and that is what makes it safe.**
+  `mail_log` records each attempt as its own row and never supersedes an earlier
+  one, so a failed row stays `failed` after a later attempt succeeds and "who
+  failed" cannot be read from the state alone. `retry_of`
+  ([`MAIL-DEC-02`](../../decisions-log.md#MAIL-DEC-02)) is the other half: a
+  re-send names the attempt it supersedes, a unique index lets one attempt be
+  named once, and the claim is taken before the message leaves. The cost is that
+  the composer must post the message back for a retry to have anything to send,
+  since no body is kept; the subject is checked against the rows and the body
+  cannot be, so what a retry guarantees is the same *subject* as the send it
+  follows.
 
 ## 7. Task list
 

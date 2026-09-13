@@ -55,5 +55,34 @@
     "rightsWithdrawal": "Le retrait de votre consentement, ce qui entraîne la suppression de votre compte, car vos données ne servent ici qu'à vous donner accès.",
     "title": "Comment cet espace traite vos données",
     "link": "Comment nous traitons vos données"
+  },
+  "invitationMail": {
+    "subject": "Une invitation à l’espace investisseurs de VALO Tech",
+    "greeting": "Bonjour {name},",
+    "intro": "{inviter} vous a invité à l’espace investisseurs de VALO Tech, où l’entreprise publie ses rapports à destination de celles et ceux qui y ont investi.",
+    "action": "Ouvrez ce lien pour choisir un mot de passe et vous connecter :",
+    "expiry": "Le lien ne peut servir qu’une fois et cesse de fonctionner au bout de {days, plural, one {# jour} other {# jours}}.",
+    "ignore": "Si vous ne vous attendiez pas à ce message, vous pouvez l’ignorer. Rien ne se produit tant que le lien n’est pas ouvert.",
+    "signature": "VALO Tech"
+  },
+  "resetMail": {
+    "subject": "Réinitialisez votre mot de passe VALO Tech",
+    "greeting": "Bonjour {name},",
+    "intro": "Quelqu’un a demandé la réinitialisation du mot de passe de cette adresse dans l’espace investisseurs de VALO Tech.",
+    "action": "Si c’était vous, ouvrez ce lien pour choisir un nouveau mot de passe :",
+    "expiry": "Le lien ne peut servir qu’une fois et cesse de fonctionner au bout de {hours, plural, one {# heure} other {# heures}}.",
+    "ignore": "Si ce n’était pas vous, votre mot de passe n’a pas changé et vous n’avez rien à faire.",
+    "signature": "VALO Tech"
+  },
+  "forgot": {
+    "title": "Réinitialisez votre mot de passe",
+    "intro": "Saisissez votre adresse e-mail. Si un compte l’utilise, un lien pour choisir un nouveau mot de passe y sera envoyé.",
+    "email": "Adresse e-mail",
+    "submit": "Envoyer le lien",
+    "sent": "Si un compte utilise cette adresse, un lien est en route. Il ne peut servir qu’une fois et cesse de fonctionner au bout d’une heure.",
+    "tooManyAttempts": "Trop de tentatives. Patientez un instant puis réessayez.",
+    "unexpected": "Une erreur est survenue. Réessayez dans un instant.",
+    "backToSignIn": "Retour à la connexion",
+    "unavailable": "La réinitialisation de votre mot de passe n’est pas disponible pour le moment. Contactez la personne qui vous a invité à l’espace investisseurs."
   }
 }

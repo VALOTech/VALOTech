@@ -1,4 +1,8 @@
+/* The muted ink the admin modules share for a field’s supporting line.
+   #52525b on the console’s white is 7.5:1, which clears AA for the small
+   text this is used at (A11Y-R03). */
 .form {
+  --invite-muted: #52525b;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
@@ -32,4 +36,12 @@
 
 .error {
   margin-top: 1rem;
+}
+
+/* Under the language field: what the choice does, where the person deciding
+   it is looking. A legend at the top of the form would be read once and not
+   at the moment the select is opened. */
+.note {
+  color: var(--invite-muted);
+  font-size: 0.8125rem;
 }

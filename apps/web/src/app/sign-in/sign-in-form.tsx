@@ -14,7 +14,7 @@ import type { FormEvent, ReactElement } from 'react';
 
 import { useTranslations } from 'next-intl';
 
-import styles from './sign-in.module.css';
+import styles from '../auth-card.module.css';
 
 type Outcome = 'invalid' | 'too_many' | 'unexpected';
 

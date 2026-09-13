@@ -1,3 +1,10 @@
+/* The card the two public authentication surfaces are drawn on: /sign-in and
+   /forgot (AUTH-001/T4, SEC-001/T4). One stylesheet rather than two, because
+   a person who fails to sign in lands on the second within a click of the
+   first, and a card that changed shape between them would read as a different
+   site asking for the same address -- the exact thing somebody who has just
+   been refused a password should not have to wonder about. */
+
 .main {
   min-height: 100dvh;
   display: flex;
@@ -122,9 +129,10 @@
   }
 }
 
-/* The privacy notice's link, set apart from the card rather than inside it: it
-   is not part of signing in, and somebody who has not decided to sign in yet is
-   exactly the reader it is there for (LEGAL-SG-001/T2). */
+/* Set apart from the card rather than inside it -- the privacy notice on
+   /sign-in, the way back on /forgot. Neither is part of the act the card is
+   for, and somebody who has not decided to sign in yet is exactly the reader
+   the notice is there for (LEGAL-SG-001/T2). */
 .aside {
   margin: 1.25rem 0 0;
   text-align: center;

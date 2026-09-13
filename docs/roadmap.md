@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_316 tasks in the plan, 231 closed, 85 outstanding._
+_316 tasks in the plan, 234 closed, 82 outstanding._
 
 ---
 
@@ -35,7 +35,7 @@ _48/50 closed (96%) · 2 outstanding — 0 buildable now · 0 waiting on the own
 
 _Who may read what, and what records that they did. Everything above reads through the gate this wave builds, so a shortcut here is a shortcut in every feature after it. Sign-out precedes invitation deliberately: a session that cannot be ended server-side is a defect that grows with every account created. The scene sits here too, one layer above the page it moves behind._
 
-_72/75 closed (96%) · 3 outstanding — 2 buildable now · 0 waiting on the owner · 1 external residue · 0 parked to a later wave._
+_74/75 closed (98%) · 1 outstanding — 0 buildable now · 0 waiting on the owner · 1 external residue · 0 parked to a later wave._
 
 - **AUTH-001** · Sign-in — 5/5 closed
 - **DATA-003** · Backup and restore — 5/5 closed
@@ -45,9 +45,7 @@ _72/75 closed (96%) · 3 outstanding — 2 buildable now · 0 waiting on the own
   - `[!] SEC-002/T2` — The application role holds no UPDATE or DELETE on it  · _external_ · **Blocked by:** pending-external: the REVOKE runs where the database is deployed, against the role in DATABASE_URL, and is documented at docs/operator-checklist.md#A…
 
 - **AUTH-002** · Session and role gate — 5/5 closed
-- **AUTH-003** · Invitation and password reset — 6/7 closed · depth 3
-  - `[ ] AUTH-003/T3` — The mail that carries the link, in the invitee's locale
-
+- **AUTH-003** · Invitation and password reset — 7/7 closed
 - **SCENE-002** · Satellites and their rings — 3/3 closed
 - **SCENE-003** · The sky — 3/3 closed
 - **SCENE-005** · Orbit stages — 4/4 closed
@@ -56,9 +54,7 @@ _72/75 closed (96%) · 3 outstanding — 2 buildable now · 0 waiting on the own
 - **AUTH-004** · Sign-out — 5/5 closed
 - **CMS-001** · Content model and revisions — 7/7 closed
 - **SCENE-004** · Annotation chips — 3/3 closed
-- **SEC-001** · Security baseline — 4/5 closed · depth 4
-  - `[~] SEC-001/T4` — Rate limits on sign-in, reset and invitation, per account and per address, refusing identically  · **Note:** Two of the three surfaces are rate-limited. Sign-in is limited per account and per address (apps/web/src/app/api/auth/sign-in/route.ts, AUTH-001), an…
-
+- **SEC-001** · Security baseline — 5/5 closed
 ## W2 — The desk
 
 _The machinery every kind of writing shares — the editor, the media, the locale states, the audience rule, publishing, search — plus the account, configuration and logging surfaces an operator needs before anything is published. Building it once is the whole reason a report, an update and a deck are three navigations over one system rather than three systems._
@@ -85,7 +81,7 @@ _69/73 closed (94%) · 4 outstanding — 0 buildable now · 1 waiting on the own
 
 _The three content types, and the compliance posture that governs what is held about the people reading them. Updates come before decks, and not only because they are the simpler shape of the same problem: they are what the room is for. An investor signs in to find out what has happened since they last looked._
 
-_39/61 closed (63%) · 22 outstanding — 21 buildable now · 1 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_40/61 closed (65%) · 21 outstanding — 20 buildable now · 1 waiting on the owner · 0 external residue · 0 parked to a later wave._
 
 - **DECK-001** · Deck authoring — 6/6 closed
 - **LEGAL-SG-001** · PDPA posture — 4/7 closed · depth 7
@@ -93,9 +89,7 @@ _39/61 closed (63%) · 22 outstanding — 21 buildable now · 1 waiting on the o
   - `[ ] LEGAL-SG-001/T4` — A named DPO recorded, and published in the notice
   - `[!] LEGAL-SG-001/T7` — The cross-border transfer assessment, now that the hosting and the mail carrier are both settled  · _pending-decision_ · **Blocked by:** pending-decision: OPS-DEC-03 ([docs/decisions-log.md#OPS-DEC-03](decisions-log.md#OPS-DEC-03)) — the assessment is about whether personal data leaves…
 
-- **MAIL-001** · Investor mail — 7/8 closed · depth 7
-  - `[ ] MAIL-001/T6` — Retry sends only to the ones that failed
-
+- **MAIL-001** · Investor mail — 8/8 closed
 - **POST-001** · Update authoring — 0/6 closed · depth 7
   - `[ ] POST-001/T1` — A composer that opens with the cursor in the body and fits without scrolling
   - `[ ] POST-001/T2` — Kind is required and chosen before writing; three kinds, no more

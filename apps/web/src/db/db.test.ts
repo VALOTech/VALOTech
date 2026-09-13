@@ -165,6 +165,7 @@ const SELECTABLE_SAMPLES: { readonly [T in keyof Database]: Selectable<Database[
     state: 'invited',
     last_sign_in: null,
     read_tracking_objected: false,
+    locale: 'vi',
     created_at: AT,
     updated_at: AT,
   },
@@ -258,6 +259,7 @@ const SELECTABLE_SAMPLES: { readonly [T in keyof Database]: Selectable<Database[
     state: 'accepted',
     queue_id: '2QkP7r0000000001',
     error: null,
+    retry_of: null,
   },
   unsubscribes: {
     account_id: ID,

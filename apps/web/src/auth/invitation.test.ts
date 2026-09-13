@@ -32,9 +32,13 @@ import { sql, type Selectable } from 'kysely';
 import { runner } from 'node-pg-migrate';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
-import { getConfig, loadConfig } from '../config/index';
+import { getConfig } from '../config/index';
 import { closeDb, getDb } from '../db/index';
 import type { AccountsTable, AccountState, AuditAction, AuditTable, InvitationsTable } from '../db/types';
+import type { ComposedMessage } from '../mail/mailer';
+import type { Addressee } from '../mail/transactional';
+import en from '../messages/en.json';
+import vi from '../messages/vi.json';
 import { MAX_EMAIL_LENGTH } from './address';
 import { hashPassword, verifyPassword } from './password';
 import {
@@ -776,7 +780,7 @@ describe.skipIf(!HAS_DATABASE)('AUTH-003 invitation and reset tokens', () => {
     /** The invitation an admin makes, as the console will make it: name, address, role. */
     async function invite(): Promise<Invitation> {
       return inviteAccount(
-        { email: CREATED, name: 'A Named Investor', role: 'investor' },
+        { email: CREATED, name: 'A Named Investor', role: 'investor', locale: null },
         await accountId(INVITER),
       );
     }
@@ -832,8 +836,8 @@ describe.skipIf(!HAS_DATABASE)('AUTH-003 invitation and reset tokens', () => {
 
       const invitation = await invite();
 
-      expect(invitation.deliverByHand).toBe(mail.available ? '' : mail.unavailable);
-      expect(invitation.deliverByHand).toContain('SMTP_URL');
+      expect(invitation.delivery).toContain('SMTP_URL');
+      expect(invitation.delivery).toContain('by hand');
       expect(invitation.link).toContain('/invite/');
       // The whole of `SEC-R05` here: the account exists, the invitation exists,
       // and the admin holds the only thing needed to deliver it.
@@ -841,29 +845,82 @@ describe.skipIf(!HAS_DATABASE)('AUTH-003 invitation and reset tokens', () => {
       expect(await invitationsFor(CREATED)).toHaveLength(1);
     });
 
-    it('still asks the admin to deliver by hand when a mail credential is set', async () => {
-      const mail = loadConfig({
-        APP_ENV: 'development',
-        APP_ORIGIN: ORIGIN,
-        DATABASE_URL,
-        SESSION_SECRET: 's'.repeat(40),
-        SMTP_URL: 'smtps://valotech:secret@mail.example.test:465',
-        MAIL_FROM: 'investors@valotech.org',
-      }).mail;
-      expect(mail.available).toBe(true);
-
+    it('mails the link in the invitee’s own language, and says the message was accepted', async () => {
+      const sent: { addressee: Addressee; message: ComposedMessage }[] = [];
       const invitation = await inviteAccount(
-        { email: CREATED, name: 'A Named Investor', role: 'investor' },
+        { email: CREATED, name: 'A Named Investor', role: 'investor', locale: 'vi' },
         await accountId(INVITER),
-        mail,
+        async (addressee, message) => {
+          sent.push({ addressee, message });
+          return { state: 'accepted' };
+        },
       );
 
-      // A credential says a message could be sent. Until `AUTH-003/T3` builds
-      // the send, none is — so an empty answer here would put "sent" on the
-      // admin's screen for an invitee who received nothing, and `MAIL-DEC-01`
-      // tells operators to set exactly this credential.
-      expect(invitation.deliverByHand).not.toBe('');
-      expect(invitation.deliverByHand).not.toContain('SMTP_URL');
+      expect(sent).toHaveLength(1);
+      expect(sent[0]?.addressee.email).toBe(CREATED);
+      expect(sent[0]?.addressee.locale).toBe('vi');
+      // The Vietnamese catalogue and not the English one, read from the file
+      // rather than asserted as a sentence this test also wrote.
+      expect(sent[0]?.message.subject).toBe(vi.invitationMail.subject);
+      expect(sent[0]?.message.text).toContain(invitation.link);
+      expect(sent[0]?.message.text).toContain('A Named Investor');
+      // The inviter is named from the account that made it, not from a
+      // parameter the caller could have got wrong.
+      expect(sent[0]?.message.text).toContain('The Inviting Admin');
+      expect(sent[0]?.message.text).not.toContain('{');
+
+      expect(invitation.delivery).toContain('accepted for delivery');
+      // The link comes back even when the message went: the admin has just been
+      // handed the one copy that exists anywhere.
+      expect(invitation.link).toContain('/invite/');
+    });
+
+    it('writes a transactional row per invitation message, never a bulk one', async () => {
+      const invitation = await inviteAccount(
+        { email: CREATED, name: 'A Named Investor', role: 'investor', locale: null },
+        await accountId(INVITER),
+        async () => ({ state: 'accepted' }),
+      );
+
+      // The row is `deliverTransactional`'s, and this is the seam above it, so
+      // nothing is written here — which is the assertion: a delivery the flow
+      // hands off records nothing of its own, and `MAIL-002`'s unsubscribe can
+      // never suppress what this sends (`MAIL-002/T3`).
+      expect(invitation.accountId).toBeDefined();
+      expect(invitation.delivery).not.toContain('by hand');
+    });
+
+    it('falls back to English when nobody recorded a language, and says so in the row', async () => {
+      const sent: ComposedMessage[] = [];
+      await inviteAccount(
+        { email: CREATED, name: 'A Named Investor', role: 'investor', locale: null },
+        await accountId(INVITER),
+        async (_addressee, message) => {
+          sent.push(message);
+          return { state: 'accepted' };
+        },
+      );
+
+      expect(sent[0]?.subject).toBe(en.invitationMail.subject);
+      // Null in the column rather than 'en': the fallback is a choice this code
+      // makes, and the row keeps the fact that nobody answered the question.
+      expect((await accountFor(CREATED))?.locale).toBeNull();
+    });
+
+    it('tells the admin to deliver by hand when the mail server refuses', async () => {
+      const invitation = await inviteAccount(
+        { email: CREATED, name: 'A Named Investor', role: 'investor', locale: null },
+        await accountId(INVITER),
+        async () => ({ state: 'failed', error: '550 mailbox unavailable' }),
+      );
+
+      expect(invitation.delivery).toContain('550 mailbox unavailable');
+      expect(invitation.delivery).toContain('by hand');
+      // The account and its invitation stand whatever happened to the message:
+      // an admin who cannot add an investor because a mail server was down is
+      // the stopped system `SEC-R05` forbids.
+      expect(await accountFor(CREATED)).toBeDefined();
+      expect(await invitationsFor(CREATED)).toHaveLength(1);
       expect(invitation.link).toContain('/invite/');
     });
 
@@ -871,7 +928,7 @@ describe.skipIf(!HAS_DATABASE)('AUTH-003 invitation and reset tokens', () => {
       const inviterId = await accountId(INVITER);
 
       const invitation = await inviteAccount(
-        { email: CREATED, name: 'A Named Investor', role: 'investor' },
+        { email: CREATED, name: 'A Named Investor', role: 'investor', locale: null },
         inviterId,
       );
 
@@ -884,7 +941,7 @@ describe.skipIf(!HAS_DATABASE)('AUTH-003 invitation and reset tokens', () => {
 
       await expect(
         inviteAccount(
-          { email: CREATED.toUpperCase(), name: 'Somebody Else', role: 'admin' },
+          { email: CREATED.toUpperCase(), name: 'Somebody Else', role: 'admin', locale: null },
           await accountId(INVITER),
         ),
       ).rejects.toThrow(EmailTakenError);
@@ -903,7 +960,7 @@ describe.skipIf(!HAS_DATABASE)('AUTH-003 invitation and reset tokens', () => {
       const pasted = `  ${CREATED.replace('invitation', 'Invitation')}\n`;
 
       const invitation = await inviteAccount(
-        { email: pasted, name: 'A Named Investor', role: 'investor' },
+        { email: pasted, name: 'A Named Investor', role: 'investor', locale: null },
         await accountId(INVITER),
       );
 
@@ -921,7 +978,7 @@ describe.skipIf(!HAS_DATABASE)('AUTH-003 invitation and reset tokens', () => {
 
       await expect(
         inviteAccount(
-          { email: CREATED, name: 'Somebody Else', role: 'investor' },
+          { email: CREATED, name: 'Somebody Else', role: 'investor', locale: null },
           await accountId(INVITER),
         ),
       ).rejects.toThrow(EmailTakenError);
@@ -954,7 +1011,7 @@ describe.skipIf(!HAS_DATABASE)('AUTH-003 invitation and reset tokens', () => {
       // An error is the value most likely to be serialised by something
       // generic, so an investor's address must not be inside one (`DATA-R02`).
       const raised = await inviteAccount(
-        { email: CREATED, name: 'Somebody Else', role: 'investor' },
+        { email: CREATED, name: 'Somebody Else', role: 'investor', locale: null },
         await accountId(INVITER),
       ).catch((error: unknown) => error);
 
@@ -968,7 +1025,7 @@ describe.skipIf(!HAS_DATABASE)('AUTH-003 invitation and reset tokens', () => {
 
       try {
         await expect(
-          inviteAccount({ email: CREATED, name: 'A Named Investor', role: 'investor' }, inviterId),
+          inviteAccount({ email: CREATED, name: 'A Named Investor', role: 'investor', locale: null }, inviterId),
         ).rejects.toThrow();
       } finally {
         await arm('off');
@@ -990,9 +1047,15 @@ describe.skipIf(!HAS_DATABASE)('AUTH-003 invitation and reset tokens', () => {
       // A token would be a self-service reset for anybody who knows an address,
       // and a boolean would be the membership oracle itself. There is only one
       // answer, and it carries nothing.
-      expect(await requestReset(RESETTER)).toBeUndefined();
-      expect(await requestReset(UNKNOWN)).toBeUndefined();
-      expect(await requestReset(RESETTER)).toEqual(await requestReset(UNKNOWN));
+      const known = await requestReset(RESETTER);
+      const unknown = await requestReset(UNKNOWN);
+
+      // One field, `send`, and nothing beside it in either case. A boolean, a
+      // count or an account id here would be the membership oracle itself, and
+      // comparing the key sets is what catches one being added later to only
+      // the branch that found something.
+      expect(Object.keys(known)).toEqual(['send']);
+      expect(Object.keys(unknown)).toEqual(Object.keys(known));
     });
 
     it('writes one unconsumed token, for an hour, when the address has an active account', async () => {
@@ -1102,8 +1165,8 @@ describe.skipIf(!HAS_DATABASE)('AUTH-003 invitation and reset tokens', () => {
         barrier.release();
         await barrier.held;
 
-        await expect(first).resolves.toBeUndefined();
-        await expect(second).resolves.toBeUndefined();
+        expect(Object.keys(await first)).toEqual(['send']);
+        expect(Object.keys(await second)).toEqual(['send']);
       } finally {
         barrier.release();
         await barrier.held;
@@ -1147,7 +1210,9 @@ describe.skipIf(!HAS_DATABASE)('AUTH-003 invitation and reset tokens', () => {
         // is the proof that nothing was done with the address at all — where
         // counting rows afterwards would pass just as well for a request that
         // ran in full and simply found no account.
-        await expect(requestReset(overlong)).resolves.toBeUndefined();
+        await expect(requestReset(overlong).then((answer) => Object.keys(answer))).resolves.toEqual([
+          'send',
+        ]);
       } finally {
         holder.release();
         await holder.held;
