@@ -131,6 +131,9 @@ def main():
 
         resolved = 0
         for token in PATH_RE.findall(scan):
+            # A citation closing a sentence carries the sentence's full stop,
+            # and no path or symbol ends in one: the dot belongs to the prose.
+            token = token.rstrip(".")
             # An anchor citation is checked against the document it names.
             reason = check_citation(token, targets)
             if reason:
