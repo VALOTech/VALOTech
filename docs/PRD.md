@@ -103,7 +103,7 @@ A third role — an editor who may draft but not publish, an analyst who may rea
 | `AUTH-002` | Session and role gate | live | httpOnly cookie, rotation on privilege change, server-side invalidation; every gated read scoped by role at the query |
 | `AUTH-003` | Invitation and password reset | building | An admin invites; the invitee sets their own password from a single-use, expiring link |
 | `AUTH-004` | Sign-out | live | Session destroyed server-side, not merely cleared client-side |
-| `ADMIN-001` | Account management | live | Create, suspend and delete investor accounts; grant and revoke deck access; audited |
+| `ADMIN-001` | Account management | building | Create, suspend and delete investor accounts; correct a person's name and address; grant and revoke deck access; audited |
 | `ADMIN-002` | Admin console shell | live | The staff surface the other admin features live in |
 
 ### 5.3 The content system — `CMS`
@@ -136,7 +136,7 @@ because an investor navigates each of them differently.
 | `RPT-003` | Report reading | design | The investor's view: sequential, readable on a phone, printable, and stating the period and publication date on the page itself |
 | `POST-001` | Update authoring | design | A short update, of a stated kind: an announcement, an achievement, or a progress note. Kinds exist because the three are read differently and an investor scanning for one should not have to read the other two |
 | `POST-002` | Update publishing and audience | building | An update is public, investor-only, or draft; audience is enforced at the query, and the stream is ordered newest first |
-| `DECK-001` | Deck authoring | building | An admin composes a presentation as ordered sections |
+| `DECK-001` | Deck authoring | live | An admin composes a presentation as ordered sections |
 | `DECK-002` | Deck versioning and publishing | building | A deck is published as a version; an investor reads the version they were granted; a draft is never visible |
 | `DECK-003` | Deck reading | design | The investor's view: sequential, readable on a phone, printable |
 | `DECK-004` | Deck access grants | building | Which investor may read which deck, granted and revoked by an admin, audited |
@@ -165,7 +165,7 @@ because an investor navigates each of them differently.
 
 | Code | Feature | Status | What it is |
 |---|---|---|---|
-| `LEGAL-SG-001` | PDPA posture | design | Consent for the stated purpose, access and correction, breach notification, a named DPO |
+| `LEGAL-SG-001` | PDPA posture | building | Consent for the stated purpose, access and correction, breach notification, a named DPO |
 | `LEGAL-GLOBAL-001` | GDPR posture for EU investors | building | Lawful basis, subject rights, and what crosses a border |
 | `LEGAL-GLOBAL-002` | Cookie and analytics posture | design | Whether the site measures anything about visitors — settled at `docs/decisions-log.md#OPS-DEC-01` (permitted, off by default); the pages and banner are `SITE-006` |
 

@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_313 tasks in the plan, 221 closed, 92 outstanding._
+_315 tasks in the plan, 224 closed, 91 outstanding._
 
 ---
 
@@ -63,9 +63,11 @@ _71/74 closed (95%) · 3 outstanding — 1 buildable now · 0 waiting on the own
 
 _The machinery every kind of writing shares — the editor, the media, the locale states, the audience rule, publishing, search — plus the account, configuration and logging surfaces an operator needs before anything is published. Building it once is the whole reason a report, an update and a deck are three navigations over one system rather than three systems._
 
-_68/72 closed (94%) · 4 outstanding — 0 buildable now · 1 waiting on the owner · 0 external residue · 3 parked to a later wave._
+_68/73 closed (93%) · 5 outstanding — 1 buildable now · 1 waiting on the owner · 0 external residue · 3 parked to a later wave._
 
-- **ADMIN-001** · Account management — 9/9 closed
+- **ADMIN-001** · Account management — 9/10 closed · depth 5
+  - `[ ] ADMIN-001/T10` — Correcting a person's name and address from their page, audited like every other act
+
 - **CFG-001** · Runtime configuration — 8/8 closed
 - **CMS-003** · Media library — 10/10 closed
 - **CMS-005** · Locale variants and translation state — 6/6 closed
@@ -85,18 +87,15 @@ _68/72 closed (94%) · 4 outstanding — 0 buildable now · 1 waiting on the own
 
 _The three content types, and the compliance posture that governs what is held about the people reading them. Updates come before decks, and not only because they are the simpler shape of the same problem: they are what the room is for. An investor signs in to find out what has happened since they last looked._
 
-_31/60 closed (51%) · 29 outstanding — 29 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_34/61 closed (55%) · 27 outstanding — 27 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
 
-- **DECK-001** · Deck authoring — 5/6 closed · depth 7
-  - `[ ] DECK-001/T6` — The editor writes a section's speaker context, which today only the overview can show
-
-- **LEGAL-SG-001** · PDPA posture — 0/6 closed · depth 7
+- **DECK-001** · Deck authoring — 6/6 closed
+- **LEGAL-SG-001** · PDPA posture — 2/7 closed · depth 7
   - `[ ] LEGAL-SG-001/T1` — The privacy notice: what is held, why, how long, who to write to, in twenty locales
   - `[ ] LEGAL-SG-001/T2` — The notice is linked from the sign-in page and the room's footer
-  - `[ ] LEGAL-SG-001/T3` — The four rights answered within thirty days, with the admin path for each written down
   - `[ ] LEGAL-SG-001/T4` — A named DPO recorded, and published in the notice
-  - `[ ] LEGAL-SG-001/T5` — A breach runbook with the assessment steps and both notification paths
   - `[ ] LEGAL-SG-001/T6` — The backup window disclosed in the notice rather than omitted
+  - `[ ] LEGAL-SG-001/T7` — The cross-border transfer assessment, now that the hosting and the mail carrier are both settled
 
 - **MAIL-001** · Investor mail — 4/8 closed · depth 7
   - `[ ] MAIL-001/T4` — The send requires the recipient count to be typed, and re-resolves every recipient first

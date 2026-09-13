@@ -147,6 +147,16 @@
   outline-offset: 1px;
 }
 
+/* What a field means, when the label alone cannot carry it. Tied to its control
+   by aria-describedby rather than sitting near it, so it is read with the field
+   rather than found afterwards (A11Y-R02). */
+.hint {
+  margin: 0.3rem 0 0;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  opacity: 0.72;
+}
+
 .itemRow {
   display: flex;
   gap: 0.4rem;

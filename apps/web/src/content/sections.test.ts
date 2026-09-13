@@ -12,7 +12,7 @@ import { describe, expect, it } from 'vitest';
 
 import type { JsonValue } from '../db/types';
 
-import { type Block, withoutSpeakerContext } from './blocks';
+import { type Block, withSpeakerContext, withoutSpeakerContext } from './blocks';
 import { cardsOf, deriveSections, reorderSections, totalsOf } from './sections';
 
 const heading = (text: string, context?: string): Block =>
@@ -248,5 +248,46 @@ describe('reorderSections — a move is an edit of the block array (DECK-001/T3)
 
     expect(reorderSections(one, 0, 0)).toBe(one);
     expect(reorderSections([], 0, 0)).toEqual([]);
+  });
+});
+
+describe('withSpeakerContext — writing a section note (DECK-001/T6)', () => {
+  const bare: Block = { type: 'heading', level: 2, text: 'One' };
+  const noted: Block = { type: 'heading', level: 2, text: 'One', context: 'say it slowly' };
+
+  it('puts the note on the heading as typed', () => {
+    expect(withSpeakerContext(bare, 'say it slowly')).toEqual(noted);
+  });
+
+  it('replaces a note rather than appending to it', () => {
+    expect(withSpeakerContext(noted, 'say it quickly')).toEqual({
+      type: 'heading',
+      level: 2,
+      text: 'One',
+      context: 'say it quickly',
+    });
+  });
+
+  it('removes the field when the note is cleared, because empty and absent are one fact', () => {
+    const cleared = withSpeakerContext(noted, '');
+
+    expect(cleared).toEqual(bare);
+    expect('context' in cleared).toBe(false);
+  });
+
+  it('treats whitespace as cleared, since that is what the space bar leaves behind', () => {
+    expect('context' in withSpeakerContext(noted, '   ')).toBe(false);
+  });
+
+  it('keeps the note a card shows exactly as it was written', () => {
+    const [card] = cardsOf(deriveSections([withSpeakerContext(bare, '  pause here  ')]));
+
+    expect(card?.context).toBe('  pause here  ');
+  });
+
+  it('leaves the heading otherwise untouched, level and text alike', () => {
+    const sub: Block = { type: 'heading', level: 3, text: 'Detail' };
+
+    expect(withSpeakerContext(sub, 'aside')).toEqual({ type: 'heading', level: 3, text: 'Detail', context: 'aside' });
   });
 });

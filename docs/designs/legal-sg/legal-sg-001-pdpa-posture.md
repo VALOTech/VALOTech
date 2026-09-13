@@ -7,7 +7,7 @@ depends_on: [DATA-002]
 depended_by: [LEGAL-GLOBAL-001]
 layers_touched: [service, frontend, ui]
 cross_cutting_rules: [DATA-R01, DATA-R02, DATA-R03, DATA-R04, I18N-R01]
-status: design-ready
+status: in-progress
 ---
 
 # `LEGAL-SG-001` — PDPA posture
@@ -64,7 +64,7 @@ this product does not do is worse than a page naming five things accurately.
 | Right | How |
 |---|---|
 | Access | Write to the contact; an admin reads the person's page and replies. No self-service export (`DATA-002` §3) |
-| Correction | Write to the contact; an admin edits the account |
+| Correction | Write to the contact; an admin edits the account (`ADMIN-001/T10` — until it lands there is no control, and `docs/runbooks/legal-sg-001-rights.md` carries the two paths that work today) |
 | Withdrawal of consent | Write to the contact, or ask an admin. Withdrawal means the account is deleted, because the only purpose is access |
 | Erasure | `DATA-002`'s manifest-driven delete |
 
@@ -118,10 +118,13 @@ obligations are stricter and mostly the same in shape.
 - **DNC provisions do not apply** — no telephone numbers are held and no
   marketing messages are sent to Singapore numbers. Stated so a future reader
   does not have to re-derive it.
-- **No cross-border transfer assessment yet.** It depends on where the
-  application runs (`INFRA-DEC-03`) and on the mail carrier
-  (`MAIL-DEC-01`). Both are open, and the assessment is a task that unblocks
-  with them rather than a gap in this design.
+- **The cross-border transfer assessment is owed, and both its inputs have
+  landed.** [`INFRA-DEC-03`](../../decisions-log.md#INFRA-DEC-03) put the
+  application on AWS and [`MAIL-DEC-01`](../../decisions-log.md#MAIL-DEC-01)
+  chose SMTP against the company’s own mailbox, which takes a third-party mail
+  processor out of the picture entirely — so what remains to assess is where the
+  data rests and who can reach it, not who else holds a copy. `LEGAL-SG-001/T7`
+  is that assessment.
 - **The owner is the DPO.** Correct at this size and worth revisiting when
   somebody else joins, because a DPO who is also the person deciding what to
   build has a structural conflict that only scale makes real.
@@ -134,3 +137,4 @@ obligations are stricter and mostly the same in shape.
 - `LEGAL-SG-001/T4` — A named DPO recorded, and published in the notice
 - `LEGAL-SG-001/T5` — A breach runbook with the assessment steps and both notification paths
 - `LEGAL-SG-001/T6` — The backup window disclosed in the notice rather than omitted
+- `LEGAL-SG-001/T7` — The cross-border transfer assessment, now that the hosting and the mail carrier are both settled

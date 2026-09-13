@@ -231,6 +231,25 @@ export function validateBlocks(value: unknown): Block[] {
 }
 
 /**
+ * A heading carrying `note` as its speaker context, or carrying none when the
+ * note is empty (`DECK-001/T6`).
+ *
+ * **An empty note and no note are the same fact**, so one is never stored as the
+ * other. A heading left with `context: ''` would read as a section that has
+ * something to say and say nothing: the overview would show a labelled blank
+ * line, and `deriveSections` would carry the empty string onto a card as though
+ * an author had put it there. Clearing the field therefore removes it.
+ *
+ * Whitespace alone is empty for the same reason — a note of three spaces is a
+ * field somebody cleared with the space bar — but a note is otherwise stored as
+ * typed, because what a presenter means to say is theirs to shape.
+ */
+export function withSpeakerContext(block: Extract<Block, { type: 'heading' }>, note: string): Block {
+  const { context: _removed, ...bare } = block;
+  return note.trim() === '' ? bare : { ...bare, context: note };
+}
+
+/**
  * The blocks with speaker context removed from every heading (`DECK-001/T5`).
  *
  * Speaker context is written on a heading and kept for the overview and the

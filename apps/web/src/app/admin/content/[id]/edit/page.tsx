@@ -29,5 +29,8 @@ export default async function EditContentPage({
   const view = await forAuthor(id, actor);
   const initialBlocks = view === null ? [] : validateBlocks(view.revision.blocks);
 
-  return <Editor itemId={id} initialBlocks={initialBlocks} />;
+  // A deck is the one type that is presented as well as read, so it is the one
+  // whose headings carry a speaker note (`DECK-001/T6`). The editor is told the
+  // type rather than shown every field every type could have.
+  return <Editor itemId={id} type={view?.item.type ?? null} initialBlocks={initialBlocks} />;
 }

@@ -17,7 +17,8 @@
 import type { ClipboardEvent, ReactElement } from 'react';
 import { useId, useRef, useState } from 'react';
 
-import type { Block, BlockType, Mark, MarkType } from '../../../../../content/blocks';
+import { type Block, type BlockType, type Mark, type MarkType, withSpeakerContext } from '../../../../../content/blocks';
+import type { ContentType } from '../../../../../db/types';
 import { applyMark, remapMarks, removeMark } from '../../../../../content/marks';
 import { isStructured, pasteToBlocks } from '../../../../../content/paste';
 
@@ -71,7 +72,32 @@ function Field({ label, children }: { label: string; children: (id: string) => R
   );
 }
 
-function HeadingFields({ block, onChange }: { block: Narrow<'heading'>; onChange: (b: Block) => void }): ReactElement {
+/**
+ * A heading's fields, plus the speaker note a deck's sections carry
+ * (`DECK-001/T6`).
+ *
+ * **The note is offered on a deck's level-2 headings and nowhere else.** A
+ * section is a level-2 heading (`DECK-001` §3), and a deck is the one type that
+ * is presented as well as read — a report or an update has no moment where
+ * somebody is speaking over it, so the field would invite text that means
+ * nothing and that no surface would ever show. The schema stays permissive
+ * where this is strict: `blocks.ts` accepts a context on any heading and
+ * `withoutSpeakerContext` strips it from any heading, so a note that arrives by
+ * some other route is still never served.
+ *
+ * Removing the text removes the field rather than storing an empty one, because
+ * an empty note and no note are the same fact and the overview would otherwise
+ * show a blank line labelled as something to say.
+ */
+function HeadingFields({
+  block,
+  type,
+  onChange,
+}: {
+  block: Narrow<'heading'>;
+  type: ContentType | null;
+  onChange: (b: Block) => void;
+}): ReactElement {
   return (
     <>
       <Field label="Level">
@@ -97,6 +123,26 @@ function HeadingFields({ block, onChange }: { block: Narrow<'heading'>; onChange
           />
         )}
       </Field>
+      {type !== 'deck' || block.level !== 2 ? null : (
+        <Field label="To say when presenting">
+          {(id) => (
+            <>
+              <textarea
+                id={id}
+                className={styles.textarea}
+                rows={2}
+                value={block.context ?? ''}
+                aria-describedby={`${id}-note`}
+                onChange={(e) => onChange(withSpeakerContext(block, e.target.value))}
+              />
+              <p id={`${id}-note`} className={styles.hint}>
+                Yours and the room&rsquo;s, never an investor&rsquo;s: this is stripped before a deck is served
+                and appears only in the section overview.
+              </p>
+            </>
+          )}
+        </Field>
+      )}
     </>
   );
 }
@@ -438,16 +484,19 @@ function ListFields({ block, onChange }: { block: Narrow<'list'>; onChange: (b: 
 /** Dispatch to the fields for this block's type. */
 export function BlockFields({
   block,
+  type,
   onChange,
   onPaste,
 }: {
   block: Block;
+  /** What is being written, so a field only one type uses appears only there. */
+  type: ContentType | null;
   onChange: (b: Block) => void;
   onPaste: (blocks: Block[]) => void;
 }): ReactElement {
   switch (block.type) {
     case 'heading':
-      return <HeadingFields block={block} onChange={onChange} />;
+      return <HeadingFields block={block} type={type} onChange={onChange} />;
     case 'paragraph':
       return <ParagraphFields block={block} onChange={onChange} onPaste={onPaste} />;
     case 'list':

@@ -31,6 +31,7 @@ import { useEffect, useRef, useState } from 'react';
 import type { KeyboardEvent as ReactKeyboardEvent, ReactElement } from 'react';
 
 import { type Block, BLOCK_TYPES, BlockValidationError, validateBlocks } from '../../../../../content/blocks';
+import type { ContentType } from '../../../../../db/types';
 
 import { BlockFields, defaultBlock, TYPE_LABELS } from './block-fields';
 import styles from './editor.module.css';
@@ -61,7 +62,16 @@ function blocksOf(items: readonly Item[]): Block[] {
   return items.map((item) => item.block);
 }
 
-export function Editor({ itemId, initialBlocks }: { itemId: string; initialBlocks: Block[] }): ReactElement {
+export function Editor({
+  itemId,
+  type,
+  initialBlocks,
+}: {
+  itemId: string;
+  /** What is being written, so a field only one type uses appears only there. */
+  type: ContentType | null;
+  initialBlocks: Block[];
+}): ReactElement {
   const [items, setItems] = useState<Item[]>(() =>
     initialBlocks.map((block, index) => ({ key: `b${index}`, block })),
   );
@@ -416,6 +426,7 @@ export function Editor({ itemId, initialBlocks }: { itemId: string; initialBlock
             </div>
             <BlockFields
               block={item.block}
+              type={type}
               onChange={(block) => update(item.key, block)}
               onPaste={(blocks) => pasteBlocks(item.key, blocks)}
             />
