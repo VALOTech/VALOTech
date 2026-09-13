@@ -35,6 +35,7 @@ import type { AccountState } from '../../../../db/types';
 import { DestructiveAction } from '../../destructive-action';
 
 import type { AccountAction, AccountActionAnswer, AccountDeleteAnswer } from './account-actions';
+import { CorrectIdentity } from './correction';
 import styles from './person.module.css';
 
 /** One act and the answer it came back with, held so the page can report it. */
@@ -351,6 +352,7 @@ function DeleteAccount({
 export function PersonActions({
   accountId,
   name,
+  email,
   state,
   self,
   erasure,
@@ -358,6 +360,8 @@ export function PersonActions({
   readonly accountId: string;
   /** The person's name, which the suspension and delete confirmations state. */
   readonly name: string;
+  /** The address the record holds, which the correction field opens on. */
+  readonly email: string;
   readonly state: AccountState;
   /** Whether the admin reading the page is the person it is about. */
   readonly self: boolean;
@@ -438,6 +442,9 @@ export function PersonActions({
       ) : null}
 
       <Outcome runner={runner} self={self} />
+
+      <h3>Correction</h3>
+      <CorrectIdentity accountId={accountId} name={name} email={email} disabled={held} />
     </>
   );
 }

@@ -65,6 +65,11 @@ export const RECORDABLE_FIELDS: Readonly<Record<AuditAction, readonly string[]>>
   'account.object_read_tracking': [],
   'account.invitation_resend': [],
   'account.password_reset_request': [],
+  // A correction moves exactly the two fields no list may name, so what it
+  // records is which of them moved and never what either held. The value is the
+  // moved column names joined by a comma — `name`, `email`, or `name,email` —
+  // which is a fact about the act rather than a value the row took.
+  'account.correct': ['fields'],
   'grant.add': [],
   'grant.remove': [],
   // `CMS-R07` — a publication is audited with what it replaced, which is the

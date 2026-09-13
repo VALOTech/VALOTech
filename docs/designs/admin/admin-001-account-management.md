@@ -7,7 +7,7 @@ depends_on: [ADMIN-002, AUTH-003, AUTH-004, SEC-002]
 depended_by: [DATA-002, DECK-004, MAIL-001]
 layers_touched: [data, domain, service, api, frontend, ui]
 cross_cutting_rules: [DATA-R01, DATA-R02, DATA-R03, SEC-R04, A11Y-R01, A11Y-R02]
-status: in-progress
+status: implemented
 ---
 
 # `ADMIN-001` — Account management
@@ -47,7 +47,7 @@ person who lost interest or an account nobody remembered to close.
 | Identity | Name, address, role, state, created, last sign-in |
 | Access | Every deck granted, with pin and last opened (`DECK-004`) |
 | Sessions | Live sessions, and a control to end them all (`AUTH-004`) |
-| Actions | Resend invitation, reset password, suspend, reinstate, delete |
+| Actions | Resend invitation, reset password, suspend, reinstate, correct the name or the address, delete |
 
 ### The action route
 
@@ -133,6 +133,65 @@ those is a thing somebody would write about a person into a system with no
 retention policy for prose (`DATA-R01`). The relationship lives wherever the
 company keeps relationships; this system knows who may read what.
 
+### Correcting
+
+The console's answer to the PDPA correction right (`LEGAL-SG-001` §3): a person
+says their name is spelled wrong or their address is not theirs, and an admin
+fixes the record from their page. Without it the two paths are erasing the
+account and inviting it again, which costs the person their read state, and the
+owner editing the row in the database, which is outside the product and
+therefore outside the audit.
+
+    POST /admin/accounts/<id>/correct   { name?, email? }
+
+Its own route rather than another act on the action route, for the reason
+deleting has one: the acts on that route are each a name and a call to the
+service that owns them, and a correction carries two values beyond its own name.
+A field left out is left alone, so correcting one of the two says nothing about
+the other.
+
+**The trail records which fields moved and never what they held.** No action's
+allow-list may name `name` or `email` (`SEC-DEC-01`), and this is the one act
+whose entire subject is those two fields — and the one where both the old and the
+new value belong to the person. So `account.correct` records the moved column
+names and nothing else, `before` is empty because there is no prior value the row
+may carry, and neither value ever leaves the database: the statements compute the
+new value from the old inside SQL.
+
+**Correcting the address destroys an outstanding invitation, in the same
+transaction.** A live token sets this account's password, and it was minted for
+the address that has just been found wrong, so leaving it valid leaves a working
+way in sitting in a mailbox the account holder does not read (`AUTH-003`). It is
+the suspension's delete and the same meaning of outstanding — unconsumed, because
+a consumed row records that somebody used a token at a stated moment, which stays
+true. The answer says whether one went, because the admin has to know to resend
+it to the corrected address.
+
+**No session is ended**, unlike a role change's. A session is keyed to the
+account, the person behind it is the same person, and what they may read has not
+moved, so there is no privilege change for a live session's claims to be stale
+about (`SEC-R02`). Where the account is in the wrong hands rather than merely
+mis-spelled, the acts wanted are suspension or ending the sessions, both on the
+same page; a correction cannot tell those apart and does not pretend to.
+
+**An address another account holds is refused by name**, as a `409` carrying the
+same `email_taken` the invite surface answers with, and nothing is written — not
+the name either, because the refusal is of the correction and not of half of it.
+The refusal is read from a lookup rather than from a driver's error code, and the
+lookup can decide because it is taken under the advisory lock every writer of
+that address holds: an invitation and a correction racing for one address
+serialise rather than meeting at the unique index.
+
+**Asking for what the row already holds writes nothing, records nothing, and is
+not an error.** The comparison is the database's — `citext` for the address, so a
+correction that only changes its case moves nothing and leaves the invitation
+alone. Both values are trimmed and the address is lower-cased before anything is
+compared, which is the one spelling every surface that takes an address uses.
+
+A blank name and an address the sign-in door would turn away are refused as a
+`400` naming which of the two fields it was, because a form with two inputs that
+says only "refused" is a form the admin has to guess at.
+
 ## 4. Integration
 
 **`ADMIN-002`** is the console and the destructive-action component.
@@ -147,7 +206,8 @@ action. **`DATA-002`** is the erasure design this implements the admin half of.
 - **`DATA-R02`** — no personal data in the audit or in a log.
 - **`DATA-R03`** — deletion is a delete, and the confirmation says what
   survives.
-- **`SEC-R04`** — create, suspend, role change, delete, and every grant change.
+- **`SEC-R04`** — create, suspend, role change, correct, delete, and every grant
+  change.
 - **`A11Y-R01`**, **`A11Y-R02`** — the lists and the confirmations are
   operable and named.
 
@@ -177,6 +237,21 @@ action. **`DATA-002`** is the erasure design this implements the admin half of.
   sentence it carries, which names exactly what did and did not happen — more
   honest than an absent control that leaves the admin guessing whether the
   console can reset at all. Built by `ADMIN-001/T9`.
+
+- **Correcting an address will be a takeover path once mail is sent.** Today it
+  is not: the reset control hands the admin nothing, so moving an account's
+  address somewhere the admin reads gains them no way in. When `AUTH-003/T3`
+  mails the reset link, an admin who corrects another admin's address to their
+  own mailbox and then presses reset has taken that account — two acts, each
+  audited against them by name, and no refusal in between. Refusing a correction
+  of another admin's address is not the answer on its own, because an admin can
+  already resend an invitation to an `invited` account and read the link from the
+  screen; what changes at `AUTH-003/T3` is the reach, not the shape. The
+  trade-off is stated here rather than pre-empted with a control nobody has asked
+  for: two admins, both named in the trail, is the containment this room has, and
+  whether a correction that moves an address should take step-up
+  authentication is [`ADMIN-DEC-05`](../../decisions-log.md#ADMIN-DEC-05), filed now so
+  the question arrives with the send that makes it reachable rather than after it.
 
 ## 7. Task list
 

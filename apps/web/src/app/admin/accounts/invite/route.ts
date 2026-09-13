@@ -19,6 +19,7 @@
  * may hold.
  */
 
+import { isAddressShaped, normaliseAddress } from '../../../../auth/address';
 import { requireAdmin } from '../../../../auth/gate';
 import { EmailTakenError, inviteAccount } from '../../../../auth/invitation';
 import { getConfig } from '../../../../config/index';
@@ -69,9 +70,16 @@ async function handleInvite(request: Request): Promise<Response> {
 
   const { name, email, role } = body as { name?: unknown; email?: unknown; role?: unknown };
   // A name and an address the invitation can reach, and one of the two roles. The
-  // address is only shape-checked here — `inviteAccount` normalises it and the
+  // address is only shape-checked here, against the same predicate the correction
+  // surface applies (`ADMIN-001/T10`) — `inviteAccount` normalises it and the
   // unique index is what actually settles who already exists.
-  if (typeof name !== 'string' || name.trim() === '' || typeof email !== 'string' || !email.includes('@') || !isRole(role)) {
+  if (
+    typeof name !== 'string' ||
+    name.trim() === '' ||
+    typeof email !== 'string' ||
+    !isAddressShaped(normaliseAddress(email)) ||
+    !isRole(role)
+  ) {
     return json(400, INVALID_REQUEST);
   }
 

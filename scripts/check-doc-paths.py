@@ -33,14 +33,20 @@ SCAN = ("docs", ".claude", "brand", "credentials", "deploy")
 # A backticked token that starts with one of this repository's own directories.
 # Anchored on the directory set rather than on "looks like a path", because a
 # glob, a shell fragment and a URL all look like paths and none of them is one.
+#
+# Square brackets are part of a path here: a Next.js dynamic segment is a real
+# directory named `[id]` on disk. Without them a citation of any route under one
+# is not refused -- it is not seen at all, which is the failure a gate cannot
+# report, and every route handler in the admin console lives under one.
 ROOTS = r"docs|scripts|assets|apps|brand|deploy|credentials|\.claude|\.github|\.githooks"
-CITE = re.compile(r"`((?:%s)/[\w./-]+)`" % ROOTS)
+SEGMENT = r"[\w./\[\]-]+"
+CITE = re.compile(r"`((?:%s)/%s)`" % (ROOTS, SEGMENT))
 # The forward form: the path, then a task code within a short reach. The reach
 # spans one line break, because markdown wraps and a citation that happens to
 # fall at the end of a line is not a different kind of citation.
 FORWARD = re.compile(
-    r"`(?:%s)/[\w./-]+`[^\n]{0,50}\n?[^\n]{0,50}?`?[A-Z][A-Z0-9-]*-\d{3}/T\d+[a-z]?\d*`?"
-    % ROOTS
+    r"`(?:%s)/%s`[^\n]{0,50}\n?[^\n]{0,50}?`?[A-Z][A-Z0-9-]*-\d{3}/T\d+[a-z]?\d*`?"
+    % (ROOTS, SEGMENT)
 )
 
 

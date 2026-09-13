@@ -57,24 +57,42 @@ again.
 
 ## Correction — this is wrong, fix it
 
-**There is no console control for this today, and this runbook will not pretend
-otherwise.** The person page offers resend-invitation, reset-password, suspend,
-reinstate, end-sessions and delete; none of them edits a name or an address
-(`apps/web/src/app/admin/accounts/[id]/account-actions.ts`). `ADMIN-001/T10` is
-the control, and this section is rewritten when it lands.
+1. **`/admin/accounts/<id>`**, the Correction form at the foot of the Actions
+   section. The two fields open holding what the record holds; change the one
+   that is wrong and leave the other alone.
+2. **Save correction.** The act writes both fields or neither, and says which of
+   them moved.
+3. Three answers are refusals rather than faults, and each names itself. *That
+   address already belongs to another account* means the person already has a
+   second row — resolve which one they keep before correcting anything, because
+   the console cannot merge them. *A name is needed* and *not an address this
+   system can store* are the two values the record will not take.
+4. *Nothing changed* is neither a refusal nor a fault: the row already held what
+   was asked for, and an address differing only in case is the same address.
+5. **The act is audited as `account.correct`, naming which fields moved and
+   neither of the values** (`SEC-DEC-01`). If the reply has to say what the
+   record said before, take it from the person's own request or from the reply
+   that answered their access request — the trail does not hold it, by design.
 
-Until then, there are two honest paths and the choice is the owner's:
+**Correcting the address stops a link they had not used from working**, and the
+form says so when it happens. The link was minted for the mailbox that has just
+been found wrong, so it goes with the address. Issue a new one from the same
+page: **Resend invitation** if they had never accepted, **Reset password** if
+they were part-way through a reset. Nothing is mailed yet (`AUTH-003/T3`), so
+the invitation link is delivered by hand, and the reset hands back nothing at
+all — tell them it is coming and that it will not reach them until the reset
+mail is built.
 
-- **The address is wrong** — erase the account and invite the person again at the
-  correct address. Access is restored when they accept, and the act is audited
-  like any other deletion. It costs them one invitation link and costs their read
-  state, which is the part to tell them about.
-- **The name is wrong** — the owner changes the row directly. It is a database
-  change, outside the product and therefore outside the audit, and that is the
-  reason `ADMIN-001/T10` exists rather than being a convenience.
+**Correcting an address ends no session.** The person is the same person and
+their access has not moved, so somebody signed in on their phone stays signed in.
+If the request is really *this account is not mine* — an address that reached
+somebody else, and they accepted the invitation — then correction is the wrong
+act: suspend the account or end its sessions first, on the same page, and only
+then correct the record.
 
-Either way, say in the reply what was done, because from outside the two look the
-same and only one of them lost their read state.
+**An address that is itself disputed still needs the owner.** The identity check
+above is not waived by the control existing: the one request that cannot be
+confirmed from the address on the account is the one asking to change it.
 
 ## Withdrawal of consent — stop holding my data
 
@@ -120,6 +138,10 @@ withdrawal.
 
 **Never executed end to end.** No data-protection request has been received,
 because there are no investors yet. What has been checked is that every console
-path named above exists and carries the controls named — and that the correction
-path does not, which is why it is written as an absence. Re-verify when the first
-account belongs to somebody outside the company.
+path named above exists and carries the controls named. The correction path is
+the one whose behaviour is pinned rather than merely present: each answer this
+section tells the reader to expect — the fields that moved, the taken address,
+the two unusable values, the invitation that stops working, the sessions that do
+not — is asserted against a real PostgreSQL by
+`apps/web/src/app/admin/accounts/[id]/correct/route.test.ts`. Re-verify when the
+first account belongs to somebody outside the company.

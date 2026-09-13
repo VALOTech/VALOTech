@@ -1,9 +1,10 @@
 /**
  * What an admin does to somebody else's account (`ADMIN-001`): the list of who
- * can sign in and the one person behind a row of it, the six acts that change an
- * account — suspend, role change, reinstate, end every session, erase, and honour
- * a read-tracking objection — and a read of everything held about one, for a
- * data-portability request (`LEGAL-GLOBAL-001/T2`).
+ * can sign in and the one person behind a row of it, the seven acts that change
+ * an account — suspend, role change, reinstate, end every session, erase, honour
+ * a read-tracking objection, and correct a name or an address — and a read of
+ * everything held about one, for a data-portability request
+ * (`LEGAL-GLOBAL-001/T2`).
  *
  * The reads are plain and carry none of what follows. Each act is one carrying
  * several writes, and the design is that the writes are one
@@ -58,6 +59,7 @@
 import { sql, type Transaction } from 'kysely';
 
 import { recordAudit } from '../audit/record';
+import { isAddressShaped, lockAddress, normaliseAddress } from '../auth/address';
 import { invalidateAllForAccountIn } from '../auth/session';
 import { type AccountGrant, erasureContentCounts, grantsForAccount } from '../content/grants';
 import { getDb } from '../db/index';
@@ -382,6 +384,205 @@ export async function reinstateAccount(accountId: string, actorId: string): Prom
       });
 
       return true;
+    });
+}
+
+/** A field a correction may move, named as the row names it. */
+export type CorrectableField = 'name' | 'email';
+
+/**
+ * What an admin is asking to correct. A field left out is left alone, so
+ * correcting one of the two says nothing about the other.
+ */
+export interface Correction {
+  readonly name?: string;
+  readonly email?: string;
+}
+
+/**
+ * What came of a correction. Four answers, because a correction can fail in two
+ * ways the other acts cannot: the value offered is not one the column can hold,
+ * and the address offered belongs to somebody else. Each names itself, so the
+ * surface can say which it was instead of reporting a refusal it cannot explain.
+ */
+export type CorrectionResult =
+  | {
+      readonly outcome: 'changed';
+      /** Which fields moved. Never what they held — that is the point. */
+      readonly fields: readonly CorrectableField[];
+      /** Whether an outstanding invitation went with the address. */
+      readonly invitationDestroyed: boolean;
+    }
+  | { readonly outcome: 'unchanged' }
+  | { readonly outcome: 'address-taken' }
+  | { readonly outcome: 'invalid'; readonly field: CorrectableField };
+
+/**
+ * Correct a person's name or the address they sign in with, which is how the
+ * PDPA's correction right is answered from the console rather than from the
+ * database (`LEGAL-SG-001` §3, `ADMIN-001/T10`).
+ *
+ * **The trail records which fields moved and never what they held.** No action's
+ * allow-list may name `name` or `email` (`SEC-DEC-01`), so the one act whose
+ * whole subject is those two fields records the fact that they moved — a value
+ * on either side would put the person into a table kept seven years past their
+ * erasure (`DATA-R02`), and the correction case is the one where *both* the old
+ * and the new value are theirs. Neither ever leaves the database: the statements
+ * below compute the new value from the old inside SQL, so this process never
+ * holds either.
+ *
+ * **Correcting the address destroys an outstanding invitation.** A live token is
+ * a way to set this account's password, and it was minted for the address that
+ * has just been found wrong — so leaving it valid leaves a working way in
+ * sitting in a mailbox the account holder does not read (`AUTH-003`). The delete
+ * is the suspension's, in the same transaction as the address, and outstanding
+ * means unconsumed: a consumed row records that somebody used a token at a
+ * stated moment, which stays true. The answer says whether one went, because an
+ * admin who corrected a typo needs to know that the link they sent has stopped
+ * working.
+ *
+ * **No session is ended**, unlike a role change's. A session is keyed to the
+ * account, the person behind it is the same person, and what they may read has
+ * not moved — a correction grants nothing and takes nothing away, so there is no
+ * privilege change for a live session's claims to be stale about (`SEC-R02`).
+ * Where the account is in the wrong hands rather than merely mis-spelled, the act
+ * wanted is suspension or ending the sessions, and both are on the same page;
+ * this one cannot tell those apart and does not pretend to.
+ *
+ * **A taken address is refused by name.** `accounts.email` is unique and
+ * `citext`, so "taken" is case-insensitive, and the refusal is read from a
+ * lookup rather than from a driver's error code. The lookup can decide because
+ * it is taken under the lock every writer of that address holds
+ * (`lockAddress`), so no invitation and no other correction can claim it between
+ * this read and this write. If the unique index ever raises here the lock
+ * discipline has broken, and the transaction rolling back with it is the honest
+ * answer rather than a caught code that would hide it.
+ *
+ * **Asking for what the row already holds is not an error and not an act.** The
+ * comparison is the database's — `citext` for the address, the column's
+ * collation for the name — so a correction that only changes the case of an
+ * address moves nothing, records nothing, and leaves the invitation alone. The
+ * narrowed `UPDATE` is still the check, as in the acts above: it is belt and
+ * braces while the row lock is held across the read, and it is what keeps the
+ * write honest if the two are ever separated.
+ */
+export async function correctIdentity(
+  accountId: string,
+  correction: Correction,
+  actorId: string,
+): Promise<CorrectionResult> {
+  const name = correction.name === undefined ? undefined : correction.name.trim();
+  const address = correction.email === undefined ? undefined : normaliseAddress(correction.email);
+
+  // Refused before anything is locked or read, and refused for the value's own
+  // shape: a blank name is a row that names nobody, and an address the sign-in
+  // door would turn away is access nobody could use (`AUTH-001`).
+  if (name !== undefined && name.length === 0) {
+    return { outcome: 'invalid', field: 'name' };
+  }
+  if (address !== undefined && !isAddressShaped(address)) {
+    return { outcome: 'invalid', field: 'email' };
+  }
+
+  return getDb()
+    .transaction()
+    .execute(async (trx) => {
+      if (address !== undefined) {
+        // Before the row lock, and in the same order `inviteAccount` takes the
+        // two, so a correction and an invitation racing for one address
+        // serialise rather than deadlock.
+        await lockAddress(trx, address);
+      }
+
+      // `coalesce` makes an absent field compare against itself, so one
+      // expression covers both "correct this" and "leave this alone" without a
+      // second query shape. The comparison is the database's, which is the point:
+      // `citext` decides what a changed address is, and reading the two values
+      // out to compare them here would both differ from that and put them in
+      // this process.
+      const nextName = sql<string>`coalesce(${name ?? null}::text, name)`;
+      const nextAddress = sql<string>`coalesce(${address ?? null}::citext, email)`;
+
+      const held = await trx
+        .selectFrom('accounts')
+        .select([
+          sql<boolean>`name is distinct from ${nextName}`.as('nameMoves'),
+          sql<boolean>`email is distinct from ${nextAddress}`.as('addressMoves'),
+        ])
+        .where('id', '=', accountId)
+        .forUpdate()
+        .executeTakeFirst();
+
+      if (held === undefined) {
+        return { outcome: 'unchanged' };
+      }
+
+      const nameMoves = name !== undefined && held.nameMoves;
+      const addressMoves = address !== undefined && held.addressMoves;
+
+      if (!nameMoves && !addressMoves) {
+        return { outcome: 'unchanged' };
+      }
+
+      if (addressMoves) {
+        const taken = await trx
+          .selectFrom('accounts')
+          .select('id')
+          .where('email', '=', address)
+          .where('id', '<>', accountId)
+          .executeTakeFirst();
+
+        if (taken !== undefined) {
+          return { outcome: 'address-taken' };
+        }
+      }
+
+      const corrected = await trx
+        .updateTable('accounts')
+        .set({ name: nextName, email: nextAddress })
+        .where('id', '=', accountId)
+        .where((eb) =>
+          eb.or([
+            eb('name', 'is distinct from', nextName),
+            eb('email', 'is distinct from', nextAddress),
+          ]),
+        )
+        .returning('id')
+        .executeTakeFirst();
+
+      if (corrected === undefined) {
+        return { outcome: 'unchanged' };
+      }
+
+      const fields: CorrectableField[] = [];
+      if (nameMoves) {
+        fields.push('name');
+      }
+      if (addressMoves) {
+        fields.push('email');
+      }
+
+      const destroyed = addressMoves
+        ? await trx
+            .deleteFrom('invitations')
+            .where('account_id', '=', accountId)
+            .where('consumed_at', 'is', null)
+            .returning('id')
+            .execute()
+        : [];
+
+      await recordAudit(trx, {
+        actorId,
+        action: 'account.correct',
+        subjectType: 'account',
+        subjectId: accountId,
+        // The moved column names, in the order the page states them. `before` is
+        // absent because there is no prior value this row may carry: the two
+        // fields a correction moves are the two no allow-list may name.
+        after: { fields: fields.join(',') },
+      });
+
+      return { outcome: 'changed', fields, invitationDestroyed: destroyed.length > 0 };
     });
 }
 

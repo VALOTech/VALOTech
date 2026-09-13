@@ -57,7 +57,7 @@ everywhere else fails here (`DATA-R02`, `DATA-R03`).
 
 `account.create`, `account.suspend`, `account.delete`, `account.role_change`,
 `account.reinstate`, `account.object_read_tracking`, `account.invitation_resend`,
-`account.password_reset_request`, `grant.add`, `grant.remove`,
+`account.password_reset_request`, `account.correct`, `grant.add`, `grant.remove`,
 `content.publish`, `content.withdraw`, `content.audience_change`,
 `media.delete`, `config.change`, `mail.send`, `mail.unsubscribe`,
 `session.invalidate_all`, `portfolio.change`.
@@ -81,6 +81,7 @@ the trail, because there is no action under which a caller could offer one.
 | `account.suspend`, `account.reinstate`, `account.delete`, `account.object_read_tracking` | — | the action names the change |
 | `account.role_change` | `role`, `state` | the role is what a role change moves, and what its row records; `state` stands beside it because the decision names both, and a row carries only the fields the act moved |
 | `account.invitation_resend`, `account.password_reset_request` | — | the act is the whole fact; what changes is which token is live, and a token is never written down |
+| `account.correct` | `fields` | the one act whose whole subject is the two fields no list may name, and the one where the old value is the person's as much as the new one — so the row holds which of them moved, joined by a comma, and neither of the values |
 | `grant.add`, `grant.remove` | — | the subject written is the account whose access changed; that the row cannot name the item is open at `SEC-DEC-04` |
 | `content.publish`, `content.withdraw` | `revision_id` | `CMS-R07`: audited with what was replaced |
 | `content.audience_change` | `audience` | without both values the trail cannot tell a narrowing from a widening |

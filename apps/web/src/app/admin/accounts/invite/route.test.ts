@@ -25,6 +25,7 @@ import { Pool } from 'pg';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
 import { consumeToken } from '../../../../auth/invitation';
+import { MAX_EMAIL_LENGTH } from '../../../../auth/address';
 import { issue } from '../../../../auth/session';
 import { closeDb, getDb } from '../../../../db/index';
 import type { AccountRole } from '../../../../db/types';
@@ -207,6 +208,21 @@ describe.skipIf(!HAS_DATABASE)('POST /admin/accounts/invite', () => {
 
       const badEmail = await callPost({ name: 'Ada', email: 'not-an-address', role: 'investor' }, { cookie: admin.cookie, origin: ORIGIN });
       expect(badEmail.status).toBe(400);
+    });
+
+    it('refuses an address past the bound the sign-in door applies, creating nothing', async () => {
+      // One character over RFC 5321's forward path. An account holding it could
+      // never sign in, because `AUTH-001` turns the same length away at the door,
+      // so creating one would be access nobody can use. The bound is the shared
+      // predicate's, so this surface and the correction surface refuse the same
+      // addresses (`ADMIN-001/T10`).
+      const overlong = `${'a'.repeat(MAX_EMAIL_LENGTH - 'x@'.length + 1)}@x.test`;
+      expect(overlong.length).toBeGreaterThan(MAX_EMAIL_LENGTH);
+
+      const response = await callPost({ name: 'Ada', email: overlong, role: 'investor' }, { cookie: admin.cookie, origin: ORIGIN });
+
+      expect(response.status).toBe(400);
+      expect(await accountByEmail(overlong)).toHaveLength(0);
     });
 
     it('refuses a second invite of a taken address, leaving one account', async () => {

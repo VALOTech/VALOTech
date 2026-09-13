@@ -35,7 +35,7 @@ import { getConfig, type MailConfig } from '../config/index';
 import { getDb } from '../db/index';
 import type { AccountRole, Database } from '../db/types';
 
-import { MAX_EMAIL_LENGTH, normaliseAddress } from './address';
+import { lockAddress, MAX_EMAIL_LENGTH, normaliseAddress } from './address';
 
 /** 256 bits from the system CSPRNG, which is what makes the token unguessable. */
 const TOKEN_BYTES = 32;
@@ -71,28 +71,6 @@ export const RESET_TTL_SECONDS = SECONDS_PER_HOUR;
  */
 function hashOf(token: string): string {
   return createHash('sha256').update(token).digest('hex');
-}
-
-/**
- * Serialise everything that issues a token for one address, on a lock the
- * address alone decides.
- *
- * A row lock cannot do this job. `SELECT … FOR UPDATE` on the account takes a
- * lock when a row is there and takes none when it is not, so concurrent
- * requests for an address an account holds queue behind each other while
- * requests for an address it does not hold run straight through — and the gap
- * widens with every extra client, which is a membership oracle that grows
- * louder the harder it is asked. An advisory lock is taken on the address
- * itself, so both answers cost the same wait under any amount of concurrency.
- *
- * `hashtext` folds the address into the lock's integer key. Two addresses can
- * collide there and serialise together, which costs a little contention and
- * nothing else — the lock orders writers, it does not decide anything. It is
- * held to the end of the transaction and released with it, so no path can
- * forget to give it back.
- */
-async function lockAddress(trx: Transaction<Database>, address: string): Promise<void> {
-  await sql`select pg_advisory_xact_lock(hashtext(${address}))`.execute(trx);
 }
 
 /**

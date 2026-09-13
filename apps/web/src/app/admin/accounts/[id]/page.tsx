@@ -20,9 +20,11 @@ import styles from './person.module.css';
  * when it was last opened, which is the column that separates a grant somebody
  * uses from one nobody remembered to revoke. **Sessions** is the ways in that are
  * live right now, and the control that ends them. **Actions** is what can be done
- * about any of it.
+ * about any of it, ending with the correction that fixes a wrong name or a wrong
+ * address (`ADMIN-001/T10`) — the one act there that writes the record rather
+ * than acting on the access it grants.
  *
- * Deleting is the last of those and the only one nothing undoes, so the page reads
+ * Deleting is the only one of them nothing undoes, so the page reads
  * what it would cost before offering it (`ADMIN-001/T4`): the confirmation states
  * how much goes and how much stays, and then asks for the name to be typed. The
  * counts are read here, with the sections, rather than when the panel opens —
@@ -192,6 +194,7 @@ export default async function PersonPage({
         <PersonActions
           accountId={person.id}
           name={person.name}
+          email={person.email}
           state={person.state}
           self={self}
           erasure={erasure}

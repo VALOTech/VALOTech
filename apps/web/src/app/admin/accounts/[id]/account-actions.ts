@@ -10,6 +10,8 @@
  * clicking.
  */
 
+import type { CorrectionResult } from '../../../../admin/accounts';
+
 export const ACCOUNT_ACTIONS = [
   'resend-invitation',
   'reset-password',
@@ -57,3 +59,21 @@ export interface AccountActionAnswer {
 export interface AccountDeleteAnswer {
   readonly outcome: 'changed' | 'unchanged';
 }
+
+/**
+ * What came of a correction (`ADMIN-001/T10`).
+ *
+ * The two outcomes a correction can be *answered* with, taken from the four the
+ * act itself has: the other two are a refused address and a value the column
+ * cannot hold, which the route reports as statuses rather than as outcomes, the
+ * way the invite surface reports a taken address. Narrowing the service's own
+ * type rather than restating two of its arms is what keeps the wire and the act
+ * from drifting — a field added to the changed arm arrives here by itself.
+ *
+ * The import is a type and is erased, so nothing this file's other side depends
+ * on reaches the browser bundle.
+ */
+export type AccountCorrectionAnswer = Extract<
+  CorrectionResult,
+  { outcome: 'changed' | 'unchanged' }
+>;
