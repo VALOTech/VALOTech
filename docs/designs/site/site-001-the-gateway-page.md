@@ -96,6 +96,14 @@ the operating system answers differently on every machine.
 phase label, a marker on the planet, an aside such as `// the cost — every AI
 initiative stalls at the data layer`. Prose is never set in it.
 
+**And a voice has one size.** Every mono passage on the page is `--type-mono`,
+except inside a statement block, where `.statement p` lifts each paragraph to
+the intro size so the block reads as one set. That holds on a wide frame and
+breaks on a phone: at 390px a 17px mono paragraph reads as a second heading
+under the heading it is meant to annotate, so below 900px the mono one keeps its
+own size. It is the only size in the scale that was a literal rather than a
+token until it needed to be named in two places at once.
+
 ### A frame past two thousand pixels
 
 Every fixed size in the type scale is a reading distance measured on a 1440-wide

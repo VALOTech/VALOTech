@@ -53,6 +53,7 @@
   --type-body: 16px;
   --type-card-title: 16px;
   --type-card-body: 15px;
+  --type-mono: 13px;
   --type-meta: 12px;
 
   /* One factor for every size a wide frame is allowed to grow. It is 1 on
@@ -311,7 +312,7 @@ p:last-child {
 /* The machine's voice: a phase label, a marker, an aside. Never prose. */
 .mono {
   font-family: var(--mono);
-  font-size: 13px;
+  font-size: var(--type-mono);
   line-height: 1.5;
   color: var(--text-dim);
   letter-spacing: 0.01em;
@@ -2969,6 +2970,16 @@ html:not(.can-scene) .planet {
      own corner against the world. The measure is the frame here. */
   .chapter-head {
     max-width: none;
+  }
+
+  /* `.statement p` lifts every paragraph in the block to the intro size, which
+     holds a wide frame together — the mono line reads as part of one set
+     there. On a frame this narrow it reads as a second heading instead, and
+     the class it is already carrying declares the size it wants: the
+     descendant selector simply out-specifies it. Restored from the token
+     rather than restated, so the two cannot drift. */
+  .statement p.mono {
+    font-size: var(--type-mono);
   }
 
   /* The small mono labels are the binding constraint on how transparent a card
