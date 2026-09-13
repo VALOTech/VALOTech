@@ -33,5 +33,27 @@
     "expires": "Caduca",
     "endEverywhere": "Cerrar sesión en todos los dispositivos",
     "endEverywhereHint": "Finaliza todas las sesiones, incluida esta. Tendrá que iniciar sesión de nuevo."
+  },
+  "privacy": {
+    "contactBody": "Escriba a {address}.",
+    "contactTitle": "A quién escribir",
+    "heldBasis": "Los dos primeros se basan en su consentimiento, dado al aceptar la invitación. Los dos últimos se basan en nuestro interés legítimo en mantener su cuenta segura y la sala exacta.",
+    "heldIdentity": "Su nombre y su dirección de correo electrónico, para poder dar acceso a los informes de la empresa a una persona con nombre.",
+    "heldReads": "Qué documentos ha abierto y cuándo, para que la sala pueda mostrarle lo nuevo y registrar qué versión de una presentación se le mostró. Esto es solo suyo: nunca se agrega, nunca se comunica como analítica y desaparece con su cuenta.",
+    "heldRole": "Su rol y el estado de su cuenta, para que la sala sepa qué puede leer usted.",
+    "heldSessions": "Su último inicio de sesión y sus sesiones abiertas, para que usted y un administrador puedan verlas y cerrarlas.",
+    "heldTitle": "Qué guardamos, y por qué",
+    "intro": "VALO Tech guarda una lista breve de datos sobre las personas que leen sus informes para inversores. Esta página dice qué, por qué, durante cuánto tiempo y qué puede pedirnos.",
+    "keptBackups": "Las copias de seguridad cifradas se conservan hasta doce meses, de modo que alguien eliminado hoy todavía puede aparecer en una copia anterior. Esas copias solo se abren para recuperarse de una pérdida de datos, nunca para buscar a una persona.",
+    "keptBody": "Mientras tenga acceso. Eliminar una cuenta es una eliminación real: los registros desaparecen, no una marca sobre ellos.",
+    "keptTitle": "Cuánto tiempo los conservamos",
+    "rightsAccess": "Una copia de lo que guardamos sobre usted.",
+    "rightsCorrection": "Una corrección, si algo es incorrecto.",
+    "rightsErasure": "La eliminación.",
+    "rightsTitle": "Qué puede pedir",
+    "rightsWhen": "Respondemos en un plazo de treinta días.",
+    "rightsWithdrawal": "Retirar su consentimiento, lo que supone eliminar su cuenta, porque sus datos solo están aquí para darle acceso.",
+    "title": "Cómo esta sala trata sus datos",
+    "link": "Cómo tratamos sus datos"
   }
 }

@@ -19,6 +19,7 @@ import { closeDb, getDb } from '../db/index';
 import {
   changeSetting,
   isSecretShaped,
+  publishedContact,
   revertSetting,
   Settings,
   SETTINGS,
@@ -70,14 +71,18 @@ describe('the registry and the secret-guard (CFG-001/T1, T6)', () => {
 });
 
 describe('what the registry holds (CFG-001/T7)', () => {
-  it('holds only the three values an admin changes at runtime', () => {
+  it('holds only the four values an admin changes at runtime', () => {
     // The session lifetime and the sign-in rate are the environment's, where a
     // change is reviewed and deployed (`CFG-DEC-01`). A security parameter that
     // can be widened from a web form at runtime is the failure this excludes,
     // and the list being short is the design rather than an accident of what has
-    // been built (`CFG-001` §3).
+    // been built (`CFG-001` §3). The privacy notice's contact earns its place on
+    // the other side of that line: who holds the mailbox a data-subject request
+    // arrives at changes without the words around it changing, and a deploy to
+    // move an address is a deploy nobody makes (`LEGAL-SG-001/T4`).
     expect(Object.keys(SETTINGS).sort()).toEqual([
       'mail.enabled',
+      'privacy.contact',
       'room.banner',
       'room.signin_message',
     ]);
@@ -348,5 +353,24 @@ describe.skipIf(!HAS_DATABASE)('the cached accessor (CFG-001/T5)', () => {
       expect(await readRow('room.banner')).toBeUndefined();
       expect(await changesBy(actor)).toHaveLength(0);
     });
+  });
+});
+
+describe('publishedContact — the address the privacy notice names (LEGAL-SG-001/T1)', () => {
+  it('publishes the address an operator set', () => {
+    expect(publishedContact('dpo@valotech.org')).toBe('dpo@valotech.org');
+  });
+
+  it('falls back when the row was cleared, because a notice naming nobody is not one', () => {
+    expect(publishedContact('')).toBe(SETTINGS['privacy.contact'].fallback);
+    expect(publishedContact('   ')).toBe(SETTINGS['privacy.contact'].fallback);
+  });
+
+  it('drops surrounding space rather than publishing it', () => {
+    expect(publishedContact('  dpo@valotech.org  ')).toBe('dpo@valotech.org');
+  });
+
+  it('falls back to an address the company already publishes', () => {
+    expect(SETTINGS['privacy.contact'].fallback).toBe('hello@valotech.org');
   });
 });

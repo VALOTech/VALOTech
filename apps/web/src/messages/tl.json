@@ -33,5 +33,27 @@
     "expires": "Mag-e-expire",
     "endEverywhere": "Mag-sign out sa lahat ng device",
     "endEverywhereHint": "Tinatapos ang bawat session, kasama ito. Kakailanganin mong mag-sign in ulit."
+  },
+  "privacy": {
+    "contactBody": "Sumulat sa {address}.",
+    "contactTitle": "Kanino susulat",
+    "heldBasis": "Ang unang dalawa ay nakasalalay sa iyong pahintulot, na ibinigay nang tanggapin mo ang paanyaya. Ang huling dalawa ay nakasalalay sa aming lehitimong interes na panatilihing ligtas ang iyong account at tumpak ang silid.",
+    "heldIdentity": "Ang iyong pangalan at e-mail address, upang mabigyan ng akses sa mga ulat ng kompanya ang isang taong may pangalan.",
+    "heldReads": "Kung aling mga dokumento ang binuksan mo at kailan, upang maipakita ng silid kung ano ang bago at maitala kung aling bersyon ng presentasyon ang ipinakita sa iyo. Sa iyo lamang ito: hindi kailanman pinagsasama-sama, hindi kailanman iniuulat bilang analytics, at nawawala kasabay ng iyong account.",
+    "heldRole": "Ang iyong papel at ang kalagayan ng iyong account, upang malaman ng silid kung ano ang maaari mong basahin.",
+    "heldSessions": "Ang huli mong pag-sign in at ang iyong mga bukas na sesyon, upang makita at matapos mo at ng administrador ang mga ito.",
+    "heldTitle": "Ano ang itinatago namin, at bakit",
+    "intro": "Kaunti lang ang itinatago ng VALO Tech tungkol sa mga taong bumabasa ng mga ulat nito para sa mga namumuhunan. Sinasabi ng pahinang ito kung ano, bakit, gaano katagal, at ano ang maaari mong hilingin sa amin.",
+    "keptBackups": "Ang mga naka-encrypt na backup ay iniingatan nang hanggang labindalawang buwan, kaya ang taong tinanggal ngayon ay maaari pa ring lumitaw sa isang backup na kinuha bago iyon. Binubuksan lamang ang mga backup na iyon upang makabawi sa nawalang datos, hindi kailanman upang maghanap ng tao.",
+    "keptBody": "Habang may akses ka. Ang pagtanggal ng account ay tunay na pagbura: nawawala ang mga talaan, hindi lamang nilalagyan ng marka.",
+    "keptTitle": "Gaano katagal namin ito itinatago",
+    "rightsAccess": "Isang kopya ng itinatago namin tungkol sa iyo.",
+    "rightsCorrection": "Pagwawasto, kung may mali.",
+    "rightsErasure": "Pagbura.",
+    "rightsTitle": "Ano ang maaari mong hilingin",
+    "rightsWhen": "Sumasagot kami sa loob ng tatlumpung araw.",
+    "rightsWithdrawal": "Ang pag-urong ng iyong pahintulot, na nangangahulugang pagtanggal ng iyong account, dahil ang iyong datos ay narito para lamang sa akses.",
+    "title": "Paano pinangangasiwaan ng silid na ito ang iyong datos",
+    "link": "Paano namin pinangangasiwaan ang iyong datos"
   }
 }

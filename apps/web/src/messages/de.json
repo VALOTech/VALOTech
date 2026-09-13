@@ -33,5 +33,27 @@
     "expires": "Läuft ab",
     "endEverywhere": "Überall abmelden",
     "endEverywhereHint": "Beendet jede Sitzung, auch diese. Sie müssen sich erneut anmelden."
+  },
+  "privacy": {
+    "contactBody": "Schreiben Sie an {address}.",
+    "contactTitle": "An wen Sie schreiben",
+    "heldBasis": "Die ersten beiden beruhen auf Ihrer Einwilligung, die Sie mit der Annahme Ihrer Einladung gegeben haben. Die letzten beiden beruhen auf unserem berechtigten Interesse daran, Ihr Konto sicher und den Raum richtig zu halten.",
+    "heldIdentity": "Ihren Namen und Ihre E-Mail-Adresse, damit einer namentlich genannten Person Zugang zur Unternehmensberichterstattung gegeben werden kann.",
+    "heldReads": "Welche Dokumente Sie geöffnet haben und wann, damit der Raum Ihnen zeigen kann, was neu ist, und festhält, welche Fassung einer Präsentation Ihnen gezeigt wurde. Das gehört allein Ihnen: es wird nie aggregiert, nie als Analysedaten gemeldet, und es geht mit Ihrem Konto.",
+    "heldRole": "Ihre Rolle und den Zustand Ihres Kontos, damit der Raum weiß, was Sie lesen dürfen.",
+    "heldSessions": "Ihre letzte Anmeldung und Ihre offenen Sitzungen, damit Sie und eine Administratorin sie sehen und beenden können.",
+    "heldTitle": "Was wir speichern, und warum",
+    "intro": "VALO Tech speichert eine kurze Liste von Angaben über die Personen, die seine Investorenberichte lesen. Diese Seite sagt, was, warum, wie lange, und worum Sie uns bitten können.",
+    "keptBackups": "Verschlüsselte Sicherungen werden bis zu zwölf Monate aufbewahrt; wer heute gelöscht wird, kann daher noch in einer älteren Sicherung erscheinen. Diese Sicherungen werden nur geöffnet, um Datenverlust zu beheben, nie um eine Person nachzuschlagen.",
+    "keptBody": "So lange Sie Zugang haben. Das Löschen eines Kontos ist ein echtes Löschen: die Datensätze verschwinden, nicht bloß eine Markierung auf ihnen.",
+    "keptTitle": "Wie lange wir sie aufbewahren",
+    "rightsAccess": "Eine Kopie dessen, was wir über Sie gespeichert haben.",
+    "rightsCorrection": "Eine Berichtigung, wenn etwas falsch ist.",
+    "rightsErasure": "Löschung.",
+    "rightsTitle": "Worum Sie bitten können",
+    "rightsWhen": "Wir antworten innerhalb von dreißig Tagen.",
+    "rightsWithdrawal": "Den Widerruf Ihrer Einwilligung, was die Löschung Ihres Kontos bedeutet, denn Ihre Daten dienen hier allein dem Zugang.",
+    "title": "Wie dieser Raum mit Ihren Daten umgeht",
+    "link": "Wie wir mit Ihren Daten umgehen"
   }
 }

@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_316 tasks in the plan, 226 closed, 90 outstanding._
+_316 tasks in the plan, 228 closed, 88 outstanding._
 
 ---
 
@@ -85,15 +85,13 @@ _69/73 closed (94%) · 4 outstanding — 0 buildable now · 1 waiting on the own
 
 _The three content types, and the compliance posture that governs what is held about the people reading them. Updates come before decks, and not only because they are the simpler shape of the same problem: they are what the room is for. An investor signs in to find out what has happened since they last looked._
 
-_34/61 closed (55%) · 27 outstanding — 27 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_36/61 closed (59%) · 25 outstanding — 24 buildable now · 1 waiting on the owner · 0 external residue · 0 parked to a later wave._
 
 - **DECK-001** · Deck authoring — 6/6 closed
-- **LEGAL-SG-001** · PDPA posture — 2/7 closed · depth 7
-  - `[ ] LEGAL-SG-001/T1` — The privacy notice: what is held, why, how long, who to write to, in twenty locales
-  - `[ ] LEGAL-SG-001/T2` — The notice is linked from the sign-in page and the room's footer
+- **LEGAL-SG-001** · PDPA posture — 4/7 closed · depth 7
+  - `[~] LEGAL-SG-001/T2` — The notice is linked from the sign-in page and the room's footer  · **Note:** the sign-in half ships. apps/web/src/app/sign-in/page.tsx carries the link below the card, in the reader’s own language (privacy.link in all twenty l…
   - `[ ] LEGAL-SG-001/T4` — A named DPO recorded, and published in the notice
-  - `[ ] LEGAL-SG-001/T6` — The backup window disclosed in the notice rather than omitted
-  - `[ ] LEGAL-SG-001/T7` — The cross-border transfer assessment, now that the hosting and the mail carrier are both settled
+  - `[!] LEGAL-SG-001/T7` — The cross-border transfer assessment, now that the hosting and the mail carrier are both settled  · _pending-decision_ · **Blocked by:** pending-decision: OPS-DEC-03 ([docs/decisions-log.md#OPS-DEC-03](decisions-log.md#OPS-DEC-03)) — the assessment is about whether personal data leaves…
 
 - **MAIL-001** · Investor mail — 4/8 closed · depth 7
   - `[ ] MAIL-001/T4` — The send requires the recipient count to be typed, and re-resolves every recipient first

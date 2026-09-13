@@ -33,5 +33,27 @@
     "expires": "Sona eriyor",
     "endEverywhere": "Her yerde oturumu kapat",
     "endEverywhereHint": "Bu oturum dahil tüm oturumları sonlandırır. Yeniden oturum açmanız gerekir."
+  },
+  "privacy": {
+    "contactBody": "{address} adresine yazın.",
+    "contactTitle": "Kime yazmalı",
+    "heldBasis": "İlk ikisi, daveti kabul ederken verdiğiniz rızaya dayanır. Son ikisi, hesabınızı güvende ve odayı doğru tutmaktaki meşru menfaatimize dayanır.",
+    "heldIdentity": "Adınız ve e-posta adresiniz; adı belli bir kişiye şirket raporlarına erişim verilebilsin diye.",
+    "heldReads": "Hangi belgeleri ne zaman açtığınız; oda size yeni olanı gösterebilsin ve sunumun hangi sürümünün gösterildiğini kaydedebilsin diye. Bu yalnızca size aittir: hiçbir zaman toplulaştırılmaz, hiçbir zaman analitik olarak raporlanmaz ve hesabınızla birlikte silinir.",
+    "heldRole": "Rolünüz ve hesabınızın durumu; oda neyi okuyabileceğinizi bilsin diye.",
+    "heldSessions": "Son girişiniz ve açık oturumlarınız; siz ve bir yönetici bunları görüp sonlandırabilesiniz diye.",
+    "heldTitle": "Neyi tutuyoruz ve neden",
+    "intro": "VALO Tech, yatırımcı raporlarını okuyan kişiler hakkında yalnızca kısa bir liste tutar. Bu sayfa neyi, neden, ne kadar süreyle tuttuğumuzu ve bizden neler isteyebileceğinizi anlatır.",
+    "keptBackups": "Şifreli yedekler en fazla on iki ay saklanır; bu yüzden bugün silinen biri, daha önce alınmış bir yedekte hâlâ görünebilir. Bu yedekler yalnızca veri kaybından kurtulmak için açılır, hiçbir zaman bir kişiyi aramak için değil.",
+    "keptBody": "Erişiminiz sürdüğü sürece. Bir hesabın silinmesi gerçek bir silmedir: kayıtlar gider, üzerlerine bir işaret konmuş olmaz.",
+    "keptTitle": "Ne kadar süreyle saklıyoruz",
+    "rightsAccess": "Hakkınızda tuttuklarımızın bir kopyası.",
+    "rightsCorrection": "Bir şey yanlışsa düzeltme.",
+    "rightsErasure": "Silme.",
+    "rightsTitle": "Neler isteyebilirsiniz",
+    "rightsWhen": "Otuz gün içinde yanıt veriyoruz.",
+    "rightsWithdrawal": "Rızanızı geri çekmek; bu, hesabınızın silinmesi anlamına gelir, çünkü verileriniz burada yalnızca erişim içindir.",
+    "title": "Bu oda verilerinizi nasıl işliyor",
+    "link": "Verilerinizi nasıl işliyoruz"
   }
 }

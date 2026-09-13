@@ -125,6 +125,16 @@ An entry is filed the moment the choice surfaces, not when it is answered. Nothi
 - **Revises:** ADMIN-001/T10 — the correction ships with no step-up; the answer decides whether it gains one
 - **Status:** OPEN. Safe default: the correction writes with no step-up, records which fields moved against the admin who asked, and destroys every unconsumed invitation and reset token for the account rather than leaving one pointed at the old mailbox. There is no reach today, because `AUTH-003/T3` mails nothing yet — this is filed now so the question arrives with the send rather than after it.
 
+<a id="OPS-DEC-03"></a>
+### `OPS-DEC-03` — Which AWS region holds the data, and therefore whether it leaves Singapore — OPEN
+
+- **Decision:** [`INFRA-DEC-03`](#INFRA-DEC-03) put the application on AWS and [`INFRA-DEC-05`](#INFRA-DEC-05) chose its shape — ECS Fargate, RDS PostgreSQL, an ALB, Route 53 and ACM. Neither names a region, `OPS-001` names none, and `deploy/` holds a README rather than Terraform. The region is not a deployment detail here: the company is Singaporean, its investors’ names and addresses are the personal data it holds, and whether that data rests inside or outside Singapore is what a PDPA cross-border transfer assessment is about (`LEGAL-SG-001/T7`). Which region?
+- **Options:** **A** `ap-southeast-1` (Singapore) — the data never leaves the jurisdiction, so the transfer assessment concludes that there is no transfer to assess and the comparable-protection obligation does not arise; latency is lowest for the readers this room has · **B** Whichever region the rest of the ecosystem already runs in, if that is not Singapore — one account, one identity model and one place to look, which is the reason `INFRA-DEC-03` chose AWS at all; the cost is a transfer to assess and to disclose in the notice · **C** A cheaper region — real money at this size, paid for with a transfer assessment, higher latency, and a notice that has to explain both.
+- **Recommendation:** **A**. The transfer that never happens is the one that needs no assessment, no comparable-protection finding and no paragraph in the notice explaining it; for a Singapore company with a handful of Singapore-and-region investors, that is the whole argument, and `ap-southeast-1` carries every service `INFRA-DEC-05` named. **B**’s case is real and turns on a fact outside this repository — if the ecosystem is already consolidated in one region, splitting this product off it costs the operational singleness that justified AWS, and that is the owner’s to weigh; it is not a straw option, it is the one to take if the ecosystem region is Singapore anyway or if the operational cost of a second region is larger than an assessment. **C** is refused: the saving is small at this size and it buys a permanent compliance obligation.
+- **Decision owner:** user
+- **Blocks:** LEGAL-SG-001/T7
+- **Status:** OPEN. Safe default: nothing is deployed, so nothing has left anywhere — the data is on a development machine and the notice makes no claim about where it rests. The assessment is written once the region is known, and `OPS-001`’s Terraform needs the same answer before it can name a provider block.
+
 ---
 ## Resolved decisions
 

@@ -121,3 +121,17 @@
     color: #ff6b6b;
   }
 }
+
+/* The privacy notice's link, set apart from the card rather than inside it: it
+   is not part of signing in, and somebody who has not decided to sign in yet is
+   exactly the reader it is there for (LEGAL-SG-001/T2). */
+.aside {
+  margin: 1.25rem 0 0;
+  text-align: center;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+.aside a {
+  color: inherit;
+}

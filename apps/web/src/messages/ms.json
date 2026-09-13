@@ -33,5 +33,27 @@
     "expires": "Tamat tempoh",
     "endEverywhere": "Log keluar dari semua peranti",
     "endEverywhereHint": "Menamatkan setiap sesi, termasuk sesi ini. Anda perlu log masuk semula."
+  },
+  "privacy": {
+    "contactBody": "Tuliskan kepada {address}.",
+    "contactTitle": "Kepada siapa hendak menulis",
+    "heldBasis": "Dua yang pertama bersandar pada persetujuan anda, yang diberikan semasa menerima jemputan. Dua yang terakhir bersandar pada kepentingan sah kami untuk memastikan akaun anda selamat dan bilik ini tepat.",
+    "heldIdentity": "Nama dan alamat e-mel anda, supaya seseorang yang dinamakan boleh diberi akses kepada laporan syarikat.",
+    "heldReads": "Dokumen mana yang anda buka dan bila, supaya bilik ini boleh menunjukkan apa yang baharu dan merekodkan versi pembentangan mana yang ditunjukkan kepada anda. Ini milik anda sahaja: tidak pernah diagregatkan, tidak pernah dilaporkan sebagai analitik, dan hilang bersama akaun anda.",
+    "heldRole": "Peranan dan keadaan akaun anda, supaya bilik ini tahu apa yang boleh anda baca.",
+    "heldSessions": "Log masuk terakhir anda dan sesi anda yang terbuka, supaya anda dan pentadbir boleh melihat serta menamatkannya.",
+    "heldTitle": "Apa yang kami simpan, dan mengapa",
+    "intro": "VALO Tech menyimpan senarai ringkas tentang orang yang membaca laporan pelaburnya. Halaman ini menerangkan apa, mengapa, berapa lama, dan apa yang boleh anda minta daripada kami.",
+    "keptBackups": "Sandaran yang disulitkan disimpan sehingga dua belas bulan, jadi seseorang yang dipadam hari ini masih boleh muncul dalam sandaran yang dibuat sebelum itu. Sandaran itu hanya dibuka untuk memulihkan kehilangan data, tidak pernah untuk mencari seseorang.",
+    "keptBody": "Selagi anda mempunyai akses. Memadam akaun ialah pemadaman sebenar: barisnya hilang, bukan sekadar ditanda.",
+    "keptTitle": "Berapa lama kami menyimpannya",
+    "rightsAccess": "Salinan apa yang kami simpan tentang anda.",
+    "rightsCorrection": "Pembetulan, jika ada yang salah.",
+    "rightsErasure": "Pemadaman.",
+    "rightsTitle": "Apa yang boleh anda minta",
+    "rightsWhen": "Kami menjawab dalam tempoh tiga puluh hari.",
+    "rightsWithdrawal": "Menarik balik persetujuan anda, yang bermakna memadam akaun anda, kerana data anda berada di sini semata-mata untuk akses.",
+    "title": "Bagaimana bilik ini mengendalikan data anda",
+    "link": "Bagaimana kami mengendalikan data anda"
   }
 }

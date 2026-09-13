@@ -19,6 +19,7 @@ export async function generateMetadata(): Promise<Metadata> {
  */
 export default async function SignInPage(): Promise<ReactElement> {
   const t = await getTranslations('signIn');
+  const privacy = await getTranslations('privacy');
 
   return (
     <main className={styles.main}>
@@ -29,6 +30,13 @@ export default async function SignInPage(): Promise<ReactElement> {
         <p className={styles.intro}>{t('intro')}</p>
         <SignInForm />
       </section>
+      {/* The notice is linked from here because somebody deciding whether to
+          accept an invitation reads it before they have an account, so a notice
+          reachable only from inside the room is one they cannot reach
+          (`LEGAL-SG-001/T2`). */}
+      <p className={styles.aside}>
+        <a href="/privacy">{privacy('link')}</a>
+      </p>
     </main>
   );
 }

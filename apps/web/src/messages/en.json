@@ -33,5 +33,27 @@
     "expires": "Expires",
     "endEverywhere": "Sign out everywhere",
     "endEverywhereHint": "Ends every session, including this one. You will need to sign in again."
+  },
+  "privacy": {
+    "contactBody": "Write to {address}.",
+    "contactTitle": "Who to write to",
+    "heldBasis": "The first two rest on your consent, given when you accepted your invitation. The last two rest on our legitimate interest in keeping your account secure and the room accurate.",
+    "heldIdentity": "Your name and e-mail address, so a named person can be given access to company reporting.",
+    "heldReads": "Which documents you have opened, and when, so the room can show you what is new and record which version of a deck you were shown. This is yours alone: it is never aggregated, never reported as analytics, and it goes when your account goes.",
+    "heldRole": "Your role and the state of your account, so the room knows what you may read.",
+    "heldSessions": "Your last sign-in and your open sessions, so you and an administrator can see them and end them.",
+    "heldTitle": "What we hold, and why",
+    "intro": "VALO Tech holds a short list of things about the people who read its investor reporting. This page says what, why, how long, and what you can ask us for.",
+    "keptBackups": "Encrypted backups are kept for up to twelve months, so somebody deleted today can still appear in a backup taken before that. Those backups are opened only to recover from data loss, never to look a person up.",
+    "keptBody": "As long as you have access. Deleting an account is a real deletion: the rows go, not a flag on them.",
+    "keptTitle": "How long we keep it",
+    "rightsAccess": "A copy of what we hold about you.",
+    "rightsCorrection": "A correction, if something is wrong.",
+    "rightsErasure": "Deletion.",
+    "rightsTitle": "What you can ask for",
+    "rightsWhen": "We answer within thirty days.",
+    "rightsWithdrawal": "To withdraw your consent, which means deleting your account, because access is the only thing your data is here for.",
+    "title": "How this room handles your data",
+    "link": "How we handle your data"
   }
 }

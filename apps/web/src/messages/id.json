@@ -33,5 +33,27 @@
     "expires": "Kedaluwarsa",
     "endEverywhere": "Keluar dari semua perangkat",
     "endEverywhereHint": "Mengakhiri setiap sesi, termasuk yang ini. Anda perlu masuk lagi."
+  },
+  "privacy": {
+    "contactBody": "Tulislah ke {address}.",
+    "contactTitle": "Kepada siapa menulis",
+    "heldBasis": "Dua hal pertama bersandar pada persetujuan Anda, yang diberikan saat menerima undangan. Dua hal terakhir bersandar pada kepentingan sah kami menjaga akun Anda tetap aman dan ruang ini tetap akurat.",
+    "heldIdentity": "Nama dan alamat surel Anda, agar seseorang yang disebut namanya dapat diberi akses ke laporan perusahaan.",
+    "heldReads": "Dokumen mana yang Anda buka dan kapan, agar ruang ini dapat menunjukkan apa yang baru dan mencatat versi paparan mana yang Anda lihat. Ini milik Anda sendiri: tidak pernah diagregasi, tidak pernah dilaporkan sebagai analitik, dan hilang bersama akun Anda.",
+    "heldRole": "Peran dan status akun Anda, agar ruang ini tahu apa yang boleh Anda baca.",
+    "heldSessions": "Waktu masuk terakhir dan sesi Anda yang terbuka, agar Anda dan administrator dapat melihat serta mengakhirinya.",
+    "heldTitle": "Apa yang kami simpan, dan mengapa",
+    "intro": "VALO Tech menyimpan daftar singkat mengenai orang-orang yang membaca laporan investornya. Halaman ini menjelaskan apa, mengapa, berapa lama, dan apa yang dapat Anda minta dari kami.",
+    "keptBackups": "Cadangan terenkripsi disimpan hingga dua belas bulan, sehingga seseorang yang dihapus hari ini masih dapat muncul dalam cadangan yang dibuat sebelumnya. Cadangan itu hanya dibuka untuk memulihkan kehilangan data, tidak pernah untuk mencari seseorang.",
+    "keptBody": "Selama Anda masih memiliki akses. Menghapus akun adalah penghapusan sungguhan: barisnya hilang, bukan sekadar diberi tanda.",
+    "keptTitle": "Berapa lama kami menyimpannya",
+    "rightsAccess": "Salinan dari apa yang kami simpan tentang Anda.",
+    "rightsCorrection": "Perbaikan, jika ada yang keliru.",
+    "rightsErasure": "Penghapusan.",
+    "rightsTitle": "Apa yang dapat Anda minta",
+    "rightsWhen": "Kami menjawab dalam tiga puluh hari.",
+    "rightsWithdrawal": "Menarik persetujuan Anda, yang berarti menghapus akun Anda, karena data Anda ada di sini hanya untuk akses.",
+    "title": "Bagaimana ruang ini menangani data Anda",
+    "link": "Bagaimana kami menangani data Anda"
   }
 }

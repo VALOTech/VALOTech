@@ -1,0 +1,60 @@
+/* The privacy notice (LEGAL-SG-001/T1). Set as a document to be read, not as a
+   page to be skimmed: one column at a reading measure, generous line height, and
+   nothing competing with the words. */
+
+.main {
+  min-height: 100vh;
+  padding: 3rem 1.25rem 5rem;
+  display: flex;
+  justify-content: center;
+  font:
+    16px/1.65 system-ui,
+    -apple-system,
+    Segoe UI,
+    sans-serif;
+}
+
+/* 34rem is around seventy characters at this size, which is where a line stops
+   being comfortable to return from. */
+.notice {
+  max-width: 34rem;
+}
+
+.title {
+  margin: 0 0 0.75rem;
+  font-size: 1.6rem;
+  line-height: 1.25;
+}
+
+.intro {
+  margin: 0 0 2rem;
+  font-size: 1.05rem;
+}
+
+.heading {
+  margin: 2.25rem 0 0.6rem;
+  font-size: 1.1rem;
+  line-height: 1.3;
+}
+
+.notice p {
+  margin: 0 0 0.9rem;
+}
+
+/* The list carries the four things held and the four that can be asked for.
+   Each is a sentence, so the markers sit outside and the text stays aligned. */
+.list {
+  margin: 0 0 0.9rem;
+  padding-left: 1.25rem;
+}
+
+.list li {
+  margin-bottom: 0.5rem;
+}
+
+.notice a {
+  color: inherit;
+}
+
+/* Arabic and Urdu are read right to left; the document direction is set on the
+   html element by the root layout, so nothing here assumes a side. */

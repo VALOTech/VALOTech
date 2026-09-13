@@ -151,10 +151,18 @@ describe.skipIf(!HAS_DATABASE)('CFG-001/T8 — the settings surface', () => {
         'room.banner',
         'room.signin_message',
         'mail.enabled',
+        'privacy.contact',
       ]);
       // The defaults are what the application reads, so they are what the screen
-      // shows for a key with no row.
-      expect(settings.map((setting) => setting.value)).toEqual(['', '', 'true']);
+      // shows for a key with no row. The contact's default is an address the
+      // company already publishes, so the privacy notice names somewhere real
+      // before anybody sets anything (`LEGAL-SG-001/T1`).
+      expect(settings.map((setting) => setting.value)).toEqual([
+        '',
+        '',
+        'true',
+        'hello@valotech.org',
+      ]);
       expect(settings.every((setting) => setting.previousValue === null)).toBe(true);
       expect(settings.every((setting) => setting.changedAt === null)).toBe(true);
       expect(settings.every((setting) => setting.what !== '')).toBe(true);

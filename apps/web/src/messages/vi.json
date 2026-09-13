@@ -33,5 +33,27 @@
     "expires": "Hết hạn",
     "endEverywhere": "Đăng xuất khỏi mọi nơi",
     "endEverywhereHint": "Kết thúc mọi phiên, kể cả phiên này. Bạn sẽ cần đăng nhập lại."
+  },
+  "privacy": {
+    "contactBody": "Hãy viết tới {address}.",
+    "contactTitle": "Viết cho ai",
+    "heldBasis": "Hai mục đầu dựa trên sự đồng ý của bạn, đã đưa ra khi bạn chấp nhận lời mời. Hai mục sau dựa trên lợi ích hợp pháp của chúng tôi trong việc giữ tài khoản của bạn an toàn và giữ cho phòng chính xác.",
+    "heldIdentity": "Tên và địa chỉ e-mail của bạn, để một người có tên cụ thể được cấp quyền đọc báo cáo của công ty.",
+    "heldReads": "Bạn đã mở tài liệu nào và vào lúc nào, để phòng cho bạn thấy những gì còn mới và ghi lại phiên bản bộ tài liệu bạn đã xem. Thông tin này chỉ thuộc về bạn: không bao giờ được tổng hợp, không bao giờ được báo cáo như số liệu phân tích, và sẽ mất đi cùng tài khoản của bạn.",
+    "heldRole": "Vai trò và trạng thái tài khoản của bạn, để phòng biết bạn được phép đọc những gì.",
+    "heldSessions": "Lần đăng nhập gần nhất và các phiên đang mở của bạn, để bạn và quản trị viên có thể xem và kết thúc chúng.",
+    "heldTitle": "Chúng tôi giữ gì, và vì sao",
+    "intro": "VALO Tech lưu giữ một danh sách ngắn về những người đọc báo cáo dành cho nhà đầu tư. Trang này cho biết chúng tôi giữ gì, vì sao, trong bao lâu, và bạn có thể yêu cầu những gì.",
+    "keptBackups": "Bản sao lưu được mã hóa và giữ tối đa mười hai tháng, nên người bị xóa hôm nay vẫn có thể xuất hiện trong một bản sao lưu tạo trước đó. Những bản sao lưu ấy chỉ được mở để khôi phục khi mất dữ liệu, không bao giờ để tra cứu một người.",
+    "keptBody": "Chừng nào bạn còn quyền truy cập. Xóa một tài khoản là xóa thật: các dòng dữ liệu biến mất, chứ không phải bị đánh dấu.",
+    "keptTitle": "Chúng tôi giữ trong bao lâu",
+    "rightsAccess": "Một bản sao những gì chúng tôi giữ về bạn.",
+    "rightsCorrection": "Sửa lại, nếu có gì sai.",
+    "rightsErasure": "Xóa dữ liệu.",
+    "rightsTitle": "Bạn có thể yêu cầu những gì",
+    "rightsWhen": "Chúng tôi trả lời trong vòng ba mươi ngày.",
+    "rightsWithdrawal": "Rút lại sự đồng ý của bạn, nghĩa là xóa tài khoản, vì dữ liệu của bạn ở đây chỉ để phục vụ việc truy cập.",
+    "title": "Cách phòng này xử lý dữ liệu của bạn",
+    "link": "Cách chúng tôi xử lý dữ liệu của bạn"
   }
 }

@@ -69,9 +69,39 @@ export const SETTINGS = {
     fallback: true,
     what: 'Whether mail is sent at all. Turning it off stops sending without a deploy and without touching the credential.',
   },
+  // The address the privacy notice publishes (`LEGAL-SG-001/T1`). It is a
+  // setting rather than a string in the dictionary because the notice names
+  // where to write, the PDPA asks for a designated contact, and who holds that
+  // mailbox changes without the words around it changing — a deploy to move an
+  // address is a deploy nobody makes, and a notice naming a mailbox nobody
+  // reads is worse than one naming a general address honestly. The default is
+  // the address the gateway already publishes, so the notice is true before
+  // anybody sets anything; naming a data protection officer is
+  // `LEGAL-SG-001/T4`, and that is the owner's act, not a code change.
+  'privacy.contact': {
+    type: 'text',
+    fallback: 'hello@valotech.org',
+    maxLength: 120,
+    what: 'The address the privacy notice tells a reader to write to. Empty falls back to the published company address.',
+  },
 } as const satisfies Record<string, SettingSpec>;
 
 export type SettingKey = keyof typeof SETTINGS;
+
+/**
+ * The address the privacy notice publishes (`LEGAL-SG-001/T1`).
+ *
+ * A row set to nothing is treated as no row. `get` returns the declared default
+ * only when the key is absent, so an operator who clears the field would
+ * otherwise leave the notice telling a reader to write to nowhere — and a
+ * privacy notice naming no contact is the one sentence in it that must never be
+ * empty. Surrounding space is dropped for the same reason: an address that is
+ * one space is a field somebody cleared.
+ */
+export function publishedContact(configured: string): string {
+  const trimmed = configured.trim();
+  return trimmed === '' ? SETTINGS['privacy.contact'].fallback : trimmed;
+}
 
 /** The value a key reads back as — the type of its declared default. */
 export type SettingValue<K extends SettingKey> = (typeof SETTINGS)[K]['fallback'];

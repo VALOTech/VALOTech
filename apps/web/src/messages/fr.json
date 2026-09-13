@@ -33,5 +33,27 @@
     "expires": "Expire",
     "endEverywhere": "Se déconnecter partout",
     "endEverywhereHint": "Met fin à toutes les sessions, y compris celle-ci. Vous devrez vous reconnecter."
+  },
+  "privacy": {
+    "contactBody": "Écrivez à {address}.",
+    "contactTitle": "À qui écrire",
+    "heldBasis": "Les deux premiers reposent sur votre consentement, donné lorsque vous avez accepté votre invitation. Les deux derniers reposent sur notre intérêt légitime à protéger votre compte et à garder cet espace exact.",
+    "heldIdentity": "Votre nom et votre adresse e-mail, afin qu'une personne nommée puisse accéder aux rapports de la société.",
+    "heldReads": "Les documents que vous avez ouverts et quand, afin que cet espace puisse vous montrer ce qui est nouveau et retenir quelle version d'une présentation vous avez vue. Cela n'appartient qu'à vous : jamais agrégé, jamais transmis comme mesure d'audience, et supprimé avec votre compte.",
+    "heldRole": "Votre rôle et l’état de votre compte, afin que cet espace sache ce que vous pouvez lire.",
+    "heldSessions": "Votre dernière connexion et vos sessions ouvertes, afin que vous et un administrateur puissiez les voir et y mettre fin.",
+    "heldTitle": "Ce que nous conservons, et pourquoi",
+    "intro": "VALO Tech conserve une courte liste d'informations sur les personnes qui lisent ses rapports aux investisseurs. Cette page indique quoi, pourquoi, combien de temps, et ce que vous pouvez nous demander.",
+    "keptBackups": "Les sauvegardes chiffrées sont conservées jusqu'à douze mois : une personne supprimée aujourd'hui peut donc encore figurer dans une sauvegarde antérieure. Ces sauvegardes ne sont ouvertes que pour réparer une perte de données, jamais pour rechercher quelqu'un.",
+    "keptBody": "Aussi longtemps que vous avez accès. La suppression d'un compte est une vraie suppression : les enregistrements disparaissent, et non un simple indicateur.",
+    "keptTitle": "Combien de temps nous les conservons",
+    "rightsAccess": "Une copie de ce que nous conservons à votre sujet.",
+    "rightsCorrection": "Une correction, si quelque chose est inexact.",
+    "rightsErasure": "La suppression.",
+    "rightsTitle": "Ce que vous pouvez demander",
+    "rightsWhen": "Nous répondons sous trente jours.",
+    "rightsWithdrawal": "Le retrait de votre consentement, ce qui entraîne la suppression de votre compte, car vos données ne servent ici qu'à vous donner accès.",
+    "title": "Comment cet espace traite vos données",
+    "link": "Comment nous traitons vos données"
   }
 }
