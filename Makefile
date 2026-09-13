@@ -7,7 +7,7 @@
 .DEFAULT_GOAL := help
 SHELL := /bin/sh
 
-PYTHON ?= python
+PYTHON ?= $(if $(shell command -v python3 2>/dev/null),python3,python)
 NODE   ?= node
 PORT   ?= 3101
 

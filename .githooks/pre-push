@@ -46,13 +46,17 @@ fi
 # owner's), so running the aggregate here is running it against what will be
 # pushed, whichever ref is being updated. Python and make are optional: a
 # machine without either can still publish the site, which is the one thing
-# this hook must never make impossible.
+# this hook must never make impossible. The interpreter answers to `python3`
+# on macOS and most Linux and to `python` elsewhere, so both names are tried:
+# a machine carrying it under the other name is not a machine without it, and
+# skipping every document gate there is a guard reporting success for checks
+# that never ran.
 #
 # `make check` rather than a list of scripts, deliberately. A hook enumerating
 # its own gates drifts from the Makefile the first time a gate is added, and
 # what it then reports is not that a check failed but that no check ran.
-if command -v python >/dev/null 2>&1 && command -v make >/dev/null 2>&1; then
-	if ! make "$GATE"; then
+if PYTHON_BIN="$(command -v python3 || command -v python)" && command -v make >/dev/null 2>&1; then
+	if ! make "$GATE" PYTHON="$PYTHON_BIN"; then
 		echo "pre-push: 'make $GATE' failed — see the output above" >&2
 		echo "pre-push: fix it; do not push past this" >&2
 		exit 1
@@ -61,7 +65,7 @@ elif ! node scripts/sync-static-copy.mjs --check; then
 	echo "pre-push: index.html does not match assets/i18n.js" >&2
 	exit 1
 else
-	echo "pre-push: make or python is absent, so only the served copy was checked" >&2
+	echo "pre-push: make or Python is absent, so only the served copy was checked" >&2
 fi
 
 ALLOWED_REFS="refs/heads/main refs/heads/development"
