@@ -34,6 +34,7 @@ const DESTINATIONS: ReadonlyArray<{ readonly href: string; readonly label: strin
   { href: '/admin/content', label: 'Content' },
   { href: '/admin/media', label: 'Media' },
   { href: '/admin/accounts', label: 'Accounts' },
+  { href: '/admin/mail', label: 'Mail' },
   { href: '/admin/portfolio', label: 'Portfolio' },
   { href: '/admin/config', label: 'Settings' },
   { href: '/admin/audit', label: 'Audit' },

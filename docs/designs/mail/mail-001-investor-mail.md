@@ -66,10 +66,17 @@ connection that cannot be secured **fails the send** rather than falling back to
 plaintext: an investor's address and the subject line would otherwise cross the
 network in the clear, and a silent downgrade is the way that happens.
 
-Absent credential: the port is unavailable and says why (`CRED-001`). The
-composer still works, the recipient list still resolves, and the send control is
-disabled with the reason on it — an admin who cannot see who they would have
-mailed cannot prepare the mail while the credential is being arranged.
+Two separate things withhold a send, and the send reads both. There may be no
+credential (`CRED-001`), and an operator may have turned sending off —
+`mail.enabled` (`CFG-001`) is the lever that stops sending without a deploy and
+without touching the credential, and a switch the send did not read would be a
+kill switch that kills nothing. Either way the port is unavailable and says why.
+The composer still works, the recipient list still resolves, and the send control
+is disabled with the reason on it — an admin who cannot see who they would have
+mailed cannot prepare the mail while the credential is being arranged. When both
+are true the credential is named first, because turning the setting back on would
+not make a send possible and an admin told only about the switch would fix the
+wrong thing.
 
 ### Recipients
 
@@ -95,10 +102,12 @@ is not an afterthought — it is what a corporate mail client shows.
 
 ### Sending
 
-    POST /admin/mail/send   { recipients[], subject, body }
+    /admin/mail             the composer, the audience and the send control
+    POST /admin/mail/send   { recipients[], subject, body, confirmCount }
 
 1. Re-resolve every recipient and refuse if any has become suspended or
-   unsubscribed since selection.
+   unsubscribed since selection, or has been erased since — an id that resolves
+   to nobody is the same change wearing a different name.
 2. Show the final count and require it to be **typed** (`ADMIN-002`). Typing
    "17" is a different act from clicking a button, and the difference is the
    point.
