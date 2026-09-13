@@ -131,16 +131,23 @@ with animation off met the bare rock parked on the left through a chapter that
 had asked for a finished world on the right, because the scrub and the reveal
 were reading a position two chapters behind the one on screen.
 
-**The journey is read a little ahead of the reader.** The planet follows a moving
+**The journey is read exactly where the reader is.** The planet follows a moving
 target, so while the reader scrolls it trails by roughly the target's speed times
-the easing's time constant — which is why a chapter can be reached before the
-planet is in the space it left, and why moving a station earlier cannot fix it:
-moving a station moves the target and the trail with it. The lead is the same
-product, so the two subtract. It falls to nothing when scrolling stops, so a
-settled planet sits exactly on its station. The rate is smoothed, because a wheel
-delivers scroll in steps, and capped, because a flick would otherwise read the
-journey most of a page ahead. **Only the journey is led:** the growth scrub and
-the star's bearing stay honest to where the reader is.
+the easing's time constant — a chapter can be reached before the planet is in the
+space it left, and moving a station earlier cannot fix it, because moving a
+station moves the target and the trail with it.
+
+Reading the journey a little ahead of the reader was the answer to that for a
+year, and it was the wrong one. The trail is a distance **on the screen**; the
+read-ahead was a step **along the journey**; and the journey maps the two through
+a different slope on every leg — nothing at all across a station the world is
+holding, most of the frame across a crossing. The two were the same product and
+were meant to subtract. Measured on the running page, they did not: the
+read-ahead bought **two pixels and ten milliseconds** at the arrival it was
+written for, and cost **thirty pixels** of the world setting off across the frame
+and being pulled back when it decayed — which is the half of it a reader actually
+sees. It is gone (`#SCENE-DEC-03`). What remains is the trail, which is a world
+following, and which reads as one.
 
 **A crossing is timed to the hand-over and stays in sight.** Two arguments face
 each other across it, and the incoming heading arrives at the bottom of the frame
@@ -230,6 +237,23 @@ What a phone keeps is everything that is the argument rather than the
 arrangement: the self-rotation, the lunar-to-Earth scrub on scroll, and the star
 crossing the sky. The world stands still; it is not switched off
 (`SCENE-R04`, `#SCENE-DEC-02`).
+
+### Nothing drifts
+
+**The world moves where the journey sends it and nowhere else.** Two sinusoids
+used to breathe under everything — three pixels across on one period, six down
+on another, never lining up and never ending. They were written as a world alive
+beside a column of text; from the chair they are the opposite. With the page
+standing still and the journey settled, the disc still wandered **5.9px across
+the frame and 11.2px down it**, which is not life, it is slack: it takes the
+weight out of every station the journey does put it in, and it is the difference
+between a world placed somewhere and a world floating near somewhere.
+
+The rule was already written — a loop exists only while something is moving, and
+stops when nothing is (`SCENE-R03`). What keeps the scene alive at rest is the
+rotation below: the world turning on its axis, rather than the world sliding
+about the frame. Measured at rest now, at three points of the page and at both
+widths: **0.00px**.
 
 ### Rotation
 
@@ -363,3 +387,4 @@ belong to the page's choreography too.
 - `SCENE-001/T6` — The close takes the open side of the footer
 - `SCENE-001/T7` — On a phone the world holds one station at the centre of the visible frame, and stops drifting there
 - `SCENE-001/T8` — The phone's dim is owned by the stylesheet and actually reaches the world
+- `SCENE-001/T9` — The world stands still when the page does, and follows without reading ahead

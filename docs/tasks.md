@@ -80,7 +80,7 @@ Design: [docs/designs/scene/scene-001-world-and-journey.md](designs/scene/scene-
 - [x] SCENE-001/T2 — The journey is measured in chapters, not page fractions
   Evidence: assets/scene/boot.js:CHAPTER_SPINE
 - [x] SCENE-001/T3 — The journey is read ahead of the reader so each chapter's disc is standing when its heading arrives
-  Evidence: assets/scene/boot.js:LEAD_EASE
+  Evidence: docs/designs/scene/scene-001-world-and-journey.md · docs/decisions-log.md#SCENE-DEC-03 — shipped as written and since withdrawn. The read-ahead cannot cancel the trail it was built for: one is a distance on the screen and the other a step along the journey, whose slope differs on every leg. Measured, it bought 2px at the arrival named above and cost 30px of the world setting off and being pulled back. `SCENE-001/T9` removed it
 - [x] SCENE-001/T4 — A jump is placed rather than eased
   Evidence: commit e180555
 - [x] SCENE-001/T5 — The world's size follows the frame, with no flat ceiling and a floor that cannot shrink a tuned size
@@ -91,6 +91,8 @@ Design: [docs/designs/scene/scene-001-world-and-journey.md](designs/scene/scene-
   Evidence: assets/scene/boot.js:PHONE_SCALE · assets/scene/boot.js:centreOffsetY · docs/decisions-log.md#SCENE-DEC-02 — the page at 390 x 844 and at 360 x 800 reads an identical 50% across, 50% down and 122px drawn radius at every point, against 47-63%, 52-65% and 99-133px before; the idle drift measured 0.00px across twelve samples with nothing being scrolled, against 4.8px across and 4.0px down. The vertical origin the disc, the star and the orbit layers are placed from existed twice — `var(--hdr) / 2` inside the transform and a second computation for the other two — and is now one function they all read, verified by sampling all three at the top of the page and mid-page at three widths
 - [x] SCENE-001/T8 — The phone's dim is owned by the stylesheet and actually reaches the world
   Evidence: assets/scene/boot.js:worldDim · assets/site.css:--planet-dim — the stylesheet asked for 0.55 below 900px and the inline opacity written here every frame overwrote it, so the computed value measured 1 for as long as the rule had existed; the scene now reads the property off the element and multiplies its intro fade by it, and the property carries `opacity` as well for the machines that never run the scene. Measured 0.7
+- [x] SCENE-001/T9 — The world stands still when the page does, and follows without reading ahead
+  Evidence: assets/scene/boot.js:place · docs/decisions-log.md#SCENE-DEC-03 — two faults, both reported from the chair as the world feeling loose. At rest the disc wandered 5.9px across the frame and 11.2px down it on two sinusoids that never end, with the page still and the journey settled; `SCENE-R03` already forbade it and this had been fixed below 900px only. And the journey was read ahead of the reader to cancel the easing's trail, which cannot work: the trail is a distance on the screen, the read-ahead a step along the journey, and the journey's slope differs on every leg. Measured over fourteen wheel-scrolled segments of the page, the world's worst travel against its own direction fell from 133.9px across and 45.5px down to 26.9 and 6.8, and twelve of the fourteen segments now read under 1px; at rest it measures 0.00px at three points and both widths. The read-ahead bought 2px and 10ms at the arrival it was written for
 
 ## SCENE-002 · Satellites and their rings
 PRD: `SCENE-002` · Decision: [decisions-log.md#SCENE-DEC-01](decisions-log.md#SCENE-DEC-01)

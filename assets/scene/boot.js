@@ -124,24 +124,10 @@ const CALM_ORBIT = 0.16;
    against — and closes the same amount per second everywhere else. */
 const DRIFT_EASE = 0.26;
 
-/* The planet trails its target by the target's speed times the easing's time
-   constant, which is why a chapter can be reached before the planet is in the
-   space it left — a fault no amount of moving the stations earlier can fix,
-   because moving a station moves the target and the trail with it. Reading the
-   journey a little ahead of the reader cancels it instead: the lead is the
-   same product, so the two subtract. It falls to nothing the moment scrolling
-   stops, so a settled planet sits exactly on its station rather than past it.
-
-   The measured rate is smoothed, because a wheel delivers scroll in steps and
-   an unsmoothed lead would jump the planet on every notch, and it is capped,
-   because a flick would otherwise read the journey most of a page ahead. */
 /* One frame of an ordinary scroll covers well under a hundredth of the page;
    a flick at three thousand pixels a second covers about a four-hundredth. A
    fiftieth in a single frame is not scrolling. */
 const JUMP_STEP = 0.02;
-
-const LEAD_EASE = 0.2;
-const LEAD_MAX = 0.06;
 
 /* How far the reference's key light sits toward the viewer relative to its
    spread across the frame. Holding the ratio keeps the surface's modelling
@@ -355,7 +341,6 @@ let scale = 1;
 let introStartedAt = 0;
 let lastTick = 0;
 let lastProgress = 0;
-let leadRate = 0;
 let spinBoost = 0;
 let orbitClock = 0;
 let running = false;
@@ -717,23 +702,30 @@ function place(now) {
      is on the first frame. */
   if (Math.abs(step) > JUMP_STEP) {
     primed = false;
-    leadRate = 0;
   }
-  leadRate += (drift - leadRate) * ease(gap, LEAD_EASE);
-  const lead = Math.max(-LEAD_MAX, Math.min(LEAD_MAX, leadRate * DRIFT_EASE));
-  const look = Math.max(0, Math.min(1, progress + lead));
 
-  /* Which leg of the journey this position sits on. The stations are layout,
-     so they are honoured as written — the lead moves when they are read, never
-     what they say. Only the journey is read ahead: the growth scrub and the
-     star's bearing stay honest to where the reader actually is. */
+  /* Which leg of the journey the reader is on. The journey is read exactly
+     where they are, and the world follows from there.
+
+     It used to be read a little ahead of them, to cancel the trail the easing
+     leaves behind: the planet lags its target by the target's speed times the
+     time constant, so a chapter can be reached before the world is in the
+     space that chapter left. The two are the same product and were meant to
+     subtract. They do not, because the trail is a distance on the screen and
+     the read-ahead was a step along the journey, and the journey maps the two
+     through a different slope on every leg — nothing at all across a station
+     the world is holding, most of the frame across a crossing. What it bought
+     was measured at the arrival it was written for: two pixels and ten
+     milliseconds. What it cost was measured on the same page: thirty pixels of
+     the world setting off and being pulled back, which is what a reader
+     actually sees. */
   const path = wide ? route || JOURNEY : JOURNEY_NARROW;
   let i = 0;
-  while (i < path.length - 2 && look > path[i + 1].at) i++;
+  while (i < path.length - 2 && progress > path[i + 1].at) i++;
   const from = path[i];
   const to = path[i + 1];
   const span = to.at - from.at || 1;
-  const t = smoothstep((look - from.at) / span);
+  const t = smoothstep((progress - from.at) / span);
 
   /* The stations are written for a page that reads left to right. Under
      Arabic and Urdu the argument is pinned to the other side, so the whole
@@ -786,26 +778,27 @@ function place(now) {
 
   motion.visualScale = scale * introScale;
 
-  /* The drift is a wide-frame gesture: a world breathing beside a column of
-     text, a few pixels against a disc that is already travelling. On a phone
-     the world holds one station behind the text, so those few pixels are the
-     only thing moving in the whole frame and read as a picture that will not
-     settle -- 4.8px across and 4.0px down with nothing being scrolled at all.
-     A held station has to be held (`SCENE-R03`). */
-  const breathing = !still && wide;
-  const floatX = breathing ? Math.sin((now / 1000) * 0.84) * 3 : 0;
-  const floatY = breathing ? Math.cos((now / 1000) * 0.71) * 6 : 0;
+  /* Nothing drifts. The two sinusoids that used to breathe here were read as a
+     gesture — a world alive beside a column of text — and from the chair they
+     are the opposite: with the page standing still and the journey settled,
+     the disc still wandered 5.9px across the frame and 11.2px down it, on two
+     periods that never line up and never end. A world that will not stop
+     moving does not read as alive; it reads as unmoored, and it takes the
+     weight out of every place the journey actually does put it.
 
+     The rule was already written: a loop exists only while something is
+     moving, and stops when nothing is (`SCENE-R03`). What keeps the scene
+     alive at rest is the rotation, which is the world turning on its axis
+     rather than the world sliding about the frame. */
   container.style.transform =
-    `translate(calc(-50% + ${floatX.toFixed(1)}px + ${driftVW.toFixed(2)}vw),` +
-    ` calc(-50% + ${centreOffsetY().toFixed(1)}px + ${floatY.toFixed(1)}px` +
-    ` + ${offsetVH.toFixed(2)}vh))`;
+    `translate(calc(-50% + ${driftVW.toFixed(2)}vw),` +
+    ` calc(-50% + ${centreOffsetY().toFixed(1)}px + ${offsetVH.toFixed(2)}vh))`;
   container.style.opacity = (introOpacity * worldDim()).toFixed(3);
 
   /* The star, placed from the planet rather than from the frame. Its bearing
      is the orbit; its distance holds it in the band of open sky. */
-  const planetX = vw / 2 + floatX + (driftVW / 100) * vw;
-  const planetY = sceneCentreY(vh) + floatY + (offsetVH / 100) * vh;
+  const planetX = vw / 2 + (driftVW / 100) * vw;
+  const planetY = sceneCentreY(vh) + (offsetVH / 100) * vh;
   /* The distance breathes as the bearing swings. An orbit is an ellipse, and a
      star held at one radius for a whole page reads as a lamp on a bracket. */
   const swing = 1 + Math.cos((progress - 0.5) * Math.PI) * 0.18;
@@ -837,8 +830,8 @@ function place(now) {
   /* The orbit layers are positioned from these, so they travel and shrink with
      the planet rather than being pinned to the viewport. */
   if (orbitNodes.length) {
-    stage.x = vw / 2 + floatX + (driftVW / 100) * vw;
-    stage.y = sceneCentreY(vh) + floatY + (offsetVH / 100) * vh;
+    stage.x = vw / 2 + (driftVW / 100) * vw;
+    stage.y = sceneCentreY(vh) + (offsetVH / 100) * vh;
     stage.scale = motion.visualScale;
     /* Nothing orbits the bare rock: the cover's sky has a world in it and
        nothing else. The moon arrives with the surface it belongs to, and the

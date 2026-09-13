@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_315 tasks in the plan, 224 closed, 91 outstanding._
+_316 tasks in the plan, 225 closed, 91 outstanding._
 
 ---
 
@@ -35,12 +35,12 @@ _48/50 closed (96%) · 2 outstanding — 0 buildable now · 0 waiting on the own
 
 _Who may read what, and what records that they did. Everything above reads through the gate this wave builds, so a shortcut here is a shortcut in every feature after it. Sign-out precedes invitation deliberately: a session that cannot be ended server-side is a defect that grows with every account created. The scene sits here too, one layer above the page it moves behind._
 
-_71/74 closed (95%) · 3 outstanding — 1 buildable now · 0 waiting on the owner · 1 external residue · 1 parked to a later wave._
+_72/75 closed (96%) · 3 outstanding — 1 buildable now · 0 waiting on the owner · 1 external residue · 1 parked to a later wave._
 
 - **AUTH-001** · Sign-in — 5/5 closed
 - **DATA-003** · Backup and restore — 5/5 closed
 - **I18N-002** · Served-copy parity gate — 2/2 closed
-- **SCENE-001** · The world and its journey — 8/8 closed
+- **SCENE-001** · The world and its journey — 9/9 closed
 - **SEC-002** · Audit log — 4/5 closed · depth 2
   - `[!] SEC-002/T2` — The application role holds no UPDATE or DELETE on it  · _external_ · **Blocked by:** pending-external: the REVOKE runs where the database is deployed, against the role in DATABASE_URL, and is documented at docs/operator-checklist.md#A…
 
