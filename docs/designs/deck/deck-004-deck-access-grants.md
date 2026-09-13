@@ -37,8 +37,13 @@ that gets asked when somebody leaves.
 
 ### Granting
 
-    POST   /admin/decks/<id>/grants     { accountId, pinnedVersion? }
-    DELETE /admin/decks/<id>/grants/<accountId>
+    POST   /admin/content/<id>/grants     { accountId, pinnedVersion? }
+    DELETE /admin/content/<id>/grants/<accountId>
+
+A deck is a content item, so the deck half of this lives where every item lives
+(`CMS-004/T4`) and the account half under the person it is about
+(`/admin/accounts/<id>`); the console has one list of things to write and one of
+people, and a grant is an edge between them rather than a third hub.
 
 Granting names the investor, the deck, and whether the version is pinned. The
 confirmation states what the person will be able to read, in words, including

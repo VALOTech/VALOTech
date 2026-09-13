@@ -43,7 +43,13 @@ two representations to reconcile.
 
 ### The overview
 
-    GET /admin/decks/<id>/overview
+    GET /admin/content/<id>/overview
+
+A deck is a content item, so it is reached where every item is reached: the
+console lists one kind of thing (`CMS-002/T8`) and `/admin/content/<id>` is its
+screen (`CMS-004/T4`). The overview is one more view from there, offered for a
+deck and for nothing else, rather than a second hub the rail would have to name
+and a second list somebody would have to keep.
 
 Cards in order, each showing the section heading, its first line, and whether it
 carries an image or a figure. Drag to reorder; the drag is also a keyboard

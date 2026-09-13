@@ -110,6 +110,16 @@ export default async function ItemPage({
         {' · '}
         <a href={`/admin/content/${id}/preview`}>Preview</a>
         {' · '}
+        {/* A deck is the one type read in sections, so it is the one type with an
+            overview (`DECK-001` §3). The link is absent for the others rather
+            than present and refusing, because a destination that answers 404 is
+            one somebody tries twice. */}
+        {item.type !== 'deck' ? null : (
+          <>
+            <a href={`/admin/content/${id}/overview`}>Sections</a>
+            {' · '}
+          </>
+        )}
         <a href={`/admin/content/${id}/locales`}>
           Translations ({item.reviewedLocales === 0 ? 'English only' : `${item.reviewedLocales} reviewed`})
         </a>

@@ -16,6 +16,11 @@
  * one (`RPT-002/T2`), which comes back with the report holding it so the author
  * can choose between withdrawing that one and re-filing this.
  *
+ * An identifier naming no item — including one that is not an identifier at all
+ * — is a `404` rather than the `500` a uuid column would raise (`CMS-004/T7`).
+ * The two are one answer, so a caller cannot learn from the difference which
+ * identifiers are well-formed.
+ *
  * A route handler inherits no segment layout, so this asks the gate itself
  * (`requireAdmin`), and an `Origin` present and not ours is refused before
  * anything else (`ADMIN-002`, `AUTH-001`).
@@ -24,7 +29,7 @@
 import { requireAdmin } from '../../../../../auth/gate';
 import { getConfig } from '../../../../../config/index';
 import { BlockValidationError } from '../../../../../content/blocks';
-import { PeriodTakenError, publish } from '../../../../../content/publish';
+import { NoSuchItemError, PeriodTakenError, publish } from '../../../../../content/publish';
 import { withRequestId } from '../../../../../ops/request-context';
 
 const JSON_HEADERS: Readonly<Record<string, string>> = {
@@ -62,6 +67,9 @@ async function handlePublish(request: Request, itemId: string): Promise<Response
     const item = await publish(itemId, revisionId, actor.id);
     return json(200, { id: item.id, revisionId });
   } catch (error) {
+    if (error instanceof NoSuchItemError) {
+      return json(404, { error: 'not_found' });
+    }
     if (error instanceof BlockValidationError) {
       return json(422, { error: 'invalid_blocks', detail: error.message });
     }

@@ -27,16 +27,51 @@ import type { ContentType, Database } from '../db/types';
 import { LOCALES } from '../i18n/locales';
 
 import { validateBlocks } from './blocks';
-import type { ContentItem } from './items';
+import { type ContentItem, isItemId } from './items';
+
+/**
+ * Raised when publishing or withdrawing names an item the store does not hold
+ * (`CMS-004/T7`).
+ *
+ * An identifier that is not one and an identifier for an item that is not there
+ * are the same refusal, because they are the same answer: there is nothing here
+ * to move a pointer on. Collapsing them is what `CMS-006` §6 asks of a read, and
+ * a write owes it for the same reason — the alternative tells a caller which
+ * identifiers are well-formed, and tells it through a `500`.
+ *
+ * The message names no identifier. It is raised from a transaction that rolls
+ * back and is reported by whatever catches it, so anything it carries is
+ * something a log holds (`DATA-R02`); the caller already knows what it asked
+ * for.
+ */
+export class NoSuchItemError extends Error {
+  constructor() {
+    super('no such content item');
+    this.name = 'NoSuchItemError';
+  }
+}
 
 /** The item's id, pointer and type, locked so two publications of it cannot interleave. */
 async function lockItem(trx: Transaction<Database>, itemId: string) {
-  return trx
+  // The shape is asked before the value reaches the column, because `22P02`
+  // cannot be caught apart from a genuine query fault and arrives carrying the
+  // input (`content/items.ts:isItemId`).
+  if (!isItemId(itemId)) {
+    throw new NoSuchItemError();
+  }
+
+  const item = await trx
     .selectFrom('content_items')
     .select(['id', 'current_revision_id', 'type'])
     .where('id', '=', itemId)
     .forUpdate()
-    .executeTakeFirstOrThrow();
+    .executeTakeFirst();
+
+  if (item === undefined) {
+    throw new NoSuchItemError();
+  }
+
+  return item;
 }
 
 /**

@@ -37,7 +37,13 @@ import { issue } from '../../../../auth/session';
 import type { Block } from '../../../../content/blocks';
 import { createItem, saveDraft } from '../../../../content/items';
 import { localeGrid, markReviewed, seedLocale } from '../../../../content/locales';
-import { publishConsequences, withdrawReturnsTo } from '../../../../content/publish';
+import {
+  NoSuchItemError,
+  publish,
+  publishConsequences,
+  withdraw,
+  withdrawReturnsTo,
+} from '../../../../content/publish';
 import { forReader } from '../../../../content/read';
 import { closeDb, getDb } from '../../../../db/index';
 
@@ -370,6 +376,57 @@ describe.skipIf(!HAS_DATABASE)('CMS-004/T4 — publishing and withdrawing from t
         { action: 'content.publish', actor_id: adminId },
         { action: 'content.withdraw', actor_id: adminId },
       ]);
+    });
+  });
+  describe('an item that is not there (CMS-004/T7)', () => {
+    // A malformed identifier and a well-formed one naming nothing are one
+    // answer. Before this they were two 500s, and the message of the first
+    // repeated the value supplied into whatever logged it (`DATA-R02`).
+    const NOT_AN_ID = 'not-an-identifier';
+
+    it('refuses both alike at publish, with nothing raised', async () => {
+      const absent = randomUUID();
+
+      for (const id of [NOT_AN_ID, absent]) {
+        const response = await call(PUBLISH, 'publish', id, { revisionId: randomUUID() }, { cookie: adminCookie });
+        expect(response.status).toBe(404);
+        expect(await response.json()).toEqual({ error: 'not_found' });
+      }
+    });
+
+    it('refuses both alike at withdraw, with nothing raised', async () => {
+      for (const id of [NOT_AN_ID, randomUUID()]) {
+        const response = await call(WITHDRAW, 'withdraw', id, {}, { cookie: adminCookie });
+        expect(response.status).toBe(404);
+        expect(await response.json()).toEqual({ error: 'not_found' });
+      }
+    });
+
+    it('expresses the refusal in the store, so a second surface cannot answer differently', async () => {
+      await expect(publish(NOT_AN_ID, randomUUID(), adminId)).rejects.toBeInstanceOf(NoSuchItemError);
+      await expect(withdraw(NOT_AN_ID, adminId)).rejects.toBeInstanceOf(NoSuchItemError);
+      await expect(publish(randomUUID(), randomUUID(), adminId)).rejects.toBeInstanceOf(NoSuchItemError);
+      await expect(withdraw(randomUUID(), adminId)).rejects.toBeInstanceOf(NoSuchItemError);
+    });
+
+    it('names no identifier in the refusal, because what is reported is logged', async () => {
+      await expect(publish(NOT_AN_ID, randomUUID(), adminId)).rejects.toThrow(
+        expect.objectContaining({ message: expect.not.stringContaining(NOT_AN_ID) }),
+      );
+    });
+
+    it('answers an investor the same way whether the item is there or not', async () => {
+      // The gate runs before the lookup, so the refusal a non-admin receives
+      // cannot be read as an answer about which identifiers name something.
+      const real = await publicItem('a real item');
+      const answers: string[] = [];
+      for (const id of [real.id, randomUUID(), NOT_AN_ID]) {
+        const response = await call(PUBLISH, 'publish', id, { revisionId: randomUUID() }, { cookie: investorCookie });
+        answers.push(`${response.status} ${await response.text()}`);
+      }
+
+      expect(new Set(answers).size).toBe(1);
+      expect(answers[0]).toContain('404');
     });
   });
 });

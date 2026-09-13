@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_312 tasks in the plan, 217 closed, 95 outstanding._
+_312 tasks in the plan, 220 closed, 92 outstanding._
 
 ---
 
@@ -63,7 +63,7 @@ _71/74 closed (95%) · 3 outstanding — 1 buildable now · 0 waiting on the own
 
 _The machinery every kind of writing shares — the editor, the media, the locale states, the audience rule, publishing, search — plus the account, configuration and logging surfaces an operator needs before anything is published. Building it once is the whole reason a report, an update and a deck are three navigations over one system rather than three systems._
 
-_67/72 closed (93%) · 5 outstanding — 1 buildable now · 1 waiting on the owner · 0 external residue · 3 parked to a later wave._
+_68/72 closed (94%) · 4 outstanding — 0 buildable now · 1 waiting on the owner · 0 external residue · 3 parked to a later wave._
 
 - **ADMIN-001** · Account management — 9/9 closed
 - **CFG-001** · Runtime configuration — 8/8 closed
@@ -72,8 +72,7 @@ _67/72 closed (93%) · 5 outstanding — 1 buildable now · 1 waiting on the own
 - **CMS-006** · Audience and access — 6/6 closed
 - **OPS-002** · Logging and monitoring — 6/6 closed
 - **CMS-002** · Authoring surface — 9/9 closed
-- **CMS-004** · Preview, publish and withdraw — 5/7 closed · depth 6
-  - `[ ] CMS-004/T7` — Publish and withdraw refuse an identifier that is not one, rather than raising it at the column
+- **CMS-004** · Preview, publish and withdraw — 6/7 closed · depth 6
   - `[!] CMS-004/T6` — A public item's cache is purged on publish and on withdraw  · _pending-decision_ · **Blocked by:** pending-decision: CMS-DEC-07 ([docs/decisions-log.md#CMS-DEC-07](decisions-log.md#CMS-DEC-07)) — OPS-001 §3 settles that Cloudflare caches the assets…
 
 - **CMS-007** · Search and filter in the room — 3/6 closed · depth 6
@@ -86,12 +85,10 @@ _67/72 closed (93%) · 5 outstanding — 1 buildable now · 1 waiting on the own
 
 _The three content types, and the compliance posture that governs what is held about the people reading them. Updates come before decks, and not only because they are the simpler shape of the same problem: they are what the room is for. An investor signs in to find out what has happened since they last looked._
 
-_28/59 closed (47%) · 31 outstanding — 31 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_30/59 closed (50%) · 29 outstanding — 29 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
 
-- **DECK-001** · Deck authoring — 2/5 closed · depth 7
-  - `[ ] DECK-001/T2` — An overview of section cards in order, showing heading, first line and what each carries
+- **DECK-001** · Deck authoring — 4/5 closed · depth 7
   - `[ ] DECK-001/T3` — Reordering by drag and by keyboard, writing back to the block array
-  - `[ ] DECK-001/T4` — Section, word and figure counts in the overview
 
 - **LEGAL-SG-001** · PDPA posture — 0/6 closed · depth 7
   - `[ ] LEGAL-SG-001/T1` — The privacy notice: what is held, why, how long, who to write to, in twenty locales

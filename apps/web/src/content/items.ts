@@ -39,6 +39,24 @@ export type ContentItem = Selectable<ContentItemsTable>;
 // caller reads omits them until a reader that needs `version` (`DECK-003`) adds it.
 export type ContentRevision = Omit<Selectable<ContentRevisionsTable>, 'search' | 'version'>;
 
+/**
+ * The shape an item's identifier takes, checked before a value reaches the uuid
+ * column it would be compared against.
+ *
+ * PostgreSQL raises `22P02` on a value that is not one, and that error arrives
+ * with the supplied value repeated in its message — so it cannot be reported or
+ * logged without carrying the input with it (`DATA-R02`), and it reaches a
+ * caller as a `500` describing an invariant rather than an answer about an item.
+ * Asking the shape first turns both into the one refusal a caller can act on:
+ * a garbage path is answered exactly as a missing item is (`CMS-006` §6).
+ */
+const ITEM_ID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+/** Whether this string could name a content item at all. */
+export function isItemId(value: string): boolean {
+  return ITEM_ID.test(value);
+}
+
 /** A new content item. `audience` defaults to `investor` in the database. */
 export interface NewItem {
   type: ContentType;

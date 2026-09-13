@@ -14,12 +14,14 @@
  * differ and the control is the same.
  *
  * The act is `withdraw`'s, where the pointer move and the `content.withdraw`
- * audit commit as one (`CMS-004/T5`, `SEC-R04`).
+ * audit commit as one (`CMS-004/T5`, `SEC-R04`). An identifier naming no item —
+ * including one that is not an identifier at all — is a `404` rather than the
+ * `500` a uuid column would raise (`CMS-004/T7`).
  */
 
 import { requireAdmin } from '../../../../../auth/gate';
 import { getConfig } from '../../../../../config/index';
-import { withdraw } from '../../../../../content/publish';
+import { NoSuchItemError, withdraw } from '../../../../../content/publish';
 import { withRequestId } from '../../../../../ops/request-context';
 
 const JSON_HEADERS: Readonly<Record<string, string>> = {
@@ -41,9 +43,15 @@ async function handleWithdraw(request: Request, itemId: string): Promise<Respons
     return actor;
   }
 
-  const item = await withdraw(itemId, actor.id);
-
-  return json(200, { id: item.id, published: item.current_revision_id !== null });
+  try {
+    const item = await withdraw(itemId, actor.id);
+    return json(200, { id: item.id, published: item.current_revision_id !== null });
+  } catch (error) {
+    if (error instanceof NoSuchItemError) {
+      return json(404, { error: 'not_found' });
+    }
+    throw error;
+  }
 }
 
 export async function POST(

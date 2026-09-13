@@ -14,6 +14,12 @@
  * one leading section with no heading, so the round-trip holds whatever shape the
  * draft is in. A level-3 heading is content inside a section, not a section of
  * its own.
+ *
+ * `cardsOf` and `totalsOf` are what the overview shows of that derivation
+ * (`DECK-001/T2`, `DECK-001/T4`) — what each section is about and carries, and
+ * what the deck adds up to. Both are pure and both read the sections rather than
+ * the block array a second time, so the card list and the count cannot describe
+ * two different readings of one deck.
  */
 
 import type { Block } from './blocks';
@@ -26,6 +32,120 @@ export interface DeckSection {
   readonly context: string | null;
   /** The section's blocks in order, the heading first — a contiguous slice of the source array. */
   readonly blocks: Block[];
+}
+
+/** One section as the overview shows it: what it is about, and what it carries. */
+export interface SectionCard {
+  readonly heading: string | null;
+  /** The speaker context, shown here and served to no investor (`DECK-001/T5`). */
+  readonly context: string | null;
+  /** The first line of prose after the heading, or `null` when it carries none. */
+  readonly firstLine: string | null;
+  readonly hasImage: boolean;
+  readonly hasFigure: boolean;
+}
+
+/** What the deck adds up to, which is how its author learns it became a document. */
+export interface DeckTotals {
+  readonly sections: number;
+  readonly words: number;
+  readonly figures: number;
+}
+
+/**
+ * The words a reader receives, for the count.
+ *
+ * A heading, a paragraph, a list's items, a quote and its attribution, and a
+ * caption are all prose on the page and are counted. Two things are not. An
+ * image's alternative text stands in for the picture rather than adding to the
+ * document, so counting it would make a deck of photographs read as long as one
+ * of argument. Speaker context is never served to anybody (`DECK-001` §3), and
+ * the question this count answers — is this still something a person will read —
+ * is about what they receive.
+ */
+function textOf(block: Block): string[] {
+  switch (block.type) {
+    case 'heading':
+      return [block.text];
+    case 'paragraph':
+      return [block.text];
+    case 'list':
+      return block.items;
+    case 'quote':
+      return block.attribution === null ? [block.text] : [block.text, block.attribution];
+    case 'image':
+      return block.caption === null ? [] : [block.caption];
+    case 'figure':
+      return block.caption === null ? [] : [block.caption];
+    case 'divider':
+      return [];
+  }
+}
+
+function words(text: string): number {
+  return text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
+}
+
+/**
+ * The first line of prose a section carries after its heading.
+ *
+ * A picture and a table are not lines, so a section that is a heading and an
+ * image has none — and the card says what it carries instead, which is the
+ * reason `DECK-001` §3 asks for both and not for one standing in for the other.
+ * The line is returned whole: where it is cut is the card's business, and a
+ * server that truncated it would be deciding a width it cannot see.
+ */
+function firstLineOf(section: DeckSection): string | null {
+  for (const block of section.blocks) {
+    if (block.type === 'paragraph' && block.text.trim() !== '') {
+      return block.text;
+    }
+    if (block.type === 'list' && block.items.length > 0) {
+      return block.items[0] ?? null;
+    }
+    if (block.type === 'quote') {
+      return block.text;
+    }
+  }
+
+  return null;
+}
+
+/** The cards the overview lists, in the deck's own order (`DECK-001/T2`). */
+export function cardsOf(sections: DeckSection[]): SectionCard[] {
+  return sections.map((section) => ({
+    heading: section.heading,
+    context: section.context,
+    firstLine: firstLineOf(section),
+    hasImage: section.blocks.some((block) => block.type === 'image'),
+    hasFigure: section.blocks.some((block) => block.type === 'figure'),
+  }));
+}
+
+/**
+ * What the deck adds up to (`DECK-001/T4`).
+ *
+ * Counted over the sections rather than over the block array, so the section
+ * count and the word count are answers about one object: a deck whose overview
+ * shows thirty cards cannot report a total taken from a different reading of the
+ * same blocks.
+ */
+export function totalsOf(sections: DeckSection[]): DeckTotals {
+  let wordCount = 0;
+  let figures = 0;
+
+  for (const section of sections) {
+    for (const block of section.blocks) {
+      if (block.type === 'figure') {
+        figures += 1;
+      }
+      for (const text of textOf(block)) {
+        wordCount += words(text);
+      }
+    }
+  }
+
+  return { sections: sections.length, words: wordCount, figures };
 }
 
 /** Split a deck's blocks into sections, one per level-2 heading. */

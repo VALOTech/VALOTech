@@ -13,7 +13,7 @@ import { describe, expect, it } from 'vitest';
 import type { JsonValue } from '../db/types';
 
 import { type Block, withoutSpeakerContext } from './blocks';
-import { deriveSections } from './sections';
+import { cardsOf, deriveSections, totalsOf } from './sections';
 
 const heading = (text: string, context?: string): Block =>
   context === undefined ? { type: 'heading', level: 2, text } : { type: 'heading', level: 2, text, context };
@@ -86,5 +86,112 @@ describe('withoutSpeakerContext', () => {
 
   it('returns a non-array value as it came', () => {
     expect(withoutSpeakerContext('not blocks')).toBe('not blocks');
+  });
+});
+
+const list = (...items: string[]): Block => ({ type: 'list', ordered: false, items });
+const quote = (text: string, attribution: string | null = null): Block => ({ type: 'quote', text, attribution });
+const image = (caption: string | null = null): Block => ({ type: 'image', mediaId: 'm', alt: 'a picture', caption });
+const figure = (caption: string | null = null): Block => ({ type: 'figure', mediaId: 'm', caption, data: ['1', '2'] });
+
+describe('cardsOf — what the overview shows of each section (DECK-001/T2)', () => {
+  it('takes the first paragraph as the line, not the heading', () => {
+    const [card] = cardsOf(deriveSections([heading('One'), para('the first line'), para('the second')]));
+
+    expect(card?.heading).toBe('One');
+    expect(card?.firstLine).toBe('the first line');
+  });
+
+  it('takes a list item or a quote when the section opens with one instead', () => {
+    const cards = cardsOf(
+      deriveSections([heading('One'), list('first item', 'second'), heading('Two'), quote('what they said')]),
+    );
+
+    expect(cards[0]?.firstLine).toBe('first item');
+    expect(cards[1]?.firstLine).toBe('what they said');
+  });
+
+  it('has no line for a section that carries no prose, and says what it carries instead', () => {
+    const [card] = cardsOf(deriveSections([heading('One'), image('a caption'), figure()]));
+
+    expect(card?.firstLine).toBeNull();
+    expect(card?.hasImage).toBe(true);
+    expect(card?.hasFigure).toBe(true);
+  });
+
+  it('skips an empty paragraph rather than showing a blank line', () => {
+    const [card] = cardsOf(deriveSections([heading('One'), para('   '), para('the real line')]));
+
+    expect(card?.firstLine).toBe('the real line');
+  });
+
+  it('carries the speaker context, which the overview shows and no investor receives', () => {
+    const [card] = cardsOf(deriveSections([heading('One', 'say the number slowly'), para('a')]));
+
+    expect(card?.context).toBe('say the number slowly');
+  });
+
+  it('names a run of blocks before the first heading rather than dropping it', () => {
+    const cards = cardsOf(deriveSections([para('stray'), heading('One'), para('a')]));
+
+    expect(cards).toHaveLength(2);
+    expect(cards[0]?.heading).toBeNull();
+    expect(cards[0]?.firstLine).toBe('stray');
+  });
+
+  it('reports the section order the deck is in, card for card', () => {
+    const cards = cardsOf(deriveSections([heading('One'), para('a'), heading('Two'), para('b'), heading('Three')]));
+
+    expect(cards.map((card) => card.heading)).toEqual(['One', 'Two', 'Three']);
+  });
+});
+
+describe('totalsOf — what the deck adds up to (DECK-001/T4)', () => {
+  it('counts a section per level-2 heading and a figure per figure block', () => {
+    const totals = totalsOf(deriveSections([heading('One'), figure(), heading('Two'), figure(), para('a')]));
+
+    expect(totals.sections).toBe(2);
+    expect(totals.figures).toBe(2);
+  });
+
+  it('counts the words of every kind of prose a reader receives', () => {
+    // 2 (heading) + 3 (paragraph) + 3 (two list items) + 2 (quote) + 1
+    // (attribution) + 2 (image caption) + 2 (figure caption) = 15.
+    const totals = totalsOf(
+      deriveSections([
+        heading('One two'),
+        para('three four five'),
+        list('six seven', 'eight'),
+        quote('nine ten', 'eleven'),
+        image('twelve thirteen'),
+        figure('fourteen fifteen'),
+      ]),
+    );
+
+    expect(totals.words).toBe(15);
+  });
+
+  it('counts no alternative text, so a deck of pictures does not read as long as one of argument', () => {
+    const totals = totalsOf(deriveSections([heading('One'), image(), image(), image()]));
+
+    expect(totals.words).toBe(1);
+  });
+
+  it('counts no speaker context, because the count is of what a reader receives', () => {
+    const spoken = totalsOf(deriveSections([heading('One', 'a great deal said aloud here'), para('two words')]));
+    const silent = totalsOf(deriveSections([heading('One'), para('two words')]));
+
+    expect(spoken.words).toBe(silent.words);
+  });
+
+  it('counts nothing for an empty deck and for one that is only a divider', () => {
+    expect(totalsOf(deriveSections([]))).toEqual({ sections: 0, words: 0, figures: 0 });
+    expect(totalsOf(deriveSections([{ type: 'divider' }]))).toEqual({ sections: 1, words: 0, figures: 0 });
+  });
+
+  it('counts runs of whitespace as one break rather than as words', () => {
+    const totals = totalsOf(deriveSections([heading('One'), para('  two   spaced   words  ')]));
+
+    expect(totals.words).toBe(4);
   });
 });

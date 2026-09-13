@@ -1,0 +1,112 @@
+/* The deck overview (DECK-001/T2, T4), on the console's tokens rather than a
+   palette of its own (ADMIN-002, ADMIN-DEC-04). */
+
+.crumb {
+  display: inline-block;
+  margin-bottom: 0.75rem;
+  font-size: 0.85rem;
+  color: var(--admin-link);
+}
+
+/* The tally leads, because the number is the reason this page exists: a deck
+   that has become a document says so here rather than after thirty cards. */
+.tally {
+  margin: 0.75rem 0 0.35rem;
+  font-size: 1.05rem;
+  line-height: 1.5;
+}
+
+.tally strong {
+  font-variant-numeric: tabular-nums;
+}
+
+.quiet {
+  margin: 0 0 1.25rem;
+  line-height: 1.5;
+  opacity: 0.75;
+}
+
+.empty {
+  max-width: 40rem;
+  padding: 1rem 1.15rem;
+  border: 1px dashed var(--admin-line);
+  border-radius: 0.5rem;
+  line-height: 1.55;
+}
+
+.empty a {
+  color: var(--admin-link);
+}
+
+/* One column at a reading measure rather than a grid of tiles: the cards are
+   read in order, and order is the thing the overview exists to show. The number
+   is the list's own, so a section's position is never written into its card. */
+.cards {
+  margin: 0;
+  padding: 0 0 0 2.25rem;
+  max-width: 44rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.card {
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--admin-line);
+  border-radius: 0.5rem;
+}
+
+.card::marker {
+  font-variant-numeric: tabular-nums;
+  opacity: 0.6;
+}
+
+.heading {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.unheaded {
+  font-weight: 400;
+  font-style: italic;
+  opacity: 0.7;
+}
+
+/* The first line is cut where the card ends rather than where a server guessed,
+   so the words stored are the words sent and only the display is bounded. */
+.line {
+  margin: 0.35rem 0 0;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+}
+
+.carries {
+  margin: 0.4rem 0 0;
+  font-size: 0.85rem;
+  letter-spacing: 0.01em;
+  opacity: 0.7;
+}
+
+/* Speaker context is the one thing here no investor ever receives, so it is set
+   apart rather than reading as another line of the document. */
+.context {
+  margin: 0.55rem 0 0;
+  padding: 0.4rem 0.65rem;
+  border-left: 3px solid var(--admin-link);
+  background: color-mix(in srgb, var(--admin-link) 7%, transparent);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.contextLabel {
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  opacity: 0.8;
+}
