@@ -2,10 +2,13 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import type { ReactElement } from 'react';
 
+import { audienceOptions } from '../../../../content/audience';
 import { itemsForConsole } from '../../../../content/items';
 import { localeGrid } from '../../../../content/locales';
 import { publishConsequences, withdrawReturnsTo } from '../../../../content/publish';
+import { reportWithdrawal } from '../../../../content/reports';
 
+import { AudienceControl } from './audience-control';
 import { ItemActions } from './item-actions';
 import styles from './item.module.css';
 
@@ -19,22 +22,23 @@ const TYPE_LABEL: Readonly<Record<string, string>> = {
   deck: 'Deck',
 };
 
-const AUDIENCE_LABEL: Readonly<Record<string, string>> = {
-  public: 'Anyone, including a visitor who has not signed in',
-  investor: 'Every investor',
-  granted: 'Only investors it is granted to',
-};
-
 /**
  * `GET /admin/content/<id>` (`CMS-004/T4`) — one item's own screen: what a
- * reader sees today, what is waiting, and the two controls that move between
- * them.
+ * reader sees today, who that reader is, and the controls that change either.
  *
  * It is the hub the content list opens, and it leads on rather than duplicating:
  * the editor writes the words, the translation grid handles languages, and this
  * page is where a draft becomes something a reader sees. Publishing is the
  * dangerous direction and carries the confirmation; withdrawing is reversible
- * and carries none (`CMS-004` §3).
+ * and carries none (`CMS-004` §3). The audience is the second question and sits
+ * above them, because "is it published" and "who may read it" are separate
+ * answers and an item is routinely one without the other.
+ *
+ * Every consequence the confirmations state is read on the server and passed
+ * down — what publishing replaces, what withdrawing returns to, what a period
+ * becomes, what an audience costs. The screen composes sentences from facts; it
+ * never derives one, so no control can describe an outcome the store would not
+ * produce.
  *
  * The item's row comes from the console's own list read, filtered here rather
  * than fetched by a second query of the same shape: the room holds a few dozen
@@ -63,6 +67,14 @@ export default async function ItemPage({
   const consequences = openDraft === undefined ? null : await publishConsequences(id, openDraft.revisionId);
   const returnsTo = item.published ? await withdrawReturnsTo(id) : null;
 
+  // Withdrawing a report frees the period as well as moving the pointer, and the
+  // two are different sentences (`RPT-002/T5`). `reportWithdrawal` answers `null`
+  // for anything that is not a published report, which is every other item here.
+  const asReport = item.published ? await reportWithdrawal(id) : null;
+
+  // The audience panel offers all three, so all three are read at once.
+  const audiences = await audienceOptions(id);
+
   return (
     <>
       <a className={styles.crumb} href="/admin/content">
@@ -78,10 +90,6 @@ export default async function ItemPage({
             {item.period === null ? '' : ` · ${item.period}`}
             {item.kind === null ? '' : ` · ${item.kind}`}
           </dd>
-        </div>
-        <div>
-          <dt>Readable by</dt>
-          <dd>{AUDIENCE_LABEL[item.audience] ?? item.audience}</dd>
         </div>
         <div>
           <dt>Address</dt>
@@ -107,10 +115,18 @@ export default async function ItemPage({
         </a>
       </p>
 
+      {/* The item was resolved from the console's own list above, so this read
+          of the same row cannot be absent; the check is the type's rather than a
+          case the screen has. */}
+      {audiences === null ? null : (
+        <AudienceControl itemId={id} audience={item.audience} facts={audiences} />
+      )}
+
       <ItemActions
         itemId={id}
         published={item.published}
         withdrawReturnsTo={returnsTo === null ? null : WHEN(returnsTo.publishedAt)}
+        asReport={asReport}
         publishable={
           openDraft === undefined || consequences === null
             ? null

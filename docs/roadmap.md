@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_311 tasks in the plan, 214 closed, 97 outstanding._
+_312 tasks in the plan, 217 closed, 95 outstanding._
 
 ---
 
@@ -63,7 +63,7 @@ _71/74 closed (95%) · 3 outstanding — 1 buildable now · 0 waiting on the own
 
 _The machinery every kind of writing shares — the editor, the media, the locale states, the audience rule, publishing, search — plus the account, configuration and logging surfaces an operator needs before anything is published. Building it once is the whole reason a report, an update and a deck are three navigations over one system rather than three systems._
 
-_67/71 closed (94%) · 4 outstanding — 3 buildable now · 0 waiting on the owner · 0 external residue · 1 parked to a later wave._
+_67/72 closed (93%) · 5 outstanding — 1 buildable now · 1 waiting on the owner · 0 external residue · 3 parked to a later wave._
 
 - **ADMIN-001** · Account management — 9/9 closed
 - **CFG-001** · Runtime configuration — 8/8 closed
@@ -72,20 +72,21 @@ _67/71 closed (94%) · 4 outstanding — 3 buildable now · 0 waiting on the own
 - **CMS-006** · Audience and access — 6/6 closed
 - **OPS-002** · Logging and monitoring — 6/6 closed
 - **CMS-002** · Authoring surface — 9/9 closed
-- **CMS-004** · Preview, publish and withdraw — 5/6 closed · depth 6
-  - `[ ] CMS-004/T6` — A public item's cache is purged on publish and on withdraw
+- **CMS-004** · Preview, publish and withdraw — 5/7 closed · depth 6
+  - `[ ] CMS-004/T7` — Publish and withdraw refuse an identifier that is not one, rather than raising it at the column
+  - `[!] CMS-004/T6` — A public item's cache is purged on publish and on withdraw  · _pending-decision_ · **Blocked by:** pending-decision: CMS-DEC-07 ([docs/decisions-log.md#CMS-DEC-07](decisions-log.md#CMS-DEC-07)) — OPS-001 §3 settles that Cloudflare caches the assets…
 
 - **CMS-007** · Search and filter in the room — 3/6 closed · depth 6
-  - `[ ] CMS-007/T5` — The empty state names what narrowed the result and offers to widen it
-  - `[ ] CMS-007/T6` — The field is labelled, keyboard-operable, and announces its result count
   - `[!] CMS-007/T3` — Kind, product, period and type filters, composing into one statement  · _cross-wave-parked_ · **Blocked by:** POST-001/T3 (the optional product tag from the six) — the product filter narrows on a product a content item carries, and no item carries one until t…
+  - `[!] CMS-007/T5` — The empty state names what narrowed the result and offers to widen it  · _cross-wave-parked_ · **Blocked by:** INV-001/T1 (the room’s landing surface) — CMS-007 §2 puts the field and its filters above the stream and §4 names INV-001 as the surface this appears…
+  - `[!] CMS-007/T6` — The field is labelled, keyboard-operable, and announces its result count  · _cross-wave-parked_ · **Blocked by:** INV-001/T1 (the room’s landing surface) — the field this labels is the one CMS-007 §2 places above the stream, on the surface §4 names as INV-001, an…
 
 - **DATA-002** · Erasure and retention — 5/5 closed
 ## W3 — What is written
 
 _The three content types, and the compliance posture that governs what is held about the people reading them. Updates come before decks, and not only because they are the simpler shape of the same problem: they are what the room is for. An investor signs in to find out what has happened since they last looked._
 
-_25/59 closed (42%) · 34 outstanding — 34 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_28/59 closed (47%) · 31 outstanding — 31 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
 
 - **DECK-001** · Deck authoring — 2/5 closed · depth 7
   - `[ ] DECK-001/T2` — An overview of section cards in order, showing heading, first line and what each carries
@@ -114,9 +115,8 @@ _25/59 closed (42%) · 34 outstanding — 34 buildable now · 0 waiting on the o
   - `[ ] POST-001/T5` — A soft length marker that offers to move the text into the current draft report
   - `[ ] POST-001/T6` — The tagged product's current progress value is shown beside the composer
 
-- **RPT-001** · Investor report authoring — 3/5 closed · depth 7
+- **RPT-001** · Investor report authoring — 4/5 closed · depth 7
   - `[ ] RPT-001/T4` — The progress board's current values are shown beside the section that narrates them
-  - `[ ] RPT-001/T5` — Making a report public states in words what that means
 
 - **DECK-002** · Deck versioning and publishing — 4/6 closed · depth 8
   - `[ ] DECK-002/T3` — An unpinned reader is told once when the version changed, with what changed by section
@@ -133,13 +133,11 @@ _25/59 closed (42%) · 34 outstanding — 34 buildable now · 0 waiting on the o
   - `[ ] MAIL-002/T4` — A manual `stop sending` control with its reason, and the send view naming the mailbox bounces arrive in
   - `[ ] MAIL-002/T6` — The admin log, filtered by recipient and date, showing state and error
 
-- **POST-002** · Update publishing and audience — 4/6 closed · depth 8
-  - `[ ] POST-002/T5` — Narrowing states what it cannot recall; widening states what becomes public
+- **POST-002** · Update publishing and audience — 5/6 closed · depth 8
   - `[ ] POST-002/T6` — Unread marking from the per-account read state, and a paging control rather than infinite scroll
 
-- **RPT-002** · Report periods and archive — 4/6 closed · depth 8
+- **RPT-002** · Report periods and archive — 5/6 closed · depth 8
   - `[ ] RPT-002/T3` — The archive lists by period, groups by year, and shows a period with no report as a gap
-  - `[ ] RPT-002/T5` — Withdrawal states that the period becomes a gap and which report becomes current
 
 ## W4 — The room
 

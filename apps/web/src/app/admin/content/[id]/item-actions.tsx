@@ -18,6 +18,15 @@
  * server's (`content/publish.ts:withdrawReturnsTo`), so the control cannot
  * describe an outcome the store would not produce.
  *
+ * **A report carries a second outcome, because it holds a period** (`RPT-002/T5`).
+ * Withdrawing one can leave that period a gap in the archive and hand "the
+ * current report" to an earlier one, and neither is what "withdraw" reads as —
+ * it reads as hiding this document. Both come from
+ * `content/reports.ts:reportWithdrawal`, and the gap sentence appears only when
+ * there will be a gap: a report on its second published revision falls back to
+ * its first and keeps its period, so promising a gap there would be a promise
+ * the store does not keep.
+ *
  * The revision is posted explicitly rather than as "the latest": the
  * confirmation named a revision, and publishing a different one would make the
  * confirmation a lie (`CMS-004` §3).
@@ -46,13 +55,25 @@ type Outcome =
 const FAILED = 'Nothing changed. Try again in a moment.';
 const LAPSED = 'Your session has ended. Open the page again to sign in.';
 
+/** What withdrawing does to the archive, for a published report (`RPT-002/T5`). */
+export interface ReportWithdrawalFacts {
+  readonly period: string;
+  /** Whether the period is left holding no published report at all. */
+  readonly becomesGap: boolean;
+  /** The report the room would present as current afterwards, or `null`. */
+  readonly becomesCurrent: { readonly period: string; readonly title: string } | null;
+}
+
 export function ItemActions({
   itemId,
+  asReport,
   publishable,
   published,
   withdrawReturnsTo,
 }: {
   readonly itemId: string;
+  /** The archive consequences, for a published report; `null` for anything else. */
+  readonly asReport: ReportWithdrawalFacts | null;
   /** The draft that can be published, or `null` when there is nothing newer. */
   readonly publishable: PublishFacts | null;
   /** Whether a reader sees anything today; withdrawing is offered only then. */
@@ -159,6 +180,14 @@ export function ItemActions({
               ? 'Withdrawing leaves nothing visible to any reader. The item and its history stay.'
               : `Withdrawing returns readers to the version published ${withdrawReturnsTo} UTC.`}
           </p>
+          {asReport === null || !asReport.becomesGap ? null : (
+            <p className={styles.quiet}>
+              {`The archive then shows ${asReport.period} as a gap. `}
+              {asReport.becomesCurrent === null
+                ? 'There is no other published report, so the room presents none as current.'
+                : `The room presents ${asReport.becomesCurrent.period} — ${asReport.becomesCurrent.title} — as the current report.`}
+            </p>
+          )}
           <button
             type="button"
             className={styles.secondary}

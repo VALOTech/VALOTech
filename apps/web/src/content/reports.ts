@@ -2,8 +2,8 @@
  * Report-specific reads and read state (`RPT-001`, `RPT-002`).
  *
  * A report is read as a series: an investor files the Q3 report beside the Q2 one
- * and reads the difference. Three functions here serve that, and each composes
- * `visibleTo` like every content read (`CMS-R03`).
+ * and reads the difference. The reads that answer a reader serve that, and each
+ * composes `visibleTo` like every content read (`CMS-R03`).
  *
  * `prefillStructureFor` opens a new report with the previous report's section
  * headings rather than a blank page (`RPT-001/T2`) — the same shape and none of
@@ -18,6 +18,11 @@
  * publication date. `markReportRead` records that an investor has opened a report
  * (`RPT-002/T6`) — the one piece of behavioural data the archive needs to answer
  * "have I read this", deleted with the account (`DATA-002`).
+ *
+ * `reportWithdrawal` is the exception and is a staff read: it answers what
+ * withdrawing a report would do to the archive and to what the room presents as
+ * current (`RPT-002/T5`), and the question has no reader in it — an admin is
+ * asking what everyone will see, not what they themselves may.
  */
 
 import type { Actor } from '../auth/gate';
@@ -26,6 +31,7 @@ import { getDb } from '../db/index';
 import { visibleTo } from './access';
 import { type Block, validateBlocks } from './blocks';
 import type { ContentItem } from './items';
+import { withdrawReturnsTo } from './publish';
 
 /**
  * The headings a first report opens with (`RPT-001` §3): a starting point, not a
@@ -93,6 +99,84 @@ export async function currentReport(reader: Actor | null): Promise<ContentItem |
     .executeTakeFirst();
 
   return report ?? null;
+}
+
+/** What withdrawing this report would do to the archive and to what is current. */
+export interface ReportWithdrawal {
+  /** The period this report holds. */
+  readonly period: string;
+  /** Whether the period is left with no published report at all. */
+  readonly becomesGap: boolean;
+  /** The report the room would present as current afterwards, or `null` for none. */
+  readonly becomesCurrent: { readonly period: string; readonly title: string } | null;
+}
+
+/**
+ * What withdrawing the published report `itemId` would do, or `null` when it is
+ * not a published report (`RPT-002/T5`).
+ *
+ * `RPT-002` §3 asks the confirmation to say two things, because "withdraw" reads
+ * as "hide from the list" and is also "the room now presents a different
+ * document as current". Both are read here rather than assembled at the surface,
+ * so the sentence cannot describe an outcome the store would not produce.
+ *
+ * **The period is not always a gap, and the design's sentence assumes it is.**
+ * Withdrawing moves the pointer to the revision published before this one
+ * (`CMS-004/T5`), so a report on its second published revision stays published
+ * on its first: the archive still holds that period and only the words change
+ * back. The gap is the case where nothing earlier was published, which is what
+ * `withdrawReturnsTo` answering `null` means — so it is asked rather than
+ * assumed, and a confirmation promising a gap that will not appear is not
+ * written.
+ *
+ * What becomes current is read with an admin's reach, because the question is
+ * what the room will present and not what one reader may see; `currentReport`
+ * would otherwise need a reader nobody is asking about. It is taken after
+ * excluding this item, since this is the one being withdrawn.
+ */
+export async function reportWithdrawal(itemId: string): Promise<ReportWithdrawal | null> {
+  const item = await getDb()
+    .selectFrom('content_items')
+    .select(['period', 'type', 'current_revision_id'])
+    .where('id', '=', itemId)
+    .executeTakeFirst();
+
+  if (item === undefined || item.type !== 'report' || item.period === null) {
+    return null;
+  }
+  if (item.current_revision_id === null) {
+    return null;
+  }
+
+  const becomesGap = (await withdrawReturnsTo(itemId)) === null;
+
+  // A report still holding its period stays the room's current one, so nothing
+  // takes its place and there is no second document to name.
+  const successor = becomesGap
+    ? await getDb()
+        .selectFrom('content_items')
+        .innerJoin('content_revisions', (join) =>
+          join
+            .onRef('content_revisions.id', '=', 'content_items.current_revision_id')
+            .onRef('content_revisions.item_id', '=', 'content_items.id'),
+        )
+        .select(['content_items.period as period', 'content_items.title as title'])
+        .where('content_items.type', '=', 'report')
+        .where('content_items.id', '!=', itemId)
+        .where('content_items.current_revision_id', 'is not', null)
+        .orderBy('content_items.period', 'desc')
+        .limit(1)
+        .executeTakeFirst()
+    : undefined;
+
+  return {
+    period: item.period,
+    becomesGap,
+    becomesCurrent:
+      successor === undefined || successor.period === null
+        ? null
+        : { period: successor.period, title: successor.title },
+  };
 }
 
 /**

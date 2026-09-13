@@ -178,6 +178,13 @@ logic.
   is trustworthy and it means a rendering change breaks both together, which is
   correct. It also means a preview cannot show a diff against the published
   version; that is a second feature and it is not built.
+- **There is no cache of a document to purge.** §3 says a public item carries
+  a short lifetime and a purge on publish, and `OPS-001` §3 settles that
+  Cloudflare caches the assets and never the documents — so the only cache
+  holding one is the reader’s own browser, which no server reaches. What
+  publish and withdraw should do instead is
+  [`CMS-DEC-07`](../../decisions-log.md#CMS-DEC-07); the ten-minute lifetime is
+  what ships while it is open, and `CMS-004/T6` waits on it.
 
 ## 7. Task list
 
@@ -187,3 +194,4 @@ logic.
 - `CMS-004/T4` — The confirmation names what is replaced and how many locales will fall back
 - `CMS-004/T5` — Withdraw returns to the previous published revision, or states plainly that nothing will be visible
 - `CMS-004/T6` — A public item's cache is purged on publish and on withdraw
+- `CMS-004/T7` — Publish and withdraw refuse an identifier that is not one, rather than raising it at the column

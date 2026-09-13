@@ -32,15 +32,19 @@
  */
 
 import { accountForToken, presentedToken } from '../../../auth/gate';
+import { PUBLIC_CACHE_SECONDS } from '../../../content/audience';
 import { forReader } from '../../../content/read';
 import { withRequestId } from '../../../ops/request-context';
 
 /**
  * How long a public item may be cached. Ten minutes matches the window the
  * media route and the gateway's edge carry, and it bounds how long a reader
- * holds an item whose audience has since been narrowed away from public.
+ * holds an item whose audience has since been narrowed away from public. It is
+ * the audience's number rather than this route's — the confirmation an admin
+ * reads before narrowing states the same window, and two copies of it would
+ * drift the first time either was changed alone.
  */
-const PUBLIC_MAX_AGE_SECONDS = 600;
+const PUBLIC_MAX_AGE_SECONDS = PUBLIC_CACHE_SECONDS;
 
 /** The shape an item's id takes, checked before the value reaches a uuid column. */
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;

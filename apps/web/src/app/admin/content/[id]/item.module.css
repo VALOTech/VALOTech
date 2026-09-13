@@ -8,8 +8,10 @@
   color: var(--admin-link);
 }
 
-/* Four facts, read down rather than across: each answers a different question
-   and a table would suggest they compare. */
+/* The facts, read down rather than across: each answers a different question
+   and a table would suggest they compare. Who may read the item is not among
+   them, because it is a control rather than a fact and stating it twice on one
+   screen is two places to disagree. */
 .facts {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
@@ -38,6 +40,13 @@
 
 .onward {
   margin: 0 0 1.5rem;
+}
+
+/* Two panels of the same weight: who may read it, then what they see. The
+   second is separated by space rather than by a rule, because a rule between
+   two bordered cards reads as a third edge. */
+.actions + .actions {
+  margin-top: 1.25rem;
 }
 
 .actions {
@@ -153,4 +162,33 @@
   border-left: 3px solid var(--admin-warn-ink);
   background: var(--admin-warn-bg);
   color: var(--admin-warn-ink);
+}
+
+/* The three audiences as a list rather than a row of buttons: each carries a
+   sentence saying who it means, and a row would push those sentences under
+   controls nobody reads them beside. */
+.audiences {
+  margin: 0 0 0.9rem;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.55rem;
+}
+
+/* The audience in force is stated, never rendered as a pressed button: a
+   control that looks pressable and does nothing is the one somebody clicks
+   twice before believing it. */
+.audienceNow {
+  margin: 0;
+  padding: 0.45rem 0.75rem;
+  border-left: 3px solid var(--admin-link);
+  background: color-mix(in srgb, var(--admin-link) 7%, transparent);
+  line-height: 1.5;
+}
+
+.audienceNow .quiet {
+  margin: 0;
+  font-size: 0.9rem;
 }
