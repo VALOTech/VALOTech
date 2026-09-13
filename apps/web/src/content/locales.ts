@@ -46,7 +46,13 @@ export interface ServedLocale {
  * script is not (`zt` never falls back to `zh`), because a reader who cannot read
  * Simplified cannot read it served as Traditional's fallback.
  */
-export async function localeFor(revision: ContentRevision, requested: string): Promise<ServedLocale> {
+export async function localeFor(
+  // Narrowed to what this reads, so a caller holding a revision that is not a
+  // whole row — a preview reading the latest one (`CMS-004/T1`) — can pass it
+  // without a cast that would be a claim about columns it never fetched.
+  revision: Pick<ContentRevision, 'id' | 'blocks'>,
+  requested: string,
+): Promise<ServedLocale> {
   // The authored language needs no locale row: the revision's own blocks are it,
   // and asking the table for them would only ever miss.
   if (requested === AUTHORED_LOCALE) {

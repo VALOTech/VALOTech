@@ -178,3 +178,45 @@ export function remapMarks(marks: Mark[], oldText: string, newText: string): Mar
   }
   return sortMarks(remapped);
 }
+
+/** One run of a paragraph's text, and every mark covering the whole of it. */
+export interface MarkedPiece {
+  readonly text: string;
+  /** Indexes into the paragraph's own mark array, in that array's order. */
+  readonly marks: readonly number[];
+}
+
+/**
+ * The pieces a paragraph's text falls into at its mark boundaries
+ * (`CMS-005/T4`, `CMS-004/T1`).
+ *
+ * Marks are offsets rather than nesting, and they may overlap — a link inside a
+ * bold phrase is two marks over one run — so the cut points are every start and
+ * every end, and a piece carries the index of every mark that covers it. That is
+ * the shape both callers need and neither can get from the offsets directly: a
+ * renderer wraps each piece in the elements its marks name, and a translation
+ * rebuilds each mark's span from the pieces it covered, which is how emphasis
+ * survives text of a different length.
+ *
+ * A paragraph with no text still yields one piece, so an empty string is a run
+ * to render or to translate rather than nothing at all.
+ */
+export function piecesOf(text: string, marks: readonly Mark[]): MarkedPiece[] {
+  const cuts = [...new Set([0, text.length, ...marks.flatMap((mark) => [mark.start, mark.end])])]
+    .filter((cut) => cut >= 0 && cut <= text.length)
+    .sort((left, right) => left - right);
+
+  const pieces: MarkedPiece[] = [];
+  for (let index = 0; index + 1 < cuts.length; index += 1) {
+    const start = cuts[index] ?? 0;
+    const end = cuts[index + 1] ?? 0;
+    pieces.push({
+      text: text.slice(start, end),
+      marks: marks
+        .map((mark, position) => (mark.start <= start && mark.end >= end ? position : -1))
+        .filter((position) => position >= 0),
+    });
+  }
+
+  return pieces.length === 0 ? [{ text, marks: [] }] : pieces;
+}

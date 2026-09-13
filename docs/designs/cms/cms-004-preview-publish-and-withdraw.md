@@ -50,9 +50,28 @@ with different surroundings, and an admin previewing as themselves sees the admi
 chrome around it and misses that the public version has no navigation to the rest
 of the room.
 
+`as=` defaults to the admin's own view, which is how they read a `granted`
+item at all: the role is a **generic** member of its kind, so an investor here
+holds no grants and a granted item admits none of them. That is the honest
+answer rather than a gap — an investor who is not named on the grant sees
+nothing, and an admin previewing as one is told so rather than shown the
+document.
+
+A value outside the three roles, or a language outside the twenty, is a `404`
+rather than a guess. Both are closed sets, so no crafted URL widens what a
+preview shows, and nothing in the console links to a malformed one.
+
+**The renderer is the reader's and lives with the content**, not with the
+preview: one component renders a block array and every reading surface goes
+through it (`RPT-003`, `DECK-003` after this). A preview with a renderer of its
+own shows an admin something no reader will ever see, and the difference
+surfaces after publication, in front of investors.
+
 A preview is reachable by an admin only. There is no shareable preview link and
 no preview token — a token that outlives its preview is a published draft nobody
-decided to publish (`CMS-R02`).
+decided to publish (`CMS-R02`). It is a page under `/admin`, so the segment
+layout's role check gates it before it renders (`ADMIN-002/T1`) rather than a
+check this page is trusted to carry.
 
 ### Publish
 

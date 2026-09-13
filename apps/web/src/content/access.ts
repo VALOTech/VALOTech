@@ -56,13 +56,45 @@ export type ContentVisibility = (
  * An admin is answered `TRUE`: they may read every audience, and — through
  * `forAuthor` alone — items with no published revision.
  */
+/**
+ * The role a surface is being read as. `investor` and `public` are the roles a
+ * preview offers (`CMS-004/T1`); `admin` is the person doing the previewing.
+ */
+export type ReadingRole = 'admin' | 'investor' | 'public';
+
+/**
+ * The audiences a role is admitted to **before any grant of its own**
+ * (`CMS-006`).
+ *
+ * This is the audience half of `visibleTo` with the published check and the
+ * grant left out, and it exists because a preview needs exactly that: it reads a
+ * revision nobody has published, for a role that is nobody in particular
+ * (`CMS-004/T1`). Naming it here rather than in the preview is the whole point
+ * — the audience rule is the one whose failure is invisible (see the note at the
+ * top of this file), so there is one of it and `visibleTo` is built from it
+ * rather than beside it.
+ *
+ * An `investor` here is a **generic** investor with no grants, so a `granted`
+ * item admits none. That is the honest answer for a preview: a reader who is not
+ * named on the grant sees nothing, and an admin previewing as an investor should
+ * be told so rather than shown the document.
+ */
+export function audienceAdmits(role: ReadingRole): ContentVisibility {
+  if (role === 'admin') {
+    return (eb) => eb.lit(true);
+  }
+
+  if (role === 'investor') {
+    return (eb) => eb('content_items.audience', 'in', ['public', 'investor']);
+  }
+
+  return (eb) => eb('content_items.audience', '=', 'public');
+}
+
 export function visibleTo(reader: Actor | null): ContentVisibility {
   if (reader === null) {
     return (eb) =>
-      eb.and([
-        eb('content_items.audience', '=', 'public'),
-        eb('content_items.current_revision_id', 'is not', null),
-      ]);
+      eb.and([audienceAdmits('public')(eb), eb('content_items.current_revision_id', 'is not', null)]);
   }
 
   if (reader.role === 'admin') {
@@ -76,7 +108,7 @@ export function visibleTo(reader: Actor | null): ContentVisibility {
       eb.and([
         eb('content_items.current_revision_id', 'is not', null),
         eb.or([
-          eb('content_items.audience', 'in', ['public', 'investor']),
+          audienceAdmits('investor')(eb),
           eb.and([
             eb('content_items.audience', '=', 'granted'),
             eb.exists(

@@ -32,7 +32,8 @@
  * with it.
  */
 
-import type { Block, Mark, MarkType } from './blocks';
+import type { Block, MarkType } from './blocks';
+import { piecesOf } from './marks';
 
 /** How a marked piece of a paragraph is named, so a translator sees what it is. */
 const MARK_LABELS: Readonly<Record<MarkType, string>> = {
@@ -41,38 +42,6 @@ const MARK_LABELS: Readonly<Record<MarkType, string>> = {
   code: 'code',
   link: 'link',
 };
-
-/**
- * The pieces a paragraph's text falls into at its mark boundaries, each with the
- * marks covering it.
- *
- * Marks may overlap — a link inside a bold phrase is two marks over one run — so
- * the cut points are every start and every end, and a piece carries the index of
- * every mark that covers it. Rebuilding then gives each mark the span of the
- * pieces it covered, which is how emphasis survives a translation of a different
- * length.
- */
-function piecesOf(text: string, marks: readonly Mark[]): { text: string; marks: number[] }[] {
-  const cuts = [...new Set([0, text.length, ...marks.flatMap((mark) => [mark.start, mark.end])])]
-    .filter((cut) => cut >= 0 && cut <= text.length)
-    .sort((left, right) => left - right);
-
-  const pieces: { text: string; marks: number[] }[] = [];
-  for (let index = 0; index + 1 < cuts.length; index += 1) {
-    const start = cuts[index] ?? 0;
-    const end = cuts[index + 1] ?? 0;
-    pieces.push({
-      text: text.slice(start, end),
-      marks: marks
-        .map((mark, position) => (mark.start <= start && mark.end >= end ? position : -1))
-        .filter((position) => position >= 0),
-    });
-  }
-
-  // A paragraph with no text still offers one field, so an empty string can be
-  // translated into one rather than disappearing from the screen.
-  return pieces.length === 0 ? [{ text, marks: [] }] : pieces;
-}
 
 /** One string a translator replaces, and what the screen calls it. */
 export interface TranslatableField {

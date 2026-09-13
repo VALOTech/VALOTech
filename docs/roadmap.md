@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_311 tasks in the plan, 212 closed, 99 outstanding._
+_311 tasks in the plan, 214 closed, 97 outstanding._
 
 ---
 
@@ -63,7 +63,7 @@ _71/74 closed (95%) · 3 outstanding — 1 buildable now · 0 waiting on the own
 
 _The machinery every kind of writing shares — the editor, the media, the locale states, the audience rule, publishing, search — plus the account, configuration and logging surfaces an operator needs before anything is published. Building it once is the whole reason a report, an update and a deck are three navigations over one system rather than three systems._
 
-_65/71 closed (91%) · 6 outstanding — 5 buildable now · 0 waiting on the owner · 0 external residue · 1 parked to a later wave._
+_67/71 closed (94%) · 4 outstanding — 3 buildable now · 0 waiting on the owner · 0 external residue · 1 parked to a later wave._
 
 - **ADMIN-001** · Account management — 9/9 closed
 - **CFG-001** · Runtime configuration — 8/8 closed
@@ -72,9 +72,7 @@ _65/71 closed (91%) · 6 outstanding — 5 buildable now · 0 waiting on the own
 - **CMS-006** · Audience and access — 6/6 closed
 - **OPS-002** · Logging and monitoring — 6/6 closed
 - **CMS-002** · Authoring surface — 9/9 closed
-- **CMS-004** · Preview, publish and withdraw — 3/6 closed · depth 6
-  - `[ ] CMS-004/T1` — Preview renders through the reader's own components and evaluates the audience rule as the chosen role
-  - `[ ] CMS-004/T2` — Preview is admin-only, with no token and no shareable link
+- **CMS-004** · Preview, publish and withdraw — 5/6 closed · depth 6
   - `[ ] CMS-004/T6` — A public item's cache is purged on publish and on withdraw
 
 - **CMS-007** · Search and filter in the room — 3/6 closed · depth 6

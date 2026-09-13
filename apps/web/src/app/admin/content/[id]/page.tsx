@@ -100,6 +100,8 @@ export default async function ItemPage({
       <p className={styles.onward}>
         <a href={`/admin/content/${id}/edit`}>Edit the words</a>
         {' · '}
+        <a href={`/admin/content/${id}/preview`}>Preview</a>
+        {' · '}
         <a href={`/admin/content/${id}/locales`}>
           Translations ({item.reviewedLocales === 0 ? 'English only' : `${item.reviewedLocales} reviewed`})
         </a>
