@@ -84,5 +84,19 @@
     "unexpected": "May nangyaring mali. Subukang muli mamaya.",
     "backToSignIn": "Bumalik sa sign-in",
     "unavailable": "Hindi available sa ngayon ang pag-reset ng sarili mong password. Makipag-ugnayan sa taong nag-imbita sa iyo sa investor room."
+  },
+  "mailPreference": {
+    "title": "Mail para sa investor",
+    "confirmIntro": "Ihinto ang mail para sa investor papunta sa account na ito? Isang pindot lang ang kailangan, at hindi mo kailangang mag-sign in.",
+    "stop": "Ihinto ang mail para sa investor",
+    "stops": "Ihihinto nito ang mga update para sa investor, ibig sabihin ang mga mensaheng ipinapadala ng VALO Tech sa lahat ng may akses sa investor room.",
+    "keeps": "Hindi nito ihihinto ang mga mensaheng kailangan mo para magamit ang iyong account: isang imbitasyon, isang pag-reset ng password, o isang abiso tungkol sa mensaheng ipinadala sa iyo. Sumasagot ang mga iyon sa isang bagay na hiniling mo o ng administrator, kaya patuloy pa rin silang darating sa iyo.",
+    "stopped": "Nakahinto ang mail para sa investor sa account na ito.",
+    "stoppedByCompany": "Ihininto ng VALO Tech ang mail para sa investor papunta sa account na ito. Kung sisimulan mo itong muli at hindi pa rin dumarating ang mga mensahe, makipag-ugnayan sa taong nag-imbita sa iyo.",
+    "on": "Dumarating sa account na ito ang mail para sa investor.",
+    "resume": "Simulan muli ang mail para sa investor",
+    "roomIntro": "Kung dumarating ba sa address ng iyong account ang mga update ng VALO Tech para sa investor.",
+    "expired": "Hindi na gumagana ang link na ito. Mag-sign in para baguhin ang setting sa pahina ng iyong account, o makipag-ugnayan sa taong nag-imbita sa iyo.",
+    "signIn": "Mag-sign in"
   }
 }

@@ -5,15 +5,17 @@ import { erasureCounts, personIdentity, type PersonIdentity } from '../../../../
 import { requireAdminPage } from '../../../../auth/page-guard';
 import { type LiveSession, liveSessionsForAccount } from '../../../../auth/session';
 import { type AccountDeckAccess, grantedDecksForAccount } from '../../../../content/decks';
+import { investorMailPreference } from '../../../../mail/unsubscribe';
 
 import { EndSessions, PersonActions } from './actions';
 import styles from './person.module.css';
+import { StopSending } from './stop-sending';
 
 /**
  * One person, answering the question the list cannot (`ADMIN-001/T2`): what can
  * this person reach, and what would happen if I removed them.
  *
- * Four sections in the order an admin reads them. **Identity** is the record
+ * Five sections in the order an admin reads them. **Identity** is the record
  * itself, which is a name, an address, a role, a state and two timestamps and
  * nothing else — there is no notes field to show because there is no notes field
  * to write into (`DATA-R01`). **Access** is every deck granted, with the pin and
@@ -22,7 +24,10 @@ import styles from './person.module.css';
  * live right now, and the control that ends them. **Actions** is what can be done
  * about any of it, ending with the correction that fixes a wrong name or a wrong
  * address (`ADMIN-001/T10`) — the one act there that writes the record rather
- * than acting on the access it grants.
+ * than acting on the access it grants. **Investor mail** is last because it is
+ * about the messages that leave rather than the access that lets somebody in:
+ * whether the list is stopping them, and the control that stops them with the
+ * reason (`MAIL-002/T4`).
  *
  * Deleting is the only one of them nothing undoes, so the page reads
  * what it would cost before offering it (`ADMIN-001/T4`): the confirmation states
@@ -171,10 +176,11 @@ export default async function PersonPage({
     return notFound();
   }
 
-  const [decks, sessions, erasure] = await Promise.all([
+  const [decks, sessions, erasure, mail] = await Promise.all([
     grantedDecksForAccount(person.id),
     liveSessionsForAccount(person.id),
     erasureCounts(person.id),
+    investorMailPreference(person.id),
   ]);
   const self = reader.id === person.id;
 
@@ -198,6 +204,14 @@ export default async function PersonPage({
           state={person.state}
           self={self}
           erasure={erasure}
+        />
+      </section>
+
+      <section aria-labelledby="investor-mail-heading">
+        <h2 id="investor-mail-heading">Investor mail</h2>
+        <StopSending
+          accountId={person.id}
+          stopped={mail.stopped ? { at: mail.at.toISOString(), source: mail.source } : null}
         />
       </section>
     </>

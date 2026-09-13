@@ -8,6 +8,20 @@ depended_by: []
 layers_touched: [data, domain, service, api, frontend, ui]
 cross_cutting_rules: [DATA-R04, DATA-R02, DATA-R03, SEC-R04, A11Y-R01, I18N-R01]
 status: in-progress
+inert_until:
+  reason: Both halves are built and both answer today for the parts that do not
+    need a message to have left. An investor signed in to the room sees their own
+    investor-mail preference and can stop it; an admin sees the log, filtered by
+    recipient and by day, and can stop investor mail to one person with the
+    reason. **What is inert is everything the message carries.** No investor
+    receives anything while the process holds no mailbox (MAIL-001's own
+    inert_until says so from the sending side), so no unsubscribe link exists in
+    any inbox, the one-click page nothing has been sent to is reachable and
+    unreached, and the log is an empty table. The rows this feature is read for —
+    what went to whom, and a person stopping it from the message in front of
+    them — begin to exist with the first send.
+  unblocks_when: credential — SMTP_URL and MAIL_FROM, at
+    docs/operator-checklist.md#SMTP-MAILBOX
 ---
 
 # `MAIL-002` — Mail log and unsubscribe
@@ -71,12 +85,12 @@ message that bounces afterwards produces a delivery-status notification to the
 read. So there is no automatic suspension of a dead address, and the log cannot
 mark one.
 
-What is built instead is honest rather than absent: the send view shows the
-`MAIL_FROM` mailbox as **the place bounces arrive**, and the admin screen for an
-account carries a manual `stop sending` control with its reason. An admin who
-finds a bounce notice in that mailbox sets it, and the suppression list then
-holds. That is a person doing what a webhook would, and the design says so
-rather than implying the system noticed.
+What is built instead is honest rather than absent: the send view names the
+`MAIL_FROM` mailbox as **the place bounces arrive** and says that nothing reads
+it, and the admin screen for an account carries a manual `stop sending` control
+with its reason. An admin who finds a bounce notice in that mailbox sets it, and
+the suppression list then holds. That is a person doing what a webhook would, and
+the design says so rather than implying the system noticed.
 
 The signal that this has become too expensive is the first send where somebody
 reports never receiving an invitation, which is also the signal named on
@@ -84,13 +98,47 @@ reports never receiving an invitation, which is also the signal named on
 
 ### Unsubscribe
 
-    GET /unsubscribe/<token>     confirms, one click, no sign-in
-    POST /account/mail           the preference, from inside the room
+    GET  /unsubscribe/<token>    the confirmation: what stops, what does not, one button
+    POST /api/unsubscribe        what that button posts, and the only thing that writes
+    POST /api/account/mail       the preference, from inside the room
 
 Every **bulk** message carries the link, and the token identifies the account
 without authenticating it — an unsubscribe that requires signing in is an
 unsubscribe most people cannot complete, and the regime does not care why it
 failed. The token is single-purpose and does nothing but this.
+
+**The link is opened by a `GET` and acted on by a `POST`**, because a link in a
+message is fetched by things that are not the reader: mail scanners, corporate
+link-protection rewriters, and clients that prefetch what they render. A `GET`
+that wrote the row would unsubscribe those people without a press, and nothing
+in the row would tell such a row from a real one. What the reader does is
+unchanged — they open the link and press once
+([`MAIL-DEC-05`](../../decisions-log.md#MAIL-DEC-05)). No `List-Unsubscribe`
+header accompanies the link: the `Mailer` port carries a recipient, a subject
+and two bodies and no headers at all, so the RFC 8058 one-click path would be
+that port widened, which is `MAIL-001`'s contract rather than this one's.
+
+**The token is derived, not stored.** It has to be computable at send time for
+an account that has never unsubscribed and holds no row anywhere, so it is the
+account's id beside an HMAC of that id under `SESSION_SECRET` — the construction
+the session cookie's signature uses ([`AUTH-DEC-02`](../../decisions-log.md#AUTH-DEC-02)),
+with a purpose label inside the hash so that a value minted for one signer does
+not verify at the other. Rotating that secret invalidates every link already in
+an inbox, which is the price of deriving rather than storing; the page reads a
+dead link as one to sign in past rather than as a forgery, and the preference
+inside the room writes the same row.
+
+**`source` says who decided, and the row proves or explains itself
+accordingly.** `link` is the person's own act, by the link in a message or by
+the preference on their account page — the token identifies them either way,
+presented in the link when they are not signed in and derived from the account
+when they are, and the row keeps its SHA-256 rather than the token itself, the
+way every token in this system is kept. `admin` is a staff member acting for
+somebody else, and carries the reason instead of a token. Whoever set it, the
+person can start investor mail again from their own page: it is their inbox, and
+a setting nobody can undo becomes wrong the first time an address starts working
+again. Nothing in the console starts it again, because the trail has no act that
+names it ([`MAIL-DEC-06`](../../decisions-log.md#MAIL-DEC-06)).
 
 **Transactional mail is never suppressed.** An invitation, a password reset and a
 mail-send failure notice reach an unsubscribed account, because they are
@@ -120,7 +168,12 @@ them. **`SEC-002`** records the send as a fact; this is the detail.
 - **`DATA-R04`** — recorded, consented, with a working unsubscribe.
 - **`DATA-R02`** — the log holds an account id, never an address.
 - **`DATA-R03`** — rows go with the account, and expire at two years anyway.
-- **`SEC-R04`** — an unsubscribe is a privileged write and is audited.
+- **`SEC-R04`** — an unsubscribe is audited from every door, in the transaction
+  that writes the row. Starting again is not, and cannot be: the trail's action
+  vocabulary is closed and enforced by the database, and its one
+  mail-preference act is the stop. That is why only the person themselves may
+  start it again — their own preference over their own inbox is not a privileged
+  write, and an admin's would be ([`MAIL-DEC-06`](../../decisions-log.md#MAIL-DEC-06)).
 - **`A11Y-R01`**, **`I18N-R01`** — the unsubscribe page is a page: reachable,
   operable, and in the reader's language.
 
@@ -135,6 +188,12 @@ them. **`SEC-002`** records the send as a fact; this is the detail.
   the trade is worth it.
 - **Two years.** A guess, sized to the fundraise cycle rather than to a statute.
   It is stated so it can be argued with rather than left implicit.
+- **Nobody in the console can start investor mail again.** The trail has no act
+  that names it, and minting one edits a `CHECK` a shipped migration installed —
+  the question [`DATA-DEC-01`](../../decisions-log.md#DATA-DEC-01) is already
+  holding. So a stop-sending an admin sets by mistake is undone by the person it
+  was set on and by nobody else, which is the fail-closed side of the choice and
+  is decided at [`MAIL-DEC-06`](../../decisions-log.md#MAIL-DEC-06).
 
 ## 7. Task list
 

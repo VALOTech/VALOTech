@@ -84,5 +84,19 @@
     "unexpected": "Something went wrong. Try again in a moment.",
     "backToSignIn": "Back to sign-in",
     "unavailable": "Resetting your own password is unavailable at the moment. Ask the person who invited you to the room."
+  },
+  "mailPreference": {
+    "title": "Investor mail",
+    "confirmIntro": "Stop investor mail to this account? One press is all it takes, and you do not need to sign in.",
+    "stop": "Stop investor mail",
+    "stops": "This stops investor updates — the messages VALO Tech sends to everyone with access to the investor room.",
+    "keeps": "It does not stop the messages you need in order to use your account: an invitation, a password reset, or a notice about a message sent to you. Those answer something you or an administrator asked for, so they still reach you.",
+    "stopped": "Investor mail is stopped for this account.",
+    "stoppedByCompany": "VALO Tech stopped investor mail to this account. If you start it again and messages still do not arrive, ask the person who invited you.",
+    "on": "Investor mail is reaching this account.",
+    "resume": "Start investor mail again",
+    "roomIntro": "Whether VALO Tech's investor updates reach the address on your account.",
+    "expired": "This link no longer works. Sign in to change the setting on your account page, or ask the person who invited you.",
+    "signIn": "Sign in"
   }
 }

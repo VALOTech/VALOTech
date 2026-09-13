@@ -49,8 +49,7 @@ import { useMemo, useState } from 'react';
 import type { FormEvent, ReactElement } from 'react';
 
 import { MAX_TITLE_LENGTH, titleFromBody } from '../../../content/derive';
-import type { Standing } from '../../../portfolio/board';
-import { standingOf } from '../../../portfolio/board';
+import { standingOf, type Standing } from '../../../portfolio/standing';
 import { PRODUCT_LABEL, STAGE_LABEL } from '../../../portfolio/labels';
 import { blocksFromText } from '../../../content/paste';
 import { CONTENT_PRODUCT_TAGS, CONTENT_UPDATE_KINDS, type ContentUpdateKind } from '../../../db/types';

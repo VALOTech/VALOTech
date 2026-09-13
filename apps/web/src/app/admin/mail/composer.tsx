@@ -5,13 +5,24 @@
  * (`MAIL-001/T4`, `MAIL-001/T7`).
  *
  * **The preview is the message, not a rendering of it.** `compose` is the same
- * function the send calls, so what is shown below is byte-for-byte what leaves:
- * the plain-text half as an author wrote it, which is what a corporate mail
- * client shows, and the HTML half as its source, so an admin can see that
- * nothing was invented around their words. Painting that HTML into this page
- * instead would be the only place in the console that writes markup it did not
- * author, and the escaping it would be trusting is the very thing the preview
- * exists to let somebody check.
+ * function the send calls, over the same source: the body the author wrote and
+ * the unsubscribe line every investor message carries (`MAIL-002/T2`). So what
+ * is shown below is what leaves, down to the one thing that cannot be the same
+ * for everybody — the link in that line names the recipient, and the preview
+ * stands a phrase in for the token so an admin is not handed one person's link
+ * to press. The plain-text half appears as an author wrote it, which is what a
+ * corporate mail client shows, and the HTML half as its source, so an admin can
+ * see that nothing was invented around their words. Painting that HTML into this
+ * page instead would be the only place in the console that writes markup it did
+ * not author, and the escaping it would be trusting is the very thing the
+ * preview exists to let somebody check.
+ *
+ * **The sender is named on the send panel, because that mailbox is where bounces
+ * arrive.** SMTP answers once at hand-off and reports nothing afterwards, so a
+ * message that fails later is a notice in `MAIL_FROM` that no code reads
+ * (`MAIL-002` §3). Saying so is what makes the absence of bounce handling a
+ * thing an admin knows to compensate for rather than a silence they mistake for
+ * success.
  *
  * **The count is typed, and nothing fills it in.** The field starts empty and is
  * compared against the number of people ticked; the server compares its own
@@ -116,11 +127,17 @@ export function MailComposer({
   recipients,
   excluded,
   unavailable,
+  sender,
+  unsubscribeNotice,
 }: {
   readonly recipients: readonly ComposerRecipient[];
   readonly excluded: readonly ComposerExclusion[];
   /** The reason a send cannot happen, or `null` when it can (`MAIL-001/T7`). */
   readonly unavailable: string | null;
+  /** The `MAIL_FROM` mailbox, or `null` when no credential names one. */
+  readonly sender: string | null;
+  /** The unsubscribe line every recipient receives, with their token stood in for. */
+  readonly unsubscribeNotice: string;
 }): ReactElement {
   const [subject, setSubject] = useState('');
   const [body, setBody] = useState('');
@@ -131,7 +148,14 @@ export function MailComposer({
   const [outcome, setOutcome] = useState<Outcome | null>(null);
   const [typedRetryCount, setTypedRetryCount] = useState('');
 
-  const message = useMemo(() => compose(subject, body), [subject, body]);
+  // Composed from the body *and* the unsubscribe line, because that is what the
+  // send composes: `deliverQueued` appends the recipient's own link before the
+  // hand-off, so a preview of the body alone would be a preview of something
+  // shorter than what leaves (`MAIL-002/T2`).
+  const message = useMemo(
+    () => compose(subject, body === '' ? '' : `${body}\n\n${unsubscribeNotice}`),
+    [subject, body, unsubscribeNotice],
+  );
   const nameOf = useMemo(
     () => new Map(recipients.map((recipient) => [recipient.id, recipient.name])),
     [recipients],
@@ -238,6 +262,8 @@ export function MailComposer({
         <h3 className={styles.subhead}>What will be sent</h3>
         <p className={styles.quiet}>
           These are the exact bytes the send uses — the same rendering, not an approximation of it.
+          The unsubscribe line goes on every investor message; each person receives it with a link of
+          their own, which is the one thing below that differs between them.
         </p>
         <pre className={styles.preview}>{message.text === '' ? 'Nothing written yet.' : message.text}</pre>
         <details className={styles.details}>
@@ -285,6 +311,16 @@ export function MailComposer({
 
       <section className={styles.panel} aria-labelledby="send-heading">
         <h2 id="send-heading">Send</h2>
+
+        {sender === null ? null : (
+          <p className={styles.quiet}>
+            Sent from <strong>{sender}</strong>, which is also where bounces arrive. The mail server
+            answers once, when it takes each message; anything that fails afterwards comes back to
+            that mailbox as a notice, and nothing here reads it. Somebody has to open it. When a
+            notice says an address is dead, stop investor mail to that person from their account
+            page.
+          </p>
+        )}
 
         {outcome === null ? (
           <>

@@ -1,0 +1,130 @@
+/* The reader's own mail preference, on the card the room's other account page
+   uses (AUTH-004/T2). One shape for both, because somebody moving between
+   "my sessions" and "my mail" is in the same place doing the same kind of
+   thing, and a card that changed under them would read as a different site. */
+
+.main {
+  min-height: 100dvh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 2.5rem 1.5rem;
+  background: #f4f5f7;
+  color: #16181d;
+}
+
+.card {
+  width: 100%;
+  max-width: 34rem;
+  padding: 2rem;
+  border: 1px solid #dfe2e8;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(16, 18, 29, 0.06);
+}
+
+.title {
+  margin: 0 0 0.5rem;
+  font-size: 1.5rem;
+  line-height: 1.2;
+}
+
+.intro {
+  margin: 0 0 1.5rem;
+  color: #5a606b;
+  line-height: 1.5;
+}
+
+/* The current setting, stated before the control that changes it -- the whole
+   point of the page is that somebody can see where they stand. */
+.state {
+  margin: 0 0 1rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid #dfe2e8;
+  border-radius: 10px;
+  background: #fbfcfd;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.detail {
+  margin: 0 0 1rem;
+  line-height: 1.5;
+}
+
+.change {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid #e6e9ee;
+}
+
+.change button {
+  align-self: flex-start;
+  padding: 0.55rem 1rem;
+  font: inherit;
+  font-weight: 600;
+  color: #16181d;
+  background: #ffffff;
+  border: 1px solid #c9cdd6;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.change button:hover {
+  background: #f4f5f7;
+}
+
+.change button:focus-visible {
+  outline: 2px solid #2a5bd7;
+  outline-offset: 2px;
+}
+
+.hint {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: #5a606b;
+  line-height: 1.4;
+}
+
+@media (prefers-color-scheme: dark) {
+  .main {
+    background: #0f1115;
+    color: #e8eaed;
+  }
+
+  .card {
+    border-color: #2a2e37;
+    background: #16181d;
+    box-shadow: none;
+  }
+
+  .intro,
+  .hint {
+    color: #a3a9b5;
+  }
+
+  .state {
+    border-color: #2a2e37;
+    background: #12141a;
+  }
+
+  .change {
+    border-top-color: #2a2e37;
+  }
+
+  .change button {
+    color: #e8eaed;
+    background: #16181d;
+    border-color: #3a3f4a;
+  }
+
+  .change button:hover {
+    background: #1b1e25;
+  }
+
+  .change button:focus-visible {
+    outline-color: #4f7be0;
+  }
+}

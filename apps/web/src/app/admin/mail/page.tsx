@@ -1,8 +1,10 @@
 import type { ReactElement } from 'react';
 
 import { listAccounts } from '../../../admin/accounts';
+import { getConfig } from '../../../config/index';
 import { sendingIsPossible } from '../../../mail/availability';
 import { resolveRecipients } from '../../../mail/recipients';
+import { unsubscribeNoticePreview } from '../../../mail/unsubscribe-notice';
 
 import { MailComposer } from './composer';
 
@@ -29,6 +31,20 @@ import { MailComposer } from './composer';
  * address in a browser cache and a browser's history (`DATA-R01`, `DATA-R02`).
  * The account list is where an admin checks an address.
  *
+ * **The sender is named, because it is where bounces arrive.** SMTP answers once
+ * at hand-off and says nothing afterwards, so a message that fails later becomes
+ * a delivery-status notice in the `MAIL_FROM` mailbox and nothing in this system
+ * reads it (`MAIL-002` §3). Naming that mailbox on the screen where a send is
+ * pressed is what turns an invisible failure into one an admin knows to go and
+ * look for — and what they do about it is the stop-sending control on the
+ * person's page (`MAIL-002/T4`).
+ *
+ * **The unsubscribe line is previewed with the rest of the message**, because
+ * every investor message carries one and a preview that omitted it would be a
+ * preview of something other than what leaves. The token in it is stood in for:
+ * it differs per recipient, and a real one on this screen would be one person's
+ * link an admin could press.
+ *
  * The `/admin` layout's role check gates the page; it does not re-check.
  */
 export default async function MailPage(): Promise<ReactElement> {
@@ -40,6 +56,13 @@ export default async function MailPage(): Promise<ReactElement> {
     <>
       <h1>Mail</h1>
 
+      {/* The log is reached from here rather than from the rail: the rail is one
+          entry per section (`ADMIN-002` §3), and what was sent is a question
+          about this section rather than a section of its own. */}
+      <p>
+        <a href="/admin/mail/log">What has been sent</a>
+      </p>
+
       <MailComposer
         recipients={audience.recipients.map((recipient) => ({ id: recipient.id, name: recipient.name }))}
         excluded={audience.excluded.map((account) => ({
@@ -48,6 +71,8 @@ export default async function MailPage(): Promise<ReactElement> {
           reason: account.reason,
         }))}
         unavailable={availability.available ? null : availability.reason}
+        sender={availability.available ? availability.mail.from : null}
+        unsubscribeNotice={unsubscribeNoticePreview(getConfig().app.origin)}
       />
     </>
   );

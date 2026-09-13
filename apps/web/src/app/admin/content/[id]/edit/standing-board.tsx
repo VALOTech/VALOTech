@@ -23,7 +23,7 @@
 import type { ReactElement } from 'react';
 
 import { STANDS_HEADING } from '../../../../../content/report-structure';
-import type { Standing } from '../../../../../portfolio/board';
+import type { Standing } from '../../../../../portfolio/standing';
 import { PRODUCT_LABEL, STAGE_LABEL } from '../../../../../portfolio/labels';
 
 import styles from './editor.module.css';

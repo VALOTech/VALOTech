@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_318 tasks in the plan, 243 closed, 75 outstanding._
+_318 tasks in the plan, 247 closed, 71 outstanding._
 
 ---
 
@@ -81,7 +81,7 @@ _69/73 closed (94%) · 4 outstanding — 0 buildable now · 1 waiting on the own
 
 _The three content types, and the compliance posture that governs what is held about the people reading them. Updates come before decks, and not only because they are the simpler shape of the same problem: they are what the room is for. An investor signs in to find out what has happened since they last looked._
 
-_49/63 closed (77%) · 14 outstanding — 10 buildable now · 1 waiting on the owner · 3 external residue · 0 parked to a later wave._
+_53/63 closed (84%) · 10 outstanding — 6 buildable now · 1 waiting on the owner · 3 external residue · 0 parked to a later wave._
 
 - **DECK-001** · Deck authoring — 6/6 closed
 - **LEGAL-SG-001** · PDPA posture — 4/8 closed · depth 7
@@ -101,12 +101,7 @@ _49/63 closed (77%) · 14 outstanding — 10 buildable now · 1 waiting on the o
   - `[ ] LEGAL-GLOBAL-001/T5` — A one-page record of processing, and a written statement of what is deliberately not claimed
   - `[!] LEGAL-GLOBAL-001/T6` — The GDPR articles this design rests on are in the tree, and every claim cites one  · _external_ · **Blocked by:** pending-external: legal — the article text is obtained by the owner or counsel, at docs/operator-checklist.md#COMPLIANCE-SOURCES. The operational rul…
 
-- **MAIL-002** · Mail log and unsubscribe — 2/6 closed · depth 8
-  - `[ ] MAIL-002/T2` — An unsubscribe that works in one click without signing in, and a preference inside the room
-  - `[ ] MAIL-002/T3` — Transactional mail is never suppressed, enforced by the `kind` set at send time
-  - `[ ] MAIL-002/T4` — A manual `stop sending` control with its reason, and the send view naming the mailbox bounces arrive in
-  - `[ ] MAIL-002/T6` — The admin log, filtered by recipient and date, showing state and error
-
+- **MAIL-002** · Mail log and unsubscribe — 6/6 closed
 - **POST-002** · Update publishing and audience — 5/6 closed · depth 8
   - `[ ] POST-002/T6` — Unread marking from the per-account read state, and a paging control rather than infinite scroll
 

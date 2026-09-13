@@ -43,17 +43,26 @@
  * (`MAIL-001/T3`), never again at send time, so a list derived twice cannot
  * become two lists.
  *
+ * Every message this loop hands over carries the recipient's own unsubscribe
+ * link, which is what `DATA-R04` requires of investor mail and what the
+ * transactional messages must never carry (`MAIL-002/T2`, `MAIL-002/T3`). It is
+ * added here, at the hand-off, because the link names the account and so is the
+ * one part of the message that differs per person.
+ *
  * Retrying only the recipients that failed is `retry.ts`, built on the states
  * this loop writes and on the `retry_of` column that makes a claimed failure
- * unrepeatable (`MAIL-001/T6`, `MAIL-DEC-02`).
+ * unrepeatable (`MAIL-001/T6`, `MAIL-DEC-02`). A retry is investor mail too, so
+ * it goes through this loop and carries the link as a first attempt does.
  */
 
 import { recordAudit } from '../audit/record';
 import { getDb } from '../db/index';
 import { scrub } from '../ops/scrub';
 
-import type { ComposedMessage, Mailer } from './mailer';
+import { compose, type ComposedMessage, type Mailer } from './mailer';
 import type { Recipient } from './recipients';
+import { unsubscribeLink } from './unsubscribe';
+import { unsubscribeNotice } from './unsubscribe-notice';
 
 /**
  * What came of one recipient's message: the queue id the server returned, or the
@@ -152,14 +161,40 @@ async function queueAndRecord(
     });
 }
 
+/**
+ * The message as one recipient receives it: the body the admin wrote, and their
+ * own unsubscribe link under it (`MAIL-002/T2`, `DATA-R04`).
+ *
+ * Composed per recipient, because the link names the account and so differs for
+ * every person. Both halves come back through `compose` from one source, so the
+ * HTML a client renders carries the link the plain half carries and neither is
+ * assembled twice.
+ *
+ * This is the only thing the bulk path adds to what was previewed, and the
+ * composer previews this same sentence with the token stood in for, so what an
+ * admin approves is still what leaves.
+ */
+function addressed(message: ComposedMessage, accountId: string): ComposedMessage {
+  const notice = unsubscribeNotice(unsubscribeLink(accountId));
+
+  return compose(message.subject, `${message.text}\n\n${notice}`);
+}
+
 /** Hand one message to the port and say what came back, without deciding anything else. */
 async function attempt(
   mailer: Mailer,
   message: ComposedMessage,
   { recipient, logId }: QueuedRecipient,
 ): Promise<SendResult> {
+  const forRecipient = addressed(message, recipient.id);
+
   try {
-    const receipt = await mailer.send(recipient.email, message.subject, message.text, message.html);
+    const receipt = await mailer.send(
+      recipient.email,
+      forRecipient.subject,
+      forRecipient.text,
+      forRecipient.html,
+    );
     return { accountId: recipient.id, logId, state: 'accepted', queueId: receipt.queueId };
   } catch (error) {
     return { accountId: recipient.id, logId, state: 'failed', error: failureText(error) };

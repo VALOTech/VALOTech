@@ -129,7 +129,8 @@
   font-weight: 600;
 }
 
-.field input {
+.field input,
+.field textarea {
   padding: 0.4rem 0.5rem;
   font: inherit;
   font-size: 0.9rem;
@@ -137,7 +138,13 @@
   border-radius: 4px;
 }
 
-.field input:focus-visible {
+.field textarea {
+  resize: vertical;
+  min-height: 4.5rem;
+}
+
+.field input:focus-visible,
+.field textarea:focus-visible {
   outline: 2px solid #2b3a8c;
   outline-offset: 1px;
 }

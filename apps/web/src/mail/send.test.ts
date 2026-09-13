@@ -31,6 +31,8 @@ import { closeDb, getDb } from '../db/index';
 import { type Mailer, type Receipt, compose } from './mailer';
 import { type Recipient, resolveRecipients } from './recipients';
 import { send } from './send';
+import { accountForUnsubscribeToken, unsubscribeLink } from './unsubscribe';
+import { unsubscribeNotice } from './unsubscribe-notice';
 
 const RAW_DATABASE_URL = (process.env.DATABASE_URL ?? '').trim();
 const HAS_DATABASE = RAW_DATABASE_URL !== '';
@@ -51,8 +53,10 @@ if (HAS_DATABASE) {
 
 const MIGRATIONS_DIR = join(dirname(fileURLToPath(import.meta.url)), '..', '..', 'migrations');
 
+const ORIGIN = 'http://localhost:3100';
+
 process.env.APP_ENV = 'development';
-process.env.APP_ORIGIN = 'http://localhost:3100';
+process.env.APP_ORIGIN = ORIGIN;
 process.env.SESSION_SECRET = 's'.repeat(40);
 
 async function recreateIsolatedDatabase(): Promise<void> {
@@ -205,12 +209,15 @@ describe.skipIf(!HAS_DATABASE)('the send loop (MAIL-001/T5)', () => {
       })),
     );
 
+    // The subject and the author's words are the same for everybody; the
+    // unsubscribe line under them names the recipient, so each hand-off is the
+    // composed message plus that person's own link (`MAIL-002/T2`).
     expect(mailer.handed).toEqual(
       recipients.map((recipient) => ({
         to: recipient.email,
         subject: message.subject,
-        text: message.text,
-        html: message.html,
+        text: `${message.text}\n\n${unsubscribeNotice(unsubscribeLink(recipient.id))}`,
+        html: expect.stringContaining(unsubscribeLink(recipient.id)),
       })),
     );
 
@@ -225,6 +232,47 @@ describe.skipIf(!HAS_DATABASE)('the send loop (MAIL-001/T5)', () => {
           error: null,
         },
       ]);
+    }
+  });
+
+  /**
+   * `DATA-R04` requires investor mail to carry a way to stop it, and it has to
+   * be a way that works for the person holding the message — so the link is
+   * theirs and nobody else's.
+   *
+   * Asserted on three recipients rather than one, because the failure worth
+   * catching is not an absent link but a shared one: a loop that composed the
+   * notice once would put the first person's link in everybody's message, and
+   * the second reader to press it would unsubscribe a stranger. That is
+   * invisible with a single recipient.
+   */
+  it('carries each recipient a link that names them and nobody else (MAIL-002/T2)', async () => {
+    const recipients = await threeRecipients();
+    const mailer = fakeMailer();
+
+    await send(recipients, message, mailer, randomUUID());
+
+    for (const [index, recipient] of recipients.entries()) {
+      const handed = mailer.handed[index];
+      const link = unsubscribeLink(recipient.id);
+
+      // The author's words are untouched and come first; the notice is appended.
+      expect(handed?.text.startsWith(message.text)).toBe(true);
+      // Its own paragraph, so a client that wraps cannot break the one line in
+      // the message that has to work.
+      expect(handed?.text.split('\n\n')).toContain(link);
+      expect(handed?.html).toContain(link);
+
+      // The link resolves back to this recipient, which is the property that
+      // makes it a link of their own rather than a shared one.
+      const token = link.slice(`${ORIGIN}/unsubscribe/`.length);
+      expect(accountForUnsubscribeToken(token)).toBe(recipient.id);
+
+      for (const other of recipients) {
+        if (other.id !== recipient.id) {
+          expect(handed?.text).not.toContain(unsubscribeLink(other.id));
+        }
+      }
     }
   });
 

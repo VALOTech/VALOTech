@@ -84,5 +84,19 @@
     "unexpected": "Bir şeyler ters gitti. Birazdan yeniden deneyin.",
     "backToSignIn": "Oturum açmaya dön",
     "unavailable": "Şu anda parolanızı kendiniz sıfırlayamazsınız. Sizi yatırımcı odasına davet eden kişiyle iletişime geçin."
+  },
+  "mailPreference": {
+    "title": "Yatırımcı postası",
+    "confirmIntro": "Bu hesaba gelen yatırımcı postası durdurulsun mu? Tek bir dokunuş yeterli, giriş yapmanız da gerekmiyor.",
+    "stop": "Yatırımcı postasını durdur",
+    "stops": "Bu, yatırımcı güncellemelerini durdurur; yani VALO Tech'in yatırımcı odasına erişimi olan herkese gönderdiği iletileri.",
+    "keeps": "Hesabınızı kullanmak için gereken iletileri durdurmaz: bir davet, bir parola sıfırlama ya da size gönderilen bir ileti hakkındaki bildirim. Bunlar sizin veya bir yöneticinin istediği bir şeye karşılık geldiği için size ulaşmayı sürdürür.",
+    "stopped": "Bu hesap için yatırımcı postası durduruldu.",
+    "stoppedByCompany": "VALO Tech bu hesaba gelen yatırımcı postasını durdurdu. Yeniden başlatmanıza rağmen iletiler hâlâ gelmiyorsa sizi davet eden kişiyle iletişime geçin.",
+    "on": "Yatırımcı postası bu hesaba ulaşıyor.",
+    "resume": "Yatırımcı postasını yeniden başlat",
+    "roomIntro": "VALO Tech'in yatırımcı güncellemelerinin hesabınızdaki adrese ulaşıp ulaşmadığı.",
+    "expired": "Bu bağlantı artık çalışmıyor. Bu ayarı hesap sayfanızda değiştirmek için giriş yapın ya da sizi davet eden kişiyle iletişime geçin.",
+    "signIn": "Giriş yap"
   }
 }

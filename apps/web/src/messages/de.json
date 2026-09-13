@@ -84,5 +84,19 @@
     "unexpected": "Etwas ist schiefgegangen. Versuchen Sie es gleich noch einmal.",
     "backToSignIn": "Zurück zur Anmeldung",
     "unavailable": "Das Zurücksetzen Ihres Passworts ist derzeit nicht möglich. Wenden Sie sich an die Person, die Sie in den Investorenbereich eingeladen hat."
+  },
+  "mailPreference": {
+    "title": "Investoren-E-Mails",
+    "confirmIntro": "Investoren-E-Mails an dieses Konto beenden? Ein Druck genügt, und Sie müssen sich dafür nicht anmelden.",
+    "stop": "Investoren-E-Mails beenden",
+    "stops": "Damit enden die Neuigkeiten für Investoren – die Nachrichten, die VALO Tech an alle mit Zugang zum Investorenbereich sendet.",
+    "keeps": "Die Nachrichten, die Sie zur Nutzung Ihres Kontos brauchen, enden damit nicht: eine Einladung, das Zurücksetzen eines Passworts oder ein Hinweis auf eine an Sie gesendete Nachricht. Sie beantworten etwas, worum Sie oder ein Administrator gebeten haben, und erreichen Sie deshalb weiterhin.",
+    "stopped": "Investoren-E-Mails sind für dieses Konto beendet.",
+    "stoppedByCompany": "VALO Tech hat die Investoren-E-Mails an dieses Konto beendet. Wenn Sie sie wieder starten und weiterhin keine Nachrichten ankommen, wenden Sie sich an die Person, die Sie eingeladen hat.",
+    "on": "Investoren-E-Mails erreichen dieses Konto.",
+    "resume": "Investoren-E-Mails wieder starten",
+    "roomIntro": "Ob die Neuigkeiten von VALO Tech für Investoren die Adresse Ihres Kontos erreichen.",
+    "expired": "Dieser Link funktioniert nicht mehr. Melden Sie sich an, um diese Einstellung auf Ihrer Kontoseite zu ändern, oder wenden Sie sich an die Person, die Sie eingeladen hat.",
+    "signIn": "Anmelden"
   }
 }

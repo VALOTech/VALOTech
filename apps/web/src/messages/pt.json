@@ -84,5 +84,19 @@
     "unexpected": "Algo correu mal. Tente novamente daqui a pouco.",
     "backToSignIn": "Voltar ao início de sessão",
     "unavailable": "De momento não é possível redefinir a sua própria palavra-passe. Contacte quem o convidou para a sala de investidores."
+  },
+  "mailPreference": {
+    "title": "Correio para investidores",
+    "confirmIntro": "Deixar de enviar o correio para investidores para esta conta? Basta um toque, e não precisa de iniciar sessão.",
+    "stop": "Deixar de receber o correio para investidores",
+    "stops": "Isto interrompe as novidades para investidores, ou seja, as mensagens que a VALO Tech envia a todas as pessoas com acesso à sala de investidores.",
+    "keeps": "Não interrompe as mensagens de que precisa para usar a sua conta: um convite, uma redefinição de palavra-passe ou um aviso sobre uma mensagem que lhe foi enviada. Essas respondem a um pedido seu ou de um administrador, por isso continuam a chegar-lhe.",
+    "stopped": "O correio para investidores está interrompido nesta conta.",
+    "stoppedByCompany": "A VALO Tech interrompeu o correio para investidores para esta conta. Se voltar a ativá-lo e as mensagens continuarem a não chegar, contacte quem o convidou.",
+    "on": "O correio para investidores está a chegar a esta conta.",
+    "resume": "Voltar a receber o correio para investidores",
+    "roomIntro": "Se as novidades da VALO Tech para investidores chegam ao endereço da sua conta.",
+    "expired": "Esta ligação já não funciona. Inicie sessão para alterar esta definição na página da sua conta, ou contacte quem o convidou.",
+    "signIn": "Iniciar sessão"
   }
 }

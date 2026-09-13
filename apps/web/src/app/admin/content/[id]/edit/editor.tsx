@@ -33,7 +33,7 @@ import type { KeyboardEvent as ReactKeyboardEvent, ReactElement } from 'react';
 import { type Block, BLOCK_TYPES, BlockValidationError, validateBlocks } from '../../../../../content/blocks';
 import { standsSectionAt } from '../../../../../content/report-structure';
 import type { ContentType } from '../../../../../db/types';
-import type { Standing } from '../../../../../portfolio/board';
+import type { Standing } from '../../../../../portfolio/standing';
 
 import { BlockFields, defaultBlock, TYPE_LABELS } from './block-fields';
 import { StandingBoard } from './standing-board';

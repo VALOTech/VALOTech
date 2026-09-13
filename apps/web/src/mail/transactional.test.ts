@@ -27,7 +27,9 @@ import en from '../messages/en.json';
 import vi from '../messages/vi.json';
 
 import type { MailAvailability } from './availability';
-import type { Mailer, Receipt } from './mailer';
+import { compose, type Mailer, type Receipt } from './mailer';
+import { resolveRecipients } from './recipients';
+import { send } from './send';
 import {
   deliverTransactional,
   invitationMessage,
@@ -35,6 +37,7 @@ import {
   type Addressee,
   type SessionOpener,
 } from './transactional';
+import { stopInvestorMail } from './unsubscribe';
 
 const RAW_DATABASE_URL = (process.env.DATABASE_URL ?? '').trim();
 const HAS_DATABASE = RAW_DATABASE_URL !== '';
@@ -295,5 +298,71 @@ describe.skipIf(!HAS_DATABASE)('what a transactional send records (AUTH-003/T3)'
     // The preview and the send are one rendering (`MAIL-001/T1`): what is handed
     // over is the composed value and not a second rendering of the same source.
     expect(handed).toEqual([person.email, message.subject, message.text, message.html]);
+  });
+
+  /**
+   * The split `MAIL-002/T3` turns on, asserted on **one** account so the two
+   * answers cannot come from two different states of the world: the same person,
+   * unsubscribed, reached by a transactional message and not reached by a bulk
+   * one.
+   *
+   * `kind` is what enforces it, and it is set at the send: `deliverTransactional`
+   * writes `transactional` and never reads the list; `resolveRecipients` reads
+   * the list and is the only thing a bulk send resolves its audience through. A
+   * suppression check added to the transactional path would make the first half
+   * of this fail.
+   */
+  it('never suppresses a transactional message, and suppresses the bulk one (MAIL-002/T3)', async () => {
+    const person = await account();
+    const sender = await getDb()
+      .insertInto('accounts')
+      .values({
+        email: `${randomUUID()}@example.test`,
+        name: 'An Admin',
+        role: 'admin',
+        state: 'active',
+      })
+      .returning('id')
+      .executeTakeFirstOrThrow();
+
+    await stopInvestorMail({ by: 'person', accountId: person.id });
+
+    const reset = await resetMessage(person, LINK);
+    const mailer: Mailer = {
+      async send(): Promise<Receipt> {
+        return { queueId: 'q-not-suppressed' };
+      },
+    };
+
+    expect(await deliverTransactional(person, reset, sessionOf(mailer), async () => available)).toEqual({
+      state: 'accepted',
+    });
+
+    const audience = await resolveRecipients([person.id]);
+    expect(audience.recipients).toEqual([]);
+    expect(audience.excluded).toEqual([{ id: person.id, name: person.name, reason: 'unsubscribed' }]);
+
+    const handed: string[] = [];
+    const bulk: Mailer = {
+      async send(to: string): Promise<Receipt> {
+        handed.push(to);
+        return { queueId: 'q-bulk' };
+      },
+    };
+    await send(audience.recipients, compose('A quarterly note', 'Hello.'), bulk, sender.id);
+
+    expect(handed).toEqual([]);
+    // One row for this person, and it is the transactional one. No bulk row was
+    // written, because a bulk send never resolved them as a recipient.
+    expect(await rowsFor(person.id)).toEqual([
+      {
+        subject: reset.subject,
+        kind: 'transactional',
+        state: 'accepted',
+        queue_id: 'q-not-suppressed',
+        error: null,
+        retry_of: null,
+      },
+    ]);
   });
 });

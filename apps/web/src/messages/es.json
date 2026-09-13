@@ -84,5 +84,19 @@
     "unexpected": "Algo ha salido mal. Inténtelo de nuevo en un momento.",
     "backToSignIn": "Volver al inicio de sesión",
     "unavailable": "En este momento no es posible restablecer su propia contraseña. Escriba a la persona que le invitó a la sala."
+  },
+  "mailPreference": {
+    "title": "Correo para inversores",
+    "confirmIntro": "¿Dejar de enviar el correo para inversores a esta cuenta? Basta con pulsar una vez, y no hace falta iniciar sesión.",
+    "stop": "Dejar de recibir el correo para inversores",
+    "stops": "Esto detiene las novedades para inversores, es decir, los mensajes que VALO Tech envía a todas las personas con acceso a la sala de inversores.",
+    "keeps": "No detiene los mensajes que necesita para usar su cuenta: una invitación, un restablecimiento de contraseña o un aviso sobre un mensaje enviado a usted. Esos responden a algo que ha pedido usted o un administrador, así que siguen llegándole.",
+    "stopped": "El correo para inversores está detenido en esta cuenta.",
+    "stoppedByCompany": "VALO Tech ha detenido el correo para inversores a esta cuenta. Si vuelve a activarlo y los mensajes siguen sin llegar, escriba a la persona que le invitó.",
+    "on": "El correo para inversores está llegando a esta cuenta.",
+    "resume": "Volver a recibir el correo para inversores",
+    "roomIntro": "Si las novedades para inversores de VALO Tech llegan a la dirección de su cuenta.",
+    "expired": "Este enlace ya no funciona. Inicie sesión para cambiar este ajuste en la página de su cuenta, o escriba a la persona que le invitó.",
+    "signIn": "Iniciar sesión"
   }
 }

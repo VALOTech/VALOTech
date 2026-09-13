@@ -84,5 +84,19 @@
     "unexpected": "Terjadi kesalahan. Coba lagi sebentar lagi.",
     "backToSignIn": "Kembali ke halaman masuk",
     "unavailable": "Mengatur ulang kata sandi sendiri tidak tersedia saat ini. Hubungi orang yang mengundang Anda ke ruang investor."
+  },
+  "mailPreference": {
+    "title": "Email investor",
+    "confirmIntro": "Hentikan email investor ke akun ini? Cukup satu kali tekan, dan Anda tidak perlu masuk.",
+    "stop": "Hentikan email investor",
+    "stops": "Ini menghentikan kabar terbaru untuk investor, yaitu pesan yang dikirim VALO Tech kepada semua orang yang punya akses ke ruang investor.",
+    "keeps": "Ini tidak menghentikan pesan yang Anda perlukan untuk menggunakan akun Anda: undangan, pengaturan ulang kata sandi, atau pemberitahuan tentang pesan yang dikirim kepada Anda. Pesan seperti itu menjawab sesuatu yang Anda atau administrator minta, jadi tetap sampai kepada Anda.",
+    "stopped": "Email investor dihentikan untuk akun ini.",
+    "stoppedByCompany": "VALO Tech menghentikan email investor ke akun ini. Jika Anda menyalakannya lagi dan pesan tetap tidak sampai, hubungi orang yang mengundang Anda.",
+    "on": "Email investor sampai ke akun ini.",
+    "resume": "Nyalakan lagi email investor",
+    "roomIntro": "Apakah kabar terbaru VALO Tech untuk investor sampai ke alamat pada akun Anda.",
+    "expired": "Tautan ini sudah tidak berlaku. Masuk untuk mengubah setelan ini di halaman akun Anda, atau hubungi orang yang mengundang Anda.",
+    "signIn": "Masuk"
   }
 }

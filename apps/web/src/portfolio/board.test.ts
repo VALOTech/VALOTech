@@ -21,7 +21,8 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { closeDb, getDb } from '../db/index';
 import { PORTFOLIO_PRODUCTS } from '../db/types';
 
-import { standing, standingOf } from './board';
+import { standing } from './board';
+import { standingOf } from './standing';
 
 const RAW_DATABASE_URL = (process.env.DATABASE_URL ?? '').trim();
 const HAS_DATABASE = RAW_DATABASE_URL !== '';

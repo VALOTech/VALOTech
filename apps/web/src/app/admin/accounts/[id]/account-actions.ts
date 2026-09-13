@@ -69,6 +69,20 @@ export interface AccountDeleteAnswer {
 }
 
 /**
+ * What came of stopping investor mail to somebody (`MAIL-002/T4`).
+ *
+ * Its own answer rather than the acts' above, because a stop-sending is not one
+ * of the five that route performs and none of that type's other fields can occur
+ * here: there is no `requested`, no link and no delivery sentence. `changed`
+ * means the row was written; `unchanged` means the account was already on the
+ * list, in which case nothing was written and nothing recorded — a second stop
+ * is not a second act.
+ */
+export interface StopSendingAnswer {
+  readonly outcome: 'changed' | 'unchanged';
+}
+
+/**
  * What came of a correction (`ADMIN-001/T10`).
  *
  * The two outcomes a correction can be *answered* with, taken from the four the

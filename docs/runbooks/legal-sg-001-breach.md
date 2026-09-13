@@ -125,8 +125,12 @@ Every affected person is a named account with an address, so this is individual
 mail and not an announcement. It says, in plain words: what happened, what of
 theirs was involved, what has been done, what they should do, and who to write
 to. An unsubscribe must not suppress it — a breach notice is transactional, not a
-campaign — and `MAIL-002/T3` is the row that will enforce that at send time. It
-is open, so today the enforcement is this sentence and the person sending.
+campaign — and that is enforced at the send rather than left to this sentence:
+`apps/web/src/mail/transactional.ts` writes `kind` as `transactional` and reads
+no suppression list, while only the bulk path resolves its audience through one
+(`MAIL-002/T3`). There is no breach-notice message in the product, so a notice
+sent today is written by hand and goes from the company mailbox, where no
+suppression applies either.
 
 **If the mail path is unavailable**, the addresses are on the person pages and
 the owner sends the notice from the company mailbox. Do not delay notification on

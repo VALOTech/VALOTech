@@ -84,5 +84,19 @@
     "unexpected": "Đã có lỗi xảy ra. Hãy thử lại sau giây lát.",
     "backToSignIn": "Quay lại đăng nhập",
     "unavailable": "Hiện không thể tự đặt lại mật khẩu. Hãy liên hệ người đã mời bạn vào phòng nhà đầu tư."
+  },
+  "mailPreference": {
+    "title": "Thư dành cho nhà đầu tư",
+    "confirmIntro": "Dừng thư dành cho nhà đầu tư gửi tới tài khoản này? Chỉ cần một lần nhấn, và bạn không cần đăng nhập.",
+    "stop": "Dừng thư dành cho nhà đầu tư",
+    "stops": "Việc này dừng các bản tin dành cho nhà đầu tư, tức là những thư VALO Tech gửi cho tất cả những người có quyền vào phòng nhà đầu tư.",
+    "keeps": "Việc này không dừng những thư bạn cần để sử dụng tài khoản: lời mời, đặt lại mật khẩu, hay thông báo về một tin nhắn gửi cho bạn. Những thư đó đáp lại điều mà bạn hoặc quản trị viên đã yêu cầu, nên vẫn đến với bạn.",
+    "stopped": "Thư dành cho nhà đầu tư đã dừng đối với tài khoản này.",
+    "stoppedByCompany": "VALO Tech đã dừng thư dành cho nhà đầu tư tới tài khoản này. Nếu bạn bật lại mà thư vẫn không đến, hãy liên hệ người đã mời bạn.",
+    "on": "Thư dành cho nhà đầu tư đang được gửi tới tài khoản này.",
+    "resume": "Nhận lại thư dành cho nhà đầu tư",
+    "roomIntro": "Các bản tin dành cho nhà đầu tư của VALO Tech có đến địa chỉ trên tài khoản của bạn hay không.",
+    "expired": "Liên kết này không còn hiệu lực. Hãy đăng nhập để thay đổi thiết lập trên trang tài khoản của bạn, hoặc liên hệ người đã mời bạn.",
+    "signIn": "Đăng nhập"
   }
 }

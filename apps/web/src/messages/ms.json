@@ -84,5 +84,19 @@
     "unexpected": "Sesuatu telah berlaku. Cuba lagi sebentar lagi.",
     "backToSignIn": "Kembali ke log masuk",
     "unavailable": "Menetapkan semula kata laluan sendiri tidak tersedia buat masa ini. Hubungi orang yang menjemput anda ke bilik pelabur."
+  },
+  "mailPreference": {
+    "title": "E-mel pelabur",
+    "confirmIntro": "Hentikan e-mel pelabur ke akaun ini? Cukup satu tekanan sahaja, dan anda tidak perlu log masuk.",
+    "stop": "Hentikan e-mel pelabur",
+    "stops": "Ini menghentikan berita terkini untuk pelabur, iaitu mesej yang dihantar VALO Tech kepada semua orang yang mempunyai akses ke bilik pelabur.",
+    "keeps": "Ia tidak menghentikan mesej yang anda perlukan untuk menggunakan akaun anda: jemputan, penetapan semula kata laluan, atau pemberitahuan tentang mesej yang dihantar kepada anda. Mesej begitu menjawab sesuatu yang anda atau pentadbir minta, jadi ia tetap sampai kepada anda.",
+    "stopped": "E-mel pelabur dihentikan bagi akaun ini.",
+    "stoppedByCompany": "VALO Tech telah menghentikan e-mel pelabur ke akaun ini. Jika anda menghidupkannya semula dan mesej masih tidak sampai, hubungi orang yang menjemput anda.",
+    "on": "E-mel pelabur sedang sampai ke akaun ini.",
+    "resume": "Hidupkan semula e-mel pelabur",
+    "roomIntro": "Sama ada berita terkini VALO Tech untuk pelabur sampai ke alamat pada akaun anda.",
+    "expired": "Pautan ini tidak lagi berfungsi. Log masuk untuk menukar tetapan ini pada halaman akaun anda, atau hubungi orang yang menjemput anda.",
+    "signIn": "Log masuk"
   }
 }
