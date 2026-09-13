@@ -13,7 +13,7 @@ import { describe, expect, it } from 'vitest';
 import type { JsonValue } from '../db/types';
 
 import { type Block, withoutSpeakerContext } from './blocks';
-import { cardsOf, deriveSections, totalsOf } from './sections';
+import { cardsOf, deriveSections, reorderSections, totalsOf } from './sections';
 
 const heading = (text: string, context?: string): Block =>
   context === undefined ? { type: 'heading', level: 2, text } : { type: 'heading', level: 2, text, context };
@@ -193,5 +193,60 @@ describe('totalsOf — what the deck adds up to (DECK-001/T4)', () => {
     const totals = totalsOf(deriveSections([heading('One'), para('  two   spaced   words  ')]));
 
     expect(totals.words).toBe(4);
+  });
+});
+
+describe('reorderSections — a move is an edit of the block array (DECK-001/T3)', () => {
+  const deck = [heading('One'), para('a'), heading('Two'), para('b'), para('c'), heading('Three'), para('d')];
+
+  it('moves the section whole, body and all', () => {
+    const moved = reorderSections(deck, 1, 0);
+
+    expect(deriveSections(moved).map((section) => section.heading)).toEqual(['Two', 'One', 'Three']);
+    expect(moved.slice(0, 3)).toEqual([heading('Two'), para('b'), para('c')]);
+  });
+
+  it('keeps exactly the blocks it was given, so a move can never lose or invent one', () => {
+    // Compared as a bag rather than in order, since the order is the one thing
+    // a move is allowed to change. Sorting the objects themselves would compare
+    // every one as "[object Object]" and assert nothing.
+    const bag = (blocks: Block[]): string[] => blocks.map((block) => JSON.stringify(block)).sort();
+
+    for (const [from, to] of [[0, 2], [2, 0], [1, 2], [2, 1], [0, 1]]) {
+      const moved = reorderSections(deck, from ?? 0, to ?? 0);
+
+      expect(moved).toHaveLength(deck.length);
+      expect(bag(moved)).toEqual(bag(deck));
+      expect(deriveSections(moved).flatMap((section) => section.blocks)).toEqual(moved);
+    }
+  });
+
+  it('puts the section where the list said, counting positions before the move', () => {
+    // One, Two, Three -> Two, Three, One: moving the first to position 2 leaves
+    // the one that was third in second place.
+    expect(deriveSections(reorderSections(deck, 0, 2)).map((section) => section.heading)).toEqual([
+      'Two',
+      'Three',
+      'One',
+    ]);
+  });
+
+  it('gives back the very same array when the move is a move to nowhere', () => {
+    for (const [from, to] of [[1, 1], [0, 0], [-1, 0], [0, -1], [3, 0], [0, 3], [1.5, 0], [0, Number.NaN]]) {
+      expect(reorderSections(deck, from ?? 0, to ?? 0)).toBe(deck);
+    }
+  });
+
+  it('moves a run of blocks before the first heading like any other section', () => {
+    const withStray = [para('stray'), heading('One'), para('a')];
+
+    expect(reorderSections(withStray, 0, 1)).toEqual([heading('One'), para('a'), para('stray')]);
+  });
+
+  it('has nothing to move in a deck of one section or none', () => {
+    const one = [heading('Only'), para('a')];
+
+    expect(reorderSections(one, 0, 0)).toBe(one);
+    expect(reorderSections([], 0, 0)).toEqual([]);
   });
 });

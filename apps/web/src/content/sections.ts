@@ -34,6 +34,52 @@ export interface DeckSection {
   readonly blocks: Block[];
 }
 
+/**
+ * Move the section at `from` to sit at `to`, and give back the block array that
+ * says so (`DECK-001/T3`).
+ *
+ * The block array is the single source, so a reorder is an edit of it rather
+ * than of an order stored beside it (`DECK-001` §3). `deriveSections` is this
+ * function's inverse and a section is a contiguous slice, so moving one is
+ * moving its slice whole: every block travels with the heading it belongs to,
+ * and nothing is added, dropped or rewritten. The result carries exactly the
+ * blocks the input did, in a different order, which is what lets the overview
+ * and the editor stay two views of one object.
+ *
+ * An index outside the list, and a move to where the section already is, both
+ * give back the blocks unchanged. A caller asking for either has asked for
+ * nothing to happen, and the honest answer to that is the document it already
+ * had — not a refusal it would have to distinguish from a real one.
+ *
+ * `to` is the position in the list as it stands *before* the move, which is what
+ * a person means by "put this third": the section is lifted out and put back at
+ * that index, so moving section 0 to 2 in a deck of four leaves the one that was
+ * third in second place.
+ */
+export function reorderSections(blocks: Block[], from: number, to: number): Block[] {
+  const sections = deriveSections(blocks);
+
+  if (
+    !Number.isInteger(from) ||
+    !Number.isInteger(to) ||
+    from < 0 ||
+    to < 0 ||
+    from >= sections.length ||
+    to >= sections.length ||
+    from === to
+  ) {
+    return blocks;
+  }
+
+  const moved = sections[from];
+  if (moved === undefined) {
+    return blocks;
+  }
+
+  const rest = sections.filter((_, index) => index !== from);
+  return [...rest.slice(0, to), moved, ...rest.slice(to)].flatMap((section) => section.blocks);
+}
+
 /** One section as the overview shows it: what it is about, and what it carries. */
 export interface SectionCard {
   readonly heading: string | null;

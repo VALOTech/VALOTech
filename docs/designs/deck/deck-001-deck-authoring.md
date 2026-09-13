@@ -116,3 +116,4 @@ may read it.
 - `DECK-001/T3` — Reordering by drag and by keyboard, writing back to the block array
 - `DECK-001/T4` — Section, word and figure counts in the overview
 - `DECK-001/T5` — Speaker context per section, stripped in the investor read path and proven by a test
+- `DECK-001/T6` — The editor writes a section's speaker context, which today only the overview can show

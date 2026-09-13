@@ -22,7 +22,7 @@
 
 import type { Actor } from '../auth/gate';
 
-import { validateBlocks } from './blocks';
+import { type Block, validateBlocks } from './blocks';
 import { isItemId } from './items';
 import { forAuthor } from './read';
 import { type DeckTotals, type SectionCard, cardsOf, deriveSections, totalsOf } from './sections';
@@ -30,6 +30,13 @@ import { type DeckTotals, type SectionCard, cardsOf, deriveSections, totalsOf } 
 /** What the overview page renders: the deck it is of, its cards and its totals. */
 export interface DeckOverview {
   readonly title: string;
+  /**
+   * The blocks the cards were derived from. Reordering a section rewrites this
+   * array and saves it down the editor's own write path (`DECK-001/T3`), which
+   * is what the design means by the overview and the editor being two views of
+   * one object rather than two representations to reconcile.
+   */
+  readonly blocks: Block[];
   /** Whether a reader sees anything today, so the page can say what it is showing. */
   readonly published: boolean;
   readonly cards: SectionCard[];
@@ -50,10 +57,12 @@ export async function overviewFor(itemId: string, actor: Actor): Promise<DeckOve
     return null;
   }
 
-  const sections = deriveSections(validateBlocks(view.revision.blocks));
+  const blocks = validateBlocks(view.revision.blocks);
+  const sections = deriveSections(blocks);
 
   return {
     title: view.item.title,
+    blocks,
     published: view.item.current_revision_id !== null,
     cards: cardsOf(sections),
     totals: totalsOf(sections),

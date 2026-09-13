@@ -35,6 +35,7 @@ import { closeDb, getDb } from '../db/index';
 
 import type { Block } from './blocks';
 import { createItem, saveDraft } from './items';
+import { reorderSections } from './sections';
 import { overviewFor } from './overview';
 import { publish } from './publish';
 
@@ -133,6 +134,21 @@ describe.skipIf(!HAS_DATABASE)('overviewFor — a deck seen as its sections', ()
     expect(overview?.totals).toEqual({ sections: 3, words: 13, figures: 0 });
   });
 
+  it('carries the blocks its cards came from, and a reorder saved through them comes back moved', async () => {
+    const { item } = await deck([heading('One'), para('a'), heading('Two'), para('b'), heading('Three')]);
+
+    const before = await overviewFor(item.id, admin);
+    expect(before?.cards.map((card) => card.heading)).toEqual(['One', 'Two', 'Three']);
+    expect(before?.blocks).toHaveLength(5);
+
+    // The overview hands the client these blocks, the client moves a section in
+    // them, and the editor’s own write path saves the result (DECK-001/T3).
+    await saveDraft(item.id, reorderSections(before?.blocks ?? [], 2, 0), admin.id);
+
+    const after = await overviewFor(item.id, admin);
+    expect(after?.cards.map((card) => card.heading)).toEqual(['Three', 'One', 'Two']);
+    expect(after?.totals).toEqual(before?.totals);
+  });
   it('shows the latest revision, published or not, because it is the author who is looking', async () => {
     const { item, revision } = await deck([heading('First'), para('as published')]);
     await publish(item.id, revision.id, admin.id);

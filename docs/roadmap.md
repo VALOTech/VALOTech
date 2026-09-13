@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_312 tasks in the plan, 220 closed, 92 outstanding._
+_313 tasks in the plan, 221 closed, 92 outstanding._
 
 ---
 
@@ -85,10 +85,10 @@ _68/72 closed (94%) · 4 outstanding — 0 buildable now · 1 waiting on the own
 
 _The three content types, and the compliance posture that governs what is held about the people reading them. Updates come before decks, and not only because they are the simpler shape of the same problem: they are what the room is for. An investor signs in to find out what has happened since they last looked._
 
-_30/59 closed (50%) · 29 outstanding — 29 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_31/60 closed (51%) · 29 outstanding — 29 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
 
-- **DECK-001** · Deck authoring — 4/5 closed · depth 7
-  - `[ ] DECK-001/T3` — Reordering by drag and by keyboard, writing back to the block array
+- **DECK-001** · Deck authoring — 5/6 closed · depth 7
+  - `[ ] DECK-001/T6` — The editor writes a section's speaker context, which today only the overview can show
 
 - **LEGAL-SG-001** · PDPA posture — 0/6 closed · depth 7
   - `[ ] LEGAL-SG-001/T1` — The privacy notice: what is held, why, how long, who to write to, in twenty locales
