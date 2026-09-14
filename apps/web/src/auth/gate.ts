@@ -55,6 +55,42 @@ export type SessionRequest = Pick<Request, 'headers'>;
 const SIGN_IN = '/sign-in';
 
 /**
+ * Where the request was going, set by the proxy because nothing further in has
+ * access to it (`INV-001/T5`).
+ */
+export const DESTINATION_HEADER = 'x-valo-destination';
+
+/**
+ * A hall destination worth returning a reader to, or `null`.
+ *
+ * Only a hall page qualifies, and the test is deliberately a prefix match on
+ * one known segment rather than a general "is this relative" guard. A reader is
+ * returned to a page they were reading; there is nothing to return them to on
+ * an API path, and every other surface is either public or the console's. That
+ * narrowness is also the whole open-redirect defence: a value that must begin
+ * `/hall` cannot be `//evil.example`, `https://evil.example` or `javascript:`,
+ * so the parameter carries no reachable attack rather than a filtered one.
+ *
+ * The prefix test is the entire guard, and nothing is stacked on top of it. A
+ * backslash exclusion was tried and removed: every form it would have caught —
+ * `/hall\@evil.example`, `/\evil.example` — is already refused because what
+ * follows `/hall` must be a separator, and a second check no input can reach is
+ * one a later reader trusts for protection it does not give (§1.10).
+ *
+ * One function and two callers on purpose — the gate writes the parameter and
+ * the sign-in page reads it back, and a rule stated twice is a rule that will
+ * be relaxed once (R9).
+ */
+export function hallDestination(value: string | null): string | null {
+  return value !== null && /^\/hall(?:[/?#]|$)/.test(value) ? value : null;
+}
+
+/** Where this request was going, when that is somewhere worth returning to. */
+export function rememberedDestination(headers: Headers): string | null {
+  return hallDestination(headers.get(DESTINATION_HEADER));
+}
+
+/**
  * The session token the request presents, or `null` when it presents none.
  *
  * The first cookie of the name wins, which is the one a browser sends first
@@ -177,10 +213,14 @@ export async function accountForToken(token: string | null): Promise<Actor | nul
  * §10.2.2) and which cannot send a reader to another host when a deployment's
  * origin is set wrongly.
  */
-function toSignIn(): Response {
+function toSignIn(request?: SessionRequest): Response {
+  const destination = request === undefined ? null : rememberedDestination(request.headers);
+  const location =
+    destination === null ? SIGN_IN : `${SIGN_IN}?next=${encodeURIComponent(destination)}`;
+
   return new Response(null, {
     status: 303,
-    headers: { Location: SIGN_IN, 'Cache-Control': 'no-store' },
+    headers: { Location: location, 'Cache-Control': 'no-store' },
   });
 }
 
@@ -211,7 +251,7 @@ export async function requireInvestor(request: SessionRequest): Promise<Actor | 
   const actor = await resolveSession(presentedToken(request.headers));
 
   if (actor === null) {
-    return toSignIn();
+    return toSignIn(request);
   }
 
   return actor.role === 'investor' || actor.role === 'admin' ? actor : notFound();
@@ -229,7 +269,7 @@ export async function requireAdmin(request: SessionRequest): Promise<Actor | Res
   const actor = await resolveSession(presentedToken(request.headers));
 
   if (actor === null) {
-    return toSignIn();
+    return toSignIn(request);
   }
 
   return actor.role === 'admin' ? actor : notFound();

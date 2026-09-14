@@ -15,6 +15,9 @@ import type { PortfolioStage } from '../../db/types';
 import { standing } from '../../portfolio/board';
 import { PRODUCT_LABEL } from '../../portfolio/labels';
 
+import { log } from '../../ops/logger';
+
+import { block } from './block';
 import { narrowest, readHallQuery, withoutNarrowing } from './query';
 import styles from './hall.module.css';
 
@@ -141,17 +144,50 @@ export default async function HallPage({
   }
 
 
-  const [unread, stream, board, report, decks, t, format] = await Promise.all([
-    unreadUpdateCount(actor),
-    updateStream(actor),
-    standing(),
-    currentReport(actor),
-    grantedDecksForAccount(actor.id),
+  // The dictionary and the formatter are not settled with the rest: a block
+  // that cannot be read has words to say so, and a page that cannot read its
+  // words has nothing to render at all.
+  const [reads, t, format] = await Promise.all([
+    Promise.allSettled([
+      unreadUpdateCount(actor),
+      updateStream(actor),
+      standing(),
+      currentReport(actor),
+      grantedDecksForAccount(actor.id),
+    ]),
     getTranslations('hall'),
     getFormatter(),
   ]);
 
-  const reportOpened = report === null ? false : await hasOpened(actor.id, report.id);
+  const unread = block(reads[0], 'unread');
+  const stream = block(reads[1], 'stream');
+  const board = block(reads[2], 'standing');
+  const report = block(reads[3], 'report');
+  const decks = block(reads[4], 'decks');
+
+  // Degrading to unopened is the direction `LEGAL-GLOBAL-001` §3 already chose
+  // for this question: everything looks new, which is the wrong answer in the
+  // harmless direction.
+  const reportOpened =
+    report.ok && report.value !== null
+      ? await hasOpened(actor.id, report.value.id).catch((reason: unknown) => {
+          log.warn('hall.block_failed', 'a hall block could not be read', {
+            block: 'reportOpened',
+            reason: reason instanceof Error ? reason.name : 'unknown',
+          });
+          return false;
+        })
+      : false;
+
+  /** What a block that could not be read shows in place of its content. */
+  const failed = (
+    <p className={styles.failed}>
+      {t('failed')}{' '}
+      <a className={styles.retry} href="/hall">
+        {t('retry')}
+      </a>
+    </p>
+  );
   const day = (value: Date): string => format.dateTime(value, { dateStyle: 'medium' });
 
   return (
@@ -168,10 +204,16 @@ export default async function HallPage({
         </h1>
         <p
           className={`${styles.claim} ${
-            unread !== null && unread > 0 ? styles.claimWaiting : styles.claimClear
+            unread.ok && unread.value !== null && unread.value > 0
+              ? styles.claimWaiting
+              : styles.claimClear
           }`}
         >
-          {unread === null || unread === 0 ? t('new.none') : t('new.count', { count: unread })}
+          {!unread.ok
+            ? t('failed')
+            : unread.value === null || unread.value === 0
+              ? t('new.none')
+              : t('new.count', { count: unread.value })}
         </p>
       </section>
 
@@ -180,11 +222,13 @@ export default async function HallPage({
           product it is about where the author named one, which is the identity
           pattern the gateway uses — what this is about, then what it says. */}
       <section className={styles.panel} aria-label={t('new.heading')}>
-        {stream.entries.length === 0 ? (
+        {!stream.ok ? (
+          failed
+        ) : stream.value.entries.length === 0 ? (
           <p className={styles.empty}>{t('new.empty')}</p>
         ) : (
           <ul className={styles.stream}>
-            {stream.entries.map((entry) => (
+            {stream.value.entries.map((entry) => (
               <li key={entry.item.id} className={styles.streamRow}>
                 <div className={styles.streamIdentity}>
                   {entry.item.product === null ? null : (
@@ -211,11 +255,12 @@ export default async function HallPage({
         <h2 id="hall-standing" className={styles.eyebrow}>
           {t('standing.heading')}
         </h2>
-        {board.every((entry) => !entry.set) ? (
+        {!board.ok ? <div className={styles.panel}>{failed}</div> : null}
+        {board.ok && board.value.every((entry) => !entry.set) ? (
           <p className={`${styles.panel} ${styles.empty}`}>{t('standing.empty')}</p>
         ) : null}
         <ul className={styles.board}>
-          {board.map((entry) => (
+          {(board.ok ? board.value : []).map((entry) => (
             <li key={entry.product} className={`${styles.panel} ${styles.product}`}>
               <div className={styles.productHead}>
                 <span className={styles.productName}>{PRODUCT_LABEL[entry.product]}</span>
@@ -240,12 +285,16 @@ export default async function HallPage({
           {t('report.heading')}
         </h2>
         <div className={styles.panel}>
-          {report === null ? (
+          {!report.ok ? (
+            failed
+          ) : report.value === null ? (
             <p className={styles.empty}>{t('report.empty')}</p>
           ) : (
             <div className={styles.report}>
-              {report.period === null ? null : <span className={styles.role}>{report.period}</span>}
-              <span className={styles.reportTitle}>{report.title}</span>
+              {report.value.period === null ? null : (
+                <span className={styles.role}>{report.value.period}</span>
+              )}
+              <span className={styles.reportTitle}>{report.value.title}</span>
               <span className={styles.meta}>{reportOpened ? t('report.opened') : t('report.unopened')}</span>
             </div>
           )}
@@ -258,11 +307,13 @@ export default async function HallPage({
           {t('decks.heading')}
         </h2>
         <div className={styles.panel}>
-          {decks.length === 0 ? (
+          {!decks.ok ? (
+            failed
+          ) : decks.value.length === 0 ? (
             <p className={styles.empty}>{t('decks.empty')}</p>
           ) : (
             <ul className={styles.stream}>
-              {decks.map((deck) => (
+              {decks.value.map((deck) => (
                 <li key={deck.deckId} className={styles.streamRow}>
                   <span className={styles.itemTitle}>{deck.deckTitle}</span>
                   <span className={styles.meta}>{day(deck.grantedAt)}</span>

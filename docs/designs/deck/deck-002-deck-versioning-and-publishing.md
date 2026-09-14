@@ -60,7 +60,7 @@ for as long as anyone might ask.
 
 Pinning is for the case that makes this feature necessary: a deck sent into a
 diligence process, where the document under discussion must not move. Unpinned is
-the default, because a room full of pinned decks is a room where an investor is
+the default, because a hall full of pinned decks is a hall where an investor is
 reading last year's story and nobody knows.
 
 **When an unpinned reader's deck changes**, the reading view says so once: the

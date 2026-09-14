@@ -41,7 +41,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-import { presentedToken } from './auth/gate';
+import { DESTINATION_HEADER, presentedToken } from './auth/gate';
 import { newRequestId, REQUEST_ID_HEADER } from './ops/request-context';
 
 /**
@@ -115,6 +115,14 @@ export function proxy(request: NextRequest): NextResponse {
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set('Content-Security-Policy', policy);
   requestHeaders.set(REQUEST_ID_HEADER, requestId);
+
+  // The gate refuses a reader without ever seeing a URL: it is handed headers
+  // and nothing else, and App Router hands a layout no pathname either. This is
+  // the one place on the path that knows where the request was going, so the
+  // destination is carried in from here and `INV-001/T5` can send the reader
+  // back to it. It is set from `nextUrl` rather than copied from a client
+  // header, so a request cannot name its own destination.
+  requestHeaders.set(DESTINATION_HEADER, request.nextUrl.pathname + request.nextUrl.search);
 
   const response = NextResponse.next({ request: { headers: requestHeaders } });
 

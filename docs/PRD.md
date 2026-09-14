@@ -20,7 +20,7 @@ A feature code never changes and never moves to another subject. A design under 
 
 VALO Tech Pte. Ltd. is a Singapore company that builds an AI-native product family: VALO Ads, VALO Pocket, Shimmra, Amavo, Farola, and the GRC backbone Verdiq. It sells a governed AI workforce to regulated industries.
 
-This product is **the company's own two rooms**:
+This product is **the company's own two surfaces**:
 
 - **The gateway** — the public page at valotech.org. It makes one argument to a corporate buyer: that an AI workforce is worth having, that it needs a clean data foundation underneath it, and that VALO Tech builds both in the buyer's own environment. It is the company's face and, for most people who ever encounter VALO Tech, the whole of it.
 - **The investor hall** — everything behind the sign-in, and its main job is **keeping an investor current**. What they come back for is progress: where each product stands, what the team announced this month, what it actually shipped. The deeper case — how delivery works, what the portfolio is, and the presentation an investor is asked to read — is there too, but it is read once; the updates are read repeatedly, and the hall is designed around the thing that is read repeatedly rather than around the thing that is read once.
@@ -122,7 +122,7 @@ translated, previewed, published, withdrawn or audited.
 | `CMS-004` | Preview, publish and withdraw | building | An admin sees a draft exactly as an investor will, publishes a revision deliberately, and can return to the previously published revision in one action. A draft is visible to nobody else, ever |
 | `CMS-005` | Locale variants and translation state | live | Per item, per locale: not started, machine draft, reviewed. A machine draft is never shown to a reader; an unreviewed locale falls back to the authored language — `docs/decisions-log.md#I18N-DEC-01` |
 | `CMS-006` | Audience and access | live | Public, every investor, or named investors. Enforced in the query that fetches the item, never in the template that renders it — the template is where this rule has historically been broken |
-| `CMS-007` | Search and filter in the hall | live | Find an item by kind, by product, by period, or by its words. A room with two years of updates and no search is an archive nobody reads |
+| `CMS-007` | Search and filter in the hall | live | Find an item by kind, by product, by period, or by its words. A hall with two years of updates and no search is an archive nobody reads |
 
 ### 5.4 What is written — `RPT`, `POST`, `DECK`, `INV`, `MAIL`
 

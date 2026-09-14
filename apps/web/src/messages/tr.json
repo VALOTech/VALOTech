@@ -100,6 +100,8 @@
     "signIn": "Giriş yap"
   },
   "hall": {
+    "failed": "Bu bölüm yüklenemedi.",
+    "retry": "Yeniden dene",
     "title": "Yatırımcı salonu",
     "nav": {
       "hall": "Salon",

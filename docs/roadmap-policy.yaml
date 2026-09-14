@@ -76,13 +76,13 @@ waves:
       The three content types, and the compliance posture that governs what is
       held about the people reading them. Updates come before decks, and not
       only because they are the simpler shape of the same problem: they are what
-      the room is for. An investor signs in to find out what has happened since
+      the hall is for. An investor signs in to find out what has happened since
       they last looked.
   W4:
     depth_range: [9, 10]
-    title: "The room"
+    title: "The hall"
     summary: >
-      The reading surfaces, the room they sit in, and the gateway served by the
+      The reading surfaces, the hall they sit in, and the gateway served by the
       application — which is what finally makes the gate on the two hidden
       chapters real rather than a stylesheet. This wave ends with the product
       complete and still unpublished; what publishes it is outside the waves,

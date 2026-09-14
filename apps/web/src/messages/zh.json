@@ -100,6 +100,8 @@
     "signIn": "登录"
   },
   "hall": {
+    "failed": "此处未能加载。",
+    "retry": "重试",
     "title": "投资人大厅",
     "nav": {
       "hall": "大厅",

@@ -94,8 +94,8 @@ indexed.
 
 The stream marks what has arrived since the reader's last visit, using the same
 per-account read state `RPT-002` defines. It is the answer to the question the
-room exists for — *what has happened since I last looked* — and it is why the
-room's landing surface is this stream rather than a document.
+hall exists for — *what has happened since I last looked* — and it is why the
+hall's landing surface is this stream rather than a document.
 
 ## 4. Integration
 

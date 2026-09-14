@@ -215,7 +215,7 @@ action. **`DATA-002`** is the erasure design this implements the admin half of.
 
 - **No bulk actions.** Not on suspend, not on delete. Six to fifty accounts, and
   every action here is either reversible-per-person or irreversible; a bulk
-  irreversible action is one mis-selection from an emptied room.
+  irreversible action is one mis-selection from an emptied hall.
 - **Last sign-in is stored, and it is behavioural data.** It is kept because
   the stale-account problem has no other signal, it is one timestamp, and it is
   deleted with the account. Stated in the privacy posture rather than left to be
@@ -248,7 +248,7 @@ action. **`DATA-002`** is the erasure design this implements the admin half of.
   already resend an invitation to an `invited` account and read the link from the
   screen; what changes at `AUTH-003/T3` is the reach, not the shape. The
   trade-off is stated here rather than pre-empted with a control nobody has asked
-  for: two admins, both named in the trail, is the containment this room has, and
+  for: two admins, both named in the trail, is the containment this hall has, and
   whether a correction that moves an address should take step-up
   authentication is [`ADMIN-DEC-05`](../../decisions-log.md#ADMIN-DEC-05), filed now so
   the question arrives with the send that makes it reachable rather than after it.

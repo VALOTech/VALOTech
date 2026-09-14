@@ -100,6 +100,8 @@
     "signIn": "Đăng nhập"
   },
   "hall": {
+    "failed": "Phần này không tải được.",
+    "retry": "Thử lại",
     "title": "Sảnh nhà đầu tư",
     "nav": {
       "hall": "Sảnh",

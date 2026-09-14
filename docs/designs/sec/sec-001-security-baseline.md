@@ -42,7 +42,7 @@ browser rather than assumed from the header being present.
 | `Content-Security-Policy` | `default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self' 'nonce-<per request>'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'` | Injected script, and the page being framed by somebody else's |
 | `Strict-Transport-Security` | `max-age=63072000; includeSubDomains; preload` | A first request over plain HTTP after the first visit |
 | `X-Content-Type-Options` | `nosniff` | An uploaded image being interpreted as script |
-| `Referrer-Policy` | `strict-origin-when-cross-origin` | An investor-room URL leaking to an external site |
+| `Referrer-Policy` | `strict-origin-when-cross-origin` | An investor-hall URL leaking to an external site |
 | `Permissions-Policy` | `camera=(), microphone=(), geolocation=(), browsing-topics=(), interest-cohort=()` | Capabilities this product never uses |
 
 **The CSP has no `unsafe-inline`, and the nonce is what refusing it costs.**

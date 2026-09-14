@@ -14,7 +14,7 @@ status: implemented
 
 ## 1. Purpose and PRD refs
 
-Finding one thing in a room that has been accumulating for two years. Realizes
+Finding one thing in a hall that has been accumulating for two years. Realizes
 `CMS-007`.
 
 It is filed after the audience rule and depends on it directly, because search is
@@ -129,7 +129,7 @@ generated column and its index.
   one is already the dangerous one. Revisit when the hall is genuinely
   multilingual in its content rather than in its chrome.
 - **No ranking beyond the default.** Results are ordered by recency, not by
-  relevance score, because in a room of updates the newest match is nearly
+  relevance score, because in a hall of updates the newest match is nearly
   always the wanted one and a relevance order that puts a 2024 note first reads
   as wrong.
 - **The predicate alone does not hide a draft from its author.** `visibleTo`

@@ -81,7 +81,7 @@ search into a list.
 Granting one deck to several investors at once, from the deck view, with the
 list of names shown before it commits. There is no bulk revoke: revocation is
 per person and is meant to be, because a bulk revoke is one mis-click away from
-emptying a room.
+emptying a hall.
 
 ### What a grant does not do
 

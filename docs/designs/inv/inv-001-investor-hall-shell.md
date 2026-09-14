@@ -19,7 +19,7 @@ What a signed-in investor lands on, and how they reach everything else. Realizes
 
 The PRD settles the layout question before this design starts: **an investor
 signs in to find out what has happened since they last looked**, so the landing
-surface is the update stream and not the deck. A room that opens on a document
+surface is the update stream and not the deck. A hall that opens on a document
 they read a month ago has answered a question nobody asked.
 
 ## 2. Layer walkthrough
@@ -73,7 +73,7 @@ still deciding who comes to be convinced. `accounts.investor_type` says which
 **Null is not `prospect`.** An account nobody has classified gets the order the
 table above this one sets, because a reader the company has not described is one
 the hall should not be guessing about — and the guess that costs most is showing
-the persuasion room to somebody who has already paid.
+the persuasion order to somebody who has already paid.
 
 **The type orders the page and never gates it.** What a reader may read stays
 entirely with `content_grants` and `audience` through `CMS-006`. A second thing
@@ -89,7 +89,7 @@ a chapter that exists in two places is a chapter that will disagree with itself.
 
 Each of the four states its own absence in its own words. "No updates yet" under
 a heading that says what updates are, rather than an empty area — a first-time
-investor's room is legitimately near-empty, and an empty area is
+investor's hall is legitimately near-empty, and an empty area is
 indistinguishable from a failed load (`A11Y` and the U-axis both).
 
 An empty state and an error state are different renderings and never the same
@@ -99,7 +99,7 @@ nothing in it says the company has not posted yet.
 ### Navigation
 
 Flat. `/hall`, `/hall/reports`, `/hall/decks`, `/hall/account`. Four
-destinations, no nested menus, and the current one marked. A room with four
+destinations, no nested menus, and the current one marked. A hall with four
 places does not need a hierarchy, and a hierarchy imposed on four places makes
 them harder to find.
 
@@ -115,7 +115,7 @@ works, and the ground is plain.
 
 ### Session
 
-Every response is `no-store` (`AUTH-004`). An expired session on any room route
+Every response is `no-store` (`AUTH-004`). An expired session on any hall route
 redirects to sign-in with the destination remembered, and returns there
 afterwards — an investor who followed a link from a report and was made to sign
 in should land on the report.

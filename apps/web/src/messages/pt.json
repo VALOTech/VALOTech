@@ -100,6 +100,8 @@
     "signIn": "Iniciar sessão"
   },
   "hall": {
+    "failed": "Isto não foi carregado.",
+    "retry": "Tentar de novo",
     "title": "Salão de investidores",
     "nav": {
       "hall": "O salão",

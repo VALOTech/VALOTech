@@ -3,7 +3,11 @@ import type { ReactElement } from 'react';
 
 import { getTranslations } from 'next-intl/server';
 
+import { hallDestination } from '../../auth/gate';
 import { SignInForm } from './sign-in-form';
+
+/** Where a sign-in lands when it was not sent from somewhere in particular. */
+const HALL = '/hall';
 import styles from '../auth-card.module.css';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -16,8 +20,20 @@ export async function generateMetadata(): Promise<Metadata> {
  * locale. The heading and the orienting line are read on the server; the fields
  * and their behaviour are the client form below, which shares the same locale
  * through the provider in the root layout.
+ *
+ * An investor whose session expired mid-read arrives here carrying where they
+ * were going, and the form returns them to it (`INV-001/T5`).
  */
-export default async function SignInPage(): Promise<ReactElement> {
+export default async function SignInPage({
+  searchParams,
+}: {
+  readonly searchParams: Promise<Record<string, string | string[] | undefined>>;
+}): Promise<ReactElement> {
+  // Checked again here rather than trusted: a link to `/sign-in?next=…` can be
+  // sent to somebody by anybody, so the value arriving has not necessarily
+  // passed through the gate that writes it.
+  const asked = (await searchParams).next;
+  const next = hallDestination(typeof asked === 'string' ? asked : null) ?? HALL;
   const t = await getTranslations('signIn');
   const privacy = await getTranslations('privacy');
   const forgot = await getTranslations('forgot');
@@ -29,7 +45,7 @@ export default async function SignInPage(): Promise<ReactElement> {
           {t('title')}
         </h1>
         <p className={styles.intro}>{t('intro')}</p>
-        <SignInForm />
+        <SignInForm next={next} />
       </section>
       {/* The notice is linked from here because somebody deciding whether to
           accept an invitation reads it before they have an account, so a notice

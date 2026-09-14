@@ -27,7 +27,15 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { getConfig } from '../config/index';
 import { closeDb, getDb } from '../db/index';
-import { type Actor, requireAdmin, requireInvestor, resolveSession } from './gate';
+import {
+  DESTINATION_HEADER,
+  hallDestination,
+  rememberedDestination,
+  requireAdmin,
+  requireInvestor,
+  resolveSession,
+  type Actor,
+} from './gate';
 import { hashPassword } from './password';
 import { issue, sessionCookieName, signToken, tokenOfCookie } from './session';
 
@@ -478,5 +486,50 @@ describe.skipIf(!HAS_DATABASE)('the role gate', () => {
         getConfig().session.ttlSeconds * 1000,
       );
     });
+  });
+});
+
+describe('the destination a sign-in returns to (INV-001/T5)', () => {
+  it('remembers a hall page, with its query', () => {
+    expect(hallDestination('/hall')).toBe('/hall');
+    expect(hallDestination('/hall/reports')).toBe('/hall/reports');
+    expect(hallDestination('/hall?q=runway&type=report')).toBe('/hall?q=runway&type=report');
+    expect(hallDestination('/hall/decks/7#section-2')).toBe('/hall/decks/7#section-2');
+  });
+
+  it('refuses a destination that leaves this site', () => {
+    // Each of these is a redirect somebody would be handed in a message. The
+    // first two are the classic pair; the third is read as a host by a browser
+    // that treats the backslash as a separator; the fourth executes.
+    for (const attack of [
+      '//evil.example',
+      'https://evil.example/hall',
+      '/hall\\@evil.example',
+      '/\\evil.example',
+      'javascript:alert(1)',
+      '/hall\\..\\admin',
+    ]) {
+      expect(hallDestination(attack)).toBeNull();
+    }
+  });
+
+  it('refuses a surface that is not the hall, including one that merely starts like it', () => {
+    // `/hallway` shares the prefix and is not the hall — a prefix test without
+    // the boundary would admit any path an attacker can get mounted.
+    expect(hallDestination('/hallway')).toBeNull();
+    expect(hallDestination('/halls')).toBeNull();
+    expect(hallDestination('/admin')).toBeNull();
+    expect(hallDestination('/api/auth/sign-in')).toBeNull();
+    expect(hallDestination('/')).toBeNull();
+    expect(hallDestination('')).toBeNull();
+    expect(hallDestination(null)).toBeNull();
+  });
+
+  it('reads the destination the proxy set, and nothing a client sent', () => {
+    const headers = new Headers({ [DESTINATION_HEADER]: '/hall/reports' });
+    expect(rememberedDestination(headers)).toBe('/hall/reports');
+
+    expect(rememberedDestination(new Headers())).toBeNull();
+    expect(rememberedDestination(new Headers({ [DESTINATION_HEADER]: '/admin' }))).toBeNull();
   });
 });

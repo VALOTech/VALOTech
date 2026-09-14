@@ -18,7 +18,7 @@ import styles from '../auth-card.module.css';
 
 type Outcome = 'invalid' | 'too_many' | 'unexpected';
 
-export function SignInForm(): ReactElement {
+export function SignInForm({ next }: { readonly next: string }): ReactElement {
   const t = useTranslations('signIn');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -38,10 +38,13 @@ export function SignInForm(): ReactElement {
       });
 
       if (response.status === 204) {
-        // The session cookie is set. The hall is the application root until
-        // INV-001 mounts one of its own; a full navigation, not a client route,
-        // so the next response is fetched under the new cookie.
-        window.location.assign('/');
+        // The session cookie is set. A full navigation and not a client route,
+        // so the next response is fetched under the new cookie. The destination
+        // is where the reader was going when the gate stopped them, or the
+        // hall's landing when they came to sign in of their own accord
+        // (`INV-001/T5`); the server chose it, and this never derives one from
+        // the address bar.
+        window.location.assign(next);
         return;
       }
 

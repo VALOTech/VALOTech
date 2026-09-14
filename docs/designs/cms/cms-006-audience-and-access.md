@@ -46,7 +46,7 @@ was asking.
 
 `granted` exists for the case decks were built around: a deck shown to one
 investor and not another. It is deliberately not the default, because a per-item
-grant list that nobody maintains becomes a room where an investor sees nothing.
+grant list that nobody maintains becomes a hall where an investor sees nothing.
 
 ### The predicate
 
@@ -126,7 +126,7 @@ its first sentence.
 - **`404` rather than `403`.** It costs a signed-in investor a clear message
   when an admin genuinely has revoked their access, and they will ask why a link
   stopped working. The alternative confirms which slugs exist to anyone who
-  guesses, and this room's slugs are things like `2026-q3` — guessable by design.
+  guesses, and this hall's slugs are things like `2026-q3` — guessable by design.
 - **No time-limited access.** A grant that expires would suit a deck shown
   during a diligence window. It is not built because an expiry that nobody
   notices is an investor locked out mid-conversation, and revocation is already

@@ -100,6 +100,8 @@
     "signIn": "登入"
   },
   "hall": {
+    "failed": "此處未能載入。",
+    "retry": "重試",
     "title": "投資人大廳",
     "nav": {
       "hall": "大廳",

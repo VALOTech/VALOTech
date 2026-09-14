@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_321 tasks in the plan, 255 closed, 66 outstanding._
+_321 tasks in the plan, 257 closed, 64 outstanding._
 
 ---
 
@@ -77,7 +77,7 @@ _72/74 closed (97%) · 2 outstanding — 1 buildable now · 1 waiting on the own
 - **DATA-002** · Erasure and retention — 5/5 closed
 ## W3 — What is written
 
-_The three content types, and the compliance posture that governs what is held about the people reading them. Updates come before decks, and not only because they are the simpler shape of the same problem: they are what the room is for. An investor signs in to find out what has happened since they last looked._
+_The three content types, and the compliance posture that governs what is held about the people reading them. Updates come before decks, and not only because they are the simpler shape of the same problem: they are what the hall is for. An investor signs in to find out what has happened since they last looked._
 
 _54/63 closed (85%) · 9 outstanding — 4 buildable now · 1 waiting on the owner · 3 external residue · 1 parked to a later wave._
 
@@ -105,11 +105,11 @@ _54/63 closed (85%) · 9 outstanding — 4 buildable now · 1 waiting on the own
 - **RPT-002** · Report periods and archive — 5/6 closed · depth 8
   - `[ ] RPT-002/T3` — The archive lists by period, groups by year, and shows a period with no report as a gap
 
-## W4 — The room
+## W4 — The hall
 
-_The reading surfaces, the room they sit in, and the gateway served by the application — which is what finally makes the gate on the two hidden chapters real rather than a stylesheet. This wave ends with the product complete and still unpublished; what publishes it is outside the waves, waiting on the owner._
+_The reading surfaces, the hall they sit in, and the gateway served by the application — which is what finally makes the gate on the two hidden chapters real rather than a stylesheet. This wave ends with the product complete and still unpublished; what publishes it is outside the waves, waiting on the owner._
 
-_7/59 closed (11%) · 52 outstanding — 52 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_9/59 closed (15%) · 50 outstanding — 50 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
 
 - **DECK-003** · Deck reading — 0/5 closed · depth 9
   - `[ ] DECK-003/T1` — One column with sections in order, the version and date on the page
@@ -124,10 +124,8 @@ _7/59 closed (11%) · 52 outstanding — 52 buildable now · 0 waiting on the ow
   - `[ ] DECK-004/T5` — The from-the-account view, listing every deck a person may read
   - `[ ] DECK-004/T6` — Bulk grant with the names shown before it commits, and no bulk revoke
 
-- **INV-001** · Investor hall shell — 2/6 closed · depth 9
+- **INV-001** · Investor hall shell — 4/6 closed · depth 9
   - `[~] INV-001/T3` — Flat navigation over four destinations, with the current one marked  · **Note:** the rail and its current-destination mark ship in apps/web/src/app/hall/nav.tsx, which is a client component for one reason — the current path, which…
-  - `[ ] INV-001/T2` — Empty and error states are different renderings, each saying which it is
-  - `[ ] INV-001/T5` — An expired session returns the reader to where they were going
   - `[ ] INV-001/T6` — The landing's blocks are ordered by who the reader is, and an unclassified reader has an order of their own
 
 - **LEGAL-GLOBAL-002** · Cookie and analytics posture — 0/5 closed · depth 9

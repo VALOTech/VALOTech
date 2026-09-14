@@ -78,7 +78,7 @@ alarming text to somebody who did the right thing.
 ### After
 
 - `Cache-Control: no-store` on every authenticated response, so the back button
-  after a sign-out shows the sign-in page rather than a rendered room from the
+  after a sign-out shows the sign-in page rather than a rendered hall from the
   history cache. This is the part that is usually missed, and it is verified in
   a browser by pressing the back button, not by reading the header.
 
@@ -87,7 +87,7 @@ alarming text to somebody who did the right thing.
   surface added later is covered by the commit that mounts it. A list of
   authenticated prefixes would be the same rule written as a proxy for itself,
   and would be under-inclusive the day somebody adds a surface and not the list
-  — silently, because a storable room is indistinguishable from an unstorable
+  — silently, because a storable hall is indistinguishable from an unstorable
   one until the back button is pressed.
 
   The proxy marks the response at the origin, so a shared cache in front of it

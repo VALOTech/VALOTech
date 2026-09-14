@@ -21,7 +21,7 @@ Its whole design problem is the opposite of the report's. A report is long,
 periodic and expected, so the work is in making it comparable. An update is
 short, occasional and unscheduled, so the work is in **making it cheap enough
 that it actually gets written.** An update surface that takes twenty minutes
-produces a room with four entries a year, which is a room nobody signs in to.
+produces a hall with four entries a year, which is a hall nobody signs in to.
 
 ## 2. Layer walkthrough
 
@@ -91,7 +91,7 @@ shorter".
 The request carries the words and **no destination**. `RPT-001`'s own read picks
 the report — the greatest period holding an unpublished revision — because a
 route that took an item id would let an admin append text to any item in the
-room through a surface whose purpose is one. It appends and never replaces, it
+hall through a surface whose purpose is one. It appends and never replaces, it
 publishes nothing, and it answers `409` when no report is being drafted, which
 is an ordinary state the composer says plainly rather than a failure.
 

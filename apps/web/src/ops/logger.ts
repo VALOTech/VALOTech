@@ -37,6 +37,7 @@ import { scrub } from './scrub';
  */
 export const LOG_EVENTS = [
   'db.pool_error',
+  'hall.block_failed',
   'log.scrubbed',
   'mail.transactional_failed',
   'mail.unavailable',

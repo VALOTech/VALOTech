@@ -31,7 +31,7 @@ a replacement should not be blocked by the one that is live.
 **Up.** The current report is surfaced by the hall; the rest are a list by
 period, newest first, grouped by year. A period with no report shows as absent
 rather than being omitted, because a gap an investor can see is information and a
-gap they cannot see is a room that looks complete.
+gap they cannot see is a hall that looks complete.
 
 ## 3. Contracts
 

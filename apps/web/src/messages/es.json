@@ -100,6 +100,8 @@
     "signIn": "Iniciar sesión"
   },
   "hall": {
+    "failed": "Esto no se ha cargado.",
+    "retry": "Inténtelo de nuevo",
     "title": "Sala de inversores",
     "nav": {
       "hall": "La sala",

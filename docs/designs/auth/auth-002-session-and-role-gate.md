@@ -143,7 +143,7 @@ invalidation whenever it suspends or re-roles an account.
 ## 6. Open questions and trade-offs
 
 - **Sliding expiry.** `last_seen_at` is written on each request, which is a write
-  per request for a room with a handful of readers — acceptable here and not in a
+  per request for a hall with a handful of readers — acceptable here and not in a
   larger product. If it ever matters, the write becomes periodic rather than the
   expiry becoming absolute: an investor timed out mid-read is worse than a row
   written too often.
