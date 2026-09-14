@@ -100,12 +100,13 @@
     "signIn": "サインイン"
   },
   "room": {
-    "title": "投資家ルーム",
+    "title": "投資家ホール",
     "nav": {
-      "room": "ルーム",
+      "room": "ホール",
       "account": "アカウント"
     },
     "signOut": "サインアウト",
+    "language": "言語",
     "new": {
       "heading": "新着",
       "none": "前回ご覧になってから新しいものはありません",
@@ -134,7 +135,7 @@
       "paused": "停止中"
     },
     "search": {
-      "label": "ルーム内を検索",
+      "label": "ホール内を検索",
       "placeholder": "公開済みテキストの語句",
       "submit": "検索",
       "any": "すべて",

@@ -100,12 +100,13 @@
     "signIn": "Đăng nhập"
   },
   "room": {
-    "title": "Phòng nhà đầu tư",
+    "title": "Sảnh nhà đầu tư",
     "nav": {
-      "room": "Phòng",
+      "room": "Sảnh",
       "account": "Tài khoản"
     },
     "signOut": "Đăng xuất",
+    "language": "Ngôn ngữ",
     "new": {
       "heading": "Có gì mới",
       "none": "Không có gì mới kể từ lần bạn xem gần nhất",
@@ -134,7 +135,7 @@
       "paused": "Tạm dừng"
     },
     "search": {
-      "label": "Tìm trong phòng",
+      "label": "Tìm trong sảnh",
       "placeholder": "Từ ngữ trong nội dung đã công bố",
       "submit": "Tìm",
       "any": "Tất cả",

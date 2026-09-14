@@ -129,3 +129,38 @@ export function resolveLocale(cookieValue: string | undefined, acceptLanguage: s
   }
   return negotiate(acceptLanguage);
 }
+
+/**
+ * The flag shown beside each language, by the country whose flag the gateway
+ * already uses for it (`assets/i18n.js`).
+ *
+ * **A flag is not a language**, and this map is a borrowing rather than a
+ * claim: Arabic is written in more countries than one and English in more
+ * still. It is here because the picker is a row of twenty and a reader finds
+ * their own line faster by its shape than by reading down a column — so the
+ * flag is decorative, carries `alt=""`, and the endonym beside it is what the
+ * row actually says. Keyed by the union, so a twenty-first locale stops the
+ * build rather than rendering a broken image.
+ */
+export const LOCALE_FLAG: Readonly<Record<Locale, string>> = {
+  en: 'us',
+  zh: 'cn',
+  zt: 'tw',
+  vi: 'vn',
+  th: 'th',
+  id: 'id',
+  ms: 'my',
+  tl: 'ph',
+  hi: 'in',
+  es: 'es',
+  ar: 'sa',
+  fr: 'fr',
+  bn: 'bd',
+  pt: 'pt',
+  ru: 'ru',
+  ur: 'pk',
+  de: 'de',
+  ja: 'jp',
+  tr: 'tr',
+  ko: 'kr',
+};

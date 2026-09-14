@@ -100,12 +100,13 @@
     "signIn": "Mag-sign in"
   },
   "room": {
-    "title": "Silid ng mamumuhunan",
+    "title": "Bulwagan ng mamumuhunan",
     "nav": {
-      "room": "Silid",
+      "room": "Bulwagan",
       "account": "Account"
     },
     "signOut": "Mag-sign out",
+    "language": "Wika",
     "new": {
       "heading": "Ano ang bago",
       "none": "Walang bago mula noong huli kang tumingin",
@@ -134,7 +135,7 @@
       "paused": "Nakahinto"
     },
     "search": {
-      "label": "Maghanap sa silid",
+      "label": "Maghanap sa bulwagan",
       "placeholder": "Mga salita mula sa nailathalang teksto",
       "submit": "Maghanap",
       "any": "Lahat",

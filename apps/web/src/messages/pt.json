@@ -100,12 +100,13 @@
     "signIn": "Iniciar sessão"
   },
   "room": {
-    "title": "Sala de investidores",
+    "title": "Salão de investidores",
     "nav": {
-      "room": "A sala",
+      "room": "O salão",
       "account": "Conta"
     },
     "signOut": "Terminar sessão",
+    "language": "Idioma",
     "new": {
       "heading": "Novidades",
       "none": "Nada de novo desde a sua última visita",
@@ -134,7 +135,7 @@
       "paused": "Em pausa"
     },
     "search": {
-      "label": "Pesquisar na sala",
+      "label": "Pesquisar no salão",
       "placeholder": "Palavras do texto publicado",
       "submit": "Pesquisar",
       "any": "Qualquer",

@@ -100,12 +100,13 @@
     "signIn": "登入"
   },
   "room": {
-    "title": "投資人專區",
+    "title": "投資人大廳",
     "nav": {
-      "room": "專區",
+      "room": "大廳",
       "account": "帳戶"
     },
     "signOut": "登出",
+    "language": "語言",
     "new": {
       "heading": "最新動態",
       "none": "自您上次查看以來沒有新內容",
@@ -134,7 +135,7 @@
       "paused": "已暫停"
     },
     "search": {
-      "label": "在專區中搜尋",
+      "label": "在大廳中搜尋",
       "placeholder": "已發布內容中的字詞",
       "submit": "搜尋",
       "any": "全部",

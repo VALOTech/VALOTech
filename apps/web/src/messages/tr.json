@@ -100,12 +100,13 @@
     "signIn": "Giriş yap"
   },
   "room": {
-    "title": "Yatırımcı odası",
+    "title": "Yatırımcı salonu",
     "nav": {
-      "room": "Oda",
+      "room": "Salon",
       "account": "Hesap"
     },
     "signOut": "Çıkış yap",
+    "language": "Dil",
     "new": {
       "heading": "Yenilikler",
       "none": "Son bakışınızdan bu yana yeni bir şey yok",
@@ -134,7 +135,7 @@
       "paused": "Duraklatıldı"
     },
     "search": {
-      "label": "Odada ara",
+      "label": "Salonda ara",
       "placeholder": "Yayımlanmış metindeki kelimeler",
       "submit": "Ara",
       "any": "Tümü",

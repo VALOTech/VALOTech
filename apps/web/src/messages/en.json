@@ -100,12 +100,13 @@
     "signIn": "Sign in"
   },
   "room": {
-    "title": "Investor room",
+    "title": "Investor hall",
     "nav": {
-      "room": "The room",
+      "room": "The hall",
       "account": "Account"
     },
     "signOut": "Sign out",
+    "language": "Language",
     "new": {
       "heading": "What's new",
       "none": "Nothing new since you last looked",
@@ -134,7 +135,7 @@
       "paused": "Paused"
     },
     "search": {
-      "label": "Search the room",
+      "label": "Search the hall",
       "placeholder": "Words from the published text",
       "submit": "Search",
       "any": "Any",

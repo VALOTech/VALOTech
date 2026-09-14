@@ -100,12 +100,13 @@
     "signIn": "Log masuk"
   },
   "room": {
-    "title": "Ruang pelabur",
+    "title": "Dewan pelabur",
     "nav": {
-      "room": "Ruang",
+      "room": "Dewan",
       "account": "Akaun"
     },
     "signOut": "Log keluar",
+    "language": "Bahasa",
     "new": {
       "heading": "Apa yang baharu",
       "none": "Tiada apa-apa baharu sejak kali terakhir anda melihat",
@@ -134,7 +135,7 @@
       "paused": "Dijeda"
     },
     "search": {
-      "label": "Cari dalam ruang ini",
+      "label": "Cari dalam dewan ini",
       "placeholder": "Perkataan daripada teks yang diterbitkan",
       "submit": "Cari",
       "any": "Semua",

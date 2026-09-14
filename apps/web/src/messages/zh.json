@@ -100,12 +100,13 @@
     "signIn": "登录"
   },
   "room": {
-    "title": "投资人专区",
+    "title": "投资人大厅",
     "nav": {
-      "room": "专区",
+      "room": "大厅",
       "account": "账户"
     },
     "signOut": "退出",
+    "language": "语言",
     "new": {
       "heading": "最新动态",
       "none": "自您上次查看以来没有新内容",
@@ -134,7 +135,7 @@
       "paused": "已暂停"
     },
     "search": {
-      "label": "在专区中搜索",
+      "label": "在大厅中搜索",
       "placeholder": "已公布内容中的字词",
       "submit": "搜索",
       "any": "全部",

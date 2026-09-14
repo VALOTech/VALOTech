@@ -100,12 +100,13 @@
     "signIn": "로그인"
   },
   "room": {
-    "title": "투자자 룸",
+    "title": "투자자 라운지",
     "nav": {
-      "room": "룸",
+      "room": "라운지",
       "account": "계정"
     },
     "signOut": "로그아웃",
+    "language": "언어",
     "new": {
       "heading": "새로운 소식",
       "none": "마지막으로 보신 뒤로 새로운 내용이 없습니다",
@@ -134,7 +135,7 @@
       "paused": "일시 중지"
     },
     "search": {
-      "label": "룸에서 검색",
+      "label": "라운지에서 검색",
       "placeholder": "공개된 본문의 단어",
       "submit": "검색",
       "any": "전체",

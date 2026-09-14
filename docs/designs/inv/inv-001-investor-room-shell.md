@@ -43,13 +43,17 @@ renders.
 | 3 | **The current report** — period, title, whether they have read it | Expected on a schedule; one line, not the document |
 | 4 | **Your decks** — what they have been granted | Read once, so it is present rather than prominent |
 
-Below those, the search field and its filters. Which filters those are belongs to
-`CMS-007` and is named there rather than counted here: a number restated on this
-page is a number that disagrees with its own feature the first time one is added.
-The landing is where the field sits; once a reader has narrowed the room it heads
-its own results instead, because a field below the thing it filters is one they
-scroll past to change their mind. Above it, the room's own chrome: the mark, the
-locale control, the account control, sign-out.
+The room's own chrome carries the mark, the locale control, the account control,
+sign-out — and the search. Which filters the search offers belongs to `CMS-007`
+and is named there rather than counted here: a number restated on this page is a
+number that disagrees with its own feature the first time one is added.
+
+**The field is on the chrome rather than on the landing**, because looking
+something up is a thing an investor does from wherever they are, and a field
+that sits on one page is one they navigate back to before they can use it. It is
+a disclosure that opens on demand, so the control costs a line of the frame
+rather than a block of the page, and it opens already showing what the reader
+last asked for whenever the room is narrowed.
 
 ### Who the reader is
 

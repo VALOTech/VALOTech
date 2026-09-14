@@ -17,7 +17,6 @@ import { PRODUCT_LABEL } from '../../portfolio/labels';
 
 import { narrowest, readRoomQuery, withoutNarrowing } from './query';
 import styles from './room.module.css';
-import { SearchForm } from './search-form';
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('room');
@@ -95,8 +94,6 @@ export default async function RoomPage({
 
     return (
       <main className={styles.main}>
-        <SearchForm current={query} />
-
         {/* The count is announced rather than only shown: a reader who submits
             the form and hears nothing cannot tell a narrow result from a broken
             one (`CMS-007/T6`, `A11Y-R02`). It is polite, not assertive, because
@@ -275,8 +272,6 @@ export default async function RoomPage({
           )}
         </div>
       </section>
-
-      <SearchForm current={query} />
     </main>
   );
 }
