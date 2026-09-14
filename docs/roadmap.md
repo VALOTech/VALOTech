@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_318 tasks in the plan, 251 closed, 67 outstanding._
+_321 tasks in the plan, 251 closed, 70 outstanding._
 
 ---
 
@@ -59,9 +59,11 @@ _74/75 closed (98%) · 1 outstanding — 0 buildable now · 0 waiting on the own
 
 _The machinery every kind of writing shares — the editor, the media, the locale states, the audience rule, publishing, search — plus the account, configuration and logging surfaces an operator needs before anything is published. Building it once is the whole reason a report, an update and a deck are three navigations over one system rather than three systems._
 
-_69/73 closed (94%) · 4 outstanding — 3 buildable now · 1 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_69/74 closed (93%) · 5 outstanding — 4 buildable now · 1 waiting on the owner · 0 external residue · 0 parked to a later wave._
 
-- **ADMIN-001** · Account management — 10/10 closed
+- **ADMIN-001** · Account management — 10/11 closed · depth 5
+  - `[ ] ADMIN-001/T11` — Whether a person has invested or is deciding, carried on the account and set from their page
+
 - **CFG-001** · Runtime configuration — 8/8 closed
 - **CMS-003** · Media library — 10/10 closed
 - **CMS-005** · Locale variants and translation state — 6/6 closed
@@ -111,7 +113,7 @@ _54/63 closed (85%) · 9 outstanding — 4 buildable now · 1 waiting on the own
 
 _The reading surfaces, the room they sit in, and the gateway served by the application — which is what finally makes the gate on the two hidden chapters real rather than a stylesheet. This wave ends with the product complete and still unpublished; what publishes it is outside the waves, waiting on the owner._
 
-_6/57 closed (10%) · 51 outstanding — 51 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_6/59 closed (10%) · 53 outstanding — 53 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
 
 - **DECK-003** · Deck reading — 0/5 closed · depth 9
   - `[ ] DECK-003/T1` — One column with sections in order, the version and date on the page
@@ -126,11 +128,12 @@ _6/57 closed (10%) · 51 outstanding — 51 buildable now · 0 waiting on the ow
   - `[ ] DECK-004/T5` — The from-the-account view, listing every deck a person may read
   - `[ ] DECK-004/T6` — Bulk grant with the names shown before it commits, and no bulk revoke
 
-- **INV-001** · Investor room shell — 1/5 closed · depth 9
+- **INV-001** · Investor room shell — 1/6 closed · depth 9
   - `[~] INV-001/T3` — Flat navigation over four destinations, with the current one marked  · **Note:** the rail and its current-destination mark ship in apps/web/src/app/room/nav.tsx, which is a client component for one reason — the current path, which…
   - `[~] INV-001/T4` — The room's chrome is the gateway's, with no scene  · **Note:** the header ships in apps/web/src/app/room/layout.tsx — the mark, the wordmark with the second word in the accent, the rail and sign-out, on the gatew…
   - `[ ] INV-001/T2` — Empty and error states are different renderings, each saying which it is
   - `[ ] INV-001/T5` — An expired session returns the reader to where they were going
+  - `[ ] INV-001/T6` — The landing's blocks are ordered by who the reader is, and an unclassified reader has an order of their own
 
 - **LEGAL-GLOBAL-002** · Cookie and analytics posture — 0/5 closed · depth 9
   - `[ ] LEGAL-GLOBAL-002/T1` — The three categories, with `necessary` fixed on and both others off until a visitor says otherwise
@@ -162,9 +165,10 @@ _6/57 closed (10%) · 51 outstanding — 51 buildable now · 0 waiting on the ow
   - `[ ] INV-002/T6` — The invitation block, in twenty locales, carrying no fragment of what it invites to
   - `[!] INV-002/T1` — The gated components are not called for a reader who may not see them  · _in-graph_ · **Blocked by:** SITE-005/T1 — the gateway is still the static file, so there is no server response to withhold the gated chapters from; the gate they would be withhe…
 
-- **INV-003** · Portfolio progress — 3/5 closed · depth 10
+- **INV-003** · Portfolio progress — 3/6 closed · depth 10
   - `[ ] INV-003/T2` — Editing one product at a time, audited with the previous stage and headline
   - `[ ] INV-003/T3` — A changed stage offers a prefilled progress update, and can be declined
+  - `[ ] INV-003/T6` — One product's own page: its standing, and every update tagged to it
 
 - **OPS-001** · Hosting and deploy — 0/8 closed · depth 10
   - `[ ] OPS-001/T1` — Terraform under `deploy/`: VPC, ECS Fargate, ALB, RDS in private subnets, ECR, Route 53, ACM, with remote state and a l…

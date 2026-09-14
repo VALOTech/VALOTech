@@ -43,8 +43,39 @@ renders.
 | 3 | **The current report** — period, title, whether they have read it | Expected on a schedule; one line, not the document |
 | 4 | **Your decks** — what they have been granted | Read once, so it is present rather than prominent |
 
-Below those, the search field and the two filters. Above them, the room's own
-chrome: the mark, the locale control, the account control, sign-out.
+Below those, the search field and its filters. Which filters those are belongs to
+`CMS-007` and is named there rather than counted here: a number restated on this
+page is a number that disagrees with its own feature the first time one is added.
+The landing is where the field sits; once a reader has narrowed the room it heads
+its own results instead, because a field below the thing it filters is one they
+scroll past to change their mind. Above it, the room's own chrome: the mark, the
+locale control, the account control, sign-out.
+
+### Who the reader is
+
+The room serves two people whose reasons for being here are opposite: somebody
+who has already invested and comes to find out what has happened, and somebody
+still deciding who comes to be convinced. `accounts.investor_type` says which
+(`INV-DEC-02`), and the four blocks are the same four in a different order:
+
+| | `current` | `prospect` | null |
+|---|---|---|---|
+| 1 | Since your last visit | Your decks | What is new |
+| 2 | The stream | Where things stand | Where things stand |
+| 3 | Where things stand | The current report | The current report |
+| 4 | The current report | The stream | Your decks |
+| 5 | Your decks | — | — |
+
+**Null is not `prospect`.** An account nobody has classified gets the order the
+table above this one sets, because a reader the company has not described is one
+the room should not be guessing about — and the guess that costs most is showing
+the persuasion room to somebody who has already paid.
+
+**The type orders the page and never gates it.** What a reader may read stays
+entirely with `content_grants` and `audience` through `CMS-006`. A second thing
+that could withhold a document would be a second access model, and the second one
+is the one that goes stale when the rule changes; a reader set to the wrong type
+sees an oddly ordered page and never a document that is not theirs.
 
 **The gated gateway chapters** (`INV-002`) are reachable from here as a link back
 to the public page, where they now render. They are not duplicated into the room:
@@ -124,3 +155,4 @@ inlined.
 - `INV-001/T3` — Flat navigation over four destinations, with the current one marked
 - `INV-001/T4` — The room's chrome is the gateway's, with no scene
 - `INV-001/T5` — An expired session returns the reader to where they were going
+- `INV-001/T6` — The landing's blocks are ordered by who the reader is, and an unclassified reader has an order of their own

@@ -7,7 +7,7 @@ depends_on: [ADMIN-002, AUTH-003, AUTH-004, SEC-002]
 depended_by: [DATA-002, DECK-004, MAIL-001]
 layers_touched: [data, domain, service, api, frontend, ui]
 cross_cutting_rules: [DATA-R01, DATA-R02, DATA-R03, SEC-R04, A11Y-R01, A11Y-R02]
-status: implemented
+status: in-progress
 ---
 
 # `ADMIN-001` — Account management
@@ -265,3 +265,4 @@ action. **`DATA-002`** is the erasure design this implements the admin half of.
 - `ADMIN-001/T8` — Reinstating a suspended account restores it to active and is audited
 - `ADMIN-001/T9` — Audit resend-invitation and reset-password: two new audit.action values, and a recordAudit inside each act's transaction
 - `ADMIN-001/T10` — Correcting a person's name and address from their page, audited like every other act
+- `ADMIN-001/T11` — Whether a person has invested or is deciding, carried on the account and set from their page

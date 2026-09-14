@@ -137,3 +137,4 @@ operator asking what a stale board affects reads `§4` and not a graph.
 - `INV-003/T3` — A changed stage offers a prefilled progress update, and can be declined
 - `INV-003/T4` — All six always render, including paused, with an absent row filled rather than dropped
 - `INV-003/T5` — Stage is carried by a word as well as by colour, and the board states when it last changed
+- `INV-003/T6` — One product's own page: its standing, and every update tagged to it
