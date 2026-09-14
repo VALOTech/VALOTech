@@ -9,7 +9,7 @@ import styles from './privacy.module.css';
 export const metadata: Metadata = { title: 'Privacy' };
 
 /**
- * `GET /privacy` — what this room holds about the people who read it, why, for
+ * `GET /privacy` — what this hall holds about the people who read it, why, for
  * how long, and what they can ask for (`LEGAL-SG-001/T1`, `LEGAL-SG-001/T6`).
  *
  * **Written to be true rather than complete** (`LEGAL-SG-001` §3). It names the

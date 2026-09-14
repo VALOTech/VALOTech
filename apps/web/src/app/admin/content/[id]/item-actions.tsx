@@ -75,7 +75,7 @@ export interface ReportWithdrawalFacts {
   readonly period: string;
   /** Whether the period is left holding no published report at all. */
   readonly becomesGap: boolean;
-  /** The report the room would present as current afterwards, or `null`. */
+  /** The report the hall would present as current afterwards, or `null`. */
   readonly becomesCurrent: { readonly period: string; readonly title: string } | null;
 }
 
@@ -224,8 +224,8 @@ export function ItemActions({
             <p className={styles.quiet}>
               {`The archive then shows ${asReport.period} as a gap. `}
               {asReport.becomesCurrent === null
-                ? 'There is no other published report, so the room presents none as current.'
-                : `The room presents ${asReport.becomesCurrent.period} — ${asReport.becomesCurrent.title} — as the current report.`}
+                ? 'There is no other published report, so the hall presents none as current.'
+                : `The hall presents ${asReport.becomesCurrent.period} — ${asReport.becomesCurrent.title} — as the current report.`}
             </p>
           )}
           <button

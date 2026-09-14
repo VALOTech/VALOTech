@@ -136,7 +136,7 @@ function HeadingFields({
                 onChange={(e) => onChange(withSpeakerContext(block, e.target.value))}
               />
               <p id={`${id}-note`} className={styles.hint}>
-                Yours and the room&rsquo;s, never an investor&rsquo;s: this is stripped before a deck is served
+                Yours and the hall&rsquo;s, never an investor&rsquo;s: this is stripped before a deck is served
                 and appears only in the section overview.
               </p>
             </>

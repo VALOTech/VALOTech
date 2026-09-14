@@ -20,7 +20,7 @@
  * **Its own rate-limit keys, not sign-in's.** Both surfaces limit per account and
  * per address, but on separate counters: sharing them would let an anonymous
  * caller spend a named person's sign-in allowance by posting their address here,
- * which is a lockout of the one door into the room, reachable without a password.
+ * which is a lockout of the one door into the hall, reachable without a password.
  * The limiter's own note explains why a refused attempt records nothing — the
  * same lockout, arrived at from the other side.
  */

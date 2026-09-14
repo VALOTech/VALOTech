@@ -5,7 +5,7 @@
  * The request carries blocks and nothing else, and a case below proves it by
  * sending an `itemId` for a different item and watching the text land in the
  * draft report anyway — because a route that honoured it would let any admin
- * append arbitrary text to any content item in the room through a surface whose
+ * append arbitrary text to any content item in the hall through a surface whose
  * whole stated purpose is one destination.
  *
  * On a database of its own.
@@ -287,7 +287,7 @@ describe.skipIf(!HAS_DATABASE)('POST /admin/updates/to-report (POST-001/T5)', ()
 
     it('ignores a destination the caller supplies, and uses the one it chose', async () => {
       // **The security property.** A route that honoured an `itemId` from the
-      // request would let an admin append text to any item in the room through a
+      // request would let an admin append text to any item in the hall through a
       // surface that exists to reach exactly one.
       const report = await itemWithDraft('report', 'The report.', nextPeriod());
       const someoneElse = await itemWithDraft('update', 'Not the destination.', null);

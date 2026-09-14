@@ -19,7 +19,7 @@
  * which is exactly where a rollback has something to undo.
  *
  * It needs a database, and it runs against one of its own. The guard that
- * refuses to strand the room reads every active admin in the database
+ * refuses to strand the hall reads every active admin in the database
  * (`isLastActiveAdmin`), so a test of "the last one" is deterministic only when
  * this suite owns the whole set — and the development server it would otherwise
  * share carries other suites that create active admins of their own. So
@@ -639,7 +639,7 @@ describe.skipIf(!HAS_DATABASE)('ADMIN-001 account mutations', () => {
 
     it('ends a demoted admin session, so no elevated session outlives the demotion', async () => {
       const id = await newAccount('active', 'admin');
-      // A second admin, so demoting the first does not strand the room and is
+      // A second admin, so demoting the first does not strand the hall and is
       // not refused for it (`ADMIN-DEC-01`); that refusal has its own tests.
       await newAccount('active', 'admin');
       const token = await tokenFor(id);
@@ -719,7 +719,7 @@ describe.skipIf(!HAS_DATABASE)('ADMIN-001 account mutations', () => {
     it('refuses to suspend the last admin who can sign in, writing nothing', async () => {
       const admin = await newAccount('active', 'admin');
 
-      // The only admin who can act. Suspending it leaves the room with nobody to
+      // The only admin who can act. Suspending it leaves the hall with nobody to
       // undo anything, and suspension is a one-way door in code — nothing sets a
       // suspended account back to active yet.
       expect(await suspendAccount(admin, randomUUID())).toBe(false);
@@ -741,8 +741,8 @@ describe.skipIf(!HAS_DATABASE)('ADMIN-001 account mutations', () => {
       const staying = await newAccount('active', 'admin');
       const going = await newAccount('active', 'admin');
 
-      // Not the last: `staying` still answers for the room, so the guard permits
-      // the act it exists only to refuse when it would strand the room.
+      // Not the last: `staying` still answers for the hall, so the guard permits
+      // the act it exists only to refuse when it would strand the hall.
       expect(await suspendAccount(going, randomUUID())).toBe(true);
 
       expect(await stateOf(going)).toBe('suspended');
@@ -754,7 +754,7 @@ describe.skipIf(!HAS_DATABASE)('ADMIN-001 account mutations', () => {
       // The sole admin, and a separate investor as the subject. The guard turns
       // on whether the subject is the last admin, not on whether an admin
       // exists: one that refused on the count alone would make an investor
-      // unsuspendable whenever the room held exactly one admin.
+      // unsuspendable whenever the hall held exactly one admin.
       await newAccount('active', 'admin');
       const investor = await newAccount('active', 'investor');
 
@@ -770,7 +770,7 @@ describe.skipIf(!HAS_DATABASE)('ADMIN-001 account mutations', () => {
       await newAccount('suspended', 'admin');
 
       // `active` is the last admin who can act. A guard counting the role alone
-      // would see two admins here and allow both acts, leaving the room with no
+      // would see two admins here and allow both acts, leaving the hall with no
       // admin able to sign in.
       expect(await suspendAccount(active, randomUUID())).toBe(false);
       expect(await changeRole(active, 'investor', randomUUID())).toBe(false);
@@ -802,7 +802,7 @@ describe.skipIf(!HAS_DATABASE)('ADMIN-001 account mutations', () => {
       // serialise rather than deadlock. One demotes; the other, re-reading the
       // set the first left, finds a single admin who can sign in and is refused.
       // Without the re-read under the lock both would read two admins and commit
-      // to zero, and the room would have nobody able to sign in.
+      // to zero, and the hall would have nobody able to sign in.
       const answers = await Promise.all([
         changeRole(first, 'investor', randomUUID()),
         changeRole(second, 'investor', randomUUID()),
@@ -917,7 +917,7 @@ describe.skipIf(!HAS_DATABASE)('ADMIN-001 account mutations', () => {
       const admin = await newAccount('active', 'admin');
 
       // The only admin who can act, and erasure has no inverse: stranding the
-      // room this way could not be undone even from the database.
+      // hall this way could not be undone even from the database.
       expect(await eraseAccount(admin, randomUUID())).toBe(false);
 
       expect(await accountExists(admin)).toBe(true);
@@ -1109,7 +1109,7 @@ describe.skipIf(!HAS_DATABASE)('ADMIN-001 account mutations', () => {
       await markReportRead(person, report.id);
       await getDb()
         .insertInto('mail_log')
-        .values({ account_id: person, subject: 'An invitation to the room', kind: 'transactional', state: 'queued' })
+        .values({ account_id: person, subject: 'An invitation to the hall', kind: 'transactional', state: 'queued' })
         .execute();
 
       const out = await exportPersonData(person);
@@ -1122,7 +1122,7 @@ describe.skipIf(!HAS_DATABASE)('ADMIN-001 account mutations', () => {
       expect(out?.decksRead[0]?.version).toBe(3);
       expect(out?.reportsRead).toHaveLength(1);
       expect(out?.reportsRead[0]?.reportId).toBe(report.id);
-      expect(out?.mail).toEqual([{ subject: 'An invitation to the room', at: expect.any(Date) }]);
+      expect(out?.mail).toEqual([{ subject: 'An invitation to the hall', at: expect.any(Date) }]);
     });
 
     it('scopes to the one account and not another person', async () => {

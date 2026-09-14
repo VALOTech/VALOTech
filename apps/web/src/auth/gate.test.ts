@@ -263,7 +263,7 @@ describe.skipIf(!HAS_DATABASE)('the role gate', () => {
       });
     });
 
-    it('lets an investor into a room surface', async () => {
+    it('lets an investor into a hall surface', async () => {
       const answer = await requireInvestor(presenting(await issuedFor(INVESTOR)));
 
       expect(actorOf(answer)).toEqual({ id: await accountId(INVESTOR), role: 'investor' });

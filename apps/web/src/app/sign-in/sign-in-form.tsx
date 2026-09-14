@@ -38,7 +38,7 @@ export function SignInForm(): ReactElement {
       });
 
       if (response.status === 204) {
-        // The session cookie is set. The room is the application root until
+        // The session cookie is set. The hall is the application root until
         // INV-001 mounts one of its own; a full navigation, not a client route,
         // so the next response is fetched under the new cookie.
         window.location.assign('/');

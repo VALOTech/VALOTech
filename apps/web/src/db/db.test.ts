@@ -371,7 +371,7 @@ const INSERTABLE_SAMPLES: { readonly [T in keyof Database]: Insertable<Database[
     after: { current_revision_id: ID },
   },
   config: {
-    key: 'room.banner',
+    key: 'hall.banner',
     value: 'The fourth quarter report lands on the fifteenth.',
     previous_value: null,
     changed_by: ID,
@@ -381,7 +381,7 @@ const INSERTABLE_SAMPLES: { readonly [T in keyof Database]: Insertable<Database[
   // point of writing it first.
   mail_log: {
     account_id: ID,
-    subject: 'An invitation to the investor room',
+    subject: 'An invitation to the investor hall',
     kind: 'transactional',
     state: 'queued',
     queue_id: null,

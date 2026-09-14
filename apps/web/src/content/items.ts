@@ -115,7 +115,7 @@ export interface ConsoleItem {
  * Everything an admin has written, most recently changed first (`CMS-002/T8`).
  *
  * A staff read, and deliberately not a reader-scoped one: the question is what
- * the room holds rather than what any one person may see, so it composes no
+ * the hall holds rather than what any one person may see, so it composes no
  * audience predicate and only the console reaches it, behind the admin gate
  * (`ADMIN-002/T1`). Every read that answers a *reader* still takes that reader
  * and composes `visibleTo` (`CMS-001/T6`).

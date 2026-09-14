@@ -5,7 +5,7 @@
  * is long, periodic and expected, so the work is in making it comparable. An
  * update is short, occasional and unscheduled, so the work is in **making it
  * cheap enough that it actually gets written** — a surface that takes twenty
- * minutes produces four entries a year, which is a room nobody signs in to.
+ * minutes produces four entries a year, which is a hall nobody signs in to.
  *
  * That is why this exists at all rather than the composer calling
  * `createItem` and then `saveDraft`. Those two are the generic path: an author
@@ -95,7 +95,7 @@ export async function composeUpdate(input: NewUpdate): Promise<ContentItem> {
 
   for (let attempt = 0; attempt < SLUG_ATTEMPTS; attempt += 1) {
     // Read outside the transaction: it is a snapshot either way, and holding it
-    // open across the read would serialise every compose in the room against
+    // open across the read would serialise every compose in the hall against
     // each other for the sake of a suffix. The unique index is what actually
     // settles the address; this only proposes a likely-free one.
     const taken = await getDb()

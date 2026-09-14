@@ -1,7 +1,7 @@
 /**
  * The create route against a real PostgreSQL (`CMS-002/T9`).
  *
- * An item is the one thing in this room that had no way to exist through the
+ * An item is the one thing in this hall that had no way to exist through the
  * product, so what this pins is that the way now exists and that it is narrow.
  * **The type decides what else is demanded** — an update carries a kind, a
  * report a period, a deck neither — and the check is here as well as in the

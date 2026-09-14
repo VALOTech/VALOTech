@@ -10,7 +10,7 @@
  * their next sign-in.
  *
  * Resolving also slides the session forward: `last_seen_at` and `expires_at`
- * both move. That is a write on every gated request, which a room with a
+ * both move. That is a write on every gated request, which a hall with a
  * handful of readers affords; if it ever stops being affordable the write
  * becomes periodic rather than the expiry becoming absolute, because an
  * investor timed out mid-report costs more than the row does.
@@ -200,7 +200,7 @@ function notFound(): Response {
 }
 
 /**
- * The reader of a room surface, or the response to return instead.
+ * The reader of a hall surface, or the response to return instead.
  *
  * An admin passes: they may read what an investor may. Both roles are named
  * rather than the check being left to every account resolving, because a third

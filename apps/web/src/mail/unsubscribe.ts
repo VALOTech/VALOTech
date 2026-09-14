@@ -17,13 +17,13 @@
  * signature is not an unsubscribe token and an unsubscribe token is not a
  * session — presenting one where the other is expected fails the comparison
  * rather than being read as the wrong thing. And the only act it admits is the
- * one below: it opens no room, reads no document and names no address.
+ * one below: it opens no hall, reads no document and names no address.
  *
  * **Rotating `SESSION_SECRET` invalidates every link already in an inbox.** That
  * is the cost of deriving rather than storing, and it is the same lever
  * `CRED-001` describes for signing every session out at once. It is not a dead
  * end: the page says a link that no longer works is one to sign in past, and the
- * preference inside the room writes the same row.
+ * preference inside the hall writes the same row.
  *
  * The row records the SHA-256 of the token that set it, never the token, for the
  * reason `AUTH-003` records its own the same way — a table holding a presentable
@@ -124,7 +124,7 @@ export type MailPreference =
   | { readonly stopped: false }
   | { readonly stopped: true; readonly at: Date; readonly source: UnsubscribeSource };
 
-/** What an account's preference is now — what the room page and the link page both read. */
+/** What an account's preference is now — what the hall page and the link page both read. */
 export async function investorMailPreference(accountId: string): Promise<MailPreference> {
   const row = await getDb()
     .selectFrom('unsubscribes')
@@ -245,7 +245,7 @@ export async function stopInvestorMail(stop: MailStop): Promise<boolean> {
  * Let investor mail reach an account again, at the request of the person whose
  * account it is. Answers whether a row was removed.
  *
- * Only the person's own doing, and only from inside the room, because the trail
+ * Only the person's own doing, and only from inside the hall, because the trail
  * has no action that names it: `AUDIT_ACTIONS` is a closed vocabulary the
  * database enforces, and the one mail-preference act in it is the stop. An
  * admin resuming somebody else's mail is a privileged write `SEC-R04` requires

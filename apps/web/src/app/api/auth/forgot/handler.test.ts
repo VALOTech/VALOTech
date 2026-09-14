@@ -349,7 +349,7 @@ describe.skipIf(!HAS_DATABASE)('POST /api/auth/forgot (SEC-001/T4)', () => {
       }
 
       // The counters are namespaced apart on purpose: if they were shared,
-      // anybody could lock a named person out of the one door into the room by
+      // anybody could lock a named person out of the one door into the hall by
       // posting their address here, with no password and no session.
       const { getRateLimiter } = await import('../../../../auth/rate-limit');
       expect(getRateLimiter().hit(`account:${email}`).limited).toBe(false);

@@ -2,7 +2,7 @@
  * The update stream (`POST-002`, `CMS-R03`, `DATA-R05`).
  *
  * Updates are the one content type with a genuinely public audience, so this is
- * where the room's access model meets the public page. The room's stream
+ * where the hall's access model meets the public page. The hall's stream
  * (`INV-001`) and the gateway's news (`SITE-005`) are the same query with a
  * different reader — the public page passes a null reader, and the predicate
  * reduces to public-and-published inside `access.ts`'s `visibleTo` rather than in

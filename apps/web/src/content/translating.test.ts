@@ -6,7 +6,7 @@
  * the language reviewed. The three properties worth pinning are the ones a screen
  * cannot show you.
  *
- * **A seed is the source, exactly.** The room runs no translation service
+ * **A seed is the source, exactly.** The hall runs no translation service
  * (`CMS-DEC-04`), so a seeded row holds the English with its marks and its
  * pictures intact — and holds it in the state that is served to nobody.
  *

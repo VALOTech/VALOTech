@@ -22,7 +22,7 @@ const LANGUAGE_NAMES = new Intl.DisplayNames(['en'], { type: 'language' });
  * otherwise the newest published. That is the revision `seedLocale` writes and
  * the one an admin is working on — an earlier published revision is reachable
  * only by withdrawing back to it, and translating it would be translating text
- * the room is not showing.
+ * the hall is not showing.
  *
  * English has no page here, because the authored language holds no locale row:
  * the revision's own blocks are it (`CMS-005` section 3). A locale outside the

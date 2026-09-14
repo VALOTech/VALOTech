@@ -116,7 +116,7 @@ function said(action: AccountAction, answer: AccountActionAnswer, self: boolean)
     case 'suspend':
       return changed
         ? 'Suspended. Every live session ended, and an invitation they had not accepted has stopped working.'
-        : 'Nothing changed: the account is already suspended, or suspending it would leave the room with no admin who can sign in.';
+        : 'Nothing changed: the account is already suspended, or suspending it would leave the hall with no admin who can sign in.';
     case 'reinstate':
       return changed
         ? 'Reinstated. They can sign in again, and will have to — suspension ended the sessions and nothing restores them.'

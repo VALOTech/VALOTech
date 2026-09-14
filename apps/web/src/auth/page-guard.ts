@@ -59,9 +59,9 @@ export async function requireAdminPage(): Promise<Actor> {
 }
 
 /**
- * The reader of a room surface, or the page never renders: a signed-out reader
+ * The reader of a hall surface, or the page never renders: a signed-out reader
  * is sent to the sign-in form. An admin passes where an investor does, because
- * the gate lets an admin read whatever an investor may (`AUTH-002`); a room
+ * the gate lets an admin read whatever an investor may (`AUTH-002`); a hall
  * surface such as the session list (`AUTH-004/T2`) is a reader's own, not the
  * console's, so it does not turn a signed-in investor away.
  */

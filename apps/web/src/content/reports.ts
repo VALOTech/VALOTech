@@ -13,7 +13,7 @@
  * first report, having no predecessor, opens with a suggested structure, and
  * either way the headings are ordinary blocks an author may delete, not a form.
  *
- * `currentReport` is the report the room presents as current: the published one of
+ * `currentReport` is the report the hall presents as current: the published one of
  * the greatest period the reader may read (`RPT-002/T4`), by period rather than by
  * publication date. `markReportRead` records that an investor has opened a report
  * (`RPT-002/T6`) — the one piece of behavioural data the archive needs to answer
@@ -26,7 +26,7 @@
  * question with no answer (`POST-001/T5`).
  *
  * `reportWithdrawal` is the exception and is a staff read: it answers what
- * withdrawing a report would do to the archive and to what the room presents as
+ * withdrawing a report would do to the archive and to what the hall presents as
  * current (`RPT-002/T5`), and the question has no reader in it — an admin is
  * asking what everyone will see, not what they themselves may.
  */
@@ -70,7 +70,7 @@ export async function prefillStructureFor(period: string, reader: Actor | null):
 }
 
 /**
- * The room's current report: the published report of the greatest period this
+ * The hall's current report: the published report of the greatest period this
  * reader may read (`RPT-002/T4`).
  *
  * By period, not by publication date — the two differ when a late report is
@@ -142,7 +142,7 @@ export interface ReportWithdrawal {
   readonly period: string;
   /** Whether the period is left with no published report at all. */
   readonly becomesGap: boolean;
-  /** The report the room would present as current afterwards, or `null` for none. */
+  /** The report the hall would present as current afterwards, or `null` for none. */
   readonly becomesCurrent: { readonly period: string; readonly title: string } | null;
 }
 
@@ -151,7 +151,7 @@ export interface ReportWithdrawal {
  * not a published report (`RPT-002/T5`).
  *
  * `RPT-002` §3 asks the confirmation to say two things, because "withdraw" reads
- * as "hide from the list" and is also "the room now presents a different
+ * as "hide from the list" and is also "the hall now presents a different
  * document as current". Both are read here rather than assembled at the surface,
  * so the sentence cannot describe an outcome the store would not produce.
  *
@@ -165,7 +165,7 @@ export interface ReportWithdrawal {
  * written.
  *
  * What becomes current is read with an admin's reach, because the question is
- * what the room will present and not what one reader may see; `currentReport`
+ * what the hall will present and not what one reader may see; `currentReport`
  * would otherwise need a reader nobody is asking about. It is taken after
  * excluding this item, since this is the one being withdrawn.
  */
@@ -185,7 +185,7 @@ export async function reportWithdrawal(itemId: string): Promise<ReportWithdrawal
 
   const becomesGap = (await withdrawReturnsTo(itemId)) === null;
 
-  // A report still holding its period stays the room's current one, so nothing
+  // A report still holding its period stays the hall's current one, so nothing
   // takes its place and there is no second document to name.
   const successor = becomesGap
     ? await getDb()

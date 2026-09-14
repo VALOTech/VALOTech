@@ -78,7 +78,7 @@ function fakeMailer(): Mailer & { readonly handed: readonly string[] } {
 }
 
 describe.skipIf(!HAS_DATABASE)('retrying the ones that failed (MAIL-001/T6)', () => {
-  const message = compose(SUBJECT, 'Hello.\n\nThe numbers are in the room.');
+  const message = compose(SUBJECT, 'Hello.\n\nThe numbers are in the hall.');
 
   async function account(name: string): Promise<string> {
     const row = await getDb()

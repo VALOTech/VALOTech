@@ -22,7 +22,7 @@ export async function generateMetadata(): Promise<Metadata> {
  * travels between them, and a way back matters most to the person who arrived
  * here by mistake.
  *
- * The room is invite-only, so this page names no account and offers no way to
+ * The hall is invite-only, so this page names no account and offers no way to
  * make one — it asks for an address and says the same thing whatever was typed.
  * The fallback when the message never arrives is an admin resetting from the
  * person page, because SMTP reports no bounce and a reset mail lost in transit

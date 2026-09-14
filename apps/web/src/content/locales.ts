@@ -12,7 +12,7 @@
  * from the access-checked read and the reader's requested locale; `CMS-004` reads
  * the same rows to count what a publish will and will not show.
  *
- * This module also seeds a locale (`CMS-005/T3`). The room runs no translation
+ * This module also seeds a locale (`CMS-005/T3`). The hall runs no translation
  * service (`CMS-DEC-04`), so what a seed produces is the source language under
  * the target's label, in the pre-review state, served to nobody — the thing an
  * admin then translates rather than a translation.
@@ -95,7 +95,7 @@ export type SeedOutcome =
  * **The latest revision** is the one seeded: the open draft while one is open,
  * and otherwise the newest published. It is the revision an admin is working on
  * — an earlier published one is reachable only by withdrawing back to it, and a
- * translation of it would be a translation of text the room is not showing.
+ * translation of it would be a translation of text the hall is not showing.
  *
  * The blocks are copied **by the database**, from the revision row into the
  * locale row, so what lands is the source document byte for byte: a `heading`

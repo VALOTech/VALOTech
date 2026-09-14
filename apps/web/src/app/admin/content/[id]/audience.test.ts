@@ -22,7 +22,7 @@
  * published revision falls back to its first and keeps the period, so the gap is
  * read rather than assumed and the suite drives both.
  *
- * On a database of its own: what the room's current report is, and which
+ * On a database of its own: what the hall's current report is, and which
  * accounts hold a grant, are questions about every row that exists, and a shared
  * database carries other suites' reports through the same reads.
  */

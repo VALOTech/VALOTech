@@ -43,7 +43,7 @@ const STATE_LABEL: Record<CellState, string> = {
  * **latest** column opens that language's review screen, and every other column
  * is history. Only the latest revision can be translated — an earlier published
  * one is reachable only by withdrawing back to it, and translating it would be
- * translating text the room is not showing.
+ * translating text the hall is not showing.
  *
  * The state is carried by a word as well as a colour (`A11Y-R03`). The `/admin`
  * segment layout has already resolved the admin (`ADMIN-002`), and this read is

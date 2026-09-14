@@ -3,7 +3,7 @@
  * `POST-002/T5`).
  *
  * The audience is a column the read predicate turns into an answer
- * (`CMS-006`), so this route writes one value and the whole room follows: no
+ * (`CMS-006`), so this route writes one value and the whole hall follows: no
  * cache to clear, no second list to keep, no template filter to remember. The
  * act itself is `changeAudience`'s, where the column write and the
  * `content.audience_change` audit commit as one (`CMS-006/T6`, `SEC-R04`).

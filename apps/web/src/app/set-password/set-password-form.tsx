@@ -53,7 +53,7 @@ export function SetPasswordForm({ token }: { readonly token: string }): ReactEle
       });
 
       if (response.status === 204) {
-        // Set and signed in; the room is the application root until INV-001
+        // Set and signed in; the hall is the application root until INV-001
         // mounts one. A full navigation, so the next response is fetched under
         // the new cookie.
         window.location.assign('/');

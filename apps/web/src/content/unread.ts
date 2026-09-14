@@ -1,7 +1,7 @@
 /**
  * How many published updates a reader has not opened (`INV-001/T1`).
  *
- * The room's landing surface leads with this number because it is the question
+ * The hall's landing surface leads with this number because it is the question
  * the reader arrived with — what has happened since I last looked (`INV-001` §3).
  *
  * It counts against the per-account read state `RPT-002` defines rather than a
@@ -15,7 +15,7 @@
  * the intended behaviour rather than an oversight.** Objection deletes their
  * rows and stops new ones being written (`LEGAL-GLOBAL-001/T3`), so nothing is
  * ever marked read and the count stands at everything they may see.
- * `LEGAL-GLOBAL-001` §3 settles this deliberately: the room keeps working and
+ * `LEGAL-GLOBAL-001` §3 settles this deliberately: the hall keeps working and
  * the unread marking degrades, which is the worse experience the person chose.
  * No branch here detects the flag — a count that quietly went silent for them
  * would be a second, unstated rule about who gets the feature.
@@ -70,7 +70,7 @@ export async function unreadUpdateCount(reader: Actor | null): Promise<number | 
 /**
  * Whether this reader has opened one particular item (`INV-001/T1`).
  *
- * The room's landing surface says of the current report whether it has been
+ * The hall's landing surface says of the current report whether it has been
  * read, which is one row rather than the count above — a reader with nothing
  * outstanding still wants to know they have seen this quarter's.
  *

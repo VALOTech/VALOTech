@@ -186,7 +186,7 @@ describe.skipIf(!HAS_DATABASE)('the unread update count (INV-001/T1)', () => {
   });
 
   it('shows everything as new to a reader who objected to read-tracking', async () => {
-    // LEGAL-GLOBAL-001 §3: the room keeps working and the marking degrades, which
+    // LEGAL-GLOBAL-001 §3: the hall keeps working and the marking degrades, which
     // is the worse experience the person chose. Their existing rows are deleted
     // and no new one is written, so the count is everything they may see — not a
     // silent badge, and not zero.
@@ -204,7 +204,7 @@ describe.skipIf(!HAS_DATABASE)('the unread update count (INV-001/T1)', () => {
   // are counts of what this reader may see. A test that adds to the world the
   // earlier ones measure is a test that breaks them from behind.
   it('reports whether one particular item has been opened', async () => {
-    // The room says of the current report whether it has been read, which is one
+    // The hall says of the current report whether it has been read, which is one
     // row rather than the count: a reader with nothing outstanding still wants to
     // know they have seen this quarter's.
     const fresh = await publishedUpdate('single-read', 'public');

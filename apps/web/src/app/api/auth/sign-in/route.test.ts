@@ -437,7 +437,7 @@ describe.skipIf(!HAS_DATABASE)('POST /api/auth/sign-in', () => {
       ['an invited account that has no password yet', INVITED, PASSWORD],
     ])('leaves it exactly as it was after %s', async (_case, email, password) => {
       // A refused attempt is not a sign-in. A column that moved here would name
-      // whoever was guessing as the person who was last in the room, which is
+      // whoever was guessing as the person who was last in the hall, which is
       // the opposite of what an admin reads the list for.
       const untouched = new Date('2020-02-29T12:00:00.000Z');
       await setLastSignIn(email, untouched);

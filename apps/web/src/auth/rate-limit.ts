@@ -67,7 +67,7 @@ export class RateLimiter {
       // the moment it aged out, so the window would slide without ever
       // emptying and a client that honours the `Retry-After` it is sent would
       // hold its own key locked out for as long as it kept trying -- a
-      // permanent lockout of a named person on the one door into the room. The
+      // permanent lockout of a named person on the one door into the hall. The
       // oldest allowed attempt leaving the window is what clears the key.
       this.#attempts.set(key, attempts);
       const clearsAt = (attempts[0] ?? now) + this.#windowMs;

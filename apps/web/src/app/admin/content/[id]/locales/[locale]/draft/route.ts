@@ -2,7 +2,7 @@
  * `POST /admin/content/<id>/locales/<locale>/draft` — start a translation
  * (`CMS-005/T3`).
  *
- * It seeds the locale with the source blocks and nothing more. The room runs no
+ * It seeds the locale with the source blocks and nothing more. The hall runs no
  * translation service (`CMS-DEC-04`), so what this creates is the English under
  * another language's label, in the pre-review state, served to no reader
  * (`CMS-R05`) — the thing an admin then translates in the review screen.

@@ -136,7 +136,7 @@ function sequenceMailer(): SequenceMailer {
 }
 
 describe.skipIf(!HAS_DATABASE)('the send loop (MAIL-001/T5)', () => {
-  const message = compose('A note for the room', 'Hello.\n\nThe quarter closed well.');
+  const message = compose('A note for the hall', 'Hello.\n\nThe quarter closed well.');
 
   async function account(name: string): Promise<string> {
     const row = await getDb()

@@ -148,8 +148,8 @@ describe.skipIf(!HAS_DATABASE)('CFG-001/T8 — the settings surface', () => {
       const settings = await settingsForConsole();
 
       expect(settings.map((setting) => setting.key)).toEqual([
-        'room.banner',
-        'room.signin_message',
+        'hall.banner',
+        'hall.signin_message',
         'mail.enabled',
         'privacy.contact',
       ]);
@@ -169,9 +169,9 @@ describe.skipIf(!HAS_DATABASE)('CFG-001/T8 — the settings surface', () => {
     });
 
     it('shows what is in force, what a revert would restore, and who moved it', async () => {
-      await change('room.banner', 'We are raising');
+      await change('hall.banner', 'We are raising');
 
-      expect(await shown('room.banner')).toMatchObject({
+      expect(await shown('hall.banner')).toMatchObject({
         value: 'We are raising',
         fallback: '',
         // The first change's previous value is the declared default, so reverting
@@ -179,16 +179,16 @@ describe.skipIf(!HAS_DATABASE)('CFG-001/T8 — the settings surface', () => {
         previousValue: '',
         changedBy: 'admin',
       });
-      expect((await shown('room.banner'))?.changedAt).not.toBeNull();
+      expect((await shown('hall.banner'))?.changedAt).not.toBeNull();
     });
 
     it('keeps a setting listed after the account that changed it is erased, naming nobody', async () => {
       const other = await seed('erased@config-console.test', 'admin');
-      await change('room.banner', 'Theirs', other.header);
+      await change('hall.banner', 'Theirs', other.header);
 
       await getDb().deleteFrom('accounts').where('id', '=', other.id).execute();
 
-      expect(await shown('room.banner')).toMatchObject({ value: 'Theirs', changedBy: null });
+      expect(await shown('hall.banner')).toMatchObject({ value: 'Theirs', changedBy: null });
     });
   });
 
@@ -213,15 +213,15 @@ describe.skipIf(!HAS_DATABASE)('CFG-001/T8 — the settings surface', () => {
     });
 
     it('refuses a text value past its bound with the bound, changing nothing', async () => {
-      const response = await change('room.banner', 'x'.repeat(281));
+      const response = await change('hall.banner', 'x'.repeat(281));
 
       expect(response.status).toBe(400);
       expect(((await response.json()) as { detail?: string }).detail).toContain('280');
-      expect((await shown('room.banner'))?.value).toBe('');
+      expect((await shown('hall.banner'))?.value).toBe('');
     });
 
     it('answers 404 for a key the registry does not declare', async () => {
-      const response = await change('room.colour', 'blue');
+      const response = await change('hall.colour', 'blue');
 
       expect(response.status).toBe(404);
       expect(await response.json()).toEqual({ error: 'unknown_key' });
@@ -235,24 +235,24 @@ describe.skipIf(!HAS_DATABASE)('CFG-001/T8 — the settings surface', () => {
 
     it('refuses a body with no string value', async () => {
       for (const body of [{}, { value: 3 }, { value: null }, 'not json at all']) {
-        const response = await call(PUT, 'PUT', 'room.banner', body, { cookie: adminCookie });
+        const response = await call(PUT, 'PUT', 'hall.banner', body, { cookie: adminCookie });
 
         expect(response.status).toBe(400);
       }
-      expect((await shown('room.banner'))?.value).toBe('');
+      expect((await shown('hall.banner'))?.value).toBe('');
     });
   });
 
   describe('reverting', () => {
     it('goes one step back, and twice returns to where it started', async () => {
-      await change('room.banner', 'First');
-      await change('room.banner', 'Second');
+      await change('hall.banner', 'First');
+      await change('hall.banner', 'Second');
 
-      expect((await call(REVERT, 'POST', 'room.banner', undefined, { cookie: adminCookie })).status).toBe(200);
-      expect((await shown('room.banner'))?.value).toBe('First');
+      expect((await call(REVERT, 'POST', 'hall.banner', undefined, { cookie: adminCookie })).status).toBe(200);
+      expect((await shown('hall.banner'))?.value).toBe('First');
 
-      expect((await call(REVERT, 'POST', 'room.banner', undefined, { cookie: adminCookie })).status).toBe(200);
-      expect((await shown('room.banner'))?.value).toBe('Second');
+      expect((await call(REVERT, 'POST', 'hall.banner', undefined, { cookie: adminCookie })).status).toBe(200);
+      expect((await shown('hall.banner'))?.value).toBe('Second');
     });
 
     it('restores the declared default when the first change is reverted', async () => {
@@ -264,7 +264,7 @@ describe.skipIf(!HAS_DATABASE)('CFG-001/T8 — the settings surface', () => {
     });
 
     it('has nothing to go back to for a key that has never changed', async () => {
-      const response = await call(REVERT, 'POST', 'room.banner', undefined, { cookie: adminCookie });
+      const response = await call(REVERT, 'POST', 'hall.banner', undefined, { cookie: adminCookie });
 
       expect(response.status).toBe(409);
       expect(await response.json()).toEqual({ error: 'nothing_to_revert' });
@@ -273,47 +273,47 @@ describe.skipIf(!HAS_DATABASE)('CFG-001/T8 — the settings surface', () => {
 
   describe('who may change a setting', () => {
     it('answers an investor 404, changing nothing', async () => {
-      const response = await change('room.banner', 'Theirs', investorCookie);
+      const response = await change('hall.banner', 'Theirs', investorCookie);
 
       expect(response.status).toBe(404);
-      expect((await shown('room.banner'))?.value).toBe('');
+      expect((await shown('hall.banner'))?.value).toBe('');
     });
 
     it('sends a caller with no session to sign in, changing nothing', async () => {
-      const response = await call(PUT, 'PUT', 'room.banner', { value: 'Nobody' });
+      const response = await call(PUT, 'PUT', 'hall.banner', { value: 'Nobody' });
 
       expect(response.status).toBe(303);
-      expect((await shown('room.banner'))?.value).toBe('');
+      expect((await shown('hall.banner'))?.value).toBe('');
     });
 
     it('refuses a cross-origin change before anything else', async () => {
       const response = await call(
         PUT,
         'PUT',
-        'room.banner',
+        'hall.banner',
         { value: 'Elsewhere' },
         { cookie: adminCookie, origin: 'https://elsewhere.test' },
       );
 
       expect(response.status).toBe(403);
-      expect((await shown('room.banner'))?.value).toBe('');
+      expect((await shown('hall.banner'))?.value).toBe('');
     });
 
     it('refuses a cross-origin revert, and an investor’s', async () => {
-      await change('room.banner', 'Set');
+      await change('hall.banner', 'Set');
 
       expect(
         (
-          await call(REVERT, 'POST', 'room.banner', undefined, {
+          await call(REVERT, 'POST', 'hall.banner', undefined, {
             cookie: adminCookie,
             origin: 'https://elsewhere.test',
           })
         ).status,
       ).toBe(403);
       expect(
-        (await call(REVERT, 'POST', 'room.banner', undefined, { cookie: investorCookie })).status,
+        (await call(REVERT, 'POST', 'hall.banner', undefined, { cookie: investorCookie })).status,
       ).toBe(404);
-      expect((await shown('room.banner'))?.value).toBe('Set');
+      expect((await shown('hall.banner'))?.value).toBe('Set');
     });
   });
 
@@ -328,8 +328,8 @@ describe.skipIf(!HAS_DATABASE)('CFG-001/T8 — the settings surface', () => {
         .limit(1)
         .executeTakeFirst();
 
-      await change('room.banner', 'Raising');
-      await call(REVERT, 'POST', 'room.banner', undefined, { cookie: adminCookie });
+      await change('hall.banner', 'Raising');
+      await call(REVERT, 'POST', 'hall.banner', undefined, { cookie: adminCookie });
 
       const audit = await getDb()
         .selectFrom('audit')
@@ -344,12 +344,12 @@ describe.skipIf(!HAS_DATABASE)('CFG-001/T8 — the settings surface', () => {
       // The key rides in the values, because `subject_id` is a uuid and a trail
       // naming only the setting could not say which way it moved.
       expect(audit[0]).toMatchObject({
-        before: { key: 'room.banner', value: '' },
-        after: { key: 'room.banner', value: 'Raising' },
+        before: { key: 'hall.banner', value: '' },
+        after: { key: 'hall.banner', value: 'Raising' },
       });
       expect(audit[1]).toMatchObject({
-        before: { key: 'room.banner', value: 'Raising' },
-        after: { key: 'room.banner', value: '' },
+        before: { key: 'hall.banner', value: 'Raising' },
+        after: { key: 'hall.banner', value: '' },
       });
     });
   });

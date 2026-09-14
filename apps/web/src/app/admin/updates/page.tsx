@@ -15,7 +15,7 @@ export const metadata: Metadata = { title: 'Write an update' };
  * are answering different questions. That form asks what an author is starting;
  * this one assumes the answer and takes the thing itself. An update that has to
  * be started, named, addressed and then written is an update that does not get
- * written, and a room with four entries a year is a room nobody signs in to.
+ * written, and a hall with four entries a year is a hall nobody signs in to.
  *
  * The heading says what filing does and does not do. Publishing is `CMS-004`'s,
  * one navigation on, with the preview and the audit every other kind of writing

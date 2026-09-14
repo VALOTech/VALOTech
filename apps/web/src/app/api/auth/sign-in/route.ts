@@ -1,5 +1,5 @@
 /**
- * `POST /api/auth/sign-in` — the one door into the investor room (`AUTH-001`).
+ * `POST /api/auth/sign-in` — the one door into the investor hall (`AUTH-001`).
  *
  * Three states fail identically: an address no account holds, a wrong password,
  * and an account that is not active. One status, one body, and one cost in

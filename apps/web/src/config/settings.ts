@@ -52,13 +52,13 @@ interface SettingSpec {
  * `string | number | boolean`.
  */
 export const SETTINGS = {
-  'room.banner': {
+  'hall.banner': {
     type: 'text',
     fallback: '',
     maxLength: 280,
     what: 'A line at the top of the investor hall. Empty shows nothing.',
   },
-  'room.signin_message': {
+  'hall.signin_message': {
     type: 'text',
     fallback: '',
     maxLength: 280,

@@ -11,7 +11,7 @@
  * **The destination is the server's choice, not the caller's, and that is a
  * security property rather than a convenience.** The request carries blocks and
  * nothing else; `draftReport` picks the item. A route that accepted an item id
- * would let any admin append arbitrary text to any content item in the room —
+ * would let any admin append arbitrary text to any content item in the hall —
  * a published deck, another author's report — through a surface whose whole
  * stated purpose is one destination.
  *

@@ -17,7 +17,7 @@
  * resolved because the name it compares against is the row's.
  *
  * `eraseAccount` owns the act and every refusal of it: an admin may not erase
- * their own account and no act may leave the room with no admin who can sign in
+ * their own account and no act may leave the hall with no admin who can sign in
  * (`ADMIN-DEC-01`), and the delete and its audit row are one transaction
  * (`SEC-R04`). A refusal and an id no account holds answer differently — the
  * first `unchanged`, the second `404` — so a guard that held cannot be read as a

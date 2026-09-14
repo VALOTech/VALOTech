@@ -81,10 +81,10 @@ describe('what the registry holds (CFG-001/T7)', () => {
     // arrives at changes without the words around it changing, and a deploy to
     // move an address is a deploy nobody makes (`LEGAL-SG-001/T4`).
     expect(Object.keys(SETTINGS).sort()).toEqual([
+      'hall.banner',
+      'hall.signin_message',
       'mail.enabled',
       'privacy.contact',
-      'room.banner',
-      'room.signin_message',
     ]);
   });
 });
@@ -93,7 +93,7 @@ describe('validation against type and length (CFG-001/T2)', () => {
   it('accepts a value each key type admits, and stores it as written', () => {
     expect(validateSetting('mail.enabled', 'false')).toEqual({ ok: true, stored: 'false' });
     expect(validateSetting('mail.enabled', 'true')).toEqual({ ok: true, stored: 'true' });
-    expect(validateSetting('room.banner', 'Closed for the weekend')).toEqual({
+    expect(validateSetting('hall.banner', 'Closed for the weekend')).toEqual({
       ok: true,
       stored: 'Closed for the weekend',
     });
@@ -102,12 +102,12 @@ describe('validation against type and length (CFG-001/T2)', () => {
   it('refuses an over-long text with the limit rather than truncating it', () => {
     // The limit is in the refusal, because a silent truncation would disagree
     // with what the caller typed and what the screen then shows.
-    expect(validateSetting('room.banner', 'x'.repeat(281))).toEqual({
+    expect(validateSetting('hall.banner', 'x'.repeat(281))).toEqual({
       ok: false,
-      reason: 'room.banner is at most 280 characters',
+      reason: 'hall.banner is at most 280 characters',
     });
-    expect(validateSetting('room.banner', 'x'.repeat(280)).ok).toBe(true);
-    expect(validateSetting('room.signin_message', 'x'.repeat(281)).ok).toBe(false);
+    expect(validateSetting('hall.banner', 'x'.repeat(280)).ok).toBe(true);
+    expect(validateSetting('hall.signin_message', 'x'.repeat(281)).ok).toBe(false);
   });
 
   it('refuses a value that is neither of the two words a bool admits', () => {
@@ -156,19 +156,19 @@ describe.skipIf(!HAS_DATABASE)('the cached accessor (CFG-001/T5)', () => {
   it('returns the declared default for every key when the table is empty', async () => {
     const settings = new Settings();
 
-    expect(await settings.get('room.banner')).toBe('');
-    expect(await settings.get('room.signin_message')).toBe('');
+    expect(await settings.get('hall.banner')).toBe('');
+    expect(await settings.get('hall.signin_message')).toBe('');
     expect(await settings.get('mail.enabled')).toBe(true);
   });
 
   it('parses a stored value into the key declared type', async () => {
-    await put('room.banner', 'Closed for maintenance');
+    await put('hall.banner', 'Closed for maintenance');
     await put('mail.enabled', 'false');
 
     const settings = new Settings();
 
     // A string and a boolean — the type is the key's, not the column's.
-    expect(await settings.get('room.banner')).toBe('Closed for maintenance');
+    expect(await settings.get('hall.banner')).toBe('Closed for maintenance');
     expect(await settings.get('mail.enabled')).toBe(false);
   });
 
@@ -186,16 +186,16 @@ describe.skipIf(!HAS_DATABASE)('the cached accessor (CFG-001/T5)', () => {
     let clock = 0;
     const settings = new Settings(() => clock, 5000);
 
-    await put('room.banner', 'first');
-    expect(await settings.get('room.banner')).toBe('first');
+    await put('hall.banner', 'first');
+    expect(await settings.get('hall.banner')).toBe('first');
 
-    await put('room.banner', 'second');
+    await put('hall.banner', 'second');
     // Still the cached value: a change is not instant, which is the trade the
     // short refresh makes for not reading the database on every request.
-    expect(await settings.get('room.banner')).toBe('first');
+    expect(await settings.get('hall.banner')).toBe('first');
 
     clock += 5000;
-    expect(await settings.get('room.banner')).toBe('second');
+    expect(await settings.get('hall.banner')).toBe('second');
   });
 
   describe('changing and reverting (CFG-001/T3, T4)', () => {
@@ -274,28 +274,28 @@ describe.skipIf(!HAS_DATABASE)('the cached accessor (CFG-001/T5)', () => {
     it('records the key and both values, and a revert records them the other way round', async () => {
       const actor = await anAdmin();
 
-      await changeSetting('room.banner', 'First', actor);
-      await changeSetting('room.banner', 'Second', actor);
-      expect(await revertSetting('room.banner', actor)).toBe(true);
+      await changeSetting('hall.banner', 'First', actor);
+      await changeSetting('hall.banner', 'Second', actor);
+      expect(await revertSetting('hall.banner', actor)).toBe(true);
 
       // Each row is a complete statement of the setting at that moment: what it
       // was and what it became. The revert's pair is the change's reversed,
       // which is what makes a revert readable as a revert rather than as a third
       // arbitrary value.
       expect(await movesBy(actor)).toEqual([
-        { before: { key: 'room.banner', value: '' }, after: { key: 'room.banner', value: 'First' } },
-        { before: { key: 'room.banner', value: 'First' }, after: { key: 'room.banner', value: 'Second' } },
-        { before: { key: 'room.banner', value: 'Second' }, after: { key: 'room.banner', value: 'First' } },
+        { before: { key: 'hall.banner', value: '' }, after: { key: 'hall.banner', value: 'First' } },
+        { before: { key: 'hall.banner', value: 'First' }, after: { key: 'hall.banner', value: 'Second' } },
+        { before: { key: 'hall.banner', value: 'Second' }, after: { key: 'hall.banner', value: 'First' } },
       ]);
     });
 
     it('captures the prior stored value as previous on a second change', async () => {
       const actor = await anAdmin();
 
-      await changeSetting('room.signin_message', 'Back at nine', actor);
-      await changeSetting('room.signin_message', 'Back at ten', actor);
+      await changeSetting('hall.signin_message', 'Back at nine', actor);
+      await changeSetting('hall.signin_message', 'Back at ten', actor);
 
-      const row = await readRow('room.signin_message');
+      const row = await readRow('hall.signin_message');
       expect(row?.value).toBe('Back at ten');
       expect(row?.previous_value).toBe('Back at nine');
     });
@@ -303,33 +303,33 @@ describe.skipIf(!HAS_DATABASE)('the cached accessor (CFG-001/T5)', () => {
     it('writes nothing and records nothing when the value is refused', async () => {
       const actor = await anAdmin();
 
-      expect((await changeSetting('room.banner', 'x'.repeat(281), actor)).ok).toBe(false);
+      expect((await changeSetting('hall.banner', 'x'.repeat(281), actor)).ok).toBe(false);
 
-      expect(await readRow('room.banner')).toBeUndefined();
+      expect(await readRow('hall.banner')).toBeUndefined();
       expect(await changesBy(actor)).toHaveLength(0);
     });
 
     it('rolls the change and its audit back together when the write cannot complete', async () => {
       // An unparseable actor fails the write inside the transaction, so the row
       // and any audit roll back together — the atomicity the task names.
-      await expect(changeSetting('room.banner', 'Hello', 'not-a-uuid')).rejects.toThrow(
+      await expect(changeSetting('hall.banner', 'Hello', 'not-a-uuid')).rejects.toThrow(
         /invalid input syntax for type uuid/,
       );
 
-      expect(await readRow('room.banner')).toBeUndefined();
+      expect(await readRow('hall.banner')).toBeUndefined();
     });
 
     it('reverts by swapping current and previous, and reverting twice returns to the start', async () => {
       const actor = await anAdmin();
 
-      await changeSetting('room.banner', 'First', actor);
-      await changeSetting('room.banner', 'Second', actor);
+      await changeSetting('hall.banner', 'First', actor);
+      await changeSetting('hall.banner', 'Second', actor);
 
-      expect(await revertSetting('room.banner', actor)).toBe(true);
-      expect((await readRow('room.banner'))?.value).toBe('First');
+      expect(await revertSetting('hall.banner', actor)).toBe(true);
+      expect((await readRow('hall.banner'))?.value).toBe('First');
 
-      expect(await revertSetting('room.banner', actor)).toBe(true);
-      expect((await readRow('room.banner'))?.value).toBe('Second');
+      expect(await revertSetting('hall.banner', actor)).toBe(true);
+      expect((await readRow('hall.banner'))?.value).toBe('Second');
 
       // Two changes and two reverts, each one config.change — a revert is a change
       // back, not a separate action.
@@ -348,9 +348,9 @@ describe.skipIf(!HAS_DATABASE)('the cached accessor (CFG-001/T5)', () => {
     it('is a no-op for a key that has never changed, writing nothing', async () => {
       const actor = await anAdmin();
 
-      expect(await revertSetting('room.banner', actor)).toBe(false);
+      expect(await revertSetting('hall.banner', actor)).toBe(false);
 
-      expect(await readRow('room.banner')).toBeUndefined();
+      expect(await readRow('hall.banner')).toBeUndefined();
       expect(await changesBy(actor)).toHaveLength(0);
     });
   });

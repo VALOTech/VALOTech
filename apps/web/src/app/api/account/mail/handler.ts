@@ -1,6 +1,6 @@
 /**
  * `POST /api/account/mail` — the reader's own investor-mail preference, changed
- * from inside the room (`MAIL-002/T2`, `DATA-R04`).
+ * from inside the hall (`MAIL-002/T2`, `DATA-R04`).
  *
  * The same row the link in a message writes, reached by somebody who is signed
  * in. Which door was used is the row's `source`; that both doors write one row

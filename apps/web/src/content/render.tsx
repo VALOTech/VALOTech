@@ -20,7 +20,7 @@
  * following it should not hand that site the URL of an investor-only report.
  *
  * A `figure`'s numbers are rendered as a table rather than baked into a picture,
- * because a figure a screen reader cannot read is a figure half the room cannot
+ * because a figure a screen reader cannot read is a figure half the hall cannot
  * read (`A11Y-R02`); the picture and the numbers are the same figure said twice.
  */
 

@@ -15,8 +15,8 @@
  * write. That is right for a report, which is long and expected and wants its
  * period settled before anybody writes a word. It is wrong for an update, which
  * is two sentences somebody has thirty seconds to file — three navigations is
- * where those two sentences are lost, and a room with four entries a year is a
- * room nobody signs in to.
+ * where those two sentences are lost, and a hall with four entries a year is a
+ * hall nobody signs in to.
  *
  * So this takes the finished thing: the kind, what it is about, and the words.
  * **The address is never asked for** — it is derived from the title, suffixed on

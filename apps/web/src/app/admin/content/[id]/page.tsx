@@ -42,7 +42,7 @@ const TYPE_LABEL: Readonly<Record<string, string>> = {
  * produce.
  *
  * The item's row comes from the console's own list read, filtered here rather
- * than fetched by a second query of the same shape: the room holds a few dozen
+ * than fetched by a second query of the same shape: the hall holds a few dozen
  * items, and two reads answering the same question are two chances for the
  * screen and the list to disagree.
  *

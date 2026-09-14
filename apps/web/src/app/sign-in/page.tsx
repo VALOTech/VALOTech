@@ -33,7 +33,7 @@ export default async function SignInPage(): Promise<ReactElement> {
       </section>
       {/* The notice is linked from here because somebody deciding whether to
           accept an invitation reads it before they have an account, so a notice
-          reachable only from inside the room is one they cannot reach
+          reachable only from inside the hall is one they cannot reach
           (`LEGAL-SG-001/T2`). */}
       <p className={styles.aside}>
         {/* The way to a reset, from the one page somebody reaches when their

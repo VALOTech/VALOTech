@@ -35,13 +35,13 @@
  * anything, which is also `false` for an id no account holds — in both cases
  * the answer to the caller is that nothing was written.
  *
- * **No act may strand the room or turn on the actor** (`ADMIN-DEC-01`). An
+ * **No act may strand the hall or turn on the actor** (`ADMIN-DEC-01`). An
  * admin cannot suspend, demote, or erase their own account, and no single act
- * may leave the room with no admin who can sign in; both are refused before
+ * may leave the hall with no admin who can sign in; both are refused before
  * anything is written, returning the same `false` a no-op returns. The guard is
- * fail-closed rather than advisory because a room with no admin who can sign in
+ * fail-closed rather than advisory because a hall with no admin who can sign in
  * cannot recover itself — reinstating a suspended admin is an admin act, and no
- * bootstrap creates a first admin — so a stranded room is recoverable only from
+ * bootstrap creates a first admin — so a stranded hall is recoverable only from
  * the database.
  *
  * The account row is locked by the update before suspension touches
@@ -170,13 +170,13 @@ export async function personIdentity(accountId: string): Promise<PersonIdentity 
 /**
  * Whether `subjectId` is the only admin who can sign in — the safe default for
  * [`ADMIN-DEC-01`](../../docs/decisions-log.md#ADMIN-DEC-01). An act that would
- * leave no such admin is refused by its caller, because a room with no admin who
+ * leave no such admin is refused by its caller, because a hall with no admin who
  * can act cannot recover itself — reinstating a suspended admin is an admin act,
  * and there is no bootstrap that creates a first admin — so it is recoverable
  * only from the database.
  *
  * Active, not merely `admin`: a suspended admin cannot sign in, and reinstating
- * one is itself an admin act, so the count the room depends on is admins who can
+ * one is itself an admin act, so the count the hall depends on is admins who can
  * act now. The rows are locked in id order inside the caller's transaction, so
  * two demotions racing cannot each read two admins and both commit to zero — the
  * second waits on the first and re-evaluates against the row it left — and the id
@@ -217,7 +217,7 @@ export async function suspendAccount(accountId: string, actorId: string): Promis
     .transaction()
     .execute(async (trx) => {
       // Safe default for ADMIN-DEC-01, before anything is written: an admin may
-      // not act on their own access, and no single act may leave the room with
+      // not act on their own access, and no single act may leave the hall with
       // no admin who can sign in. Both return the same `false` a no-op returns.
       if (actorId === accountId) {
         return false;
@@ -354,7 +354,7 @@ export async function changeRole(
  * never had a password, a fresh invitation is the way back in, not this.
  *
  * It needs none of `suspendAccount`'s guard. Making an account active cannot
- * strand the room — it only adds to the set of admins who can sign in — and a
+ * strand the hall — it only adds to the set of admins who can sign in — and a
  * suspended account's holder cannot sign in to reinstate themselves, so the
  * actor is always a different, active admin. Reinstating an account that is not
  * suspended is the no-op the narrowed `UPDATE` makes it: the predicate matches
@@ -613,7 +613,7 @@ export async function correctIdentity(
  *
  * It needs none of the guard the state-changing acts carry (`ADMIN-DEC-01`).
  * Ending sessions takes away no access: the account may still sign in, so no act
- * here can leave the room without an admin who can, and an admin who ends their
+ * here can leave the hall without an admin who can, and an admin who ends their
  * own sessions has signed themselves out rather than locked themselves out.
  */
 export async function endAllSessions(accountId: string, actorId: string): Promise<boolean> {
@@ -724,8 +724,8 @@ export async function erasureCounts(accountId: string): Promise<ErasureCounts> {
  *
  * The guard matters more here than anywhere, because erasure is final and has no
  * inverse (`ADMIN-DEC-01`): an admin may not erase their own account, and no
- * single act may leave the room with no admin who can sign in. A suspension that
- * stranded the room could be undone from the database; an erasure could not be
+ * single act may leave the hall with no admin who can sign in. A suspension that
+ * stranded the hall could be undone from the database; an erasure could not be
  * undone at all. Both refusals return the `false` a no-op returns, before any
  * write.
  *
@@ -742,7 +742,7 @@ export async function eraseAccount(accountId: string, actorId: string): Promise<
     .execute(async (trx) => {
       // Safe default for ADMIN-DEC-01, before anything is written, and weightier
       // than suspension's because there is no way back: an admin may not erase
-      // their own access, and no single act may leave the room with no admin who
+      // their own access, and no single act may leave the hall with no admin who
       // can sign in. Both return the same `false` a no-op returns.
       if (actorId === accountId) {
         return false;
@@ -777,7 +777,7 @@ export async function eraseAccount(accountId: string, actorId: string): Promise<
  *
  * Setting the flag stops the record functions writing new reads for this account,
  * and this deletes the reads already kept — a right exercised, so the flag, the
- * deletes and the audit row are one transaction (`SEC-R04`). The room keeps
+ * deletes and the audit row are one transaction (`SEC-R04`). The hall keeps
  * working: unread marking degrades to everything looking new, which is the cost
  * the person chose. Returns whether it changed anything — `false` when the account
  * had already objected or holds no id, in which case nothing is written or

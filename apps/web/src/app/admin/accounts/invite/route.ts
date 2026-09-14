@@ -54,7 +54,7 @@ function isRole(value: unknown): value is AccountRole {
 }
 
 /**
- * Whether a posted value names a language the room serves, or declines to name
+ * Whether a posted value names a language the hall serves, or declines to name
  * one (`AUTH-003/T3`).
  *
  * Three things pass and they mean the same: the field absent, the field empty,
@@ -62,7 +62,7 @@ function isRole(value: unknown): value is AccountRole {
  * string, an older client posts nothing, and a caller stating it outright posts
  * null — all three are "the admin did not say", which the column records as null
  * rather than as English. Anything else must be one of the twenty, because a
- * locale the room cannot render is a row whose message has nowhere to come from.
+ * locale the hall cannot render is a row whose message has nowhere to come from.
  */
 function isChosenLocale(value: unknown): value is Locale | '' | null | undefined {
   return value === undefined || value === null || value === '' || (typeof value === 'string' && isLocale(value));

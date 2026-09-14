@@ -16,7 +16,7 @@ export async function generateMetadata(): Promise<Metadata> {
  * `GET /account/mail` (`MAIL-002/T2`) — the reader's own investor-mail
  * preference, and the control that changes it.
  *
- * The same setting the link in a message changes, reached from inside the room
+ * The same setting the link in a message changes, reached from inside the hall
  * by somebody who is signed in. Both doors write one row: a second list would be
  * a second answer to "does this person want investor mail", and the disagreement
  * between two such lists is exactly what `MAIL-002` says cannot be allowed to

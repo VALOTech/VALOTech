@@ -1,5 +1,5 @@
 /**
- * Full-text search over the room's published content (`CMS-007`, `CMS-R03`, `DATA-R05`).
+ * Full-text search over the hall's published content (`CMS-007`, `CMS-R03`, `DATA-R05`).
  *
  * Search is the classic way a gated document leaks: an index built outside the
  * access model answers with a title and a first sentence to somebody who may not
@@ -26,7 +26,7 @@
  * everything. The tokeniser is `simple` rather than a stemmer, because the
  * content is in twenty possible languages and a stemmer for the wrong one is
  * worse than none. Results are ordered by recency, not by a relevance score: in a
- * room of updates the newest match is nearly always the wanted one.
+ * hall of updates the newest match is nearly always the wanted one.
  *
  * **The filters are clauses on the same statement, not a pass over its rows.**
  * Kind, product, period and type compose with each other and with the words, and
@@ -52,7 +52,7 @@ import { visibleTo } from './access';
 import type { ContentItem } from './items';
 
 /**
- * What a reader has narrowed the room by, beyond the words they typed.
+ * What a reader has narrowed the hall by, beyond the words they typed.
  *
  * Every field is optional and `null` means the same as absent, because these
  * arrive from a query string where "not chosen" and "chosen as nothing" are the
@@ -66,9 +66,9 @@ export interface SearchFilters {
 }
 
 /**
- * Whether the reader has narrowed the room at all.
+ * Whether the reader has narrowed the hall at all.
  *
- * The room shows its own stream until something narrows it, so this is the test
+ * The hall shows its own stream until something narrows it, so this is the test
  * that decides which of the two a request is asking for. A query with no
  * searchable word in it does not count: typing a space is not a search.
  */
@@ -102,7 +102,7 @@ export function toPrefixQuery(input: string): string {
 /**
  * The items a reader may read whose published body matches the query, newest
  * first. An empty query, or one with no searchable word in it, matches nothing —
- * the caller renders the room's default rather than every item.
+ * the caller renders the hall's default rather than every item.
  */
 export async function search(
   query: string,

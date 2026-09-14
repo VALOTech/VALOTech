@@ -14,7 +14,7 @@
   color: #57575f;
 }
 
-/* A wide grid scrolls inside its own box rather than the page (the room's own
+/* A wide grid scrolls inside its own box rather than the page (the hall's own
    rule for tables); the row header stays put so the language is always in view. */
 .scroll {
   overflow-x: auto;

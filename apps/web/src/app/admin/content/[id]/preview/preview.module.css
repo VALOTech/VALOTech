@@ -29,7 +29,7 @@
 }
 
 /* The document is set for reading rather than for scanning: one column at a
-   measure the eye returns from, and the room's own vertical rhythm. Nothing
+   measure the eye returns from, and the hall's own vertical rhythm. Nothing
    here is preview chrome — this is what a reader gets (RPT-003 will carry the
    page around it). */
 .document {
@@ -100,7 +100,7 @@
 }
 
 /* A figure's numbers are a table because a figure a screen reader cannot read is
-   a figure half the room cannot read (A11Y-R02). */
+   a figure half the hall cannot read (A11Y-R02). */
 .document figure table {
   border-collapse: collapse;
   font-variant-numeric: tabular-nums;

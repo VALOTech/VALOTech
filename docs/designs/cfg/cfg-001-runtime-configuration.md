@@ -43,8 +43,8 @@ a deploy to change *and* somebody would plausibly want to change it in a hurry.
 
 | Key | What | Default |
 |---|---|---|
-| `room.banner` | A line at the top of the investor hall, or empty | empty |
-| `room.signin_message` | A line on the sign-in page — planned maintenance, say | empty |
+| `hall.banner` | A line at the top of the investor hall, or empty | empty |
+| `hall.signin_message` | A line on the sign-in page — planned maintenance, say | empty |
 | `mail.enabled` | A kill switch for sending, independent of the credential | true |
 
 **Everything else is code or environment.** A setting is a value with no test
@@ -120,7 +120,7 @@ The session lifetime and the sign-in rate are not settings but environment value
   secret-shaped.
 - **`DATA-R02`** — no personal data is configurable, so none can end up here.
 - **`A11Y-R01`**, **`I18N-R01`** — the form is a form, and the hall-facing
-  values it sets (`room.banner`) are shown to investors and therefore go through
+  values it sets (`hall.banner`) are shown to investors and therefore go through
   the dictionary or are shown in the language they were written in, stated on the
   field.
 
@@ -131,7 +131,7 @@ The session lifetime and the sign-in rate are not settings but environment value
 - **A cached read with a short refresh.** It means a change is not instant and a
   reader may see the old value for a few seconds. The alternative is a database
   read on every request for a value that changes monthly.
-- **`room.banner` is untranslated free text.** It is the only visitor-facing
+- **`hall.banner` is untranslated free text.** It is the only visitor-facing
   string in the product that does not come from the dictionary, and the field
   says so. The honest alternative — twenty locale fields on a banner used twice a
   year — is a form nobody would fill in, so the banner would not get used.

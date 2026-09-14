@@ -3,7 +3,7 @@
 /**
  * The review screen's two controls (`CMS-005/T4`, `CMS-005/T3`).
  *
- * `StartTranslation` is the whole of starting one: the room runs no translation
+ * `StartTranslation` is the whole of starting one: the hall runs no translation
  * service (`CMS-DEC-04`), so pressing it copies the English under this language's
  * label and nothing else. The button says that rather than promising a
  * translation, because a control named "Translate" that produces English is the

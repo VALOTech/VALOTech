@@ -1,5 +1,5 @@
 /**
- * The room's current report (`RPT-002/T4`).
+ * The hall's current report (`RPT-002/T4`).
  *
  * The current report is the published report of the greatest period the reader
  * may read — by period, not by publication date, because the period is what an
@@ -59,7 +59,7 @@ async function recreateIsolatedDatabase(): Promise<void> {
   }
 }
 
-describe.skipIf(!HAS_DATABASE)('the room current report (RPT-002/T4)', () => {
+describe.skipIf(!HAS_DATABASE)('the hall current report (RPT-002/T4)', () => {
   let authorId = '';
   const admin = (): Actor => ({ id: authorId, role: 'admin' });
 
