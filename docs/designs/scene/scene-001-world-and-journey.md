@@ -119,6 +119,17 @@ Stations in viewport units: full size at the top, then the side each chapter
 leaves open — two left, centre through the mapping chapter, two right, two left,
 and out to the right for the close.
 
+**A chapter with no station of its own is a chapter the world crosses.** The
+table holds a position between two stations and moves between them as soon as
+the first is passed, so a chapter that names neither is not one the world stands
+through — it is the span a leg happens to occupy. The ecosystem chapter is the
+case that shows it: its layout puts six product cards down the right and leaves
+the left for the world, and with the hold ending above its top the world was at
+the centre of the frame a quarter of the way down it, crossing the cards the
+chapter is made of. Every chapter the layout leaves a side for therefore holds
+a station until the reader is most of the way through it, and the leg out
+belongs to the chapter after.
+
 **Measured in chapters, not page fractions.** A station is written as a fraction,
 but the page is not one length: reduced motion collapses three chapters to their
 stacked height — three and a half thousand pixels shorter — and a locale with

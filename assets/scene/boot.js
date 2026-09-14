@@ -297,14 +297,34 @@ const JOURNEY = [
   { at: 0.856, x: 25, y: 50, scale: 0.86 },
   { at: 0.904, x: 25, y: 50, scale: 0.86 },
   /* Two on the left to close, the last of them the portfolio the investor view
-     adds; the public view ends on the chapter before it. */
+     adds; the public view ends on the chapter before it.
+
+     The hold runs to three quarters of the ecosystem chapter, which is a
+     chapter with no station of its own. A station list that skips a chapter
+     does not leave the world standing through it -- it leaves the world in
+     transit across it, because the next leg is free to start the moment the
+     previous station is passed. Written the short way, the world left before
+     the chapter's own top and was at the centre of the frame a quarter of the
+     way down it: the family of products was read against a world already
+     walking off the argument. Holding to .9795 keeps it standing where the
+     chapter left room for it, and the departure belongs to the close. */
   { at: 0.914, x: 24, y: 46, scale: 0.84 },
-  { at: 0.952, x: 23, y: 46, scale: 0.84 },
+  { at: 0.9795, x: 23, y: 46, scale: 0.84 },
   /* And out to the right for the close. The footer's argument holds the left
      of the frame and its two columns leave only the right strip open, so a
      world parked on the left spends the last screen of the page behind the
-     heading it should be closing under. */
-  { at: 0.985, x: 79, y: 50, scale: 0.86 },
+     heading it should be closing under.
+
+     The arrival is pinned just inside the close rather than further in, and
+     that is the tighter half of a real trade. Holding through the ecosystem
+     chapter leaves a quarter of it plus the close for a crossing of most of
+     the frame, so the leg is short and the world is still moving as the close
+     comes up. Written longer -- arriving two thirds of the way down the close
+     -- it was measured mid-frame at a quarter of that chapter, standing behind
+     the footer's contact column: the same complaint the hold above fixes,
+     wearing the other side of the page. Short and arrived beats long and
+     parked over the words. */
+  { at: 0.9875, x: 79, y: 50, scale: 0.86 },
   { at: 1.0, x: 80, y: 50, scale: 0.86 }
 ];
 
