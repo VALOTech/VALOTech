@@ -14,7 +14,7 @@ status: implemented
 
 ## 1. Purpose and PRD refs
 
-The one door into the investor room. An address and a password against an
+The one door into the investor hall. An address and a password against an
 account an admin created; no self-registration, because every account here
 exists because someone decided it should. Realizes `AUTH-001` and is what
 `AUTH-002` issues a session from.
@@ -31,7 +31,7 @@ and either hands off to `AUTH-002` to issue a session or returns the single
 failure. Both paths write an attempt to the rate-limit store first, so a refusal
 costs the attacker the same as a success.
 
-**Up.** The response is either a redirect to the room or the same page with one
+**Up.** The response is either a redirect to the hall or the same page with one
 message. The message is identical for an unknown address and a wrong password,
 and identical again for a suspended account — three states, one sentence, because
 any distinction is a membership oracle (`SEC-R03`).
@@ -96,11 +96,11 @@ apply to one path and not the other.
 
 - **A second factor.** Not in scope, and the reason is honest rather than
   principled: there are a handful of accounts and no money moves here. It becomes
-  worth its friction when the room holds something an attacker wants more than a
+  worth its friction when the hall holds something an attacker wants more than a
   fundraise deck. Filed here rather than in the register because nothing is
   waiting on it.
 - **Magic links instead of passwords.** They would remove the hash, the reset
-  flow and this whole rate-limit design, and would put the security of the room
+  flow and this whole rate-limit design, and would put the security of the hall
   on the investor's mailbox — which for an institutional address is often shared.
   Rejected for that reason, not for effort.
 

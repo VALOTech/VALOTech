@@ -93,7 +93,7 @@ function request(cookie: string | null): Request {
     headers.set('Cookie', cookie);
   }
 
-  return new Request('http://localhost:3100/room', { headers });
+  return new Request('http://localhost:3100/hall', { headers });
 }
 
 /** A request presenting a token the way a browser holds it: signed. */

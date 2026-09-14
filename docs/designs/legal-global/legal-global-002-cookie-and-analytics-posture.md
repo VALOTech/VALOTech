@@ -94,13 +94,13 @@ carry, in twenty locales, linked from the footer of every page and from the
 banner. `SITE-006` builds them; `LEGAL-SG-001` and `LEGAL-GLOBAL-001` supply what
 privacy says.
 
-### What the room does is not this
+### What the hall does is not this
 
-The investor room's per-account read state is disclosed under `LEGAL-SG-001` and
+The investor hall's per-account read state is disclosed under `LEGAL-SG-001` and
 objectable under `LEGAL-GLOBAL-001`. It is application data about a named person
 who signed in, not a cookie and not analytics, and conflating the two categories
 is how a privacy notice becomes wrong. The banner does not ask about it, because
-the banner is about a visitor and this is about a member of the room.
+the banner is about a visitor and this is about a member of the hall.
 
 ## 4. Integration
 

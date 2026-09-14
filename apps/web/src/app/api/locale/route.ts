@@ -22,10 +22,10 @@ import { withRequestId } from '../../../ops/request-context';
  * is an open redirect, which is how a link that looks like ours arrives
  * somewhere that is not. A value that is not a single-slash-rooted path — which
  * excludes `//host`, a scheme, and a backslash Windows treats as a separator —
- * is replaced by the room.
+ * is replaced by the hall.
  */
 
-const HOME = '/room';
+const HOME = '/hall';
 
 function safeNext(value: FormDataEntryValue | null): string {
   if (typeof value !== 'string') {

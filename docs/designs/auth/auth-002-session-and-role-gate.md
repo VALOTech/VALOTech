@@ -18,7 +18,7 @@ What a signed-in reader carries, and what it entitles them to. This is the
 feature that turns the gateway's CSS demonstration into a control: after it,
 gated material is chosen by the server and never reaches an unauthorised reader
 at all. Realizes `AUTH-002`, `SEC-R01` and `SEC-R02`, and every read in the
-investor room passes through it.
+investor hall passes through it.
 
 It is the most load-bearing feature in the repository. Everything after it reads
 through the gate this builds, so a shortcut here is a shortcut in every feature

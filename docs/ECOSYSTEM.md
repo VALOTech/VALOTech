@@ -284,14 +284,14 @@ Every VALO repository is built and governed identically — read the repository'
 ## This repository — **VALO Tech** (`VALOTech`)
 
 You are **VALO Tech** itself: not one of the six products, but the company's own front
-door and its investor room. Two surfaces live here.
+door and its investor hall. Two surfaces live here.
 
 - **The gateway** at **valotech.org** — the public page a regulated-industry buyer reads.
   It makes the ValoLab argument: an AI workforce is worth having, it needs a clean data
   foundation underneath it, and VALO Tech builds both inside the buyer's own environment.
   It is a static page today, served verbatim by GitHub Pages, in twenty languages,
   carrying a WebGL scene designed under [docs/designs/scene/](designs/scene/).
-- **The investor room** behind its sign-in — the deeper case: how delivery works, what the
+- **The investor hall** behind its sign-in — the deeper case: how delivery works, what the
   portfolio is, where each product stands, and the presentation an investor is asked to
   read. It does not exist yet; building it is what turns this repository from a page into
   a product, and it is the work the ledger describes.

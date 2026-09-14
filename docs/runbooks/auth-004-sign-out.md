@@ -125,7 +125,7 @@ Cheapest first.
 the behaviour it buys — pressing Back after a sign-out and getting the sign-in
 path rather than a rendered gated page — is exercised on the admin console
 (`/admin`), which the gate refuses to an unauthenticated reader exactly as it
-will the investor room, so it did not wait for `INV-002`. Driven on Chromium
+will the investor hall, so it did not wait for `INV-002`. Driven on Chromium
 (`AUTH-004/T4`, 2026-09-11): a signed-in request for the console answered
 `no-store`, a sign-out landed on the public root, and the Back button re-fetched
 the console and was redirected to the sign-in path rather than restoring it from

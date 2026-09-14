@@ -108,7 +108,7 @@ oracle wearing a rate limit (`SEC-R03`).
 Each surface counts on its own keys. Sharing a counter between sign-in and the
 reset request would let an anonymous caller spend a named person's sign-in
 allowance by posting their address at the reset form, which is a lockout of the
-one door into the room, reachable with no password and no session — a denial of
+one door into the hall, reachable with no password and no session — a denial of
 service built out of two limits that are each correct alone.
 
 ### CI

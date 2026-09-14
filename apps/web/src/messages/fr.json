@@ -1,7 +1,7 @@
 {
   "signIn": {
     "title": "Connexion investisseurs",
-    "intro": "Saisissez votre adresse e-mail et votre mot de passe pour ouvrir l'espace investisseurs.",
+    "intro": "Saisissez votre adresse e-mail et votre mot de passe pour ouvrir le hall investisseurs.",
     "email": "Adresse e-mail",
     "password": "Mot de passe",
     "submit": "Se connecter",
@@ -11,7 +11,7 @@
   },
   "setPassword": {
     "title": "Choisissez votre mot de passe",
-    "intro": "Définissez le mot de passe que vous utiliserez pour vous connecter à l'espace investisseurs.",
+    "intro": "Définissez le mot de passe que vous utiliserez pour vous connecter au hall investisseurs.",
     "password": "Nouveau mot de passe",
     "confirm": "Confirmez le mot de passe",
     "submit": "Définir le mot de passe et se connecter",
@@ -37,10 +37,10 @@
   "privacy": {
     "contactBody": "Écrivez à {address}.",
     "contactTitle": "À qui écrire",
-    "heldBasis": "Les deux premiers reposent sur votre consentement, donné lorsque vous avez accepté votre invitation. Les deux derniers reposent sur notre intérêt légitime à protéger votre compte et à garder cet espace exact.",
+    "heldBasis": "Les deux premiers reposent sur votre consentement, donné lorsque vous avez accepté votre invitation. Les deux derniers reposent sur notre intérêt légitime à protéger votre compte et à garder ce hall exact.",
     "heldIdentity": "Votre nom et votre adresse e-mail, afin qu'une personne nommée puisse accéder aux rapports de la société.",
-    "heldReads": "Les documents que vous avez ouverts et quand, afin que cet espace puisse vous montrer ce qui est nouveau et retenir quelle version d'une présentation vous avez vue. Cela n'appartient qu'à vous : jamais agrégé, jamais transmis comme mesure d'audience, et supprimé avec votre compte.",
-    "heldRole": "Votre rôle et l’état de votre compte, afin que cet espace sache ce que vous pouvez lire.",
+    "heldReads": "Les documents que vous avez ouverts et quand, afin que ce hall puisse vous montrer ce qui est nouveau et retenir quelle version d'une présentation vous avez vue. Cela n'appartient qu'à vous : jamais agrégé, jamais transmis comme mesure d'audience, et supprimé avec votre compte.",
+    "heldRole": "Votre rôle et l’état de votre compte, afin que ce hall sache ce que vous pouvez lire.",
     "heldSessions": "Votre dernière connexion et vos sessions ouvertes, afin que vous et un administrateur puissiez les voir et y mettre fin.",
     "heldTitle": "Ce que nous conservons, et pourquoi",
     "intro": "VALO Tech conserve une courte liste d'informations sur les personnes qui lisent ses rapports aux investisseurs. Cette page indique quoi, pourquoi, combien de temps, et ce que vous pouvez nous demander.",
@@ -53,13 +53,13 @@
     "rightsTitle": "Ce que vous pouvez demander",
     "rightsWhen": "Nous répondons sous trente jours.",
     "rightsWithdrawal": "Le retrait de votre consentement, ce qui entraîne la suppression de votre compte, car vos données ne servent ici qu'à vous donner accès.",
-    "title": "Comment cet espace traite vos données",
+    "title": "Comment ce hall traite vos données",
     "link": "Comment nous traitons vos données"
   },
   "invitationMail": {
-    "subject": "Une invitation à l’espace investisseurs de VALO Tech",
+    "subject": "Une invitation au hall investisseurs de VALO Tech",
     "greeting": "Bonjour {name},",
-    "intro": "{inviter} vous a invité à l’espace investisseurs de VALO Tech, où l’entreprise publie ses rapports à destination de celles et ceux qui y ont investi.",
+    "intro": "{inviter} vous a invité au hall investisseurs de VALO Tech, où l’entreprise publie ses rapports à destination de celles et ceux qui y ont investi.",
     "action": "Ouvrez ce lien pour choisir un mot de passe et vous connecter :",
     "expiry": "Le lien ne peut servir qu’une fois et cesse de fonctionner au bout de {days, plural, one {# jour} other {# jours}}.",
     "ignore": "Si vous ne vous attendiez pas à ce message, vous pouvez l’ignorer. Rien ne se produit tant que le lien n’est pas ouvert.",
@@ -68,7 +68,7 @@
   "resetMail": {
     "subject": "Réinitialisez votre mot de passe VALO Tech",
     "greeting": "Bonjour {name},",
-    "intro": "Quelqu’un a demandé la réinitialisation du mot de passe de cette adresse dans l’espace investisseurs de VALO Tech.",
+    "intro": "Quelqu’un a demandé la réinitialisation du mot de passe de cette adresse dans le hall investisseurs de VALO Tech.",
     "action": "Si c’était vous, ouvrez ce lien pour choisir un nouveau mot de passe :",
     "expiry": "Le lien ne peut servir qu’une fois et cesse de fonctionner au bout de {hours, plural, one {# heure} other {# heures}}.",
     "ignore": "Si ce n’était pas vous, votre mot de passe n’a pas changé et vous n’avez rien à faire.",
@@ -83,26 +83,26 @@
     "tooManyAttempts": "Trop de tentatives. Patientez un instant puis réessayez.",
     "unexpected": "Une erreur est survenue. Réessayez dans un instant.",
     "backToSignIn": "Retour à la connexion",
-    "unavailable": "La réinitialisation de votre mot de passe n’est pas disponible pour le moment. Contactez la personne qui vous a invité à l’espace investisseurs."
+    "unavailable": "La réinitialisation de votre mot de passe n’est pas disponible pour le moment. Contactez la personne qui vous a invité au hall investisseurs."
   },
   "mailPreference": {
     "title": "Courrier investisseurs",
     "confirmIntro": "Arrêter le courrier investisseurs vers ce compte ? Une seule pression suffit, et vous n’avez pas besoin de vous connecter.",
     "stop": "Arrêter le courrier investisseurs",
-    "stops": "Cela arrête les actualités destinées aux investisseurs, c’est-à-dire les messages que VALO Tech envoie à toutes les personnes ayant accès à l’espace investisseurs.",
+    "stops": "Cela arrête les actualités destinées aux investisseurs, c’est-à-dire les messages que VALO Tech envoie à toutes les personnes ayant accès au hall investisseurs.",
     "keeps": "Cela n’arrête pas les messages dont vous avez besoin pour utiliser votre compte : une invitation, une réinitialisation de mot de passe ou un avis vous signalant un message qui vous a été envoyé. Ceux-là répondent à une demande de votre part ou de celle d’un administrateur, ils continuent donc de vous parvenir.",
     "stopped": "Le courrier investisseurs est arrêté pour ce compte.",
     "stoppedByCompany": "VALO Tech a arrêté le courrier investisseurs vers ce compte. Si vous le réactivez et que les messages n’arrivent toujours pas, contactez la personne qui vous a invité.",
     "on": "Le courrier investisseurs parvient à ce compte.",
     "resume": "Reprendre le courrier investisseurs",
-    "roomIntro": "Si les actualités de VALO Tech destinées aux investisseurs parviennent à l’adresse de votre compte.",
+    "hallIntro": "Si les actualités de VALO Tech destinées aux investisseurs parviennent à l’adresse de votre compte.",
     "expired": "Ce lien ne fonctionne plus. Connectez-vous pour modifier ce réglage sur la page de votre compte, ou contactez la personne qui vous a invité.",
     "signIn": "Se connecter"
   },
-  "room": {
+  "hall": {
     "title": "Hall investisseurs",
     "nav": {
-      "room": "Le hall",
+      "hall": "Le hall",
       "account": "Compte"
     },
     "signOut": "Se déconnecter",

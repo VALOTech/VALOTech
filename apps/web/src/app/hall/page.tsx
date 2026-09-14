@@ -15,16 +15,16 @@ import type { PortfolioStage } from '../../db/types';
 import { standing } from '../../portfolio/board';
 import { PRODUCT_LABEL } from '../../portfolio/labels';
 
-import { narrowest, readRoomQuery, withoutNarrowing } from './query';
-import styles from './room.module.css';
+import { narrowest, readHallQuery, withoutNarrowing } from './query';
+import styles from './hall.module.css';
 
 export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations('room');
+  const t = await getTranslations('hall');
   return { title: t('title') };
 }
 
 /**
- * The four stage words as the room says them.
+ * The four stage words as the hall says them.
  *
  * `portfolio/labels.ts` holds the console's, which are English by design and
  * are not a reader's (`I18N-R01`). A product's name is a proper noun and is
@@ -40,7 +40,7 @@ const STAGE_KEY: Readonly<Record<PortfolioStage, string>> = {
 };
 
 /**
- * `GET /room` — what a signed-in investor lands on (`INV-001/T1`).
+ * `GET /hall` — what a signed-in investor lands on (`INV-001/T1`).
  *
  * Four things in the order the PRD says an investor wants them, which is the
  * order of somebody catching up rather than the order of formality (`INV-001`
@@ -55,7 +55,7 @@ const STAGE_KEY: Readonly<Record<PortfolioStage, string>> = {
  * so the landing costs one round trip's latency rather than five.
  *
  * **Each of the four says its own absence in its own words** (`INV-001` §3). A
- * first-time investor's room is legitimately near-empty, and a blank area is
+ * first-time investor's hall is legitimately near-empty, and a blank area is
  * indistinguishable from a load that failed — so an empty stream says the
  * company has not posted yet, and says it under a heading that explains what
  * would appear there.
@@ -66,27 +66,27 @@ const STAGE_KEY: Readonly<Record<PortfolioStage, string>> = {
  * `DECK-003`. A link that answers the not-found page is one a reader tries
  * twice, which is worse than a title they can read and not yet open.
  *
- * The gate is called here rather than in a segment layout. `/room` is the one
+ * The gate is called here rather than in a segment layout. `/hall` is the one
  * page under it today; when `INV-001/T3` adds the other three destinations the
  * check belongs in a layout, the way `/admin`'s does, so that the fourth page
  * cannot ship without it.
  */
-export default async function RoomPage({
+export default async function HallPage({
   searchParams,
 }: {
   readonly searchParams: Promise<Record<string, string | string[] | undefined>>;
 }): Promise<ReactElement> {
   const actor = await requireInvestorPage();
-  const query = readRoomQuery(await searchParams);
+  const query = readHallQuery(await searchParams);
 
-  // A narrowed room is a different page, not the landing with a list appended:
+  // A narrowed hall is a different page, not the landing with a list appended:
   // the four things below are what has happened lately, and a reader who has
-  // asked a question wants its answer rather than the room's own summary under
+  // asked a question wants its answer rather than the hall's own summary under
   // it (`CMS-007` §2, `INV-001` §3).
   if (isNarrowed(query.q, query)) {
     const [results, t, format] = await Promise.all([
       search(query.q, actor, query),
-      getTranslations('room'),
+      getTranslations('hall'),
       getFormatter(),
     ]);
     const day = (value: Date): string => format.dateTime(value, { dateStyle: 'medium' });
@@ -107,7 +107,7 @@ export default async function RoomPage({
             {/* An empty result says which narrowing produced it and offers to
                 drop the one that excluded the most. "No results" alone is
                 indistinguishable from a broken search, and an investor who
-                concludes the room is broken does not ask (`CMS-007/T5`). */}
+                concludes the hall is broken does not ask (`CMS-007/T5`). */}
             <p className={styles.empty}>
               {drop === null ? t('search.emptyPlain') : t('search.emptyNarrowed', { narrowing: t(`search.narrowing.${drop}`) })}
             </p>
@@ -147,7 +147,7 @@ export default async function RoomPage({
     standing(),
     currentReport(actor),
     grantedDecksForAccount(actor.id),
-    getTranslations('room'),
+    getTranslations('hall'),
     getFormatter(),
   ]);
 
@@ -162,8 +162,8 @@ export default async function RoomPage({
           takes: the reader is told what they are looking at, then told the
           thing. It is a sentence and never a dot, so a screen reader reaches
           the same information a sighted reader does (`A11Y-R02`). */}
-      <section className={styles.lede} aria-labelledby="room-new">
-        <h1 id="room-new" className={styles.eyebrow}>
+      <section className={styles.lede} aria-labelledby="hall-new">
+        <h1 id="hall-new" className={styles.eyebrow}>
           {t('new.heading')}
         </h1>
         <p
@@ -207,8 +207,8 @@ export default async function RoomPage({
           (`INV-003/T4`). The stage is a word in a neutral pill and never a hue:
           the brand's one accent marks the interactive and the current, and a
           stage is neither (`INV-003/T5`, `A11Y-R03`). */}
-      <section aria-labelledby="room-standing">
-        <h2 id="room-standing" className={styles.eyebrow}>
+      <section aria-labelledby="hall-standing">
+        <h2 id="hall-standing" className={styles.eyebrow}>
           {t('standing.heading')}
         </h2>
         {board.every((entry) => !entry.set) ? (
@@ -235,8 +235,8 @@ export default async function RoomPage({
       {/* 3. The current report — one card and not the document. It is the most
           recent period this reader may read rather than the most recent
           publication (`RPT-002/T4`), which `currentReport` decides. */}
-      <section aria-labelledby="room-report">
-        <h2 id="room-report" className={styles.eyebrow}>
+      <section aria-labelledby="hall-report">
+        <h2 id="hall-report" className={styles.eyebrow}>
           {t('report.heading')}
         </h2>
         <div className={styles.panel}>
@@ -253,8 +253,8 @@ export default async function RoomPage({
       </section>
 
       {/* 4. Your decks — read once, so present rather than prominent. */}
-      <section aria-labelledby="room-decks">
-        <h2 id="room-decks" className={styles.eyebrow}>
+      <section aria-labelledby="hall-decks">
+        <h2 id="hall-decks" className={styles.eyebrow}>
           {t('decks.heading')}
         </h2>
         <div className={styles.panel}>

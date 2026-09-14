@@ -23,9 +23,9 @@ VALO Tech Pte. Ltd. is a Singapore company that builds an AI-native product fami
 This product is **the company's own two rooms**:
 
 - **The gateway** — the public page at valotech.org. It makes one argument to a corporate buyer: that an AI workforce is worth having, that it needs a clean data foundation underneath it, and that VALO Tech builds both in the buyer's own environment. It is the company's face and, for most people who ever encounter VALO Tech, the whole of it.
-- **The investor room** — everything behind the sign-in, and its main job is **keeping an investor current**. What they come back for is progress: where each product stands, what the team announced this month, what it actually shipped. The deeper case — how delivery works, what the portfolio is, and the presentation an investor is asked to read — is there too, but it is read once; the updates are read repeatedly, and the room is designed around the thing that is read repeatedly rather than around the thing that is read once.
+- **The investor hall** — everything behind the sign-in, and its main job is **keeping an investor current**. What they come back for is progress: where each product stands, what the team announced this month, what it actually shipped. The deeper case — how delivery works, what the portfolio is, and the presentation an investor is asked to read — is there too, but it is read once; the updates are read repeatedly, and the hall is designed around the thing that is read repeatedly rather than around the thing that is read once.
 
-Behind the room is the thing that fills it: a **content system** (`CMS`) an admin uses to write, translate, preview, publish and withdraw everything an investor reads — periodic reports, announcements, achievements, progress notes and decks. The room is the reading surface; the content system is the writing one, and the product is not finished when the room renders, it is finished when somebody who is not a developer can put this month's update into it.
+Behind the hall is the thing that fills it: a **content system** (`CMS`) an admin uses to write, translate, preview, publish and withdraw everything an investor reads — periodic reports, announcements, achievements, progress notes and decks. The hall is the reading surface; the content system is the writing one, and the product is not finished when the hall renders, it is finished when somebody who is not a developer can put this month's update into it.
 
 The gateway's own words are **not** in that system. They are in the page and its dictionary, changed by a commit, and the reason is in §7.6.
 
@@ -37,7 +37,7 @@ It is not a product the company sells, it carries no payment, and it holds no cu
 
 The gateway is **live and complete**: one static page, no build step, served by GitHub Pages from `main`, fronted by Cloudflare, translated into twenty languages, carrying a WebGL scene designed under `docs/designs/scene/`. Its investor split is real — two chapters and the detail under each of seven claims are hidden from a visitor — but the gate that hides them is CSS, and the material is in the page source. It is a demonstration of the design, not a control.
 
-The investor room does not exist. Building it is what turns this repository from a page into a product, and it is the whole of the work ahead.
+The investor hall does not exist. Building it is what turns this repository from a page into a product, and it is the whole of the work ahead.
 
 ### 2.4 The transition
 
@@ -47,7 +47,7 @@ The gateway stays live on `main`, unchanged, until the app can serve it at least
 
 ## 3. Global principles
 
-- **P-01 The public argument is complete on its own.** A visitor who never signs in must get a coherent case, not a teaser. The investor room adds depth; it does not withhold the point.
+- **P-01 The public argument is complete on its own.** A visitor who never signs in must get a coherent case, not a teaser. The investor hall adds depth; it does not withhold the point.
 - **P-02 The gate is real or it is not claimed.** Until the server enforces access, nothing is described as protected.
 - **P-03 Investor identity is personal data.** Every feature that touches it is designed as if a regulator will read it, because one may.
 - **P-04 The scene serves the argument.** It is never decoration competing with the words, and it never costs a reader the ability to read them.
@@ -122,7 +122,7 @@ translated, previewed, published, withdrawn or audited.
 | `CMS-004` | Preview, publish and withdraw | building | An admin sees a draft exactly as an investor will, publishes a revision deliberately, and can return to the previously published revision in one action. A draft is visible to nobody else, ever |
 | `CMS-005` | Locale variants and translation state | live | Per item, per locale: not started, machine draft, reviewed. A machine draft is never shown to a reader; an unreviewed locale falls back to the authored language — `docs/decisions-log.md#I18N-DEC-01` |
 | `CMS-006` | Audience and access | live | Public, every investor, or named investors. Enforced in the query that fetches the item, never in the template that renders it — the template is where this rule has historically been broken |
-| `CMS-007` | Search and filter in the room | live | Find an item by kind, by product, by period, or by its words. A room with two years of updates and no search is an archive nobody reads |
+| `CMS-007` | Search and filter in the hall | live | Find an item by kind, by product, by period, or by its words. A room with two years of updates and no search is an archive nobody reads |
 
 ### 5.4 What is written — `RPT`, `POST`, `DECK`, `INV`, `MAIL`
 
@@ -140,9 +140,9 @@ because an investor navigates each of them differently.
 | `DECK-002` | Deck versioning and publishing | building | A deck is published as a version; an investor reads the version they were granted; a draft is never visible |
 | `DECK-003` | Deck reading | design | The investor's view: sequential, readable on a phone, printable |
 | `DECK-004` | Deck access grants | building | Which investor may read which deck, granted and revoked by an admin, audited |
-| `INV-001` | Investor room shell | building | What a signed-in investor lands on: the update stream first, with the progress board, the current report, the deck and the gated chapters reachable from it |
+| `INV-001` | Investor hall shell | building | What a signed-in investor lands on: the update stream first, with the progress board, the current report, the deck and the gated chapters reachable from it |
 | `INV-002` | Gated gateway chapters, served | design | The two chapters and the seven mechanisms, delivered by the server to an authorised reader and to nobody else — this is what replaces the CSS demonstration |
-| `INV-003` | Portfolio progress | building | Where each of the six products stands, and the milestones ahead of it — the thing an investor opens the room to check when they have no time to read |
+| `INV-003` | Portfolio progress | building | Where each of the six products stands, and the milestones ahead of it — the thing an investor opens the hall to check when they have no time to read |
 | `MAIL-001` | Investor mail | blocked | An admin sends a message to selected investors; every send is recorded — built whole — composer, audience, send, retry and the TLS-only SMTP adapter (`docs/decisions-log.md#MAIL-DEC-01`); inert until the `SMTP_URL` credential is supplied |
 | `MAIL-002` | Mail log and unsubscribe | blocked | What was sent, to whom, when; a working unsubscribe that stops non-transactional mail — waits on the mail send path (`MAIL-001`) |
 
@@ -177,7 +177,7 @@ These hold across every feature. A feature that breaks one is not finished, what
 
 ### Security — `SEC-R*`
 
-- **SEC-R01** The investor room is gated at the server, never by CSS.
+- **SEC-R01** The investor hall is gated at the server, never by CSS.
 - **SEC-R02** Sessions are httpOnly and SameSite=Lax, rotated on sign-in and on any privilege change, and invalidated server-side on sign-out.
 - **SEC-R03** A sign-in failure is indistinguishable between an unknown account and a wrong password, and is rate-limited per account and per address.
 - **SEC-R04** Every privileged write is audited: actor, timestamp, before, after — append-only.
@@ -241,12 +241,12 @@ An investor additionally gets **how delivery works** — the five-phase engageme
 
 The reason for the line is not secrecy. It is that a buyer needs a decision and an investor needs a model, and one page cannot make both cases without becoming a hybrid that serves neither. The gateway was that hybrid until the split.
 
-### 7.2 What the room is for
+### 7.2 What the hall is for
 
 An investor signs in to find out **what has happened since they last looked**.
 That shapes three things.
 
-The room's landing surface is the **update stream**, not the deck: a reverse-
+The hall's landing surface is the **update stream**, not the deck: a reverse-
 chronological list of what the team announced, what it achieved, and how each
 product moved. An update carries a **kind**, because the three are read
 differently — an announcement is news, an achievement is evidence, and a progress
@@ -259,11 +259,11 @@ rather than a history, and it is the thing an admin updates when a milestone
 moves rather than when they have something to say.
 
 The **deck** is read once, at the start of a conversation, and the stream is read
-every time after. Both exist; the room is laid out for the second.
+every time after. Both exist; the hall is laid out for the second.
 
 ### 7.3 What the content system is, and what it is not
 
-It is the surface a non-developer uses to keep the investor room current. Its
+It is the surface a non-developer uses to keep the investor hall current. Its
 test is simple and unforgiving: **can the person who knows what happened this
 month put it in front of investors, correctly, without asking a developer?** If
 the answer needs a deploy, a migration or a rebuild, the system is not finished
@@ -318,13 +318,13 @@ The scene is documented under `docs/designs/scene/` in far more detail than this
 
 ## 8. Success
 
-The gateway succeeds when a regulated-industry buyer reads it and asks for the conversation, and when an investor reads the room and understands the portfolio without a call. Both are judged by the owner reading the pages, not by a metric this repository collects — see `docs/decisions-log.md#OPS-DEC-01` for whether it collects any at all.
+The gateway succeeds when a regulated-industry buyer reads it and asks for the conversation, and when an investor reads the hall and understands the portfolio without a call. Both are judged by the owner reading the pages, not by a metric this repository collects — see `docs/decisions-log.md#OPS-DEC-01` for whether it collects any at all.
 
 ---
 
 ## 9. Glossary
 
-`visitor` · `investor` · `admin` · `gateway` · `investor room` · `deck` · `post` · `scene` · `chapter` · `station` — defined once in `.claude/CLAUDE.md` §7.3 and not restated here.
+`visitor` · `investor` · `admin` · `gateway` · `investor hall` · `deck` · `post` · `scene` · `chapter` · `station` — defined once in `.claude/CLAUDE.md` §7.3 and not restated here.
 
 ---
 

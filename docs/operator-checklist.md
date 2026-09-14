@@ -75,7 +75,7 @@ item leaves this file when its signal is true — not when it feels handled.
 <a id="TERMS-REVIEW"></a>
 ### Have counsel read the terms page before it publishes
 
-- **What:** `SITE-006` builds `legal/terms`, and this repository is the least qualified thing in the company to write it. What ships without review is a plain statement of who operates the site, what the investor room is, and what a reader may not do with what they read there.
+- **What:** `SITE-006` builds `legal/terms`, and this repository is the least qualified thing in the company to write it. What ships without review is a plain statement of who operates the site, what the investor hall is, and what a reader may not do with what they read there.
 - **Who:** the owner, with counsel.
 - **Done when:** the page's English source has been read by somebody qualified, and the nineteen translations follow it.
 - **Until then:** the page is not published. `legal/privacy` and `legal/cookies` do not wait on this — they describe what the system does, which this repository does know.

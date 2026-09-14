@@ -7,8 +7,8 @@ import {
   PORTFOLIO_PRODUCTS,
 } from '../../db/types';
 
-/** What the reader has narrowed the room by, read from the URL. */
-export interface RoomQuery {
+/** What the reader has narrowed the hall by, read from the URL. */
+export interface HallQuery {
   readonly q: string;
   readonly kind: ContentUpdateKind | null;
   readonly product: ContentProductTag | null;
@@ -39,7 +39,7 @@ function oneOf<T extends string>(value: string, allowed: readonly T[]): T | null
  * has no closed vocabulary and is passed as typed; it reaches the statement as a
  * bound parameter like every other value.
  */
-export function readRoomQuery(params: Record<string, string | string[] | undefined>): RoomQuery {
+export function readHallQuery(params: Record<string, string | string[] | undefined>): HallQuery {
   const period = one(params.period);
   return {
     q: one(params.q),
@@ -61,7 +61,7 @@ export function readRoomQuery(params: Record<string, string | string[] | undefin
  * excluded the most would mean running the query once per narrowing to find out,
  * which is four more statements to answer a question about an empty screen.
  */
-export function narrowest(query: RoomQuery): Narrowing | null {
+export function narrowest(query: HallQuery): Narrowing | null {
   if (query.period !== null) return 'period';
   if (query.product !== null) return 'product';
   if (query.kind !== null) return 'kind';
@@ -71,11 +71,11 @@ export function narrowest(query: RoomQuery): Narrowing | null {
 }
 
 /**
- * The room's own address with one narrowing removed, so the offer to widen is a
+ * The hall's own address with one narrowing removed, so the offer to widen is a
  * link rather than a second form. Absent values are left out entirely, which
  * keeps a widened URL as short as the reader's remaining choices.
  */
-export function withoutNarrowing(query: RoomQuery, drop: Narrowing): string {
+export function withoutNarrowing(query: HallQuery, drop: Narrowing): string {
   const params = new URLSearchParams();
   const keep = (name: Narrowing, value: string | null): void => {
     if (name !== drop && value !== null && value !== '') {
@@ -89,5 +89,5 @@ export function withoutNarrowing(query: RoomQuery, drop: Narrowing): string {
   keep('period', query.period);
 
   const search = params.toString();
-  return search === '' ? '/room' : `/room?${search}`;
+  return search === '' ? '/hall' : `/hall?${search}`;
 }

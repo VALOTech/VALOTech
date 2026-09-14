@@ -38,9 +38,9 @@ describe('POST /api/locale', () => {
   });
 
   it('sets the chosen locale and returns the reader where they were', async () => {
-    const answer = await post({ locale: 'vi', next: '/room?type=update' });
+    const answer = await post({ locale: 'vi', next: '/hall?type=update' });
     expect(answer.status).toBe(303);
-    expect(answer.headers.get('location')).toBe('/room?type=update');
+    expect(answer.headers.get('location')).toBe('/hall?type=update');
     expect(answer.headers.get('set-cookie')).toContain('NEXT_LOCALE=vi');
   });
 
@@ -49,15 +49,15 @@ describe('POST /api/locale', () => {
     ['https://evil.example', 'an absolute URL'],
     ['/\\evil.example', 'a backslash a browser reads as a separator'],
     ['javascript:alert(1)', 'a scheme that is not a path'],
-    ['room', 'a path that is not rooted'],
+    ['hall', 'a path that is not rooted'],
   ])('refuses %s as a destination (%s)', async (next) => {
     const answer = await post({ locale: 'vi', next });
-    expect(answer.headers.get('location')).toBe('/room');
+    expect(answer.headers.get('location')).toBe('/hall');
   });
 
   it('changes nothing for a locale outside the catalogue', async () => {
     // Storing one would fall back on every render rather than fail once.
-    const answer = await post({ locale: 'klingon', next: '/room' });
+    const answer = await post({ locale: 'klingon', next: '/hall' });
     expect(answer.status).toBe(303);
     expect(answer.headers.get('set-cookie')).toBeNull();
   });
@@ -69,6 +69,6 @@ describe('POST /api/locale', () => {
   it('serves a client that sends no origin at all', async () => {
     // A non-browser client sends none, and the check is about a page driving
     // somebody's browser rather than about who is allowed to call it.
-    expect((await post({ locale: 'vi', next: '/room' }, null)).status).toBe(303);
+    expect((await post({ locale: 'vi', next: '/hall' }, null)).status).toBe(303);
   });
 });

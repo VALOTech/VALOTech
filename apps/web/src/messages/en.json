@@ -1,7 +1,7 @@
 {
   "signIn": {
     "title": "Investor sign-in",
-    "intro": "Enter your email address and password to open the investor room.",
+    "intro": "Enter your email address and password to open the investor hall.",
     "email": "Email address",
     "password": "Password",
     "submit": "Sign in",
@@ -11,7 +11,7 @@
   },
   "setPassword": {
     "title": "Choose your password",
-    "intro": "Set the password you will use to sign in to the investor room.",
+    "intro": "Set the password you will use to sign in to the investor hall.",
     "password": "New password",
     "confirm": "Confirm password",
     "submit": "Set password and sign in",
@@ -37,10 +37,10 @@
   "privacy": {
     "contactBody": "Write to {address}.",
     "contactTitle": "Who to write to",
-    "heldBasis": "The first two rest on your consent, given when you accepted your invitation. The last two rest on our legitimate interest in keeping your account secure and the room accurate.",
+    "heldBasis": "The first two rest on your consent, given when you accepted your invitation. The last two rest on our legitimate interest in keeping your account secure and the hall accurate.",
     "heldIdentity": "Your name and e-mail address, so a named person can be given access to company reporting.",
-    "heldReads": "Which documents you have opened, and when, so the room can show you what is new and record which version of a deck you were shown. This is yours alone: it is never aggregated, never reported as analytics, and it goes when your account goes.",
-    "heldRole": "Your role and the state of your account, so the room knows what you may read.",
+    "heldReads": "Which documents you have opened, and when, so the hall can show you what is new and record which version of a deck you were shown. This is yours alone: it is never aggregated, never reported as analytics, and it goes when your account goes.",
+    "heldRole": "Your role and the state of your account, so the hall knows what you may read.",
     "heldSessions": "Your last sign-in and your open sessions, so you and an administrator can see them and end them.",
     "heldTitle": "What we hold, and why",
     "intro": "VALO Tech holds a short list of things about the people who read its investor reporting. This page says what, why, how long, and what you can ask us for.",
@@ -53,13 +53,13 @@
     "rightsTitle": "What you can ask for",
     "rightsWhen": "We answer within thirty days.",
     "rightsWithdrawal": "To withdraw your consent, which means deleting your account, because access is the only thing your data is here for.",
-    "title": "How this room handles your data",
+    "title": "How this hall handles your data",
     "link": "How we handle your data"
   },
   "invitationMail": {
-    "subject": "An invitation to the VALO Tech investor room",
+    "subject": "An invitation to the VALO Tech investor hall",
     "greeting": "Hello {name},",
-    "intro": "{inviter} has invited you to the VALO Tech investor room, where the company publishes its reporting to the people who have invested in it.",
+    "intro": "{inviter} has invited you to the VALO Tech investor hall, where the company publishes its reporting to the people who have invested in it.",
     "action": "Open this link to choose a password and sign in:",
     "expiry": "The link can be used once, and it stops working after {days, plural, one {# day} other {# days}}.",
     "ignore": "If you were not expecting this, you can ignore this message. Nothing happens until the link is opened.",
@@ -68,7 +68,7 @@
   "resetMail": {
     "subject": "Reset your VALO Tech password",
     "greeting": "Hello {name},",
-    "intro": "Somebody asked to reset the password for this address at the VALO Tech investor room.",
+    "intro": "Somebody asked to reset the password for this address at the VALO Tech investor hall.",
     "action": "If that was you, open this link to choose a new password:",
     "expiry": "The link can be used once, and it stops working after {hours, plural, one {# hour} other {# hours}}.",
     "ignore": "If that was not you, your password has not changed and there is nothing you need to do.",
@@ -83,26 +83,26 @@
     "tooManyAttempts": "Too many attempts. Wait a moment and try again.",
     "unexpected": "Something went wrong. Try again in a moment.",
     "backToSignIn": "Back to sign-in",
-    "unavailable": "Resetting your own password is unavailable at the moment. Ask the person who invited you to the room."
+    "unavailable": "Resetting your own password is unavailable at the moment. Ask the person who invited you to the hall."
   },
   "mailPreference": {
     "title": "Investor mail",
     "confirmIntro": "Stop investor mail to this account? One press is all it takes, and you do not need to sign in.",
     "stop": "Stop investor mail",
-    "stops": "This stops investor updates — the messages VALO Tech sends to everyone with access to the investor room.",
+    "stops": "This stops investor updates — the messages VALO Tech sends to everyone with access to the investor hall.",
     "keeps": "It does not stop the messages you need in order to use your account: an invitation, a password reset, or a notice about a message sent to you. Those answer something you or an administrator asked for, so they still reach you.",
     "stopped": "Investor mail is stopped for this account.",
     "stoppedByCompany": "VALO Tech stopped investor mail to this account. If you start it again and messages still do not arrive, ask the person who invited you.",
     "on": "Investor mail is reaching this account.",
     "resume": "Start investor mail again",
-    "roomIntro": "Whether VALO Tech's investor updates reach the address on your account.",
+    "hallIntro": "Whether VALO Tech's investor updates reach the address on your account.",
     "expired": "This link no longer works. Sign in to change the setting on your account page, or ask the person who invited you.",
     "signIn": "Sign in"
   },
-  "room": {
+  "hall": {
     "title": "Investor hall",
     "nav": {
-      "room": "The hall",
+      "hall": "The hall",
       "account": "Account"
     },
     "signOut": "Sign out",

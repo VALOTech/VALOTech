@@ -8,7 +8,7 @@
 
 ## What this feature is
 
-`POST /api/auth/sign-in` — the one door into the investor room. It rate-limits by
+`POST /api/auth/sign-in` — the one door into the investor hall. It rate-limits by
 account and by address, verifies an Argon2id password — paying the same cost when
 the account does not exist, so the response time tells an attacker nothing — and
 on success writes a session row and returns the cookie. The thing that goes wrong

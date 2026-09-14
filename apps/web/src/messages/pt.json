@@ -1,7 +1,7 @@
 {
   "signIn": {
     "title": "Acesso a investidores",
-    "intro": "Introduza o seu endereço de e-mail e a sua palavra-passe para abrir a sala de investidores.",
+    "intro": "Introduza o seu endereço de e-mail e a sua palavra-passe para abrir o salão de investidores.",
     "email": "Endereço de e-mail",
     "password": "Palavra-passe",
     "submit": "Iniciar sessão",
@@ -11,7 +11,7 @@
   },
   "setPassword": {
     "title": "Escolha a sua palavra-passe",
-    "intro": "Defina a palavra-passe que irá usar para iniciar sessão na sala de investidores.",
+    "intro": "Defina a palavra-passe que irá usar para iniciar sessão no salão de investidores.",
     "password": "Nova palavra-passe",
     "confirm": "Confirme a palavra-passe",
     "submit": "Definir a palavra-passe e iniciar sessão",
@@ -37,10 +37,10 @@
   "privacy": {
     "contactBody": "Escreva para {address}.",
     "contactTitle": "A quem escrever",
-    "heldBasis": "Os dois primeiros assentam no seu consentimento, dado ao aceitar o convite. Os dois últimos assentam no nosso interesse legítimo em manter a sua conta segura e a sala exata.",
+    "heldBasis": "Os dois primeiros assentam no seu consentimento, dado ao aceitar o convite. Os dois últimos assentam no nosso interesse legítimo em manter a sua conta segura e o salão exato.",
     "heldIdentity": "O seu nome e o seu endereço de e-mail, para que uma pessoa identificada possa ter acesso aos relatórios da empresa.",
-    "heldReads": "Que documentos abriu e quando, para que a sala lhe possa mostrar o que é novo e registar que versão de uma apresentação lhe foi mostrada. Isto é só seu: nunca é agregado, nunca é comunicado como análise e desaparece com a sua conta.",
-    "heldRole": "A sua função e o estado da sua conta, para que a sala saiba o que pode ler.",
+    "heldReads": "Que documentos abriu e quando, para que o salão lhe possa mostrar o que é novo e registar que versão de uma apresentação lhe foi mostrada. Isto é só seu: nunca é agregado, nunca é comunicado como análise e desaparece com a sua conta.",
+    "heldRole": "A sua função e o estado da sua conta, para que o salão saiba o que pode ler.",
     "heldSessions": "A sua última entrada e as suas sessões abertas, para que você e um administrador as possam ver e terminar.",
     "heldTitle": "O que guardamos, e porquê",
     "intro": "A VALO Tech guarda uma lista breve de dados sobre as pessoas que leem os seus relatórios a investidores. Esta página diz o quê, porquê, durante quanto tempo e o que nos pode pedir.",
@@ -53,13 +53,13 @@
     "rightsTitle": "O que pode pedir",
     "rightsWhen": "Respondemos no prazo de trinta dias.",
     "rightsWithdrawal": "Retirar o seu consentimento, o que significa apagar a sua conta, porque os seus dados só aqui estão para lhe dar acesso.",
-    "title": "Como esta sala trata os seus dados",
+    "title": "Como este salão trata os seus dados",
     "link": "Como tratamos os seus dados"
   },
   "invitationMail": {
-    "subject": "Um convite para a sala de investidores da VALO Tech",
+    "subject": "Um convite para o salão de investidores da VALO Tech",
     "greeting": "Olá {name},",
-    "intro": "{inviter} convidou-o para a sala de investidores da VALO Tech, onde a empresa publica os seus relatórios para quem investiu nela.",
+    "intro": "{inviter} convidou-o para o salão de investidores da VALO Tech, onde a empresa publica os seus relatórios para quem investiu nela.",
     "action": "Abra esta ligação para escolher uma palavra-passe e iniciar sessão:",
     "expiry": "A ligação só pode ser usada uma vez e deixa de funcionar ao fim de {days, plural, one {# dia} other {# dias}}.",
     "ignore": "Se não estava à espera desta mensagem, pode ignorá-la. Nada acontece até a ligação ser aberta.",
@@ -68,7 +68,7 @@
   "resetMail": {
     "subject": "Redefina a sua palavra-passe da VALO Tech",
     "greeting": "Olá {name},",
-    "intro": "Alguém pediu a redefinição da palavra-passe deste endereço na sala de investidores da VALO Tech.",
+    "intro": "Alguém pediu a redefinição da palavra-passe deste endereço no salão de investidores da VALO Tech.",
     "action": "Se foi você, abra esta ligação para escolher uma nova palavra-passe:",
     "expiry": "A ligação só pode ser usada uma vez e deixa de funcionar ao fim de {hours, plural, one {# hora} other {# horas}}.",
     "ignore": "Se não foi você, a sua palavra-passe não mudou e não tem nada a fazer.",
@@ -83,26 +83,26 @@
     "tooManyAttempts": "Demasiadas tentativas. Aguarde um momento e tente novamente.",
     "unexpected": "Algo correu mal. Tente novamente daqui a pouco.",
     "backToSignIn": "Voltar ao início de sessão",
-    "unavailable": "De momento não é possível redefinir a sua própria palavra-passe. Contacte quem o convidou para a sala de investidores."
+    "unavailable": "De momento não é possível redefinir a sua própria palavra-passe. Contacte quem o convidou para o salão de investidores."
   },
   "mailPreference": {
     "title": "Correio para investidores",
     "confirmIntro": "Deixar de enviar o correio para investidores para esta conta? Basta um toque, e não precisa de iniciar sessão.",
     "stop": "Deixar de receber o correio para investidores",
-    "stops": "Isto interrompe as novidades para investidores, ou seja, as mensagens que a VALO Tech envia a todas as pessoas com acesso à sala de investidores.",
+    "stops": "Isto interrompe as novidades para investidores, ou seja, as mensagens que a VALO Tech envia a todas as pessoas com acesso ao salão de investidores.",
     "keeps": "Não interrompe as mensagens de que precisa para usar a sua conta: um convite, uma redefinição de palavra-passe ou um aviso sobre uma mensagem que lhe foi enviada. Essas respondem a um pedido seu ou de um administrador, por isso continuam a chegar-lhe.",
     "stopped": "O correio para investidores está interrompido nesta conta.",
     "stoppedByCompany": "A VALO Tech interrompeu o correio para investidores para esta conta. Se voltar a ativá-lo e as mensagens continuarem a não chegar, contacte quem o convidou.",
     "on": "O correio para investidores está a chegar a esta conta.",
     "resume": "Voltar a receber o correio para investidores",
-    "roomIntro": "Se as novidades da VALO Tech para investidores chegam ao endereço da sua conta.",
+    "hallIntro": "Se as novidades da VALO Tech para investidores chegam ao endereço da sua conta.",
     "expired": "Esta ligação já não funciona. Inicie sessão para alterar esta definição na página da sua conta, ou contacte quem o convidou.",
     "signIn": "Iniciar sessão"
   },
-  "room": {
+  "hall": {
     "title": "Salão de investidores",
     "nav": {
-      "room": "O salão",
+      "hall": "O salão",
       "account": "Conta"
     },
     "signOut": "Terminar sessão",

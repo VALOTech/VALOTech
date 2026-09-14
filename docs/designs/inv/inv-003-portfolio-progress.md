@@ -16,7 +16,7 @@ status: in-progress
 
 Where each of the six products stands, right now. Realizes `INV-003`.
 
-It is the thing an investor opens the room to check when they have no time to
+It is the thing an investor opens the hall to check when they have no time to
 read, and it is the one surface here that is a **state rather than a history**.
 The update stream says what happened; this says where things are. An investor
 asked to reconstruct the second from the first is being asked to do the company's

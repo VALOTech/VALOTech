@@ -10,7 +10,7 @@ cross_cutting_rules: [DATA-R04, DATA-R02, DATA-R03, SEC-R04, A11Y-R01, I18N-R01]
 status: in-progress
 inert_until:
   reason: Both halves are built and both answer today for the parts that do not
-    need a message to have left. An investor signed in to the room sees their own
+    need a message to have left. An investor signed in to the hall sees their own
     investor-mail preference and can stop it; an admin sees the log, filtered by
     recipient and by day, and can stop investor mail to one person with the
     reason. **What is inert is everything the message carries.** No investor
@@ -100,7 +100,7 @@ reports never receiving an invitation, which is also the signal named on
 
     GET  /unsubscribe/<token>    the confirmation: what stops, what does not, one button
     POST /api/unsubscribe        what that button posts, and the only thing that writes
-    POST /api/account/mail       the preference, from inside the room
+    POST /api/account/mail       the preference, from inside the hall
 
 Every **bulk** message carries the link, and the token identifies the account
 without authenticating it — an unsubscribe that requires signing in is an
@@ -126,7 +126,7 @@ with a purpose label inside the hash so that a value minted for one signer does
 not verify at the other. Rotating that secret invalidates every link already in
 an inbox, which is the price of deriving rather than storing; the page reads a
 dead link as one to sign in past rather than as a forgery, and the preference
-inside the room writes the same row.
+inside the hall writes the same row.
 
 **`source` says who decided, and the row proves or explains itself
 accordingly.** `link` is the person's own act, by the link in a message or by
@@ -198,7 +198,7 @@ them. **`SEC-002`** records the send as a fact; this is the detail.
 ## 7. Task list
 
 - `MAIL-002/T1` — Rows written before the attempt, keyed by account and never by address
-- `MAIL-002/T2` — An unsubscribe that works in one click without signing in, and a preference inside the room
+- `MAIL-002/T2` — An unsubscribe that works in one click without signing in, and a preference inside the hall
 - `MAIL-002/T3` — Transactional mail is never suppressed, enforced by the `kind` set at send time
 - `MAIL-002/T4` — A manual `stop sending` control with its reason, and the send view naming the mailbox bounces arrive in
 - `MAIL-002/T5` — Two-year retention, and immediate removal with the account

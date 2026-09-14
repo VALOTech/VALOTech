@@ -181,7 +181,7 @@ describe('the security baseline', () => {
     );
   });
 
-  it.each(['/', '/room', '/room/2026-q3', '/account/sessions', '/api/auth/sign-out'])(
+  it.each(['/', '/hall', '/hall/2026-q3', '/account/sessions', '/api/auth/sign-out'])(
     'sets every header on %s, so no route is exempt',
     (path) => {
       const response = proxy(requestWith(null, path));
@@ -212,10 +212,10 @@ describe('the proxy', () => {
 
   it('marks a response on any path, so a surface added later is covered by nothing', () => {
     // The property this file exists for. A prefix list would have to name
-    // `/room` on the day INV-002 mounts it, and would silently omit it on every
+    // `/hall` on the day INV-002 mounts it, and would silently omit it on every
     // day somebody forgets; the cookie is what makes the response an
     // authenticated one, and it is the same cookie on every path.
-    for (const path of ['/', '/room', '/room/2026-q3', '/account/sessions', '/api/anything']) {
+    for (const path of ['/', '/hall', '/hall/2026-q3', '/account/sessions', '/api/anything']) {
       const response = proxy(requestWith(presentedCookie(), path));
 
       expect(response.headers.get('Cache-Control')).toBe(NO_STORE);
@@ -248,7 +248,7 @@ describe('the proxy', () => {
 });
 
 describe('the matcher', () => {
-  it.each(['/', '/room', '/account/sessions', '/api/auth/sign-out'])(
+  it.each(['/', '/hall', '/account/sessions', '/api/auth/sign-out'])(
     'runs the proxy on %s',
     (path) => {
       expect(matches(path)).toBe(true);

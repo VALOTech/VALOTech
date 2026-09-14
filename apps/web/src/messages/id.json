@@ -1,7 +1,7 @@
 {
   "signIn": {
     "title": "Masuk investor",
-    "intro": "Masukkan alamat email dan kata sandi Anda untuk membuka ruang investor.",
+    "intro": "Masukkan alamat email dan kata sandi Anda untuk membuka aula investor.",
     "email": "Alamat email",
     "password": "Kata sandi",
     "submit": "Masuk",
@@ -11,7 +11,7 @@
   },
   "setPassword": {
     "title": "Pilih kata sandi Anda",
-    "intro": "Tetapkan kata sandi yang akan Anda gunakan untuk masuk ke ruang investor.",
+    "intro": "Tetapkan kata sandi yang akan Anda gunakan untuk masuk ke aula investor.",
     "password": "Kata sandi baru",
     "confirm": "Konfirmasi kata sandi",
     "submit": "Tetapkan kata sandi dan masuk",
@@ -37,10 +37,10 @@
   "privacy": {
     "contactBody": "Tulislah ke {address}.",
     "contactTitle": "Kepada siapa menulis",
-    "heldBasis": "Dua hal pertama bersandar pada persetujuan Anda, yang diberikan saat menerima undangan. Dua hal terakhir bersandar pada kepentingan sah kami menjaga akun Anda tetap aman dan ruang ini tetap akurat.",
+    "heldBasis": "Dua hal pertama bersandar pada persetujuan Anda, yang diberikan saat menerima undangan. Dua hal terakhir bersandar pada kepentingan sah kami menjaga akun Anda tetap aman dan aula ini tetap akurat.",
     "heldIdentity": "Nama dan alamat surel Anda, agar seseorang yang disebut namanya dapat diberi akses ke laporan perusahaan.",
-    "heldReads": "Dokumen mana yang Anda buka dan kapan, agar ruang ini dapat menunjukkan apa yang baru dan mencatat versi paparan mana yang Anda lihat. Ini milik Anda sendiri: tidak pernah diagregasi, tidak pernah dilaporkan sebagai analitik, dan hilang bersama akun Anda.",
-    "heldRole": "Peran dan status akun Anda, agar ruang ini tahu apa yang boleh Anda baca.",
+    "heldReads": "Dokumen mana yang Anda buka dan kapan, agar aula ini dapat menunjukkan apa yang baru dan mencatat versi paparan mana yang Anda lihat. Ini milik Anda sendiri: tidak pernah diagregasi, tidak pernah dilaporkan sebagai analitik, dan hilang bersama akun Anda.",
+    "heldRole": "Peran dan status akun Anda, agar aula ini tahu apa yang boleh Anda baca.",
     "heldSessions": "Waktu masuk terakhir dan sesi Anda yang terbuka, agar Anda dan administrator dapat melihat serta mengakhirinya.",
     "heldTitle": "Apa yang kami simpan, dan mengapa",
     "intro": "VALO Tech menyimpan daftar singkat mengenai orang-orang yang membaca laporan investornya. Halaman ini menjelaskan apa, mengapa, berapa lama, dan apa yang dapat Anda minta dari kami.",
@@ -53,13 +53,13 @@
     "rightsTitle": "Apa yang dapat Anda minta",
     "rightsWhen": "Kami menjawab dalam tiga puluh hari.",
     "rightsWithdrawal": "Menarik persetujuan Anda, yang berarti menghapus akun Anda, karena data Anda ada di sini hanya untuk akses.",
-    "title": "Bagaimana ruang ini menangani data Anda",
+    "title": "Bagaimana aula ini menangani data Anda",
     "link": "Bagaimana kami menangani data Anda"
   },
   "invitationMail": {
-    "subject": "Undangan ke ruang investor VALO Tech",
+    "subject": "Undangan ke aula investor VALO Tech",
     "greeting": "Halo {name},",
-    "intro": "{inviter} mengundang Anda ke ruang investor VALO Tech, tempat perusahaan menerbitkan laporannya kepada orang-orang yang telah berinvestasi di dalamnya.",
+    "intro": "{inviter} mengundang Anda ke aula investor VALO Tech, tempat perusahaan menerbitkan laporannya kepada orang-orang yang telah berinvestasi di dalamnya.",
     "action": "Buka tautan ini untuk memilih kata sandi dan masuk:",
     "expiry": "Tautan ini hanya dapat digunakan sekali, dan berhenti berlaku setelah {days, plural, other {# hari}}.",
     "ignore": "Jika Anda tidak mengharapkan pesan ini, Anda dapat mengabaikannya. Tidak ada yang terjadi sampai tautan dibuka.",
@@ -68,7 +68,7 @@
   "resetMail": {
     "subject": "Atur ulang kata sandi VALO Tech Anda",
     "greeting": "Halo {name},",
-    "intro": "Seseorang meminta pengaturan ulang kata sandi untuk alamat ini di ruang investor VALO Tech.",
+    "intro": "Seseorang meminta pengaturan ulang kata sandi untuk alamat ini di aula investor VALO Tech.",
     "action": "Jika itu Anda, buka tautan ini untuk memilih kata sandi baru:",
     "expiry": "Tautan ini hanya dapat digunakan sekali, dan berhenti berlaku setelah {hours, plural, other {# jam}}.",
     "ignore": "Jika itu bukan Anda, kata sandi Anda tidak berubah dan tidak ada yang perlu Anda lakukan.",
@@ -83,26 +83,26 @@
     "tooManyAttempts": "Terlalu banyak percobaan. Tunggu sebentar lalu coba lagi.",
     "unexpected": "Terjadi kesalahan. Coba lagi sebentar lagi.",
     "backToSignIn": "Kembali ke halaman masuk",
-    "unavailable": "Mengatur ulang kata sandi sendiri tidak tersedia saat ini. Hubungi orang yang mengundang Anda ke ruang investor."
+    "unavailable": "Mengatur ulang kata sandi sendiri tidak tersedia saat ini. Hubungi orang yang mengundang Anda ke aula investor."
   },
   "mailPreference": {
     "title": "Email investor",
     "confirmIntro": "Hentikan email investor ke akun ini? Cukup satu kali tekan, dan Anda tidak perlu masuk.",
     "stop": "Hentikan email investor",
-    "stops": "Ini menghentikan kabar terbaru untuk investor, yaitu pesan yang dikirim VALO Tech kepada semua orang yang punya akses ke ruang investor.",
+    "stops": "Ini menghentikan kabar terbaru untuk investor, yaitu pesan yang dikirim VALO Tech kepada semua orang yang punya akses ke aula investor.",
     "keeps": "Ini tidak menghentikan pesan yang Anda perlukan untuk menggunakan akun Anda: undangan, pengaturan ulang kata sandi, atau pemberitahuan tentang pesan yang dikirim kepada Anda. Pesan seperti itu menjawab sesuatu yang Anda atau administrator minta, jadi tetap sampai kepada Anda.",
     "stopped": "Email investor dihentikan untuk akun ini.",
     "stoppedByCompany": "VALO Tech menghentikan email investor ke akun ini. Jika Anda menyalakannya lagi dan pesan tetap tidak sampai, hubungi orang yang mengundang Anda.",
     "on": "Email investor sampai ke akun ini.",
     "resume": "Nyalakan lagi email investor",
-    "roomIntro": "Apakah kabar terbaru VALO Tech untuk investor sampai ke alamat pada akun Anda.",
+    "hallIntro": "Apakah kabar terbaru VALO Tech untuk investor sampai ke alamat pada akun Anda.",
     "expired": "Tautan ini sudah tidak berlaku. Masuk untuk mengubah setelan ini di halaman akun Anda, atau hubungi orang yang mengundang Anda.",
     "signIn": "Masuk"
   },
-  "room": {
+  "hall": {
     "title": "Aula investor",
     "nav": {
-      "room": "Aula",
+      "hall": "Aula",
       "account": "Akun"
     },
     "signOut": "Keluar",

@@ -22,7 +22,7 @@ reader sees: a locale becomes servable only when an admin has reviewed it, and
 until then the reader gets the authored language — reconciling `P-05`'s twenty
 languages with `I18N-R04`'s fallback, because an unreviewed draft is not a
 translation and showing the source language is exactly what the fallback
-describes. `CMS-DEC-04` fixes what a draft is: the room runs no translation
+describes. `CMS-DEC-04` fixes what a draft is: the hall runs no translation
 service, so drafting **seeds** the target locale with the source blocks, marks
 intact, and the admin writes the translation in the review screen. Nothing
 machine-made is ever produced or served.
@@ -75,7 +75,7 @@ nobody.
 **The revision seeded is the latest** — the open draft while one is open, and
 otherwise the newest published. That is the revision an admin is working on; an
 earlier published one is reachable only by withdrawing back to it, and a
-translation of it would be a translation of text the room is not showing. The
+translation of it would be a translation of text the hall is not showing. The
 grid says so by offering the act on its newest column alone.
 
 **A locale already started is refused rather than re-seeded.** The row may hold
@@ -176,7 +176,7 @@ list, the twenty codes, and the interface strings around the content.
 
 ## 6. Open questions and trade-offs
 
-- **Are twenty locales right for the investor room at all?** The gateway needs
+- **Are twenty locales right for the investor hall at all?** The gateway needs
   them because a visitor arrives from anywhere. Investors are named people, and
   most of them read English or Vietnamese. This design supports twenty and
   requires none: an admin translates the locales their investors read and leaves

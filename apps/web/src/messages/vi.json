@@ -1,7 +1,7 @@
 {
   "signIn": {
     "title": "Đăng nhập nhà đầu tư",
-    "intro": "Nhập địa chỉ email và mật khẩu của bạn để vào phòng nhà đầu tư.",
+    "intro": "Nhập địa chỉ email và mật khẩu của bạn để vào sảnh nhà đầu tư.",
     "email": "Địa chỉ email",
     "password": "Mật khẩu",
     "submit": "Đăng nhập",
@@ -11,7 +11,7 @@
   },
   "setPassword": {
     "title": "Chọn mật khẩu của bạn",
-    "intro": "Đặt mật khẩu bạn sẽ dùng để đăng nhập vào phòng nhà đầu tư.",
+    "intro": "Đặt mật khẩu bạn sẽ dùng để đăng nhập vào sảnh nhà đầu tư.",
     "password": "Mật khẩu mới",
     "confirm": "Xác nhận mật khẩu",
     "submit": "Đặt mật khẩu và đăng nhập",
@@ -37,10 +37,10 @@
   "privacy": {
     "contactBody": "Hãy viết tới {address}.",
     "contactTitle": "Viết cho ai",
-    "heldBasis": "Hai mục đầu dựa trên sự đồng ý của bạn, đã đưa ra khi bạn chấp nhận lời mời. Hai mục sau dựa trên lợi ích hợp pháp của chúng tôi trong việc giữ tài khoản của bạn an toàn và giữ cho phòng chính xác.",
+    "heldBasis": "Hai mục đầu dựa trên sự đồng ý của bạn, đã đưa ra khi bạn chấp nhận lời mời. Hai mục sau dựa trên lợi ích hợp pháp của chúng tôi trong việc giữ tài khoản của bạn an toàn và giữ cho sảnh chính xác.",
     "heldIdentity": "Tên và địa chỉ e-mail của bạn, để một người có tên cụ thể được cấp quyền đọc báo cáo của công ty.",
-    "heldReads": "Bạn đã mở tài liệu nào và vào lúc nào, để phòng cho bạn thấy những gì còn mới và ghi lại phiên bản bộ tài liệu bạn đã xem. Thông tin này chỉ thuộc về bạn: không bao giờ được tổng hợp, không bao giờ được báo cáo như số liệu phân tích, và sẽ mất đi cùng tài khoản của bạn.",
-    "heldRole": "Vai trò và trạng thái tài khoản của bạn, để phòng biết bạn được phép đọc những gì.",
+    "heldReads": "Bạn đã mở tài liệu nào và vào lúc nào, để sảnh cho bạn thấy những gì còn mới và ghi lại phiên bản bộ tài liệu bạn đã xem. Thông tin này chỉ thuộc về bạn: không bao giờ được tổng hợp, không bao giờ được báo cáo như số liệu phân tích, và sẽ mất đi cùng tài khoản của bạn.",
+    "heldRole": "Vai trò và trạng thái tài khoản của bạn, để sảnh biết bạn được phép đọc những gì.",
     "heldSessions": "Lần đăng nhập gần nhất và các phiên đang mở của bạn, để bạn và quản trị viên có thể xem và kết thúc chúng.",
     "heldTitle": "Chúng tôi giữ gì, và vì sao",
     "intro": "VALO Tech lưu giữ một danh sách ngắn về những người đọc báo cáo dành cho nhà đầu tư. Trang này cho biết chúng tôi giữ gì, vì sao, trong bao lâu, và bạn có thể yêu cầu những gì.",
@@ -53,13 +53,13 @@
     "rightsTitle": "Bạn có thể yêu cầu những gì",
     "rightsWhen": "Chúng tôi trả lời trong vòng ba mươi ngày.",
     "rightsWithdrawal": "Rút lại sự đồng ý của bạn, nghĩa là xóa tài khoản, vì dữ liệu của bạn ở đây chỉ để phục vụ việc truy cập.",
-    "title": "Cách phòng này xử lý dữ liệu của bạn",
+    "title": "Cách sảnh này xử lý dữ liệu của bạn",
     "link": "Cách chúng tôi xử lý dữ liệu của bạn"
   },
   "invitationMail": {
-    "subject": "Lời mời vào phòng nhà đầu tư VALO Tech",
+    "subject": "Lời mời vào sảnh nhà đầu tư VALO Tech",
     "greeting": "Chào {name},",
-    "intro": "{inviter} đã mời bạn vào phòng nhà đầu tư VALO Tech, nơi công ty công bố các báo cáo của mình cho những người đã đầu tư.",
+    "intro": "{inviter} đã mời bạn vào sảnh nhà đầu tư VALO Tech, nơi công ty công bố các báo cáo của mình cho những người đã đầu tư.",
     "action": "Mở liên kết này để chọn mật khẩu và đăng nhập:",
     "expiry": "Liên kết chỉ dùng được một lần và sẽ hết hiệu lực sau {days, plural, other {# ngày}}.",
     "ignore": "Nếu bạn không mong đợi thư này, bạn có thể bỏ qua nó. Không có gì xảy ra cho đến khi liên kết được mở.",
@@ -68,7 +68,7 @@
   "resetMail": {
     "subject": "Đặt lại mật khẩu VALO Tech của bạn",
     "greeting": "Chào {name},",
-    "intro": "Có người đã yêu cầu đặt lại mật khẩu cho địa chỉ này tại phòng nhà đầu tư VALO Tech.",
+    "intro": "Có người đã yêu cầu đặt lại mật khẩu cho địa chỉ này tại sảnh nhà đầu tư VALO Tech.",
     "action": "Nếu đó là bạn, hãy mở liên kết này để chọn mật khẩu mới:",
     "expiry": "Liên kết chỉ dùng được một lần và sẽ hết hiệu lực sau {hours, plural, other {# giờ}}.",
     "ignore": "Nếu đó không phải là bạn, mật khẩu của bạn không thay đổi và bạn không cần làm gì cả.",
@@ -83,26 +83,26 @@
     "tooManyAttempts": "Quá nhiều lần thử. Hãy đợi một lát rồi thử lại.",
     "unexpected": "Đã có lỗi xảy ra. Hãy thử lại sau giây lát.",
     "backToSignIn": "Quay lại đăng nhập",
-    "unavailable": "Hiện không thể tự đặt lại mật khẩu. Hãy liên hệ người đã mời bạn vào phòng nhà đầu tư."
+    "unavailable": "Hiện không thể tự đặt lại mật khẩu. Hãy liên hệ người đã mời bạn vào sảnh nhà đầu tư."
   },
   "mailPreference": {
     "title": "Thư dành cho nhà đầu tư",
     "confirmIntro": "Dừng thư dành cho nhà đầu tư gửi tới tài khoản này? Chỉ cần một lần nhấn, và bạn không cần đăng nhập.",
     "stop": "Dừng thư dành cho nhà đầu tư",
-    "stops": "Việc này dừng các bản tin dành cho nhà đầu tư, tức là những thư VALO Tech gửi cho tất cả những người có quyền vào phòng nhà đầu tư.",
+    "stops": "Việc này dừng các bản tin dành cho nhà đầu tư, tức là những thư VALO Tech gửi cho tất cả những người có quyền vào sảnh nhà đầu tư.",
     "keeps": "Việc này không dừng những thư bạn cần để sử dụng tài khoản: lời mời, đặt lại mật khẩu, hay thông báo về một tin nhắn gửi cho bạn. Những thư đó đáp lại điều mà bạn hoặc quản trị viên đã yêu cầu, nên vẫn đến với bạn.",
     "stopped": "Thư dành cho nhà đầu tư đã dừng đối với tài khoản này.",
     "stoppedByCompany": "VALO Tech đã dừng thư dành cho nhà đầu tư tới tài khoản này. Nếu bạn bật lại mà thư vẫn không đến, hãy liên hệ người đã mời bạn.",
     "on": "Thư dành cho nhà đầu tư đang được gửi tới tài khoản này.",
     "resume": "Nhận lại thư dành cho nhà đầu tư",
-    "roomIntro": "Các bản tin dành cho nhà đầu tư của VALO Tech có đến địa chỉ trên tài khoản của bạn hay không.",
+    "hallIntro": "Các bản tin dành cho nhà đầu tư của VALO Tech có đến địa chỉ trên tài khoản của bạn hay không.",
     "expired": "Liên kết này không còn hiệu lực. Hãy đăng nhập để thay đổi thiết lập trên trang tài khoản của bạn, hoặc liên hệ người đã mời bạn.",
     "signIn": "Đăng nhập"
   },
-  "room": {
+  "hall": {
     "title": "Sảnh nhà đầu tư",
     "nav": {
-      "room": "Sảnh",
+      "hall": "Sảnh",
       "account": "Tài khoản"
     },
     "signOut": "Đăng xuất",

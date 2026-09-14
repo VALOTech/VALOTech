@@ -71,7 +71,7 @@ stylesheet that drifts from the first is two documents to keep true.
 
 ### The scene
 
-None, as in the rest of the room.
+None, as in the rest of the hall.
 
 ## 4. Integration
 
@@ -99,7 +99,7 @@ be here. **`INV-001`** is the chrome.
   their context from the overview. If the company presents this deck often
   enough for that to hurt, it is worth building then, as its own code.
 - **No download.** Print-to-PDF gives the investor a file. An explicit download
-  would be a second rendering path, and a PDF that leaves the room takes its
+  would be a second rendering path, and a PDF that leaves the hall takes its
   audience rule with it — which is to say it does not.
 
 ## 7. Task list

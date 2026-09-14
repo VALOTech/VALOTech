@@ -1,7 +1,7 @@
 {
   "signIn": {
     "title": "Pag-sign in ng investor",
-    "intro": "Ilagay ang inyong email address at password upang buksan ang investor room.",
+    "intro": "Ilagay ang inyong email address at password upang buksan ang bulwagan ng mamumuhunan.",
     "email": "Email address",
     "password": "Password",
     "submit": "Mag-sign in",
@@ -11,7 +11,7 @@
   },
   "setPassword": {
     "title": "Piliin ang iyong password",
-    "intro": "Itakda ang password na gagamitin mo para mag-sign in sa investor room.",
+    "intro": "Itakda ang password na gagamitin mo para mag-sign in sa bulwagan ng mamumuhunan.",
     "password": "Bagong password",
     "confirm": "Kumpirmahin ang password",
     "submit": "Itakda ang password at mag-sign in",
@@ -37,10 +37,10 @@
   "privacy": {
     "contactBody": "Sumulat sa {address}.",
     "contactTitle": "Kanino susulat",
-    "heldBasis": "Ang unang dalawa ay nakasalalay sa iyong pahintulot, na ibinigay nang tanggapin mo ang paanyaya. Ang huling dalawa ay nakasalalay sa aming lehitimong interes na panatilihing ligtas ang iyong account at tumpak ang silid.",
+    "heldBasis": "Ang unang dalawa ay nakasalalay sa iyong pahintulot, na ibinigay nang tanggapin mo ang paanyaya. Ang huling dalawa ay nakasalalay sa aming lehitimong interes na panatilihing ligtas ang iyong account at tumpak ang bulwagan.",
     "heldIdentity": "Ang iyong pangalan at e-mail address, upang mabigyan ng akses sa mga ulat ng kompanya ang isang taong may pangalan.",
-    "heldReads": "Kung aling mga dokumento ang binuksan mo at kailan, upang maipakita ng silid kung ano ang bago at maitala kung aling bersyon ng presentasyon ang ipinakita sa iyo. Sa iyo lamang ito: hindi kailanman pinagsasama-sama, hindi kailanman iniuulat bilang analytics, at nawawala kasabay ng iyong account.",
-    "heldRole": "Ang iyong papel at ang kalagayan ng iyong account, upang malaman ng silid kung ano ang maaari mong basahin.",
+    "heldReads": "Kung aling mga dokumento ang binuksan mo at kailan, upang maipakita ng bulwagan kung ano ang bago at maitala kung aling bersyon ng presentasyon ang ipinakita sa iyo. Sa iyo lamang ito: hindi kailanman pinagsasama-sama, hindi kailanman iniuulat bilang analytics, at nawawala kasabay ng iyong account.",
+    "heldRole": "Ang iyong papel at ang kalagayan ng iyong account, upang malaman ng bulwagan kung ano ang maaari mong basahin.",
     "heldSessions": "Ang huli mong pag-sign in at ang iyong mga bukas na sesyon, upang makita at matapos mo at ng administrador ang mga ito.",
     "heldTitle": "Ano ang itinatago namin, at bakit",
     "intro": "Kaunti lang ang itinatago ng VALO Tech tungkol sa mga taong bumabasa ng mga ulat nito para sa mga namumuhunan. Sinasabi ng pahinang ito kung ano, bakit, gaano katagal, at ano ang maaari mong hilingin sa amin.",
@@ -53,13 +53,13 @@
     "rightsTitle": "Ano ang maaari mong hilingin",
     "rightsWhen": "Sumasagot kami sa loob ng tatlumpung araw.",
     "rightsWithdrawal": "Ang pag-urong ng iyong pahintulot, na nangangahulugang pagtanggal ng iyong account, dahil ang iyong datos ay narito para lamang sa akses.",
-    "title": "Paano pinangangasiwaan ng silid na ito ang iyong datos",
+    "title": "Paano pinangangasiwaan ng bulwagan na ito ang iyong datos",
     "link": "Paano namin pinangangasiwaan ang iyong datos"
   },
   "invitationMail": {
-    "subject": "Isang imbitasyon sa investor room ng VALO Tech",
+    "subject": "Isang imbitasyon sa bulwagan ng mamumuhunan ng VALO Tech",
     "greeting": "Kumusta {name},",
-    "intro": "Inimbitahan ka ni {inviter} sa investor room ng VALO Tech, kung saan inilalathala ng kumpanya ang mga ulat nito sa mga namuhunan dito.",
+    "intro": "Inimbitahan ka ni {inviter} sa bulwagan ng mamumuhunan ng VALO Tech, kung saan inilalathala ng kumpanya ang mga ulat nito sa mga namuhunan dito.",
     "action": "Buksan ang link na ito upang pumili ng password at mag-sign in:",
     "expiry": "Isang beses lang magagamit ang link, at hihinto itong gumana pagkatapos ng {days, plural, other {# araw}}.",
     "ignore": "Kung hindi mo ito inaasahan, maaari mong balewalain ang mensaheng ito. Walang mangyayari hangga't hindi binubuksan ang link.",
@@ -68,7 +68,7 @@
   "resetMail": {
     "subject": "I-reset ang iyong password sa VALO Tech",
     "greeting": "Kumusta {name},",
-    "intro": "May humiling na i-reset ang password para sa address na ito sa investor room ng VALO Tech.",
+    "intro": "May humiling na i-reset ang password para sa address na ito sa bulwagan ng mamumuhunan ng VALO Tech.",
     "action": "Kung ikaw iyon, buksan ang link na ito upang pumili ng bagong password:",
     "expiry": "Isang beses lang magagamit ang link, at hihinto itong gumana pagkatapos ng {hours, plural, other {# oras}}.",
     "ignore": "Kung hindi ikaw iyon, hindi nagbago ang iyong password at wala kang kailangang gawin.",
@@ -83,26 +83,26 @@
     "tooManyAttempts": "Masyadong maraming pagsubok. Maghintay saglit at subukang muli.",
     "unexpected": "May nangyaring mali. Subukang muli mamaya.",
     "backToSignIn": "Bumalik sa sign-in",
-    "unavailable": "Hindi available sa ngayon ang pag-reset ng sarili mong password. Makipag-ugnayan sa taong nag-imbita sa iyo sa investor room."
+    "unavailable": "Hindi available sa ngayon ang pag-reset ng sarili mong password. Makipag-ugnayan sa taong nag-imbita sa iyo sa bulwagan ng mamumuhunan."
   },
   "mailPreference": {
     "title": "Mail para sa investor",
     "confirmIntro": "Ihinto ang mail para sa investor papunta sa account na ito? Isang pindot lang ang kailangan, at hindi mo kailangang mag-sign in.",
     "stop": "Ihinto ang mail para sa investor",
-    "stops": "Ihihinto nito ang mga update para sa investor, ibig sabihin ang mga mensaheng ipinapadala ng VALO Tech sa lahat ng may akses sa investor room.",
+    "stops": "Ihihinto nito ang mga update para sa investor, ibig sabihin ang mga mensaheng ipinapadala ng VALO Tech sa lahat ng may akses sa bulwagan ng mamumuhunan.",
     "keeps": "Hindi nito ihihinto ang mga mensaheng kailangan mo para magamit ang iyong account: isang imbitasyon, isang pag-reset ng password, o isang abiso tungkol sa mensaheng ipinadala sa iyo. Sumasagot ang mga iyon sa isang bagay na hiniling mo o ng administrator, kaya patuloy pa rin silang darating sa iyo.",
     "stopped": "Nakahinto ang mail para sa investor sa account na ito.",
     "stoppedByCompany": "Ihininto ng VALO Tech ang mail para sa investor papunta sa account na ito. Kung sisimulan mo itong muli at hindi pa rin dumarating ang mga mensahe, makipag-ugnayan sa taong nag-imbita sa iyo.",
     "on": "Dumarating sa account na ito ang mail para sa investor.",
     "resume": "Simulan muli ang mail para sa investor",
-    "roomIntro": "Kung dumarating ba sa address ng iyong account ang mga update ng VALO Tech para sa investor.",
+    "hallIntro": "Kung dumarating ba sa address ng iyong account ang mga update ng VALO Tech para sa investor.",
     "expired": "Hindi na gumagana ang link na ito. Mag-sign in para baguhin ang setting sa pahina ng iyong account, o makipag-ugnayan sa taong nag-imbita sa iyo.",
     "signIn": "Mag-sign in"
   },
-  "room": {
+  "hall": {
     "title": "Bulwagan ng mamumuhunan",
     "nav": {
-      "room": "Bulwagan",
+      "hall": "Bulwagan",
       "account": "Account"
     },
     "signOut": "Mag-sign out",

@@ -25,7 +25,7 @@ task list rather than in a note about future work.
 **Down.** Nothing. This design writes no data; it renders the blocks
 `CMS-001` stores, in the locale `CMS-005` resolves.
 
-**Up.** One column, the room's chrome above it, and the period and publication
+**Up.** One column, the hall's chrome above it, and the period and publication
 date on the page itself rather than only in the navigation that led here — a
 printed page, a forwarded PDF and a screenshot all lose the chrome.
 
@@ -51,7 +51,7 @@ place in this product where that is true.
 
 ### The scene
 
-**There is no scene here.** The room is where somebody works, and the world
+**There is no scene here.** The hall is where somebody works, and the world
 belongs to the page that argues. A dark ground and the same type, and nothing
 that moves — which also means this surface has nothing to slow under
 `prefers-reduced-motion` beyond the reveals, and it has none of those either
@@ -61,7 +61,7 @@ that moves — which also means this surface has nothing to slow under
 
 A print stylesheet, and it is a real deliverable rather than a courtesy:
 
-- Black on white, the room's chrome gone, the body at a print measure.
+- Black on white, the hall's chrome gone, the body at a print measure.
 - The period, the title and the publication date in a header that repeats.
 - Images at their natural size, figures with their numbers **as a table**, so a
   chart that is illegible in greyscale is still readable.

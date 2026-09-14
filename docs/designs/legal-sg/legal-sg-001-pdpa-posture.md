@@ -53,7 +53,7 @@ after the account goes.
 
 A page at `/privacy`, in twenty locales, saying in plain words: what is held, why,
 on what basis, how long, who to write to, and what the person can ask for. It is
-linked from the sign-in page and from the room's footer, and it is short —
+linked from the sign-in page and from the hall's footer, and it is short —
 a notice nobody finishes is a notice nobody has read.
 
 Written to be true rather than complete. A generic template listing processing
@@ -132,7 +132,7 @@ obligations are stricter and mostly the same in shape.
 ## 7. Task list
 
 - `LEGAL-SG-001/T1` — The privacy notice: what is held, why, how long, who to write to, in twenty locales
-- `LEGAL-SG-001/T2` — The notice is linked from the sign-in page and the room's footer
+- `LEGAL-SG-001/T2` — The notice is linked from the sign-in page and the hall's footer
 - `LEGAL-SG-001/T3` — The four rights answered within thirty days, with the admin path for each written down
 - `LEGAL-SG-001/T4` — A named DPO recorded, and published in the notice
 - `LEGAL-SG-001/T5` — A breach runbook with the assessment steps and both notification paths

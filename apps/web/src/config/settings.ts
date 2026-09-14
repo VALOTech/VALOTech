@@ -56,7 +56,7 @@ export const SETTINGS = {
     type: 'text',
     fallback: '',
     maxLength: 280,
-    what: 'A line at the top of the investor room. Empty shows nothing.',
+    what: 'A line at the top of the investor hall. Empty shows nothing.',
   },
   'room.signin_message': {
     type: 'text',

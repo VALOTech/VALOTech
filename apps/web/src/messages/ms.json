@@ -1,7 +1,7 @@
 {
   "signIn": {
     "title": "Log masuk pelabur",
-    "intro": "Masukkan alamat e-mel dan kata laluan anda untuk membuka ruang pelabur.",
+    "intro": "Masukkan alamat e-mel dan kata laluan anda untuk membuka dewan pelabur.",
     "email": "Alamat e-mel",
     "password": "Kata laluan",
     "submit": "Log masuk",
@@ -11,7 +11,7 @@
   },
   "setPassword": {
     "title": "Pilih kata laluan anda",
-    "intro": "Tetapkan kata laluan yang akan anda guna untuk log masuk ke ruang pelabur.",
+    "intro": "Tetapkan kata laluan yang akan anda guna untuk log masuk ke dewan pelabur.",
     "password": "Kata laluan baharu",
     "confirm": "Sahkan kata laluan",
     "submit": "Tetapkan kata laluan dan log masuk",
@@ -37,10 +37,10 @@
   "privacy": {
     "contactBody": "Tuliskan kepada {address}.",
     "contactTitle": "Kepada siapa hendak menulis",
-    "heldBasis": "Dua yang pertama bersandar pada persetujuan anda, yang diberikan semasa menerima jemputan. Dua yang terakhir bersandar pada kepentingan sah kami untuk memastikan akaun anda selamat dan bilik ini tepat.",
+    "heldBasis": "Dua yang pertama bersandar pada persetujuan anda, yang diberikan semasa menerima jemputan. Dua yang terakhir bersandar pada kepentingan sah kami untuk memastikan akaun anda selamat dan dewan ini tepat.",
     "heldIdentity": "Nama dan alamat e-mel anda, supaya seseorang yang dinamakan boleh diberi akses kepada laporan syarikat.",
-    "heldReads": "Dokumen mana yang anda buka dan bila, supaya bilik ini boleh menunjukkan apa yang baharu dan merekodkan versi pembentangan mana yang ditunjukkan kepada anda. Ini milik anda sahaja: tidak pernah diagregatkan, tidak pernah dilaporkan sebagai analitik, dan hilang bersama akaun anda.",
-    "heldRole": "Peranan dan keadaan akaun anda, supaya bilik ini tahu apa yang boleh anda baca.",
+    "heldReads": "Dokumen mana yang anda buka dan bila, supaya dewan ini boleh menunjukkan apa yang baharu dan merekodkan versi pembentangan mana yang ditunjukkan kepada anda. Ini milik anda sahaja: tidak pernah diagregatkan, tidak pernah dilaporkan sebagai analitik, dan hilang bersama akaun anda.",
+    "heldRole": "Peranan dan keadaan akaun anda, supaya dewan ini tahu apa yang boleh anda baca.",
     "heldSessions": "Log masuk terakhir anda dan sesi anda yang terbuka, supaya anda dan pentadbir boleh melihat serta menamatkannya.",
     "heldTitle": "Apa yang kami simpan, dan mengapa",
     "intro": "VALO Tech menyimpan senarai ringkas tentang orang yang membaca laporan pelaburnya. Halaman ini menerangkan apa, mengapa, berapa lama, dan apa yang boleh anda minta daripada kami.",
@@ -53,13 +53,13 @@
     "rightsTitle": "Apa yang boleh anda minta",
     "rightsWhen": "Kami menjawab dalam tempoh tiga puluh hari.",
     "rightsWithdrawal": "Menarik balik persetujuan anda, yang bermakna memadam akaun anda, kerana data anda berada di sini semata-mata untuk akses.",
-    "title": "Bagaimana bilik ini mengendalikan data anda",
+    "title": "Bagaimana dewan ini mengendalikan data anda",
     "link": "Bagaimana kami mengendalikan data anda"
   },
   "invitationMail": {
-    "subject": "Jemputan ke bilik pelabur VALO Tech",
+    "subject": "Jemputan ke dewan pelabur VALO Tech",
     "greeting": "Helo {name},",
-    "intro": "{inviter} telah menjemput anda ke bilik pelabur VALO Tech, tempat syarikat menerbitkan laporannya kepada mereka yang telah melabur di dalamnya.",
+    "intro": "{inviter} telah menjemput anda ke dewan pelabur VALO Tech, tempat syarikat menerbitkan laporannya kepada mereka yang telah melabur di dalamnya.",
     "action": "Buka pautan ini untuk memilih kata laluan dan log masuk:",
     "expiry": "Pautan ini hanya boleh digunakan sekali, dan tamat selepas {days, plural, other {# hari}}.",
     "ignore": "Jika anda tidak menjangkakan mesej ini, anda boleh mengabaikannya. Tiada apa-apa berlaku sehingga pautan dibuka.",
@@ -68,7 +68,7 @@
   "resetMail": {
     "subject": "Tetapkan semula kata laluan VALO Tech anda",
     "greeting": "Helo {name},",
-    "intro": "Seseorang telah meminta penetapan semula kata laluan bagi alamat ini di bilik pelabur VALO Tech.",
+    "intro": "Seseorang telah meminta penetapan semula kata laluan bagi alamat ini di dewan pelabur VALO Tech.",
     "action": "Jika itu anda, buka pautan ini untuk memilih kata laluan baharu:",
     "expiry": "Pautan ini hanya boleh digunakan sekali, dan tamat selepas {hours, plural, other {# jam}}.",
     "ignore": "Jika itu bukan anda, kata laluan anda tidak berubah dan tiada apa-apa yang perlu anda lakukan.",
@@ -83,26 +83,26 @@
     "tooManyAttempts": "Terlalu banyak percubaan. Tunggu sebentar dan cuba lagi.",
     "unexpected": "Sesuatu telah berlaku. Cuba lagi sebentar lagi.",
     "backToSignIn": "Kembali ke log masuk",
-    "unavailable": "Menetapkan semula kata laluan sendiri tidak tersedia buat masa ini. Hubungi orang yang menjemput anda ke bilik pelabur."
+    "unavailable": "Menetapkan semula kata laluan sendiri tidak tersedia buat masa ini. Hubungi orang yang menjemput anda ke dewan pelabur."
   },
   "mailPreference": {
     "title": "E-mel pelabur",
     "confirmIntro": "Hentikan e-mel pelabur ke akaun ini? Cukup satu tekanan sahaja, dan anda tidak perlu log masuk.",
     "stop": "Hentikan e-mel pelabur",
-    "stops": "Ini menghentikan berita terkini untuk pelabur, iaitu mesej yang dihantar VALO Tech kepada semua orang yang mempunyai akses ke bilik pelabur.",
+    "stops": "Ini menghentikan berita terkini untuk pelabur, iaitu mesej yang dihantar VALO Tech kepada semua orang yang mempunyai akses ke dewan pelabur.",
     "keeps": "Ia tidak menghentikan mesej yang anda perlukan untuk menggunakan akaun anda: jemputan, penetapan semula kata laluan, atau pemberitahuan tentang mesej yang dihantar kepada anda. Mesej begitu menjawab sesuatu yang anda atau pentadbir minta, jadi ia tetap sampai kepada anda.",
     "stopped": "E-mel pelabur dihentikan bagi akaun ini.",
     "stoppedByCompany": "VALO Tech telah menghentikan e-mel pelabur ke akaun ini. Jika anda menghidupkannya semula dan mesej masih tidak sampai, hubungi orang yang menjemput anda.",
     "on": "E-mel pelabur sedang sampai ke akaun ini.",
     "resume": "Hidupkan semula e-mel pelabur",
-    "roomIntro": "Sama ada berita terkini VALO Tech untuk pelabur sampai ke alamat pada akaun anda.",
+    "hallIntro": "Sama ada berita terkini VALO Tech untuk pelabur sampai ke alamat pada akaun anda.",
     "expired": "Pautan ini tidak lagi berfungsi. Log masuk untuk menukar tetapan ini pada halaman akaun anda, atau hubungi orang yang menjemput anda.",
     "signIn": "Log masuk"
   },
-  "room": {
+  "hall": {
     "title": "Dewan pelabur",
     "nav": {
-      "room": "Dewan",
+      "hall": "Dewan",
       "account": "Akaun"
     },
     "signOut": "Log keluar",

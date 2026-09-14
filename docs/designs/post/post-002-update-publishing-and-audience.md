@@ -17,7 +17,7 @@ status: in-progress
 Who sees an update, and in what order. Realizes `POST-002`.
 
 Updates are the one content type with a genuinely public audience, so this is
-where the room's access model meets the public page. Getting it wrong in one
+where the hall's access model meets the public page. Getting it wrong in one
 direction shows an investor-only note to the market; in the other it hides the
 company's news from the people it was written for.
 
@@ -26,7 +26,7 @@ company's news from the people it was written for.
 **Down.** `audience` on the item, and `CMS-006`'s predicate on every read. The
 stream is one query with a cursor, not a fetch-then-filter.
 
-**Up.** Two surfaces read this: the room's stream (`INV-001`) and, for public
+**Up.** Two surfaces read this: the hall's stream (`INV-001`) and, for public
 updates, the gateway (`SITE-005`). They are the same query with a different
 reader.
 
@@ -36,9 +36,9 @@ reader.
 
 | `audience` | Who | Where it appears |
 |---|---|---|
-| `public` | anyone | The gateway's news section and the room's stream |
-| `investor` | investors and admins | The room's stream only |
-| `granted` | named investors and admins | The room's stream, for those readers only |
+| `public` | anyone | The gateway's news section and the hall's stream |
+| `investor` | investors and admins | The hall's stream only |
+| `granted` | named investors and admins | The hall's stream, for those readers only |
 
 `granted` is available and expected to be rare — an update about one investor's
 own portfolio company, say. It exists because the mechanism is already there in
@@ -46,7 +46,7 @@ own portfolio company, say. It exists because the mechanism is already there in
 
 ### The stream
 
-    GET /room/stream?kind=&product=&cursor=
+    GET /hall/stream?kind=&product=&cursor=
 
     SELECT ... FROM content_items i
       JOIN content_revisions r ON r.id = i.current_revision_id
@@ -101,7 +101,7 @@ room's landing surface is this stream rather than a document.
 
 **`POST-001`** authors. **`CMS-004`** publishes and withdraws, and purges the
 public cache. **`CMS-006`** is the predicate — the same function for both
-surfaces. **`INV-001`** is the room's stream. **`SITE-005`** is the public one.
+surfaces. **`INV-001`** is the hall's stream. **`SITE-005`** is the public one.
 **`CMS-007`** filters the same query.
 
 ## 5. Cross-cutting compliance
@@ -119,7 +119,7 @@ surfaces. **`INV-001`** is the room's stream. **`SITE-005`** is the public one.
   better on a phone and makes the end of the list unreachable, breaks the back
   button, and cannot be operated from a keyboard. A "more" control is worse for
   one case and correct for the rest.
-- **No per-update notification.** Deliberate, and it is the decision the room's
+- **No per-update notification.** Deliberate, and it is the decision the hall's
   whole shape rests on: an investor comes back and finds what is new, rather
   than being interrupted per item. `MAIL-001` covers the case where something
   genuinely should interrupt them, as an act somebody takes.

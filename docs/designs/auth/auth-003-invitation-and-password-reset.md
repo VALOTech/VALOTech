@@ -153,9 +153,9 @@ refuses it must not also take away the only other way to reach the invitee.
   because it adds a step at the exact moment the person has just proved control
   of the mailbox and chosen the credential — the strongest evidence the flow will
   ever have.
-- **No second factor.** The room holds company reporting, not money, and every
+- **No second factor.** The hall holds company reporting, not money, and every
   account is a named person the admin knows. A second factor is the right answer
-  once the room holds anything an attacker can convert; file it then.
+  once the hall holds anything an attacker can convert; file it then.
 - **A reset for an account still invited.** One outstanding token per account
   spans both kinds, so a reset would delete a pending invitation and, until the
   reset mail lands (`AUTH-003/T3`), replace it with a token nobody receives — an

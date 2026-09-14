@@ -26,7 +26,7 @@ export const UNSUBSCRIBE_PATH = '/unsubscribe';
  */
 export function unsubscribeNotice(link: string): string {
   return [
-    'You are receiving this because you have access to the VALO Tech investor room.',
+    'You are receiving this because you have access to the VALO Tech investor hall.',
     'To stop receiving investor mail, open this link:',
     link,
     'It stops investor updates and nothing else: a password reset, an invitation, or a notice about a message sent to you still reaches you, because those answer something you or an administrator asked for.',

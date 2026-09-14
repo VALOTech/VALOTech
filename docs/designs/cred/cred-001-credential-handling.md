@@ -123,7 +123,7 @@ owner chooses at `INFRA-DEC-03`.
 - **The startup failure is total.** A missing `DATABASE_URL` stops the whole
   application rather than degrading it. That is deliberate: a running site
   with no database serves pages that look correct and are empty, and an empty
-  investor room is indistinguishable from one where the investor has been
+  investor hall is indistinguishable from one where the investor has been
   removed.
 
 ## 7. Task list

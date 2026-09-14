@@ -28,12 +28,12 @@ and it has this table to wire them from.
 sixty seconds apart — a single failure is a blip, two is an outage.
 
 **How it is seen.** Until `OPS-001`'s monitor polls `/health`, by a person
-finding the room unreachable. The endpoint runs a real query, so a `503` from it
+finding the hall unreachable. The endpoint runs a real query, so a `503` from it
 is the database unreachable and not merely a slow page.
 
 **What to do.** The static gateway on `main` is the fallback and is one revert
 away (`SITE-005/T6`, the R-axis): the app's failure does not take the company's
-front page down with it. Bring the room back by the deploy's rollback
+front page down with it. Bring the hall back by the deploy's rollback
 (`OPS-001`), then read the error lines for the request that first failed.
 
 ## Errors are up

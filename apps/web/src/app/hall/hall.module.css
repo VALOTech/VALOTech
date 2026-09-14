@@ -1,12 +1,12 @@
-/* The investor room, on the Gateway theme (`brand/GUIDELINES.md`).
+/* The investor hall, on the Gateway theme (`brand/GUIDELINES.md`).
  *
  * The theme has no light variant, so this is painted on the void like every
- * other company surface. Tokens are declared on the room's own shell rather
+ * other company surface. Tokens are declared on the hall's own shell rather
  * than on `:root`, because a CSS module's `:root` is global and would reach
  * pages this segment does not own.
  *
  * **Two panel families, and this surface uses one.** Glass is for things in the
- * scene and card is for things being read; the room carries no scene, so every
+ * scene and card is for things being read; the hall carries no scene, so every
  * panel here is a card. What keeps it from reading flat is not a second
  * material — it is the eyebrow that names each section, the one accented claim,
  * the mono asides, and a board laid out as objects rather than as rows.
@@ -45,6 +45,17 @@
   font-family: var(--font);
   font-size: 16px;
   line-height: 1.6;
+}
+
+/* Width is the whole box on this surface. The application declares no reset, so
+   the initial `content-box` is in force everywhere else: a section that is
+   `width: 100%` and padded is then wider than the frame holding it by exactly
+   its padding, which a phone shows as a page that scrolls sideways. */
+.shell,
+.shell *,
+.shell *::before,
+.shell *::after {
+  box-sizing: border-box;
 }
 
 /* ---------------------------------------------------------------- The chrome */
@@ -97,6 +108,15 @@
   align-items: center;
   gap: clamp(0.75rem, 2.5vw, 1.75rem);
   margin-inline-end: auto;
+}
+
+/* Search, language and sign-out sit together at the end of the bar. They are
+   one group because they are what a reader reaches for rather than where they
+   are going, and the tight gap is what makes them read as a group at all. */
+.tools {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .navLink {
@@ -374,38 +394,19 @@
   border-radius: 4px;
 }
 
-@media (max-width: 34rem) {
-  .searchDisclosure {
-    order: 4;
-    width: 100%;
-  }
-
-  .search {
-    position: static;
-    width: 100%;
-  }
-
-  .header {
-    flex-wrap: wrap;
-    gap: 0.75rem 1rem;
-    padding-block: 0.75rem;
-  }
-
-  .nav {
-    order: 3;
-    width: 100%;
-    margin-inline-end: 0;
-  }
-}
-
 /* ---------------------------------------------------------------- The search */
 
 /* The disclosure sits in the chrome and its panel drops beneath, which is what
    `details` does on its own: open and close are the element's behaviour, so the
    control is keyboard-operable and announced as expanded or collapsed without a
-   line of script to fail to load. */
+   line of script to fail to load.
+ *
+ * Deliberately not a containing block. The panel is twenty times the width of
+ * the control that opens it, so hanging it off this button would put its far
+ * edge outside the frame; it is placed against the header instead, which is
+ * sticky and so positioned. */
 .searchDisclosure {
-  position: relative;
+  position: static;
 }
 
 /* Named for a screen reader, drawn for an eye. Visually hidden rather than
@@ -460,7 +461,7 @@
    rather than a thing in the scene. */
 .search {
   position: absolute;
-  inset-inline-end: 0;
+  inset-inline-end: var(--gut);
   top: calc(100% + 0.6rem);
   z-index: 20;
   width: min(42rem, calc(100vw - 2 * var(--gut)));
@@ -666,4 +667,35 @@
 
 .localeOption[aria-current='true'] {
   color: var(--accent-bright);
+}
+
+/* ------------------------------------------------------- The narrow frame */
+
+/* Last in the file on purpose: these carry no more weight than the rules they
+   override, so they win by order alone, and a section appended after them
+   would silently take the narrow frame back. */
+@media (max-width: 34rem) {
+  .tools {
+    order: 2;
+    margin-inline-start: auto;
+  }
+
+  /* Wide enough to fill the frame, so it meets both gutters instead of keeping
+     a width that no longer fits between them. */
+  .search {
+    inset-inline: var(--gut);
+    width: auto;
+  }
+
+  .header {
+    flex-wrap: wrap;
+    gap: 0.75rem 1rem;
+    padding-block: 0.75rem;
+  }
+
+  .nav {
+    order: 3;
+    width: 100%;
+    margin-inline-end: 0;
+  }
 }

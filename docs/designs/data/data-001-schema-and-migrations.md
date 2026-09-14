@@ -14,7 +14,7 @@ status: implemented
 
 ## 1. Purpose and PRD refs
 
-Everything the investor room stores, and the one way it changes shape. Realizes
+Everything the investor hall stores, and the one way it changes shape. Realizes
 `DATA-001` and is the ground `AUTH-001`, `AUTH-002` and the whole content system
 stand on; every other feature reads through these tables.
 

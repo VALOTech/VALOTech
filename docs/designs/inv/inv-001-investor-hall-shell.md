@@ -1,6 +1,6 @@
 ---
 code: INV-001
-title: Investor room shell
+title: Investor hall shell
 domain: inv
 prd_refs: [INV-001, SEC-R01, DATA-R05]
 depends_on: [AUTH-002, CMS-006, CMS-007, POST-002, RPT-002]
@@ -10,7 +10,7 @@ cross_cutting_rules: [SEC-R01, DATA-R05, I18N-R01, A11Y-R01, A11Y-R02, A11Y-R03]
 status: in-progress
 ---
 
-# `INV-001` — Investor room shell
+# `INV-001` — Investor hall shell
 
 ## 1. Purpose and PRD refs
 
@@ -34,7 +34,7 @@ renders.
 
 ### The landing surface
 
-    GET /room
+    GET /hall
 
 | Order | What | Why here |
 |---|---|---|
@@ -43,7 +43,7 @@ renders.
 | 3 | **The current report** — period, title, whether they have read it | Expected on a schedule; one line, not the document |
 | 4 | **Your decks** — what they have been granted | Read once, so it is present rather than prominent |
 
-The room's own chrome carries the mark, the locale control, the account control,
+The hall's own chrome carries the mark, the locale control, the account control,
 sign-out — and the search. Which filters the search offers belongs to `CMS-007`
 and is named there rather than counted here: a number restated on this page is a
 number that disagrees with its own feature the first time one is added.
@@ -53,11 +53,11 @@ something up is a thing an investor does from wherever they are, and a field
 that sits on one page is one they navigate back to before they can use it. It is
 a disclosure that opens on demand, so the control costs a line of the frame
 rather than a block of the page, and it opens already showing what the reader
-last asked for whenever the room is narrowed.
+last asked for whenever the hall is narrowed.
 
 ### Who the reader is
 
-The room serves two people whose reasons for being here are opposite: somebody
+The hall serves two people whose reasons for being here are opposite: somebody
 who has already invested and comes to find out what has happened, and somebody
 still deciding who comes to be convinced. `accounts.investor_type` says which
 (`INV-DEC-02`), and the four blocks are the same four in a different order:
@@ -72,7 +72,7 @@ still deciding who comes to be convinced. `accounts.investor_type` says which
 
 **Null is not `prospect`.** An account nobody has classified gets the order the
 table above this one sets, because a reader the company has not described is one
-the room should not be guessing about — and the guess that costs most is showing
+the hall should not be guessing about — and the guess that costs most is showing
 the persuasion room to somebody who has already paid.
 
 **The type orders the page and never gates it.** What a reader may read stays
@@ -82,7 +82,7 @@ is the one that goes stale when the rule changes; a reader set to the wrong type
 sees an oddly ordered page and never a document that is not theirs.
 
 **The gated gateway chapters** (`INV-002`) are reachable from here as a link back
-to the public page, where they now render. They are not duplicated into the room:
+to the public page, where they now render. They are not duplicated into the hall:
 a chapter that exists in two places is a chapter that will disagree with itself.
 
 ### Nothing to show
@@ -98,19 +98,19 @@ nothing in it says the company has not posted yet.
 
 ### Navigation
 
-Flat. `/room`, `/room/reports`, `/room/decks`, `/room/account`. Four
+Flat. `/hall`, `/hall/reports`, `/hall/decks`, `/hall/account`. Four
 destinations, no nested menus, and the current one marked. A room with four
 places does not need a hierarchy, and a hierarchy imposed on four places makes
 them harder to find.
 
 ### The chrome
 
-The header is the gateway's header with the room's links — the same mark, the
+The header is the gateway's header with the hall's links — the same mark, the
 same type, the same ground (`brand/GUIDELINES.md`). An investor who signs in
 should be somewhere continuous with the page they came from, and a differently
 styled application behind a sign-in reads as a different company's product.
 
-**No scene.** The world belongs to the argument. The room is where somebody
+**No scene.** The world belongs to the argument. The hall is where somebody
 works, and the ground is plain.
 
 ### Session
@@ -132,11 +132,11 @@ inlined.
 
 - **`SEC-R01`** — every route here is behind the server-side gate.
 - **`DATA-R05`** — each of the four reads takes the reader.
-- **`I18N-R01`** — the room is translated like the gateway; the content inside
+- **`I18N-R01`** — the hall is translated like the gateway; the content inside
   it follows `CMS-005`.
 - **`A11Y-R01`** — landmarks, a skip link, keyboard reach, visible focus.
 - **`A11Y-R02`** — the unread count is announced, not only rendered as a dot.
-- **`A11Y-R03`** — contrast on the room's own ground.
+- **`A11Y-R03`** — contrast on the hall's own ground.
 - **Presentation** — the landing is scannable before it is read: what is new,
   where things stand and what is waiting are shown as distinct things rather
   than as a list of sentences ([`INV-DEC-01`](../../decisions-log.md#INV-DEC-01)).
@@ -157,6 +157,6 @@ inlined.
 - `INV-001/T1` — The landing surface: what is new, where things stand, the current report, your decks
 - `INV-001/T2` — Empty and error states are different renderings, each saying which it is
 - `INV-001/T3` — Flat navigation over four destinations, with the current one marked
-- `INV-001/T4` — The room's chrome is the gateway's, with no scene
+- `INV-001/T4` — The hall's chrome is the gateway's, with no scene
 - `INV-001/T5` — An expired session returns the reader to where they were going
 - `INV-001/T6` — The landing's blocks are ordered by who the reader is, and an unclassified reader has an order of their own

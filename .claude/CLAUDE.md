@@ -5,7 +5,7 @@
 > **Team:** 1 dev + 1 BA, Singapore · Solo-maintained · part of the VALO product family
 > **Sources of truth:** `docs/PRD.md` (business + feature catalogue) · `docs/designs/` (per-feature designs) · `docs/tasks.md` (tasks with evidence) · running code (behaviour)
 >
-> **Ecosystem.** VALO Tech is the corporate gateway of **VALO TECH PTE. LTD.** (Singapore), which builds six products: VALO Ads, VALO Pocket, Shimmra, Amavo, Farola, and the B2B GRC backbone Verdiq. This repository is not one of those products; it is the company's own front door and its investor room. It follows the ecosystem's conventions because a reader moving between repositories should not have to relearn them, not because the products' domain rules apply here.
+> **Ecosystem.** VALO Tech is the corporate gateway of **VALO TECH PTE. LTD.** (Singapore), which builds six products: VALO Ads, VALO Pocket, Shimmra, Amavo, Farola, and the B2B GRC backbone Verdiq. This repository is not one of those products; it is the company's own front door and its investor hall. It follows the ecosystem's conventions because a reader moving between repositories should not have to relearn them, not because the products' domain rules apply here.
 
 **No phases.** Work is a **matrix of layers (vertical) × features (horizontal)**. Every feature carries a domain code (`AUTH-001`, `DECK-002`). A change is complete only when it is coherent on both axes.
 
@@ -168,7 +168,7 @@ Seven layers, carrying the tokens used in design frontmatter:
 | Surface | `SITE, SCENE, I18N, A11Y, UX` |
 | Access | `AUTH, ADMIN` |
 | Content system | `CMS` |
-| Investor room | `INV, RPT, DECK, POST, MAIL` |
+| Investor hall | `INV, RPT, DECK, POST, MAIL` |
 | Platform | `DATA, SEC, OPS, INFRA, CRED, CFG` |
 | Compliance | `LEGAL-SG, LEGAL-GLOBAL` |
 
@@ -302,12 +302,12 @@ All configuration through environment variables; a missing required key fails st
 | Term | Meaning |
 |---|---|
 | `visitor` | Anyone reading the public gateway. Not authenticated, not identified. |
-| `investor` | A person granted access to the investor room. **Their identity is personal data.** |
+| `investor` | A person granted access to the investor hall. **Their identity is personal data.** |
 | `admin` | Staff who manage accounts, posts, decks, mail and configuration. The only other role. |
 | `gateway` | The public page at valotech.org |
-| `investor room` | Everything behind the sign-in |
+| `investor hall` | Everything behind the sign-in |
 | `deck` | An investor presentation: ordered sections, published as a version |
-| `post` | An article, on the gateway or in the room |
+| `post` | An article, on the gateway or in the hall |
 | `scene` | The planet, sky, satellites and journey |
 | `chapter` | One section of the gateway's argument |
 | `station` | Where the journey puts the world for a chapter |
@@ -320,7 +320,7 @@ There are exactly two roles. Do not invent a third; if one seems needed, that is
 
 ### 8.1 Access and the gate
 
-- **SEC-R01** The investor room is gated at the **server**, never by CSS. The static site's `.investor` class is a demonstration of the design, and its own stylesheet says so; nothing may be put behind it that would matter if read.
+- **SEC-R01** The investor hall is gated at the **server**, never by CSS. The static site's `.investor` class is a demonstration of the design, and its own stylesheet says so; nothing may be put behind it that would matter if read.
 - **SEC-R02** Sessions are httpOnly, SameSite=Lax, rotated on sign-in and on any privilege change, and invalidated server-side on sign-out.
 - **SEC-R03** A sign-in failure is indistinguishable between "no such account" and "wrong password", and is rate-limited per account and per address.
 - **SEC-R04** Every admin action that changes an account, a deck's visibility, or a mail send is audited — actor, timestamp, before, after — append-only.
@@ -482,7 +482,7 @@ Every session is a cold start. Nothing is remembered between them, so everything
 
 ## 14. Always, never, ask
 
-**Always** — read the PRD before business logic · grep before assuming · use the vocabulary in §7.3 · gate the investor room at the server · scope every read by role at the query · treat investor identity as personal data · fill `Evidence:` before closing a task · drain open `REVIEW` rows first · read the scene's design before touching the scene.
+**Always** — read the PRD before business logic · grep before assuming · use the vocabulary in §7.3 · gate the investor hall at the server · scope every read by role at the query · treat investor identity as personal data · fill `Evidence:` before closing a task · drain open `REVIEW` rows first · read the scene's design before touching the scene.
 
 **Never** — commit anything internal to `main` · use a destructive git command without turn-specific approval · switch branches · push to `staging` or `production` · write a secret into the repository · put personal data in a log · ship a string with no i18n key · leave the scene animating when nothing moves · claim a browser behaviour without having opened a browser.
 

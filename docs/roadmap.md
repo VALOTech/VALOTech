@@ -73,7 +73,7 @@ _72/74 closed (97%) · 2 outstanding — 1 buildable now · 1 waiting on the own
 - **CMS-004** · Preview, publish and withdraw — 6/7 closed · depth 6
   - `[!] CMS-004/T6` — A public item's cache is purged on publish and on withdraw  · _pending-decision_ · **Blocked by:** pending-decision: CMS-DEC-07 ([docs/decisions-log.md#CMS-DEC-07](decisions-log.md#CMS-DEC-07)) — OPS-001 §3 settles that Cloudflare caches the assets…
 
-- **CMS-007** · Search and filter in the room — 6/6 closed
+- **CMS-007** · Search and filter in the hall — 6/6 closed
 - **DATA-002** · Erasure and retention — 5/5 closed
 ## W3 — What is written
 
@@ -83,7 +83,7 @@ _54/63 closed (85%) · 9 outstanding — 4 buildable now · 1 waiting on the own
 
 - **DECK-001** · Deck authoring — 6/6 closed
 - **LEGAL-SG-001** · PDPA posture — 4/8 closed · depth 7
-  - `[~] LEGAL-SG-001/T2` — The notice is linked from the sign-in page and the room's footer  · **Note:** the sign-in half ships. apps/web/src/app/sign-in/page.tsx carries the link below the card, in the reader’s own language (privacy.link in all twenty l…
+  - `[~] LEGAL-SG-001/T2` — The notice is linked from the sign-in page and the hall's footer  · **Note:** the sign-in half ships. apps/web/src/app/sign-in/page.tsx carries the link below the card, in the reader’s own language (privacy.link in all twenty l…
   - `[!] LEGAL-SG-001/T4` — A named DPO recorded, and published in the notice  · _external_ · **Blocked by:** pending-external: legal — the owner names the individual, at docs/operator-checklist.md#DPO-CONTACT. The mechanism is built and needs no deploy to us…
   - `[!] LEGAL-SG-001/T7` — The cross-border transfer assessment, now that the hosting and the mail carrier are both settled  · _pending-decision_ · **Blocked by:** pending-decision: OPS-DEC-03 ([docs/decisions-log.md#OPS-DEC-03](decisions-log.md#OPS-DEC-03)) — the assessment is about whether personal data leaves…
   - `[!] LEGAL-SG-001/T8` — The PDPA sections this design rests on are in the tree, and every claim cites one  · _external_ · **Blocked by:** pending-external: legal — the statute text is obtained by the owner or counsel, at docs/operator-checklist.md#COMPLIANCE-SOURCES. Nobody here can sup…
@@ -124,8 +124,8 @@ _7/59 closed (11%) · 52 outstanding — 52 buildable now · 0 waiting on the ow
   - `[ ] DECK-004/T5` — The from-the-account view, listing every deck a person may read
   - `[ ] DECK-004/T6` — Bulk grant with the names shown before it commits, and no bulk revoke
 
-- **INV-001** · Investor room shell — 2/6 closed · depth 9
-  - `[~] INV-001/T3` — Flat navigation over four destinations, with the current one marked  · **Note:** the rail and its current-destination mark ship in apps/web/src/app/room/nav.tsx, which is a client component for one reason — the current path, which…
+- **INV-001** · Investor hall shell — 2/6 closed · depth 9
+  - `[~] INV-001/T3` — Flat navigation over four destinations, with the current one marked  · **Note:** the rail and its current-destination mark ship in apps/web/src/app/hall/nav.tsx, which is a client component for one reason — the current path, which…
   - `[ ] INV-001/T2` — Empty and error states are different renderings, each saying which it is
   - `[ ] INV-001/T5` — An expired session returns the reader to where they were going
   - `[ ] INV-001/T6` — The landing's blocks are ordered by who the reader is, and an unclassified reader has an order of their own

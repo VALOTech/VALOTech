@@ -6,7 +6,8 @@ import type { ReactElement } from 'react';
 
 import { languageName, LOCALE_FLAG, LOCALES } from '../../i18n/locales';
 
-import styles from './room.module.css';
+import { Disclosure } from './disclosure';
+import styles from './hall.module.css';
 
 /**
  * The language the reader is written to in, on the chrome (`INV-001/T4`).
@@ -27,21 +28,23 @@ import styles from './room.module.css';
  * **A form, posting to a route.** The locale is resolved on the server for
  * every render, so a cookie written in the browser would take effect on the
  * next navigation rather than this one. The current path travels with it, so
- * the reader lands back where they were rather than at the top of the room.
+ * the reader lands back where they were rather than at the top of the hall.
  *
  * A client component only to know where "here" is; it imports its labels, the
  * catalogue and nothing that reaches a database.
  */
 export function LocaleForm({ current }: { readonly current: string }): ReactElement {
-  const t = useTranslations('room');
+  const t = useTranslations('hall');
   const pathname = usePathname();
   const params = useSearchParams().toString();
   const next = params === '' ? pathname : `${pathname}?${params}`;
   const chosen = LOCALES.find((locale) => locale === current) ?? 'en';
 
   return (
-    <details className={styles.localeDisclosure}>
-      <summary className={styles.localeToggle}>
+    <Disclosure
+      className={styles.localeDisclosure}
+      summary={
+        <summary className={styles.localeToggle}>
         <img
           className={styles.flag}
           src={`/flags/${LOCALE_FLAG[chosen]}.svg`}
@@ -50,8 +53,10 @@ export function LocaleForm({ current }: { readonly current: string }): ReactElem
           height={15}
         />
         <span className={styles.localeCurrent}>{languageName(chosen)}</span>
-        <span className={styles.srOnly}>{t('language')}</span>
-      </summary>
+          <span className={styles.srOnly}>{t('language')}</span>
+        </summary>
+      }
+    >
 
       <form method="post" action="/api/locale" className={styles.localeMenu}>
         <input type="hidden" name="next" value={next} />
@@ -69,6 +74,6 @@ export function LocaleForm({ current }: { readonly current: string }): ReactElem
           </button>
         ))}
       </form>
-    </details>
+    </Disclosure>
   );
 }

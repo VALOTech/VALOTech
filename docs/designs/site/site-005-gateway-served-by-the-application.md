@@ -110,7 +110,7 @@ the record (`SCENE-R01`). **`INV-002`** is the feature that needs this.
   that availability now depends on an origin that did not exist before. That is
   the price of `INV-002`, and `INV-002` is the reason the current gate is a
   claim the PRD refuses to make.
-- **The page could stay static and only the room be dynamic.** That was
+- **The page could stay static and only the hall be dynamic.** That was
   considered and settled at `INFRA-DEC-01`: it leaves the gated chapters in the
   public source forever, which is the exposure this whole line of work exists to
   remove.

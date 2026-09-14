@@ -17,7 +17,7 @@ status: implemented
 Ending a session, on the server. Realizes `AUTH-004` and carries the second half
 of `SEC-R02`.
 
-It is a small feature and it is placed before the room rather than after it, for
+It is a small feature and it is placed before the hall rather than after it, for
 one reason: **a session that cannot be ended server-side is a defect that grows
 with every account created.** Clearing a cookie asks the browser to forget a
 credential that still works, and the shared laptop, the borrowed phone and the
@@ -32,7 +32,7 @@ two steps then leaves it live forever.
 
 **Up.** The control is reachable from every signed-in surface, in one action,
 and its accessible name says what it does. Afterwards the person lands on the
-public gateway, signed out, with nothing from the room in the back-forward cache.
+public gateway, signed out, with nothing from the hall in the back-forward cache.
 
 ## 3. Contracts
 

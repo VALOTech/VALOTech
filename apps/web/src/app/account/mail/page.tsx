@@ -51,7 +51,7 @@ export default async function AccountMailPage(): Promise<ReactElement> {
         <h1 id="mail-title" className={styles.title}>
           {t('title')}
         </h1>
-        <p className={styles.intro}>{t('roomIntro')}</p>
+        <p className={styles.intro}>{t('hallIntro')}</p>
 
         <p className={styles.state}>{preference.stopped ? t('stopped') : t('on')}</p>
 

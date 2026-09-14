@@ -43,7 +43,7 @@ a deploy to change *and* somebody would plausibly want to change it in a hurry.
 
 | Key | What | Default |
 |---|---|---|
-| `room.banner` | A line at the top of the investor room, or empty | empty |
+| `room.banner` | A line at the top of the investor hall, or empty | empty |
 | `room.signin_message` | A line on the sign-in page — planned maintenance, say | empty |
 | `mail.enabled` | A kill switch for sending, independent of the credential | true |
 
@@ -119,7 +119,7 @@ The session lifetime and the sign-in rate are not settings but environment value
 - **`SEC-R05`** — no secret here, and the accessor refuses a key declared as
   secret-shaped.
 - **`DATA-R02`** — no personal data is configurable, so none can end up here.
-- **`A11Y-R01`**, **`I18N-R01`** — the form is a form, and the room-facing
+- **`A11Y-R01`**, **`I18N-R01`** — the form is a form, and the hall-facing
   values it sets (`room.banner`) are shown to investors and therefore go through
   the dictionary or are shown in the language they were written in, stated on the
   field.

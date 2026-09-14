@@ -6,12 +6,12 @@
  * one place. A per-route list would be a proxy for the property and would be
  * under-inclusive the day a surface is added and the list is not — silently, in
  * both directions: a page with no Content-Security-Policy looks identical to a
- * protected one until somebody injects a script, and a cacheable room looks
+ * protected one until somebody injects a script, and a cacheable hall looks
  * identical to an uncacheable one until somebody presses Back.
  *
  * **What counts as authenticated is the cookie, not the path.** Reading the
  * cookie is the definition itself: a response is authenticated when the request
- * that asked for it presented a session, so `INV-002`'s room is covered by the
+ * that asked for it presented a session, so `INV-002`'s hall is covered by the
  * commit that mounts it and by no edit here. It is also the accurate test for
  * the back-button case, because the pages in a signed-out person's history are
  * precisely the ones fetched while their cookie was present. A cookie that no
@@ -23,7 +23,7 @@
  * The failure `no-store` closes is the back button. A browser that stored a
  * rendered gated page will re-display it from history after the session that
  * earned it has been ended, so the person who signed out on a shared laptop
- * watches the next person press Back into their room. The session is genuinely
+ * watches the next person press Back into their hall. The session is genuinely
  * gone — nothing new can be fetched — which is exactly why the stale render is
  * the only thing left to leak.
  *

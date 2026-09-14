@@ -43,12 +43,12 @@ Depth drives everything else: `depth = (sin θ + 1) / 2` gives scale
 `0.74 + 0.26·depth`, opacity `0.48 + 0.52·depth`, blur `(1 − depth) × 1.2px`.
 
 **Bounded by the frame, not by a constant.** The horizontal radius is the
-smaller of the design value, the room between the planet and the pinned column,
-and the room between the planet and the window edge. A card can therefore never
+smaller of the design value, the hall between the planet and the pinned column,
+and the hall between the planet and the window edge. A card can therefore never
 land on the argument or leave the page at any viewport without a breakpoint being
 tuned for it.
 
-**And floored by the world.** Where the room and the disc disagree the disc wins:
+**And floored by the world.** Where the hall and the disc disagree the disc wins:
 a card cannot be drawn inside the world, and a heading can be read beside a
 slightly wider ellipse. Held instead at a flat pixel figure while the world grew
 with the frame, a 312px radius put all three cards inside a 333px disc at 3840

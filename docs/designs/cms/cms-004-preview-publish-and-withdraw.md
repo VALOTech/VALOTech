@@ -48,7 +48,7 @@ that is not part of the page.
 `as=` matters because a public item and an investor item are the same document
 with different surroundings, and an admin previewing as themselves sees the admin
 chrome around it and misses that the public version has no navigation to the rest
-of the room.
+of the hall.
 
 `as=` defaults to the admin's own view, which is how they read a `granted`
 item at all: the role is a **generic** member of its kind, so an investor here

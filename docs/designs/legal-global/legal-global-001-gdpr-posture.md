@@ -60,7 +60,7 @@ is small because the data is.
 ### Objection to read-tracking
 
 An account flag: when set, `deck_reads` and the report read state stop being
-written for that account and the existing rows are deleted. The room still works
+written for that account and the existing rows are deleted. The hall still works
 — unread marking degrades to "everything looks new", which is a worse experience
 that the person chose.
 

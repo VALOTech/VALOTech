@@ -1,6 +1,6 @@
 ---
 code: CMS-007
-title: Search and filter in the room
+title: Search and filter in the hall
 domain: cms
 prd_refs: [CMS-007, CMS-R03, DATA-R05]
 depends_on: [CMS-001, CMS-006]
@@ -10,7 +10,7 @@ cross_cutting_rules: [CMS-R03, DATA-R05, I18N-R01, A11Y-R01, A11Y-R02]
 status: implemented
 ---
 
-# `CMS-007` — Search and filter in the room
+# `CMS-007` — Search and filter in the hall
 
 ## 1. Purpose and PRD refs
 
@@ -93,7 +93,7 @@ one with some rows missing, which reads as content that vanished.
 
 An empty result says which of the query and the filters produced it, and offers
 to drop the narrowest one. "No results" alone is indistinguishable from a broken
-search, and an investor who concludes the room is broken does not ask.
+search, and an investor who concludes the hall is broken does not ask.
 
 ### Locale
 
@@ -126,7 +126,7 @@ generated column and its index.
 - **Searching only the authored text.** Indexing every locale would multiply the
   index by twenty and would search text a reader may not be shown, which then has
   to be filtered by locale state as well as by audience — two predicates where
-  one is already the dangerous one. Revisit when the room is genuinely
+  one is already the dangerous one. Revisit when the hall is genuinely
   multilingual in its content rather than in its chrome.
 - **No ranking beyond the default.** Results are ordered by recency, not by
   relevance score, because in a room of updates the newest match is nearly

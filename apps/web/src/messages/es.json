@@ -95,14 +95,14 @@
     "stoppedByCompany": "VALO Tech ha detenido el correo para inversores a esta cuenta. Si vuelve a activarlo y los mensajes siguen sin llegar, escriba a la persona que le invitó.",
     "on": "El correo para inversores está llegando a esta cuenta.",
     "resume": "Volver a recibir el correo para inversores",
-    "roomIntro": "Si las novedades para inversores de VALO Tech llegan a la dirección de su cuenta.",
+    "hallIntro": "Si las novedades para inversores de VALO Tech llegan a la dirección de su cuenta.",
     "expired": "Este enlace ya no funciona. Inicie sesión para cambiar este ajuste en la página de su cuenta, o escriba a la persona que le invitó.",
     "signIn": "Iniciar sesión"
   },
-  "room": {
+  "hall": {
     "title": "Sala de inversores",
     "nav": {
-      "room": "La sala",
+      "hall": "La sala",
       "account": "Cuenta"
     },
     "signOut": "Cerrar sesión",

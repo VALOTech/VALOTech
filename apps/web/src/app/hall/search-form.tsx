@@ -7,10 +7,11 @@ import type { ReactElement } from 'react';
 import { CONTENT_TYPES, CONTENT_UPDATE_KINDS, PORTFOLIO_PRODUCTS } from '../../db/types';
 import { PRODUCT_LABEL } from '../../portfolio/labels';
 
-import styles from './room.module.css';
+import { Disclosure } from './disclosure';
+import styles from './hall.module.css';
 
 /**
- * The room's search, as a control on the chrome (`CMS-007/T3`, `CMS-007/T6`).
+ * The hall's search, as a control on the chrome (`CMS-007/T3`, `CMS-007/T6`).
  *
  * **It lives in the header so it follows the reader.** Looking something up is
  * a thing an investor does from wherever they are, and a field that sits on one
@@ -35,31 +36,36 @@ import styles from './room.module.css';
  * sees it — only the build does.
  */
 export function SearchForm(): ReactElement {
-  const t = useTranslations('room');
+  const t = useTranslations('hall');
   const params = useSearchParams();
   const value = (name: string): string => params.get(name) ?? '';
   const narrowed = ['q', 'type', 'kind', 'product', 'period'].some((name) => value(name) !== '');
 
   return (
-    <details className={styles.searchDisclosure} open={narrowed}>
-      {/* An icon with its name beside it, hidden from sight and not from a
-          screen reader: an icon-only control is a guess for anybody who does
-          not already know what the glyph means (`A11Y-R02`). */}
-      <summary className={styles.searchToggle}>
+    <Disclosure
+      className={styles.searchDisclosure}
+      openInitially={narrowed}
+      summary={
+        /* An icon with its name beside it, hidden from sight and not from a
+           screen reader: an icon-only control is a guess for anybody who does
+           not already know what the glyph means (`A11Y-R02`). */
+        <summary className={styles.searchToggle}>
         <svg className={styles.icon} viewBox="0 0 20 20" aria-hidden="true" focusable="false">
           <circle cx="9" cy="9" r="5.5" fill="none" stroke="currentColor" strokeWidth="1.8" />
           <path d="M13.2 13.2 17.5 17.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
         </svg>
-        <span className={styles.srOnly}>{t('search.label')}</span>
-      </summary>
+          <span className={styles.srOnly}>{t('search.label')}</span>
+        </summary>
+      }
+    >
 
-      <form method="get" action="/room" className={styles.search} role="search">
+      <form method="get" action="/hall" className={styles.search} role="search">
         <div className={styles.searchField}>
-          <label htmlFor="room-q" className={styles.searchLabel}>
+          <label htmlFor="hall-q" className={styles.searchLabel}>
             {t('search.label')}
           </label>
           <input
-            id="room-q"
+            id="hall-q"
             name="q"
             type="search"
             defaultValue={value('q')}
@@ -70,10 +76,10 @@ export function SearchForm(): ReactElement {
 
         <div className={styles.searchFilters}>
           <div className={styles.searchField}>
-            <label htmlFor="room-type" className={styles.searchLabel}>
+            <label htmlFor="hall-type" className={styles.searchLabel}>
               {t('search.type')}
             </label>
-            <select id="room-type" name="type" defaultValue={value('type')} className={styles.searchSelect}>
+            <select id="hall-type" name="type" defaultValue={value('type')} className={styles.searchSelect}>
               <option value="">{t('search.any')}</option>
               {CONTENT_TYPES.map((item) => (
                 <option key={item} value={item}>
@@ -84,10 +90,10 @@ export function SearchForm(): ReactElement {
           </div>
 
           <div className={styles.searchField}>
-            <label htmlFor="room-kind" className={styles.searchLabel}>
+            <label htmlFor="hall-kind" className={styles.searchLabel}>
               {t('search.kind')}
             </label>
-            <select id="room-kind" name="kind" defaultValue={value('kind')} className={styles.searchSelect}>
+            <select id="hall-kind" name="kind" defaultValue={value('kind')} className={styles.searchSelect}>
               <option value="">{t('search.any')}</option>
               {CONTENT_UPDATE_KINDS.map((item) => (
                 <option key={item} value={item}>
@@ -98,12 +104,12 @@ export function SearchForm(): ReactElement {
           </div>
 
           <div className={styles.searchField}>
-            <label htmlFor="room-product" className={styles.searchLabel}>
+            <label htmlFor="hall-product" className={styles.searchLabel}>
               {t('search.product')}
             </label>
             {/* A product's name is a proper noun and is the same in every
                 locale, so these come from the one label map. */}
-            <select id="room-product" name="product" defaultValue={value('product')} className={styles.searchSelect}>
+            <select id="hall-product" name="product" defaultValue={value('product')} className={styles.searchSelect}>
               <option value="">{t('search.any')}</option>
               {PORTFOLIO_PRODUCTS.map((item) => (
                 <option key={item} value={item}>
@@ -114,11 +120,11 @@ export function SearchForm(): ReactElement {
           </div>
 
           <div className={styles.searchField}>
-            <label htmlFor="room-period" className={styles.searchLabel}>
+            <label htmlFor="hall-period" className={styles.searchLabel}>
               {t('search.period')}
             </label>
             <input
-              id="room-period"
+              id="hall-period"
               name="period"
               type="text"
               defaultValue={value('period')}
@@ -132,6 +138,6 @@ export function SearchForm(): ReactElement {
           </button>
         </div>
       </form>
-    </details>
+    </Disclosure>
   );
 }

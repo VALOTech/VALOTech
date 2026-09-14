@@ -14,7 +14,7 @@ inert_until:
     structure and none of its text, metrics carry their numbers as data, the
     progress board sits beside the section that narrates it, and making one
     public states in words what that means. **No investor reads any of it.**
-    A published report reaches a person through the room, and the room's
+    A published report reaches a person through the hall, and the hall's
     reading surfaces are not built — so what exists today is a complete
     authoring surface writing into a product nobody can open. Calling that
     `implemented` would be the honesty violation the token exists to prevent.

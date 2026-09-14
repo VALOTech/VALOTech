@@ -134,7 +134,7 @@ previewed and published — this surface never publishes.
 - **`CMS-R04`** — structured blocks; no markup crosses the form.
 - **`A11Y-R01`**, **`A11Y-R02`** — keyboard-operable, named controls, and a
   required alternative text that blocks the save rather than warning.
-- **`A11Y-R03`** — the editor is on the same dark ground as the room and its
+- **`A11Y-R03`** — the editor is on the same dark ground as the hall and its
   contrast is measured there.
 - **`I18N-R01`** — every label from the dictionary.
 

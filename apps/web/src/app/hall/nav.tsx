@@ -4,15 +4,15 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import type { ReactElement } from 'react';
 
-import styles from './room.module.css';
+import styles from './hall.module.css';
 
-export interface RoomDestination {
+export interface HallDestination {
   readonly href: string;
   readonly label: string;
 }
 
 /**
- * The room's flat navigation, with the current destination marked
+ * The hall's flat navigation, with the current destination marked
  * (`INV-001/T3`).
  *
  * A client component for one reason: the current path. Marking the current
@@ -28,7 +28,7 @@ export interface RoomDestination {
  * `aria-current` rather than a class alone: the underline says which page this
  * is to somebody looking at it, and nothing at all to somebody who is not.
  */
-export function RoomNav({ destinations }: { readonly destinations: readonly RoomDestination[] }): ReactElement {
+export function HallNav({ destinations }: { readonly destinations: readonly HallDestination[] }): ReactElement {
   const pathname = usePathname();
 
   return (

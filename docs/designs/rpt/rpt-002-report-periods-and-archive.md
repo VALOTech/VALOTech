@@ -28,7 +28,7 @@ working on the same afternoon.
 Partial, because drafts for the same period are legitimate — an author working on
 a replacement should not be blocked by the one that is live.
 
-**Up.** The current report is surfaced by the room; the rest are a list by
+**Up.** The current report is surfaced by the hall; the rest are a list by
 period, newest first, grouped by year. A period with no report shows as absent
 rather than being omitted, because a gap an investor can see is information and a
 gap they cannot see is a room that looks complete.
@@ -53,8 +53,8 @@ readable to anyone reconstructing what was sent.
 
 ### The archive
 
-    GET /room/reports            list, newest first, grouped by year
-    GET /room/reports/<period>   one report
+    GET /hall/reports            list, newest first, grouped by year
+    GET /hall/reports/<period>   one report
 
 The list shows, per period: the period, the title, the publication date, and
 whether the reader has read it. Periods between the first report and now with no
@@ -66,7 +66,7 @@ which is the same answer they would get if it did not exist, deliberately.
 
 ### The current report
 
-The room's landing surface (`INV-001`) shows the most recent published report the
+The hall's landing surface (`INV-001`) shows the most recent published report the
 reader may read, by period rather than by publication date. Those differ when a
 late report is published after a newer one, and the period is what an investor
 means by "the latest".
@@ -74,10 +74,10 @@ means by "the latest".
 ### Withdrawal
 
 Withdrawing the published report for a period frees the constraint immediately.
-The archive then shows that period as a gap, and the room's current report falls
+The archive then shows that period as a gap, and the hall's current report falls
 back to the previous period. The confirmation says both of those things before it
 happens, because "withdraw" is easy to read as "hide from the list" and it is
-also "the room now presents a different document as current".
+also "the hall now presents a different document as current".
 
 ### Reading state
 
@@ -116,7 +116,7 @@ report.
 - **Keeping a read state at all.** It is behavioural data about a named person
   and this product otherwise keeps none. It is kept because the alternative is a
   list of twelve documents with no way to tell which are new, and that is the
-  problem the room exists to solve. It is stated in the privacy posture
+  problem the hall exists to solve. It is stated in the privacy posture
   (`LEGAL-SG-001`) rather than left for someone to discover.
 
 ## 7. Task list
@@ -124,6 +124,6 @@ report.
 - `RPT-002/T1` — A partial unique index gives one published report per period, and drafts are exempt
 - `RPT-002/T2` — Publishing into a taken period fails with the report that holds it and the two real choices
 - `RPT-002/T3` — The archive lists by period, groups by year, and shows a period with no report as a gap
-- `RPT-002/T4` — The room's current report is the most recent period the reader may read, not the most recent publication
+- `RPT-002/T4` — The hall's current report is the most recent period the reader may read, not the most recent publication
 - `RPT-002/T5` — Withdrawal states that the period becomes a gap and which report becomes current
 - `RPT-002/T6` — A per-account read state, used only in the list, and deleted with the account

@@ -40,7 +40,7 @@ control on `legal/cookies` that changes the answer afterwards.
 |---|---|---|
 | `/legal/privacy` | What is held, why, on what basis, how long, who to write to, and the four rights | `LEGAL-SG-001`, plus `LEGAL-GLOBAL-001`'s additions |
 | `/legal/cookies` | The three storages, when each is set, the three categories, and the control to change the answer | `LEGAL-GLOBAL-002` |
-| `/legal/terms` | What using the site and the investor room means, and the company that operates them | This design |
+| `/legal/terms` | What using the site and the investor hall means, and the company that operates them | This design |
 
 Twenty locales, from the same dictionary and through the same parity gate as the
 rest of the page (`I18N-002`). A legal page in English on a page reading Thai is
@@ -129,7 +129,7 @@ the copy and **`I18N-002`** gates it. **`LEGAL-SG-001`** and
   word of it goes through the same authoring and review as the rest. That is the
   real cost of matching the family, and it is paid once.
 - **Terms are the page this repository is least qualified to write.** What ships
-  is a plain statement of who operates the site, what the investor room is, and
+  is a plain statement of who operates the site, what the investor hall is, and
   what a reader may not do with what they read there. Anything beyond that is a
   question for counsel, and it is on the operator checklist rather than guessed
   at here.
