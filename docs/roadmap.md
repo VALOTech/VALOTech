@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_318 tasks in the plan, 248 closed, 70 outstanding._
+_318 tasks in the plan, 251 closed, 67 outstanding._
 
 ---
 
@@ -59,7 +59,7 @@ _74/75 closed (98%) · 1 outstanding — 0 buildable now · 0 waiting on the own
 
 _The machinery every kind of writing shares — the editor, the media, the locale states, the audience rule, publishing, search — plus the account, configuration and logging surfaces an operator needs before anything is published. Building it once is the whole reason a report, an update and a deck are three navigations over one system rather than three systems._
 
-_69/73 closed (94%) · 4 outstanding — 0 buildable now · 1 waiting on the owner · 0 external residue · 3 parked to a later wave._
+_69/73 closed (94%) · 4 outstanding — 3 buildable now · 1 waiting on the owner · 0 external residue · 0 parked to a later wave._
 
 - **ADMIN-001** · Account management — 10/10 closed
 - **CFG-001** · Runtime configuration — 8/8 closed
@@ -72,16 +72,16 @@ _69/73 closed (94%) · 4 outstanding — 0 buildable now · 1 waiting on the own
   - `[!] CMS-004/T6` — A public item's cache is purged on publish and on withdraw  · _pending-decision_ · **Blocked by:** pending-decision: CMS-DEC-07 ([docs/decisions-log.md#CMS-DEC-07](decisions-log.md#CMS-DEC-07)) — OPS-001 §3 settles that Cloudflare caches the assets…
 
 - **CMS-007** · Search and filter in the room — 3/6 closed · depth 6
-  - `[!] CMS-007/T3` — Kind, product, period and type filters, composing into one statement  · _cross-wave-parked_ · **Blocked by:** INV-001/T1 (the room’s landing surface) — all four dimensions now rest on columns that exist, the product tag among them since POST-001/T3, so what r…
-  - `[!] CMS-007/T5` — The empty state names what narrowed the result and offers to widen it  · _cross-wave-parked_ · **Blocked by:** INV-001/T1 (the room’s landing surface) — CMS-007 §2 puts the field and its filters above the stream and §4 names INV-001 as the surface this appears…
-  - `[!] CMS-007/T6` — The field is labelled, keyboard-operable, and announces its result count  · _cross-wave-parked_ · **Blocked by:** INV-001/T1 (the room’s landing surface) — the field this labels is the one CMS-007 §2 places above the stream, on the surface §4 names as INV-001, an…
+  - `[ ] CMS-007/T3` — Kind, product, period and type filters, composing into one statement
+  - `[!] CMS-007/T5` — The empty state names what narrowed the result and offers to widen it  · _in-graph_ · **Blocked by:** CMS-007/T3 — the empty state names what narrowed a result, and the thing that narrows it is the filter set that row builds. The room page it sits on…
+  - `[!] CMS-007/T6` — The field is labelled, keyboard-operable, and announces its result count  · _in-graph_ · **Blocked by:** CMS-007/T3 — a label, a tab order and a live count are properties of a rendered control, and the control is that row's. The page it sits on is built…
 
 - **DATA-002** · Erasure and retention — 5/5 closed
 ## W3 — What is written
 
 _The three content types, and the compliance posture that governs what is held about the people reading them. Updates come before decks, and not only because they are the simpler shape of the same problem: they are what the room is for. An investor signs in to find out what has happened since they last looked._
 
-_54/63 closed (85%) · 9 outstanding — 2 buildable now · 1 waiting on the owner · 3 external residue · 3 parked to a later wave._
+_54/63 closed (85%) · 9 outstanding — 4 buildable now · 1 waiting on the owner · 3 external residue · 1 parked to a later wave._
 
 - **DECK-001** · Deck authoring — 6/6 closed
 - **LEGAL-SG-001** · PDPA posture — 4/8 closed · depth 7
@@ -102,16 +102,16 @@ _54/63 closed (85%) · 9 outstanding — 2 buildable now · 1 waiting on the own
 
 - **MAIL-002** · Mail log and unsubscribe — 6/6 closed
 - **POST-002** · Update publishing and audience — 5/6 closed · depth 8
-  - `[!] POST-002/T6` — Unread marking from the per-account read state, and a paging control rather than infinite scroll  · _cross-wave-parked_ · **Blocked by:** INV-001/T1 (the room’s landing surface) — POST-002 §3 serves the stream at GET /room/stream, and apps/web/src/app carries no room segment, so an unre…
+  - `[ ] POST-002/T6` — Unread marking from the per-account read state, and a paging control rather than infinite scroll
 
 - **RPT-002** · Report periods and archive — 5/6 closed · depth 8
-  - `[!] RPT-002/T3` — The archive lists by period, groups by year, and shows a period with no report as a gap  · _cross-wave-parked_ · **Blocked by:** INV-001/T1 (the room’s landing surface) — RPT-002 §3 serves the archive at GET /room/reports, and apps/web/src/app carries no room segment, so the li…
+  - `[ ] RPT-002/T3` — The archive lists by period, groups by year, and shows a period with no report as a gap
 
 ## W4 — The room
 
 _The reading surfaces, the room they sit in, and the gateway served by the application — which is what finally makes the gate on the two hidden chapters real rather than a stylesheet. This wave ends with the product complete and still unpublished; what publishes it is outside the waves, waiting on the owner._
 
-_3/57 closed (5%) · 54 outstanding — 54 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_6/57 closed (10%) · 51 outstanding — 51 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
 
 - **DECK-003** · Deck reading — 0/5 closed · depth 9
   - `[ ] DECK-003/T1` — One column with sections in order, the version and date on the page
@@ -126,11 +126,10 @@ _3/57 closed (5%) · 54 outstanding — 54 buildable now · 0 waiting on the own
   - `[ ] DECK-004/T5` — The from-the-account view, listing every deck a person may read
   - `[ ] DECK-004/T6` — Bulk grant with the names shown before it commits, and no bulk revoke
 
-- **INV-001** · Investor room shell — 0/5 closed · depth 9
-  - `[~] INV-001/T1` — The landing surface: what is new, where things stand, the current report, your decks  · **Note:** **the unread count is built and proven; the page is not.** apps/web/src/content/unread.ts:unreadUpdateCount answers the published updates a reader ma…
+- **INV-001** · Investor room shell — 1/5 closed · depth 9
+  - `[~] INV-001/T3` — Flat navigation over four destinations, with the current one marked  · **Note:** the rail and its current-destination mark ship in apps/web/src/app/room/nav.tsx, which is a client component for one reason — the current path, which…
+  - `[~] INV-001/T4` — The room's chrome is the gateway's, with no scene  · **Note:** the header ships in apps/web/src/app/room/layout.tsx — the mark, the wordmark with the second word in the accent, the rail and sign-out, on the gatew…
   - `[ ] INV-001/T2` — Empty and error states are different renderings, each saying which it is
-  - `[ ] INV-001/T3` — Flat navigation over four destinations, with the current one marked
-  - `[ ] INV-001/T4` — The room's chrome is the gateway's, with no scene
   - `[ ] INV-001/T5` — An expired session returns the reader to where they were going
 
 - **LEGAL-GLOBAL-002** · Cookie and analytics posture — 0/5 closed · depth 9
@@ -163,11 +162,9 @@ _3/57 closed (5%) · 54 outstanding — 54 buildable now · 0 waiting on the own
   - `[ ] INV-002/T6` — The invitation block, in twenty locales, carrying no fragment of what it invites to
   - `[!] INV-002/T1` — The gated components are not called for a reader who may not see them  · _in-graph_ · **Blocked by:** SITE-005/T1 — the gateway is still the static file, so there is no server response to withhold the gated chapters from; the gate they would be withhe…
 
-- **INV-003** · Portfolio progress — 1/5 closed · depth 10
+- **INV-003** · Portfolio progress — 3/5 closed · depth 10
   - `[ ] INV-003/T2` — Editing one product at a time, audited with the previous stage and headline
   - `[ ] INV-003/T3` — A changed stage offers a prefilled progress update, and can be declined
-  - `[ ] INV-003/T4` — All six always render, including paused, with an absent row filled rather than dropped
-  - `[ ] INV-003/T5` — Stage is carried by a word as well as by colour, and the board states when it last changed
 
 - **OPS-001** · Hosting and deploy — 0/8 closed · depth 10
   - `[ ] OPS-001/T1` — Terraform under `deploy/`: VPC, ECS Fargate, ALB, RDS in private subnets, ECR, Route 53, ACM, with remote state and a l…

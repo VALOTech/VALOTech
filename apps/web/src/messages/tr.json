@@ -98,5 +98,40 @@
     "roomIntro": "VALO Tech'in yatırımcı güncellemelerinin hesabınızdaki adrese ulaşıp ulaşmadığı.",
     "expired": "Bu bağlantı artık çalışmıyor. Bu ayarı hesap sayfanızda değiştirmek için giriş yapın ya da sizi davet eden kişiyle iletişime geçin.",
     "signIn": "Giriş yap"
+  },
+  "room": {
+    "title": "Yatırımcı odası",
+    "nav": {
+      "room": "Oda",
+      "account": "Hesap"
+    },
+    "signOut": "Çıkış yap",
+    "new": {
+      "heading": "Yenilikler",
+      "none": "Son bakışınızdan bu yana yeni bir şey yok",
+      "count": "{count, plural, one {# güncelleme, son bakışınızdan bu yana} other {# güncelleme, son bakışınızdan bu yana}}",
+      "empty": "Henüz güncelleme yok. Şirket ilerleme notlarını yayımladıkça burada görünür."
+    },
+    "standing": {
+      "heading": "Her ürünün durumu",
+      "empty": "Hiçbir ürün aşamasını henüz bildirmedi.",
+      "unset": "Bunu henüz kimse girmedi"
+    },
+    "report": {
+      "heading": "Güncel rapor",
+      "opened": "Açıldı",
+      "unopened": "Henüz açılmadı",
+      "empty": "Henüz rapor yayımlanmadı."
+    },
+    "decks": {
+      "heading": "Sunumlarınız",
+      "empty": "Sizinle henüz sunum paylaşılmadı."
+    },
+    "stage": {
+      "building": "Yapım aşamasında",
+      "inPrivateUse": "Özel kullanımda",
+      "inMarket": "Piyasada",
+      "paused": "Duraklatıldı"
+    }
   }
 }

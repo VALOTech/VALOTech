@@ -98,5 +98,40 @@
     "roomIntro": "Apakah kabar terbaru VALO Tech untuk investor sampai ke alamat pada akun Anda.",
     "expired": "Tautan ini sudah tidak berlaku. Masuk untuk mengubah setelan ini di halaman akun Anda, atau hubungi orang yang mengundang Anda.",
     "signIn": "Masuk"
+  },
+  "room": {
+    "title": "Ruang investor",
+    "nav": {
+      "room": "Ruang",
+      "account": "Akun"
+    },
+    "signOut": "Keluar",
+    "new": {
+      "heading": "Yang baru",
+      "none": "Tidak ada yang baru sejak terakhir Anda melihat",
+      "count": "{count, plural, other {# pembaruan sejak terakhir Anda melihat}}",
+      "empty": "Belum ada pembaruan. Catatan perkembangan akan muncul di sini setelah perusahaan memuatnya."
+    },
+    "standing": {
+      "heading": "Posisi tiap produk",
+      "empty": "Belum ada produk yang melaporkan tahapnya.",
+      "unset": "Belum ada yang mengisi ini"
+    },
+    "report": {
+      "heading": "Laporan terkini",
+      "opened": "Sudah dibuka",
+      "unopened": "Belum dibuka",
+      "empty": "Belum ada laporan yang diterbitkan."
+    },
+    "decks": {
+      "heading": "Presentasi Anda",
+      "empty": "Belum ada presentasi yang dibagikan kepada Anda."
+    },
+    "stage": {
+      "building": "Sedang dibangun",
+      "inPrivateUse": "Dipakai internal",
+      "inMarket": "Sudah di pasar",
+      "paused": "Dijeda"
+    }
   }
 }

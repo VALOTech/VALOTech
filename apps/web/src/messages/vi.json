@@ -98,5 +98,40 @@
     "roomIntro": "Các bản tin dành cho nhà đầu tư của VALO Tech có đến địa chỉ trên tài khoản của bạn hay không.",
     "expired": "Liên kết này không còn hiệu lực. Hãy đăng nhập để thay đổi thiết lập trên trang tài khoản của bạn, hoặc liên hệ người đã mời bạn.",
     "signIn": "Đăng nhập"
+  },
+  "room": {
+    "title": "Phòng nhà đầu tư",
+    "nav": {
+      "room": "Phòng",
+      "account": "Tài khoản"
+    },
+    "signOut": "Đăng xuất",
+    "new": {
+      "heading": "Có gì mới",
+      "none": "Không có gì mới kể từ lần bạn xem gần nhất",
+      "count": "{count, plural, other {# cập nhật kể từ lần bạn xem gần nhất}}",
+      "empty": "Chưa có cập nhật nào. Các ghi chú tiến độ sẽ xuất hiện ở đây khi công ty đăng."
+    },
+    "standing": {
+      "heading": "Mọi thứ đang ở đâu",
+      "empty": "Chưa sản phẩm nào báo cáo giai đoạn.",
+      "unset": "Chưa ai đặt mục này"
+    },
+    "report": {
+      "heading": "Báo cáo hiện tại",
+      "opened": "Đã mở",
+      "unopened": "Chưa mở",
+      "empty": "Chưa có báo cáo nào được công bố."
+    },
+    "decks": {
+      "heading": "Bản trình bày của bạn",
+      "empty": "Chưa có bản trình bày nào được chia sẻ với bạn."
+    },
+    "stage": {
+      "building": "Đang xây dựng",
+      "inPrivateUse": "Dùng nội bộ",
+      "inMarket": "Đã ra thị trường",
+      "paused": "Tạm dừng"
+    }
   }
 }

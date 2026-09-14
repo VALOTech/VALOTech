@@ -98,5 +98,40 @@
     "roomIntro": "Si las novedades para inversores de VALO Tech llegan a la dirección de su cuenta.",
     "expired": "Este enlace ya no funciona. Inicie sesión para cambiar este ajuste en la página de su cuenta, o escriba a la persona que le invitó.",
     "signIn": "Iniciar sesión"
+  },
+  "room": {
+    "title": "Sala de inversores",
+    "nav": {
+      "room": "La sala",
+      "account": "Cuenta"
+    },
+    "signOut": "Cerrar sesión",
+    "new": {
+      "heading": "Novedades",
+      "none": "Nada nuevo desde la última vez que entraste",
+      "count": "{count, plural, one {# novedad desde la última vez que entraste} other {# novedades desde la última vez que entraste}}",
+      "empty": "Todavía no hay novedades. Las notas de avance aparecerán aquí cuando la empresa las publique."
+    },
+    "standing": {
+      "heading": "Situación de cada producto",
+      "empty": "Ningún producto ha informado todavía de su etapa.",
+      "unset": "Nadie lo ha indicado todavía"
+    },
+    "report": {
+      "heading": "Informe actual",
+      "opened": "Abierto",
+      "unopened": "Sin abrir",
+      "empty": "Todavía no se ha publicado ningún informe."
+    },
+    "decks": {
+      "heading": "Tus presentaciones",
+      "empty": "Todavía no se ha compartido ninguna presentación contigo."
+    },
+    "stage": {
+      "building": "En construcción",
+      "inPrivateUse": "En uso privado",
+      "inMarket": "En el mercado",
+      "paused": "En pausa"
+    }
   }
 }

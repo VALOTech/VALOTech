@@ -140,7 +140,7 @@ because an investor navigates each of them differently.
 | `DECK-002` | Deck versioning and publishing | building | A deck is published as a version; an investor reads the version they were granted; a draft is never visible |
 | `DECK-003` | Deck reading | design | The investor's view: sequential, readable on a phone, printable |
 | `DECK-004` | Deck access grants | building | Which investor may read which deck, granted and revoked by an admin, audited |
-| `INV-001` | Investor room shell | design | What a signed-in investor lands on: the update stream first, with the progress board, the current report, the deck and the gated chapters reachable from it |
+| `INV-001` | Investor room shell | building | What a signed-in investor lands on: the update stream first, with the progress board, the current report, the deck and the gated chapters reachable from it |
 | `INV-002` | Gated gateway chapters, served | design | The two chapters and the seven mechanisms, delivered by the server to an authorised reader and to nobody else — this is what replaces the CSS demonstration |
 | `INV-003` | Portfolio progress | building | Where each of the six products stands, and the milestones ahead of it — the thing an investor opens the room to check when they have no time to read |
 | `MAIL-001` | Investor mail | blocked | An admin sends a message to selected investors; every send is recorded — built whole — composer, audience, send, retry and the TLS-only SMTP adapter (`docs/decisions-log.md#MAIL-DEC-01`); inert until the `SMTP_URL` credential is supplied |

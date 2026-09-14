@@ -66,3 +66,27 @@ export async function unreadUpdateCount(reader: Actor | null): Promise<number | 
 
   return row === undefined ? 0 : Number(row.unread);
 }
+
+/**
+ * Whether this reader has opened one particular item (`INV-001/T1`).
+ *
+ * The room's landing surface says of the current report whether it has been
+ * read, which is one row rather than the count above — a reader with nothing
+ * outstanding still wants to know they have seen this quarter's.
+ *
+ * A reader who objected to read-tracking is always answered `false`, and that
+ * follows from the same choice the count follows: their rows are deleted and
+ * none is written, so nothing has been opened as far as anything can tell
+ * (`LEGAL-GLOBAL-001` §3). No branch detects the flag here either, for the same
+ * reason it detects none there.
+ */
+export async function hasOpened(accountId: string, itemId: string): Promise<boolean> {
+  const row = await getDb()
+    .selectFrom('report_reads')
+    .select('item_id')
+    .where('account_id', '=', accountId)
+    .where('item_id', '=', itemId)
+    .executeTakeFirst();
+
+  return row !== undefined;
+}

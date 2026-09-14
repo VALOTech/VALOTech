@@ -7,7 +7,7 @@ depends_on: [AUTH-002, CMS-006, CMS-007, POST-002, RPT-002]
 depended_by: [INV-003]
 layers_touched: [api, frontend, ui]
 cross_cutting_rules: [SEC-R01, DATA-R05, I18N-R01, A11Y-R01, A11Y-R02, A11Y-R03]
-status: design-ready
+status: in-progress
 ---
 
 # `INV-001` — Investor room shell

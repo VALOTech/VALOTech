@@ -98,5 +98,40 @@
     "roomIntro": "VALO Tech 的投資人通訊是否送達您帳戶上的地址。",
     "expired": "此連結已失效。請登入後在帳戶頁面變更此設定，或聯絡邀請您進入投資人室的人。",
     "signIn": "登入"
+  },
+  "room": {
+    "title": "投資人專區",
+    "nav": {
+      "room": "專區",
+      "account": "帳戶"
+    },
+    "signOut": "登出",
+    "new": {
+      "heading": "最新動態",
+      "none": "自您上次查看以來沒有新內容",
+      "count": "{count, plural, other {自您上次查看以來有 # 則更新}}",
+      "empty": "暫無動態。公司發布進度說明後會顯示在這裡。"
+    },
+    "standing": {
+      "heading": "各產品進展",
+      "empty": "尚無產品回報所處階段。",
+      "unset": "尚未有人填寫"
+    },
+    "report": {
+      "heading": "目前報告",
+      "opened": "已開啟",
+      "unopened": "尚未開啟",
+      "empty": "尚未發布任何報告。"
+    },
+    "decks": {
+      "heading": "您的簡報",
+      "empty": "尚未有簡報與您分享。"
+    },
+    "stage": {
+      "building": "開發中",
+      "inPrivateUse": "內部使用",
+      "inMarket": "已上市",
+      "paused": "已暫停"
+    }
   }
 }

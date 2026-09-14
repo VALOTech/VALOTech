@@ -98,5 +98,40 @@
     "roomIntro": "Kung dumarating ba sa address ng iyong account ang mga update ng VALO Tech para sa investor.",
     "expired": "Hindi na gumagana ang link na ito. Mag-sign in para baguhin ang setting sa pahina ng iyong account, o makipag-ugnayan sa taong nag-imbita sa iyo.",
     "signIn": "Mag-sign in"
+  },
+  "room": {
+    "title": "Silid ng mamumuhunan",
+    "nav": {
+      "room": "Silid",
+      "account": "Account"
+    },
+    "signOut": "Mag-sign out",
+    "new": {
+      "heading": "Ano ang bago",
+      "none": "Walang bago mula noong huli kang tumingin",
+      "count": "{count, plural, one {# update mula noong huli kang tumingin} other {# update mula noong huli kang tumingin}}",
+      "empty": "Wala pang update. Lilitaw dito ang mga tala ng progreso kapag naglathala ang kompanya."
+    },
+    "standing": {
+      "heading": "Kalagayan ng bawat produkto",
+      "empty": "Wala pang produktong nag-ulat ng yugto nito.",
+      "unset": "Wala pang naglalagay nito"
+    },
+    "report": {
+      "heading": "Kasalukuyang ulat",
+      "opened": "Nabuksan na",
+      "unopened": "Hindi pa nabubuksan",
+      "empty": "Wala pang ulat na nailathala."
+    },
+    "decks": {
+      "heading": "Mga presentasyon mo",
+      "empty": "Wala pang presentasyong ibinahagi sa iyo."
+    },
+    "stage": {
+      "building": "Ginagawa",
+      "inPrivateUse": "Gamit sa loob",
+      "inMarket": "Nasa merkado",
+      "paused": "Nakahinto"
+    }
   }
 }

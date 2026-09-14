@@ -98,5 +98,40 @@
     "roomIntro": "Sama ada berita terkini VALO Tech untuk pelabur sampai ke alamat pada akaun anda.",
     "expired": "Pautan ini tidak lagi berfungsi. Log masuk untuk menukar tetapan ini pada halaman akaun anda, atau hubungi orang yang menjemput anda.",
     "signIn": "Log masuk"
+  },
+  "room": {
+    "title": "Ruang pelabur",
+    "nav": {
+      "room": "Ruang",
+      "account": "Akaun"
+    },
+    "signOut": "Log keluar",
+    "new": {
+      "heading": "Apa yang baharu",
+      "none": "Tiada apa-apa baharu sejak kali terakhir anda melihat",
+      "count": "{count, plural, other {# kemas kini sejak kali terakhir anda melihat}}",
+      "empty": "Belum ada kemas kini. Nota kemajuan akan dipaparkan di sini apabila syarikat menerbitkannya."
+    },
+    "standing": {
+      "heading": "Kedudukan setiap produk",
+      "empty": "Belum ada produk yang melaporkan peringkatnya.",
+      "unset": "Belum ada sesiapa mengisinya"
+    },
+    "report": {
+      "heading": "Laporan semasa",
+      "opened": "Sudah dibuka",
+      "unopened": "Belum dibuka",
+      "empty": "Belum ada laporan diterbitkan."
+    },
+    "decks": {
+      "heading": "Pembentangan anda",
+      "empty": "Belum ada pembentangan dikongsi dengan anda."
+    },
+    "stage": {
+      "building": "Sedang dibina",
+      "inPrivateUse": "Digunakan dalaman",
+      "inMarket": "Sudah di pasaran",
+      "paused": "Dijeda"
+    }
   }
 }

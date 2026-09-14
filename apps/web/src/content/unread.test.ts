@@ -36,7 +36,7 @@ import { addGrant } from './grants';
 import { createItem, saveDraft } from './items';
 import { publish } from './publish';
 import { markReportRead } from './reports';
-import { unreadUpdateCount } from './unread';
+import { hasOpened, unreadUpdateCount } from './unread';
 
 const RAW_DATABASE_URL = (process.env.DATABASE_URL ?? '').trim();
 const HAS_DATABASE = RAW_DATABASE_URL !== '';
@@ -148,7 +148,12 @@ describe.skipIf(!HAS_DATABASE)('the unread update count (INV-001/T1)', () => {
       audience: 'public',
     });
     await saveDraft(draft.id, heading('not published'), admin.id);
-  });
+    // The budget every database-backed file here declares. The hook drops and
+    // recreates a database and applies the whole migration set, which is well
+    // past Vitest's ten-second default on a machine that is also serving the
+    // application -- and what that produces is a hook timeout, which is evidence
+    // about the machine rather than about the code.
+  }, 120_000);
 
   afterAll(async () => {
     await closeDb();
@@ -194,5 +199,19 @@ describe.skipIf(!HAS_DATABASE)('the unread update count (INV-001/T1)', () => {
     // A read recorded after the objection changes nothing, because none is written.
     await markReportRead(objector.id, publicUpdateId);
     expect(await unreadUpdateCount(objector)).toBe(2);
+  });
+  // Last, deliberately: it publishes an update, and the counts asserted above
+  // are counts of what this reader may see. A test that adds to the world the
+  // earlier ones measure is a test that breaks them from behind.
+  it('reports whether one particular item has been opened', async () => {
+    // The room says of the current report whether it has been read, which is one
+    // row rather than the count: a reader with nothing outstanding still wants to
+    // know they have seen this quarter's.
+    const fresh = await publishedUpdate('single-read', 'public');
+    expect(await hasOpened(investor.id, fresh)).toBe(false);
+    await markReportRead(investor.id, fresh);
+    expect(await hasOpened(investor.id, fresh)).toBe(true);
+    // Scoped to the reader: one person opening it does not open it for another.
+    expect(await hasOpened(objector.id, fresh)).toBe(false);
   });
 });

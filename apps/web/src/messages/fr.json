@@ -98,5 +98,40 @@
     "roomIntro": "Si les actualités de VALO Tech destinées aux investisseurs parviennent à l’adresse de votre compte.",
     "expired": "Ce lien ne fonctionne plus. Connectez-vous pour modifier ce réglage sur la page de votre compte, ou contactez la personne qui vous a invité.",
     "signIn": "Se connecter"
+  },
+  "room": {
+    "title": "Espace investisseurs",
+    "nav": {
+      "room": "L'espace",
+      "account": "Compte"
+    },
+    "signOut": "Se déconnecter",
+    "new": {
+      "heading": "Nouveautés",
+      "none": "Rien de nouveau depuis votre dernière visite",
+      "count": "{count, plural, one {# nouveauté depuis votre dernière visite} other {# nouveautés depuis votre dernière visite}}",
+      "empty": "Aucune actualité pour l'instant. Les notes d'avancement apparaîtront ici dès que l'entreprise les publiera."
+    },
+    "standing": {
+      "heading": "Où en est chaque produit",
+      "empty": "Aucun produit n'a encore indiqué son étape.",
+      "unset": "Personne ne l'a encore renseigné"
+    },
+    "report": {
+      "heading": "Rapport en cours",
+      "opened": "Ouvert",
+      "unopened": "Pas encore ouvert",
+      "empty": "Aucun rapport n'a encore été publié."
+    },
+    "decks": {
+      "heading": "Vos présentations",
+      "empty": "Aucune présentation ne vous a encore été communiquée."
+    },
+    "stage": {
+      "building": "En construction",
+      "inPrivateUse": "En usage privé",
+      "inMarket": "Sur le marché",
+      "paused": "En pause"
+    }
   }
 }

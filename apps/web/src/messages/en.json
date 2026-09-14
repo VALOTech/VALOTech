@@ -98,5 +98,40 @@
     "roomIntro": "Whether VALO Tech's investor updates reach the address on your account.",
     "expired": "This link no longer works. Sign in to change the setting on your account page, or ask the person who invited you.",
     "signIn": "Sign in"
+  },
+  "room": {
+    "title": "Investor room",
+    "nav": {
+      "room": "The room",
+      "account": "Account"
+    },
+    "signOut": "Sign out",
+    "new": {
+      "heading": "What's new",
+      "none": "Nothing new since you last looked",
+      "count": "{count, plural, one {# update since you last looked} other {# updates since you last looked}}",
+      "empty": "No updates yet. Progress notes appear here as the company posts them."
+    },
+    "standing": {
+      "heading": "Where things stand",
+      "empty": "No product has reported a stage yet.",
+      "unset": "Nobody has set this yet"
+    },
+    "report": {
+      "heading": "The current report",
+      "opened": "Opened",
+      "unopened": "Not yet opened",
+      "empty": "No report has been published yet."
+    },
+    "decks": {
+      "heading": "Your decks",
+      "empty": "No deck has been shared with you yet."
+    },
+    "stage": {
+      "building": "Building",
+      "inPrivateUse": "In private use",
+      "inMarket": "In market",
+      "paused": "Paused"
+    }
   }
 }
