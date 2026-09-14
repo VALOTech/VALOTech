@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_321 tasks in the plan, 251 closed, 70 outstanding._
+_321 tasks in the plan, 254 closed, 67 outstanding._
 
 ---
 
@@ -59,7 +59,7 @@ _74/75 closed (98%) · 1 outstanding — 0 buildable now · 0 waiting on the own
 
 _The machinery every kind of writing shares — the editor, the media, the locale states, the audience rule, publishing, search — plus the account, configuration and logging surfaces an operator needs before anything is published. Building it once is the whole reason a report, an update and a deck are three navigations over one system rather than three systems._
 
-_69/74 closed (93%) · 5 outstanding — 4 buildable now · 1 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_72/74 closed (97%) · 2 outstanding — 1 buildable now · 1 waiting on the owner · 0 external residue · 0 parked to a later wave._
 
 - **ADMIN-001** · Account management — 10/11 closed · depth 5
   - `[ ] ADMIN-001/T11` — Whether a person has invested or is deciding, carried on the account and set from their page
@@ -73,11 +73,7 @@ _69/74 closed (93%) · 5 outstanding — 4 buildable now · 1 waiting on the own
 - **CMS-004** · Preview, publish and withdraw — 6/7 closed · depth 6
   - `[!] CMS-004/T6` — A public item's cache is purged on publish and on withdraw  · _pending-decision_ · **Blocked by:** pending-decision: CMS-DEC-07 ([docs/decisions-log.md#CMS-DEC-07](decisions-log.md#CMS-DEC-07)) — OPS-001 §3 settles that Cloudflare caches the assets…
 
-- **CMS-007** · Search and filter in the room — 3/6 closed · depth 6
-  - `[ ] CMS-007/T3` — Kind, product, period and type filters, composing into one statement
-  - `[!] CMS-007/T5` — The empty state names what narrowed the result and offers to widen it  · _in-graph_ · **Blocked by:** CMS-007/T3 — the empty state names what narrowed a result, and the thing that narrows it is the filter set that row builds. The room page it sits on…
-  - `[!] CMS-007/T6` — The field is labelled, keyboard-operable, and announces its result count  · _in-graph_ · **Blocked by:** CMS-007/T3 — a label, a tab order and a live count are properties of a rendered control, and the control is that row's. The page it sits on is built…
-
+- **CMS-007** · Search and filter in the room — 6/6 closed
 - **DATA-002** · Erasure and retention — 5/5 closed
 ## W3 — What is written
 

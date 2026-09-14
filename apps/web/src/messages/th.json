@@ -132,6 +132,38 @@
       "inPrivateUse": "ใช้งานภายใน",
       "inMarket": "ออกสู่ตลาดแล้ว",
       "paused": "หยุดชั่วคราว"
+    },
+    "search": {
+      "label": "ค้นหาในห้อง",
+      "placeholder": "คำในเนื้อหาที่เผยแพร่แล้ว",
+      "submit": "ค้นหา",
+      "any": "ทั้งหมด",
+      "periodPlaceholder": "2026-Q1",
+      "type": "ประเภท",
+      "kind": "ชนิด",
+      "product": "ผลิตภัณฑ์",
+      "period": "ช่วงเวลา",
+      "typeValue": {
+        "report": "รายงาน",
+        "update": "อัปเดต",
+        "deck": "เอกสารนำเสนอ"
+      },
+      "kindValue": {
+        "announcement": "ประกาศ",
+        "achievement": "ความสำเร็จ",
+        "progress": "ความคืบหน้า"
+      },
+      "narrowing": {
+        "type": "ตัวกรองประเภท",
+        "kind": "ตัวกรองชนิด",
+        "product": "ตัวกรองผลิตภัณฑ์",
+        "period": "ตัวกรองช่วงเวลา",
+        "q": "คำที่คุณพิมพ์"
+      },
+      "count": "{count, plural, other {# รายการ}}",
+      "emptyPlain": "ไม่พบรายการที่ตรงกัน",
+      "emptyNarrowed": "ไม่พบรายการที่ตรงกันเมื่อใช้{narrowing}",
+      "widen": "ค้นหาโดยไม่ใช้{narrowing}"
     }
   }
 }

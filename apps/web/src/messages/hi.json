@@ -132,6 +132,38 @@
       "inPrivateUse": "निजी उपयोग में",
       "inMarket": "बाज़ार में",
       "paused": "रोका गया"
+    },
+    "search": {
+      "label": "कक्ष में खोजें",
+      "placeholder": "प्रकाशित पाठ के शब्द",
+      "submit": "खोजें",
+      "any": "कोई भी",
+      "periodPlaceholder": "2026-Q1",
+      "type": "प्रकार",
+      "kind": "श्रेणी",
+      "product": "उत्पाद",
+      "period": "अवधि",
+      "typeValue": {
+        "report": "रिपोर्ट",
+        "update": "अपडेट",
+        "deck": "प्रस्तुति"
+      },
+      "kindValue": {
+        "announcement": "घोषणा",
+        "achievement": "उपलब्धि",
+        "progress": "प्रगति"
+      },
+      "narrowing": {
+        "type": "प्रकार फ़िल्टर",
+        "kind": "श्रेणी फ़िल्टर",
+        "product": "उत्पाद फ़िल्टर",
+        "period": "अवधि फ़िल्टर",
+        "q": "आपके शब्द"
+      },
+      "count": "{count, plural, one {# परिणाम} other {# परिणाम}}",
+      "emptyPlain": "कुछ भी मेल नहीं खाता।",
+      "emptyNarrowed": "{narrowing} के साथ कुछ भी मेल नहीं खाता।",
+      "widen": "{narrowing} के बिना खोजें"
     }
   }
 }

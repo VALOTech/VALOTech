@@ -132,6 +132,38 @@
       "inPrivateUse": "Dùng nội bộ",
       "inMarket": "Đã ra thị trường",
       "paused": "Tạm dừng"
+    },
+    "search": {
+      "label": "Tìm trong phòng",
+      "placeholder": "Từ ngữ trong nội dung đã công bố",
+      "submit": "Tìm",
+      "any": "Tất cả",
+      "periodPlaceholder": "2026-Q1",
+      "type": "Loại",
+      "kind": "Dạng",
+      "product": "Sản phẩm",
+      "period": "Kỳ",
+      "typeValue": {
+        "report": "Báo cáo",
+        "update": "Cập nhật",
+        "deck": "Bản trình bày"
+      },
+      "kindValue": {
+        "announcement": "Thông báo",
+        "achievement": "Thành tựu",
+        "progress": "Tiến độ"
+      },
+      "narrowing": {
+        "type": "bộ lọc loại",
+        "kind": "bộ lọc dạng",
+        "product": "bộ lọc sản phẩm",
+        "period": "bộ lọc kỳ",
+        "q": "từ ngữ bạn nhập"
+      },
+      "count": "{count, plural, other {# kết quả}}",
+      "emptyPlain": "Không có kết quả nào.",
+      "emptyNarrowed": "Không có kết quả nào với {narrowing}.",
+      "widen": "Tìm mà không có {narrowing}"
     }
   }
 }

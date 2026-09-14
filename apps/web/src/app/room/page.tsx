@@ -3,16 +3,21 @@ import type { ReactElement } from 'react';
 
 import { getFormatter, getTranslations } from 'next-intl/server';
 
+import Link from 'next/link';
+
 import { requireInvestorPage } from '../../auth/page-guard';
 import { grantedDecksForAccount } from '../../content/decks';
 import { currentReport } from '../../content/reports';
 import { updateStream } from '../../content/stream';
+import { isNarrowed, search } from '../../content/search';
 import { hasOpened, unreadUpdateCount } from '../../content/unread';
 import type { PortfolioStage } from '../../db/types';
 import { standing } from '../../portfolio/board';
 import { PRODUCT_LABEL } from '../../portfolio/labels';
 
+import { narrowest, readRoomQuery, withoutNarrowing } from './query';
 import styles from './room.module.css';
+import { SearchForm } from './search-form';
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('room');
@@ -67,8 +72,77 @@ const STAGE_KEY: Readonly<Record<PortfolioStage, string>> = {
  * check belongs in a layout, the way `/admin`'s does, so that the fourth page
  * cannot ship without it.
  */
-export default async function RoomPage(): Promise<ReactElement> {
+export default async function RoomPage({
+  searchParams,
+}: {
+  readonly searchParams: Promise<Record<string, string | string[] | undefined>>;
+}): Promise<ReactElement> {
   const actor = await requireInvestorPage();
+  const query = readRoomQuery(await searchParams);
+
+  // A narrowed room is a different page, not the landing with a list appended:
+  // the four things below are what has happened lately, and a reader who has
+  // asked a question wants its answer rather than the room's own summary under
+  // it (`CMS-007` §2, `INV-001` §3).
+  if (isNarrowed(query.q, query)) {
+    const [results, t, format] = await Promise.all([
+      search(query.q, actor, query),
+      getTranslations('room'),
+      getFormatter(),
+    ]);
+    const day = (value: Date): string => format.dateTime(value, { dateStyle: 'medium' });
+    const drop = narrowest(query);
+
+    return (
+      <main className={styles.main}>
+        <SearchForm current={query} />
+
+        {/* The count is announced rather than only shown: a reader who submits
+            the form and hears nothing cannot tell a narrow result from a broken
+            one (`CMS-007/T6`, `A11Y-R02`). It is polite, not assertive, because
+            it arrives with a whole new page and interrupting is not the job. */}
+        <p className={styles.resultCount} role="status" aria-live="polite">
+          {t('search.count', { count: results.length })}
+        </p>
+
+        {results.length === 0 ? (
+          <div className={styles.panel}>
+            {/* An empty result says which narrowing produced it and offers to
+                drop the one that excluded the most. "No results" alone is
+                indistinguishable from a broken search, and an investor who
+                concludes the room is broken does not ask (`CMS-007/T5`). */}
+            <p className={styles.empty}>
+              {drop === null ? t('search.emptyPlain') : t('search.emptyNarrowed', { narrowing: t(`search.narrowing.${drop}`) })}
+            </p>
+            {drop === null ? null : (
+              <p className={styles.widen}>
+                <Link href={withoutNarrowing(query, drop)} className={styles.widenLink}>
+                  {t('search.widen', { narrowing: t(`search.narrowing.${drop}`) })}
+                </Link>
+              </p>
+            )}
+          </div>
+        ) : (
+          <div className={styles.panel}>
+            <ul className={styles.stream}>
+              {results.map((item) => (
+                <li key={item.id} className={styles.streamRow}>
+                  <div className={styles.streamIdentity}>
+                    {item.product === null ? null : (
+                      <span className={styles.role}>{PRODUCT_LABEL[item.product]}</span>
+                    )}
+                    <span className={styles.itemTitle}>{item.title}</span>
+                  </div>
+                  {item.period === null ? null : <span className={styles.meta}>{item.period}</span>}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </main>
+    );
+  }
+
 
   const [unread, stream, board, report, decks, t, format] = await Promise.all([
     unreadUpdateCount(actor),
@@ -201,6 +275,8 @@ export default async function RoomPage(): Promise<ReactElement> {
           )}
         </div>
       </section>
+
+      <SearchForm current={query} />
     </main>
   );
 }

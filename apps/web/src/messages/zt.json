@@ -132,6 +132,38 @@
       "inPrivateUse": "內部使用",
       "inMarket": "已上市",
       "paused": "已暫停"
+    },
+    "search": {
+      "label": "在專區中搜尋",
+      "placeholder": "已發布內容中的字詞",
+      "submit": "搜尋",
+      "any": "全部",
+      "periodPlaceholder": "2026-Q1",
+      "type": "類型",
+      "kind": "類別",
+      "product": "產品",
+      "period": "週期",
+      "typeValue": {
+        "report": "報告",
+        "update": "動態",
+        "deck": "簡報"
+      },
+      "kindValue": {
+        "announcement": "公告",
+        "achievement": "成果",
+        "progress": "進展"
+      },
+      "narrowing": {
+        "type": "類型篩選",
+        "kind": "類別篩選",
+        "product": "產品篩選",
+        "period": "週期篩選",
+        "q": "您輸入的字詞"
+      },
+      "count": "{count, plural, other {# 則結果}}",
+      "emptyPlain": "沒有符合的內容。",
+      "emptyNarrowed": "使用{narrowing}後沒有符合的內容。",
+      "widen": "不使用{narrowing}再搜尋"
     }
   }
 }

@@ -27,9 +27,9 @@ import { closeDb, getDb } from '../db/index';
 
 import type { Block } from './blocks';
 import { addGrant } from './grants';
-import { createItem, saveDraft } from './items';
+import { createItem, type NewItem, saveDraft } from './items';
 import { publish, withdraw } from './publish';
-import { search } from './search';
+import { isNarrowed, search } from './search';
 
 const RAW_DATABASE_URL = (process.env.DATABASE_URL ?? '').trim();
 const HAS_DATABASE = RAW_DATABASE_URL !== '';
@@ -238,6 +238,78 @@ describe.skipIf(!HAS_DATABASE)('search over published content (CMS-007/T1, T2, T
     it('matches nothing rather than everything', async () => {
       expect(await search('', admin)).toHaveLength(0);
       expect(await search('   ', admin)).toHaveLength(0);
+    });
+  });
+
+  // Last in the file, deliberately: these publish items of their own, and the
+  // assertions above are about which items a word finds. A test that adds to the
+  // world the earlier ones measure is a test that breaks them from behind.
+  describe('the filters (CMS-007/T3)', () => {
+    let filtered: { adsProgress: string; adsAnnouncement: string; pocketProgress: string; report: string; gated: string };
+
+    beforeAll(async () => {
+      const make = async (
+        slug: string,
+        fields: Omit<NewItem, 'slug'>,
+        blocks: Block[],
+      ): Promise<string> => {
+        const item = await createItem({ ...fields, slug: `${slug}-${randomUUID()}` });
+        const revision = await saveDraft(item.id, blocks, admin.id);
+        await publish(item.id, revision.id, admin.id);
+        return item.id;
+      };
+
+      filtered = {
+        adsProgress: await make('f-ads-prog', { type: 'update', title: 'f1', kind: 'progress', product: 'valo-ads', audience: 'public' }, heading('kiwifilter')),
+        adsAnnouncement: await make('f-ads-ann', { type: 'update', title: 'f2', kind: 'announcement', product: 'valo-ads', audience: 'public' }, heading('kiwifilter')),
+        pocketProgress: await make('f-pocket', { type: 'update', title: 'f3', kind: 'progress', product: 'valo-pocket', audience: 'public' }, heading('kiwifilter')),
+        report: await make('f-report', { type: 'report', title: 'f4', period: '2031-Q2', audience: 'public' }, heading('kiwifilter')),
+        gated: await make('f-gated', { type: 'update', title: 'f5', kind: 'progress', product: 'valo-ads', audience: 'investor' }, heading('lemurfilter')),
+      };
+    }, 120_000);
+
+    it('narrows on a filter alone, with no words typed', async () => {
+      // Choosing a product and typing nothing is a question, and answering it
+      // with the empty result an absent query gives would be a control that does
+      // nothing until it is accompanied.
+      expect(isNarrowed('', { product: 'valo-pocket' })).toBe(true);
+      expect(idsOf(await search('', investorA, { product: 'valo-pocket' }))).toEqual([filtered.pocketProgress]);
+    });
+
+    it('counts neither a blank query nor an unset filter as a narrowing', async () => {
+      expect(isNarrowed('   ', {})).toBe(false);
+      expect(isNarrowed('', { product: null, kind: undefined, period: '', type: null })).toBe(false);
+      expect(await search('   ', investorA, { product: null })).toEqual([]);
+    });
+
+    it('composes a filter with the words', async () => {
+      const everything = idsOf(await search('kiwifilter', investorA));
+      expect(everything).toHaveLength(4);
+      expect(idsOf(await search('kiwifilter', investorA, { product: 'valo-ads' })).sort()).toEqual(
+        [filtered.adsProgress, filtered.adsAnnouncement].sort(),
+      );
+    });
+
+    it('composes filters with each other', async () => {
+      expect(idsOf(await search('kiwifilter', investorA, { product: 'valo-ads', kind: 'announcement' }))).toEqual([
+        filtered.adsAnnouncement,
+      ]);
+    });
+
+    it('filters by type and by period', async () => {
+      expect(idsOf(await search('kiwifilter', investorA, { type: 'report' }))).toEqual([filtered.report]);
+      expect(idsOf(await search('', investorA, { period: '2031-Q2' }))).toEqual([filtered.report]);
+    });
+
+    it('keeps the access predicate first, so a filter never widens what a reader may see', async () => {
+      // The gated item carries the filtered product and its own word. investorB
+      // holds no grant and the item is investor-audience, so it is theirs to see;
+      // an anonymous reader's is the case that matters.
+      expect(idsOf(await search('lemurfilter', investorB, { product: 'valo-ads' }))).toEqual([filtered.gated]);
+      expect(await search('lemurfilter', null, { product: 'valo-ads' })).toEqual([]);
+      expect(await search('', null, { product: 'valo-ads' })).not.toContainEqual(
+        expect.objectContaining({ id: filtered.gated }),
+      );
     });
   });
 });

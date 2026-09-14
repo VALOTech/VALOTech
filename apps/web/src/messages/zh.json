@@ -132,6 +132,38 @@
       "inPrivateUse": "内部使用",
       "inMarket": "已上市",
       "paused": "已暂停"
+    },
+    "search": {
+      "label": "在专区中搜索",
+      "placeholder": "已公布内容中的字词",
+      "submit": "搜索",
+      "any": "全部",
+      "periodPlaceholder": "2026-Q1",
+      "type": "类型",
+      "kind": "类别",
+      "product": "产品",
+      "period": "周期",
+      "typeValue": {
+        "report": "报告",
+        "update": "动态",
+        "deck": "演示文稿"
+      },
+      "kindValue": {
+        "announcement": "公告",
+        "achievement": "成果",
+        "progress": "进展"
+      },
+      "narrowing": {
+        "type": "类型筛选",
+        "kind": "类别筛选",
+        "product": "产品筛选",
+        "period": "周期筛选",
+        "q": "您输入的字词"
+      },
+      "count": "{count, plural, other {# 条结果}}",
+      "emptyPlain": "没有匹配的内容。",
+      "emptyNarrowed": "使用{narrowing}后没有匹配的内容。",
+      "widen": "不使用{narrowing}再搜索"
     }
   }
 }

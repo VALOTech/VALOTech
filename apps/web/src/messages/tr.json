@@ -132,6 +132,38 @@
       "inPrivateUse": "Özel kullanımda",
       "inMarket": "Piyasada",
       "paused": "Duraklatıldı"
+    },
+    "search": {
+      "label": "Odada ara",
+      "placeholder": "Yayımlanmış metindeki kelimeler",
+      "submit": "Ara",
+      "any": "Tümü",
+      "periodPlaceholder": "2026-Q1",
+      "type": "Tür",
+      "kind": "Kategori",
+      "product": "Ürün",
+      "period": "Dönem",
+      "typeValue": {
+        "report": "Rapor",
+        "update": "Güncelleme",
+        "deck": "Sunum"
+      },
+      "kindValue": {
+        "announcement": "Duyuru",
+        "achievement": "Başarı",
+        "progress": "İlerleme"
+      },
+      "narrowing": {
+        "type": "tür filtresi",
+        "kind": "kategori filtresi",
+        "product": "ürün filtresi",
+        "period": "dönem filtresi",
+        "q": "kelimeleriniz"
+      },
+      "count": "{count, plural, one {# sonuç} other {# sonuç}}",
+      "emptyPlain": "Eşleşen bir şey yok.",
+      "emptyNarrowed": "{narrowing} ile eşleşen bir şey yok.",
+      "widen": "{narrowing} olmadan ara"
     }
   }
 }

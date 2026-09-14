@@ -132,6 +132,38 @@
       "inPrivateUse": "限定利用中",
       "inMarket": "市場提供中",
       "paused": "停止中"
+    },
+    "search": {
+      "label": "ルーム内を検索",
+      "placeholder": "公開済みテキストの語句",
+      "submit": "検索",
+      "any": "すべて",
+      "periodPlaceholder": "2026-Q1",
+      "type": "種別",
+      "kind": "区分",
+      "product": "プロダクト",
+      "period": "期間",
+      "typeValue": {
+        "report": "レポート",
+        "update": "更新",
+        "deck": "資料"
+      },
+      "kindValue": {
+        "announcement": "お知らせ",
+        "achievement": "成果",
+        "progress": "進捗"
+      },
+      "narrowing": {
+        "type": "種別フィルター",
+        "kind": "区分フィルター",
+        "product": "プロダクトフィルター",
+        "period": "期間フィルター",
+        "q": "入力した語句"
+      },
+      "count": "{count, plural, other {# 件}}",
+      "emptyPlain": "一致するものはありません。",
+      "emptyNarrowed": "{narrowing}では一致するものがありません。",
+      "widen": "{narrowing}を外して検索"
     }
   }
 }

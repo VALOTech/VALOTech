@@ -132,6 +132,38 @@
       "inPrivateUse": "В закрытом использовании",
       "inMarket": "На рынке",
       "paused": "Приостановлено"
+    },
+    "search": {
+      "label": "Поиск по комнате",
+      "placeholder": "Слова из опубликованного текста",
+      "submit": "Найти",
+      "any": "Любой",
+      "periodPlaceholder": "2026-Q1",
+      "type": "Тип",
+      "kind": "Категория",
+      "product": "Продукт",
+      "period": "Период",
+      "typeValue": {
+        "report": "Отчёт",
+        "update": "Новость",
+        "deck": "Презентация"
+      },
+      "kindValue": {
+        "announcement": "Объявление",
+        "achievement": "Достижение",
+        "progress": "Прогресс"
+      },
+      "narrowing": {
+        "type": "фильтр типа",
+        "kind": "фильтр категории",
+        "product": "фильтр продукта",
+        "period": "фильтр периода",
+        "q": "ваши слова"
+      },
+      "count": "{count, plural, one {# результат} few {# результата} many {# результатов} other {# результата}}",
+      "emptyPlain": "Ничего не найдено.",
+      "emptyNarrowed": "Ничего не найдено с фильтром: {narrowing}.",
+      "widen": "Искать без {narrowing}"
     }
   }
 }

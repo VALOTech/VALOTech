@@ -384,3 +384,114 @@
     margin-inline-end: 0;
   }
 }
+
+/* ---------------------------------------------------------------- The search */
+
+/* A panel like the others, because the field is a thing being read against
+   rather than a thing in the scene. It sits below the four sections on the
+   landing and heads its own results once the room is narrowed. */
+.search {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  margin-block-end: clamp(1.25rem, 3vh, 1.75rem);
+  padding: 20px 24px;
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-panel);
+  background: var(--card-bg);
+  box-shadow: var(--card-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.searchField {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+/* A real label, not a placeholder standing in for one: a placeholder leaves the
+   moment somebody types, which is when a reader who lost their place needs it. */
+.searchLabel {
+  color: var(--text-dim);
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.searchInput,
+.searchSelect {
+  padding: 0.5rem 0.7rem;
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-ctrl, 10px);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+  font: inherit;
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.searchInput::placeholder {
+  color: var(--text-dim);
+}
+
+.searchInput:hover,
+.searchSelect:hover {
+  border-color: rgba(170, 195, 255, 0.4);
+}
+
+.searchFilters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.75rem;
+}
+
+.searchFilters > .searchField {
+  flex: 1 1 9rem;
+}
+
+.searchSubmit {
+  padding: 0.5rem 1.1rem;
+  border: 1px solid rgba(140, 170, 255, 0.35);
+  border-radius: var(--r-pill);
+  background: rgba(140, 158, 255, 0.1);
+  color: var(--accent-bright);
+  font: inherit;
+  font-size: 15px;
+  line-height: 1.4;
+  cursor: pointer;
+  transition: border-color 0.2s var(--ease), background 0.2s var(--ease);
+}
+
+.searchSubmit:hover {
+  border-color: rgba(170, 195, 255, 0.55);
+  background: rgba(140, 158, 255, 0.16);
+}
+
+/* The count leads the results and is announced, so submitting the form tells a
+   screen-reader user what happened rather than leaving them to go and find out. */
+.resultCount {
+  margin: 0 0 0.85rem;
+  color: var(--text-muted);
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.widen {
+  margin: 0.6rem 0 0;
+}
+
+.widenLink {
+  color: var(--accent);
+  font-size: 15px;
+  line-height: 1.4;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.widenLink:hover {
+  color: var(--accent-bright);
+}

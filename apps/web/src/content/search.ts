@@ -27,6 +27,18 @@
  * content is in twenty possible languages and a stemmer for the wrong one is
  * worse than none. Results are ordered by recency, not by a relevance score: in a
  * room of updates the newest match is nearly always the wanted one.
+ *
+ * **The filters are clauses on the same statement, not a pass over its rows.**
+ * Kind, product, period and type compose with each other and with the words, and
+ * a filter applied after the fetch would page wrongly — the second page of a
+ * filtered list would be the second page of the unfiltered one with rows
+ * missing, which reads to the person scrolling as content that vanished.
+ *
+ * **The search runs against the authored text, not the locale variants.** A
+ * reader searching in Vietnamese for an English-authored report finds it by the
+ * product name and the numbers rather than by its prose, which is a limitation
+ * the field's own placeholder states rather than one the reader has to infer
+ * from an empty result.
  */
 
 import { sql } from 'kysely';
@@ -34,8 +46,40 @@ import { sql } from 'kysely';
 import type { Actor } from '../auth/gate';
 import { getDb } from '../db/index';
 
+import type { ContentProductTag, ContentType, ContentUpdateKind } from '../db/types';
+
 import { visibleTo } from './access';
 import type { ContentItem } from './items';
+
+/**
+ * What a reader has narrowed the room by, beyond the words they typed.
+ *
+ * Every field is optional and `null` means the same as absent, because these
+ * arrive from a query string where "not chosen" and "chosen as nothing" are the
+ * same gesture and separating them would be a distinction only the code sees.
+ */
+export interface SearchFilters {
+  readonly kind?: ContentUpdateKind | null;
+  readonly product?: ContentProductTag | null;
+  readonly period?: string | null;
+  readonly type?: ContentType | null;
+}
+
+/**
+ * Whether the reader has narrowed the room at all.
+ *
+ * The room shows its own stream until something narrows it, so this is the test
+ * that decides which of the two a request is asking for. A query with no
+ * searchable word in it does not count: typing a space is not a search.
+ */
+export function isNarrowed(query: string, filters: SearchFilters = {}): boolean {
+  return (
+    toPrefixQuery(query) !== '' ||
+    [filters.kind, filters.product, filters.period, filters.type].some(
+      (value) => value !== undefined && value !== null && value !== '',
+    )
+  );
+}
 
 /**
  * The `to_tsquery` prefix query for a reader's input: each whitespace-separated
@@ -60,13 +104,16 @@ export function toPrefixQuery(input: string): string {
  * first. An empty query, or one with no searchable word in it, matches nothing —
  * the caller renders the room's default rather than every item.
  */
-export async function search(query: string, reader: Actor | null): Promise<ContentItem[]> {
-  const prefixQuery = toPrefixQuery(query);
-  if (prefixQuery === '') {
+export async function search(
+  query: string,
+  reader: Actor | null,
+  filters: SearchFilters = {},
+): Promise<ContentItem[]> {
+  if (!isNarrowed(query, filters)) {
     return [];
   }
 
-  return getDb()
+  let statement = getDb()
     .selectFrom('content_items')
     .innerJoin('content_revisions', (join) =>
       join
@@ -75,8 +122,36 @@ export async function search(query: string, reader: Actor | null): Promise<Conte
     )
     .selectAll('content_items')
     .where(visibleTo(reader))
-    .where('content_revisions.published_at', 'is not', null)
-    .where(sql<boolean>`content_revisions.search @@ to_tsquery('simple', ${prefixQuery})`)
+    .where('content_revisions.published_at', 'is not', null);
+
+  // Every narrowing is a clause on the one statement, never a pass over the rows
+  // it returned. A filter applied after the fetch pages wrongly: the second page
+  // of a filtered list would be the second page of the unfiltered one with rows
+  // missing, which reads to the person scrolling as content that vanished.
+  const prefixQuery = toPrefixQuery(query);
+  if (prefixQuery !== '') {
+    statement = statement.where(
+      sql<boolean>`content_revisions.search @@ to_tsquery('simple', ${prefixQuery})`,
+    );
+  }
+  // A filter with no words beside it narrows on its own: choosing a product and
+  // typing nothing is a question ("what has happened to this one?"), and
+  // answering it with the empty result an absent query gives would be a control
+  // that does nothing until it is accompanied.
+  if (filters.kind) {
+    statement = statement.where('content_items.kind', '=', filters.kind);
+  }
+  if (filters.product) {
+    statement = statement.where('content_items.product', '=', filters.product);
+  }
+  if (filters.period) {
+    statement = statement.where('content_items.period', '=', filters.period);
+  }
+  if (filters.type) {
+    statement = statement.where('content_items.type', '=', filters.type);
+  }
+
+  return statement
     .orderBy('content_revisions.published_at', 'desc')
     .orderBy('content_items.id', 'desc')
     .execute();

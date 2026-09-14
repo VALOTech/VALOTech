@@ -132,6 +132,38 @@
       "inPrivateUse": "비공개 사용 중",
       "inMarket": "시장 출시",
       "paused": "일시 중지"
+    },
+    "search": {
+      "label": "룸에서 검색",
+      "placeholder": "공개된 본문의 단어",
+      "submit": "검색",
+      "any": "전체",
+      "periodPlaceholder": "2026-Q1",
+      "type": "유형",
+      "kind": "종류",
+      "product": "제품",
+      "period": "기간",
+      "typeValue": {
+        "report": "리포트",
+        "update": "업데이트",
+        "deck": "자료"
+      },
+      "kindValue": {
+        "announcement": "공지",
+        "achievement": "성과",
+        "progress": "진행"
+      },
+      "narrowing": {
+        "type": "유형 필터",
+        "kind": "종류 필터",
+        "product": "제품 필터",
+        "period": "기간 필터",
+        "q": "입력한 단어"
+      },
+      "count": "{count, plural, other {# 건}}",
+      "emptyPlain": "일치하는 항목이 없습니다.",
+      "emptyNarrowed": "{narrowing}로는 일치하는 항목이 없습니다.",
+      "widen": "{narrowing} 없이 검색"
     }
   }
 }

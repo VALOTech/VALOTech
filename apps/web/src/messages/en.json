@@ -132,6 +132,38 @@
       "inPrivateUse": "In private use",
       "inMarket": "In market",
       "paused": "Paused"
+    },
+    "search": {
+      "label": "Search the room",
+      "placeholder": "Words from the published text",
+      "submit": "Search",
+      "any": "Any",
+      "periodPlaceholder": "2026-Q1",
+      "type": "Type",
+      "kind": "Kind",
+      "product": "Product",
+      "period": "Period",
+      "typeValue": {
+        "report": "Report",
+        "update": "Update",
+        "deck": "Deck"
+      },
+      "kindValue": {
+        "announcement": "Announcement",
+        "achievement": "Achievement",
+        "progress": "Progress"
+      },
+      "narrowing": {
+        "type": "the type filter",
+        "kind": "the kind filter",
+        "product": "the product filter",
+        "period": "the period filter",
+        "q": "your words"
+      },
+      "count": "{count, plural, one {# match} other {# matches}}",
+      "emptyPlain": "Nothing matches.",
+      "emptyNarrowed": "Nothing matches with {narrowing}.",
+      "widen": "Search without {narrowing}"
     }
   }
 }

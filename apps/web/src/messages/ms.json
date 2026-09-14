@@ -132,6 +132,38 @@
       "inPrivateUse": "Digunakan dalaman",
       "inMarket": "Sudah di pasaran",
       "paused": "Dijeda"
+    },
+    "search": {
+      "label": "Cari dalam ruang ini",
+      "placeholder": "Perkataan daripada teks yang diterbitkan",
+      "submit": "Cari",
+      "any": "Semua",
+      "periodPlaceholder": "2026-Q1",
+      "type": "Jenis",
+      "kind": "Kategori",
+      "product": "Produk",
+      "period": "Tempoh",
+      "typeValue": {
+        "report": "Laporan",
+        "update": "Kemas kini",
+        "deck": "Pembentangan"
+      },
+      "kindValue": {
+        "announcement": "Pengumuman",
+        "achievement": "Pencapaian",
+        "progress": "Kemajuan"
+      },
+      "narrowing": {
+        "type": "penapis jenis",
+        "kind": "penapis kategori",
+        "product": "penapis produk",
+        "period": "penapis tempoh",
+        "q": "perkataan anda"
+      },
+      "count": "{count, plural, other {# hasil}}",
+      "emptyPlain": "Tiada yang sepadan.",
+      "emptyNarrowed": "Tiada yang sepadan dengan {narrowing}.",
+      "widen": "Cari tanpa {narrowing}"
     }
   }
 }

@@ -132,6 +132,38 @@
       "inPrivateUse": "Gamit sa loob",
       "inMarket": "Nasa merkado",
       "paused": "Nakahinto"
+    },
+    "search": {
+      "label": "Maghanap sa silid",
+      "placeholder": "Mga salita mula sa nailathalang teksto",
+      "submit": "Maghanap",
+      "any": "Lahat",
+      "periodPlaceholder": "2026-Q1",
+      "type": "Uri",
+      "kind": "Klase",
+      "product": "Produkto",
+      "period": "Panahon",
+      "typeValue": {
+        "report": "Ulat",
+        "update": "Update",
+        "deck": "Presentasyon"
+      },
+      "kindValue": {
+        "announcement": "Anunsyo",
+        "achievement": "Tagumpay",
+        "progress": "Progreso"
+      },
+      "narrowing": {
+        "type": "ang salang uri",
+        "kind": "ang salang klase",
+        "product": "ang salang produkto",
+        "period": "ang salang panahon",
+        "q": "ang mga salita mo"
+      },
+      "count": "{count, plural, one {# resulta} other {# na resulta}}",
+      "emptyPlain": "Walang tumugma.",
+      "emptyNarrowed": "Walang tumugma gamit {narrowing}.",
+      "widen": "Maghanap nang wala {narrowing}"
     }
   }
 }

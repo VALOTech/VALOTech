@@ -132,6 +132,38 @@
       "inPrivateUse": "قيد الاستخدام الخاص",
       "inMarket": "في السوق",
       "paused": "متوقف مؤقتًا"
+    },
+    "search": {
+      "label": "ابحث في الغرفة",
+      "placeholder": "كلمات من النص المنشور",
+      "submit": "بحث",
+      "any": "الكل",
+      "periodPlaceholder": "2026-Q1",
+      "type": "النوع",
+      "kind": "الفئة",
+      "product": "المنتج",
+      "period": "الفترة",
+      "typeValue": {
+        "report": "تقرير",
+        "update": "تحديث",
+        "deck": "عرض تقديمي"
+      },
+      "kindValue": {
+        "announcement": "إعلان",
+        "achievement": "إنجاز",
+        "progress": "تقدّم"
+      },
+      "narrowing": {
+        "type": "مرشّح النوع",
+        "kind": "مرشّح الفئة",
+        "product": "مرشّح المنتج",
+        "period": "مرشّح الفترة",
+        "q": "كلماتك"
+      },
+      "count": "{count, plural, zero {لا نتائج} one {نتيجة واحدة} two {نتيجتان} few {# نتائج} many {# نتيجة} other {# نتيجة}}",
+      "emptyPlain": "لا توجد نتائج مطابقة.",
+      "emptyNarrowed": "لا توجد نتائج مطابقة مع {narrowing}.",
+      "widen": "ابحث بدون {narrowing}"
     }
   }
 }

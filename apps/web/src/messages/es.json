@@ -132,6 +132,38 @@
       "inPrivateUse": "En uso privado",
       "inMarket": "En el mercado",
       "paused": "En pausa"
+    },
+    "search": {
+      "label": "Buscar en la sala",
+      "placeholder": "Palabras del texto publicado",
+      "submit": "Buscar",
+      "any": "Cualquiera",
+      "periodPlaceholder": "2026-Q1",
+      "type": "Tipo",
+      "kind": "Clase",
+      "product": "Producto",
+      "period": "Periodo",
+      "typeValue": {
+        "report": "Informe",
+        "update": "Novedad",
+        "deck": "Presentación"
+      },
+      "kindValue": {
+        "announcement": "Anuncio",
+        "achievement": "Logro",
+        "progress": "Avance"
+      },
+      "narrowing": {
+        "type": "el filtro de tipo",
+        "kind": "el filtro de clase",
+        "product": "el filtro de producto",
+        "period": "el filtro de periodo",
+        "q": "tus palabras"
+      },
+      "count": "{count, plural, one {# resultado} other {# resultados}}",
+      "emptyPlain": "No hay coincidencias.",
+      "emptyNarrowed": "No hay coincidencias con {narrowing}.",
+      "widen": "Buscar sin {narrowing}"
     }
   }
 }

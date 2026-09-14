@@ -132,6 +132,38 @@
       "inPrivateUse": "Dipakai internal",
       "inMarket": "Sudah di pasar",
       "paused": "Dijeda"
+    },
+    "search": {
+      "label": "Cari di ruang ini",
+      "placeholder": "Kata dari teks yang sudah terbit",
+      "submit": "Cari",
+      "any": "Semua",
+      "periodPlaceholder": "2026-Q1",
+      "type": "Jenis",
+      "kind": "Macam",
+      "product": "Produk",
+      "period": "Periode",
+      "typeValue": {
+        "report": "Laporan",
+        "update": "Pembaruan",
+        "deck": "Presentasi"
+      },
+      "kindValue": {
+        "announcement": "Pengumuman",
+        "achievement": "Pencapaian",
+        "progress": "Perkembangan"
+      },
+      "narrowing": {
+        "type": "filter jenis",
+        "kind": "filter macam",
+        "product": "filter produk",
+        "period": "filter periode",
+        "q": "kata yang Anda ketik"
+      },
+      "count": "{count, plural, other {# hasil}}",
+      "emptyPlain": "Tidak ada yang cocok.",
+      "emptyNarrowed": "Tidak ada yang cocok dengan {narrowing}.",
+      "widen": "Cari tanpa {narrowing}"
     }
   }
 }

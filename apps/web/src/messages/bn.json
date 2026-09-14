@@ -132,6 +132,38 @@
       "inPrivateUse": "ব্যক্তিগত ব্যবহারে",
       "inMarket": "বাজারে",
       "paused": "বিরতিতে"
+    },
+    "search": {
+      "label": "কক্ষে খুঁজুন",
+      "placeholder": "প্রকাশিত লেখার শব্দ",
+      "submit": "খুঁজুন",
+      "any": "যেকোনো",
+      "periodPlaceholder": "2026-Q1",
+      "type": "ধরন",
+      "kind": "শ্রেণি",
+      "product": "পণ্য",
+      "period": "সময়কাল",
+      "typeValue": {
+        "report": "প্রতিবেদন",
+        "update": "আপডেট",
+        "deck": "উপস্থাপনা"
+      },
+      "kindValue": {
+        "announcement": "ঘোষণা",
+        "achievement": "অর্জন",
+        "progress": "অগ্রগতি"
+      },
+      "narrowing": {
+        "type": "ধরনের ফিল্টার",
+        "kind": "শ্রেণির ফিল্টার",
+        "product": "পণ্যের ফিল্টার",
+        "period": "সময়কালের ফিল্টার",
+        "q": "আপনার শব্দ"
+      },
+      "count": "{count, plural, one {# ফল} other {# ফল}}",
+      "emptyPlain": "কিছুই মেলেনি।",
+      "emptyNarrowed": "{narrowing} দিয়ে কিছুই মেলেনি।",
+      "widen": "{narrowing} ছাড়া খুঁজুন"
     }
   }
 }

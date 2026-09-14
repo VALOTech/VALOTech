@@ -132,6 +132,38 @@
       "inPrivateUse": "نجی استعمال میں",
       "inMarket": "مارکیٹ میں",
       "paused": "روکا گیا"
+    },
+    "search": {
+      "label": "کمرے میں تلاش کریں",
+      "placeholder": "شائع شدہ متن کے الفاظ",
+      "submit": "تلاش",
+      "any": "کوئی بھی",
+      "periodPlaceholder": "2026-Q1",
+      "type": "قسم",
+      "kind": "زمرہ",
+      "product": "پروڈکٹ",
+      "period": "مدت",
+      "typeValue": {
+        "report": "رپورٹ",
+        "update": "اپ ڈیٹ",
+        "deck": "پریزنٹیشن"
+      },
+      "kindValue": {
+        "announcement": "اعلان",
+        "achievement": "کامیابی",
+        "progress": "پیش رفت"
+      },
+      "narrowing": {
+        "type": "قسم کا فلٹر",
+        "kind": "زمرے کا فلٹر",
+        "product": "پروڈکٹ کا فلٹر",
+        "period": "مدت کا فلٹر",
+        "q": "آپ کے الفاظ"
+      },
+      "count": "{count, plural, one {# نتیجہ} other {# نتائج}}",
+      "emptyPlain": "کچھ نہیں ملا۔",
+      "emptyNarrowed": "{narrowing} کے ساتھ کچھ نہیں ملا۔",
+      "widen": "{narrowing} کے بغیر تلاش کریں"
     }
   }
 }
