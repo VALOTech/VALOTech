@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_321 tasks in the plan, 257 closed, 64 outstanding._
+_321 tasks in the plan, 259 closed, 62 outstanding._
 
 ---
 
@@ -59,11 +59,9 @@ _74/75 closed (98%) · 1 outstanding — 0 buildable now · 0 waiting on the own
 
 _The machinery every kind of writing shares — the editor, the media, the locale states, the audience rule, publishing, search — plus the account, configuration and logging surfaces an operator needs before anything is published. Building it once is the whole reason a report, an update and a deck are three navigations over one system rather than three systems._
 
-_72/74 closed (97%) · 2 outstanding — 1 buildable now · 1 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_73/74 closed (98%) · 1 outstanding — 0 buildable now · 1 waiting on the owner · 0 external residue · 0 parked to a later wave._
 
-- **ADMIN-001** · Account management — 10/11 closed · depth 5
-  - `[ ] ADMIN-001/T11` — Whether a person has invested or is deciding, carried on the account and set from their page
-
+- **ADMIN-001** · Account management — 11/11 closed
 - **CFG-001** · Runtime configuration — 8/8 closed
 - **CMS-003** · Media library — 10/10 closed
 - **CMS-005** · Locale variants and translation state — 6/6 closed
@@ -79,11 +77,10 @@ _72/74 closed (97%) · 2 outstanding — 1 buildable now · 1 waiting on the own
 
 _The three content types, and the compliance posture that governs what is held about the people reading them. Updates come before decks, and not only because they are the simpler shape of the same problem: they are what the hall is for. An investor signs in to find out what has happened since they last looked._
 
-_54/63 closed (85%) · 9 outstanding — 4 buildable now · 1 waiting on the owner · 3 external residue · 1 parked to a later wave._
+_55/63 closed (87%) · 8 outstanding — 3 buildable now · 1 waiting on the owner · 3 external residue · 1 parked to a later wave._
 
 - **DECK-001** · Deck authoring — 6/6 closed
-- **LEGAL-SG-001** · PDPA posture — 4/8 closed · depth 7
-  - `[~] LEGAL-SG-001/T2` — The notice is linked from the sign-in page and the hall's footer  · **Note:** the sign-in half ships. apps/web/src/app/sign-in/page.tsx carries the link below the card, in the reader’s own language (privacy.link in all twenty l…
+- **LEGAL-SG-001** · PDPA posture — 5/8 closed · depth 7
   - `[!] LEGAL-SG-001/T4` — A named DPO recorded, and published in the notice  · _external_ · **Blocked by:** pending-external: legal — the owner names the individual, at docs/operator-checklist.md#DPO-CONTACT. The mechanism is built and needs no deploy to us…
   - `[!] LEGAL-SG-001/T7` — The cross-border transfer assessment, now that the hosting and the mail carrier are both settled  · _pending-decision_ · **Blocked by:** pending-decision: OPS-DEC-03 ([docs/decisions-log.md#OPS-DEC-03](decisions-log.md#OPS-DEC-03)) — the assessment is about whether personal data leaves…
   - `[!] LEGAL-SG-001/T8` — The PDPA sections this design rests on are in the tree, and every claim cites one  · _external_ · **Blocked by:** pending-external: legal — the statute text is obtained by the owner or counsel, at docs/operator-checklist.md#COMPLIANCE-SOURCES. Nobody here can sup…
