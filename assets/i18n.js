@@ -1,7 +1,20 @@
 /* VALO Tech - i18n engine + dictionaries.
    20 ecosystem locales (order/RTL/endonyms synced with the VALO standard).
    English is the source of truth; every other locale is authored to a formal,
-   natural register, with product and technical terms kept in English. */
+   natural register.
+
+   Product names are kept in English everywhere: VALO Tech, ValoLab, ValoStack
+   and the six product names are one spelling in twenty languages, because a
+   reader who meets one on any VALO surface should meet the same characters here.
+
+   Technical terms are not that class and were wrongly bound to it by an earlier
+   version of this sentence, which the dictionary then broke in five locales
+   while keeping it perfectly for every product name. Each such term has one
+   answer per locale, settled once in docs/glossary/<locale>.json and checked by
+   scripts/check-glossary.py -- because no blanket rule survives them. hi, bn and
+   ur keep `AI` and translate `cookie`; es, fr, pt and de translate `AI` and keep
+   `cookie`; tr translates both and ar translates both. The sets cross, so the
+   rule is per term (docs/decisions-log.md#I18N-DEC-03). */
 (function (w) {
   "use strict";
 
@@ -868,7 +881,7 @@
     "foot.tagline":"VALO Tech Pte. Ltd. สร้างอีโคซิสเต็มที่ขับเคลื่อนด้วย AI เป็นหัวใจ เพื่อธุรกิจในโลกจริงที่อยู่ภายใต้การกำกับดูแล",
     "foot.product":"ผลิตภัณฑ์","foot.company":"บริษัท","foot.legal":"กฎหมาย",
     "foot.about":"เกี่ยวกับเรา","foot.careers":"ร่วมงานกับเรา","foot.press":"ข่าวสาร","foot.contact":"ติดต่อ",
-    "foot.privacy":"ความเป็นส่วนตัว","foot.terms":"เงื่อนไขการใช้งาน","foot.cookies":"Cookie",
+    "foot.privacy":"ความเป็นส่วนตัว","foot.terms":"เงื่อนไขการใช้งาน","foot.cookies":"คุกกี้",
     "foot.rights":"© 2026 VALO Tech Pte. Ltd. สงวนลิขสิทธิ์ทั้งหมด","foot.loc":"สิงคโปร์",
     "problem.eyebrow":"โจทย์",
     "problem.1nl":"ช่องว่าง",
@@ -1214,7 +1227,7 @@
     "foot.tagline":"VALO Tech Pte. Ltd. membina sebuah ekosistem natif AI untuk perniagaan dunia sebenar dalam industri yang dikawal selia.",
     "foot.product":"Produk","foot.company":"Syarikat","foot.legal":"Perundangan",
     "foot.about":"Perihal","foot.careers":"Kerjaya","foot.press":"Akhbar","foot.contact":"Hubungi",
-    "foot.privacy":"Privasi","foot.terms":"Terma","foot.cookies":"Cookie",
+    "foot.privacy":"Privasi","foot.terms":"Terma","foot.cookies":"Kuki",
     "foot.rights":"© 2026 VALO Tech Pte. Ltd. Hak cipta terpelihara.","foot.loc":"Singapura",
     "problem.eyebrow":"Cabarannya",
     "problem.1nl":"jurangnya",
@@ -1560,7 +1573,7 @@
     "foot.tagline":"VALO Tech Pte. Ltd. विनियमित, वास्तविक-दुनिया के कारोबार के लिए एक AI-नेटिव इकोसिस्टम बनाती है।",
     "foot.product":"उत्पाद","foot.company":"कंपनी","foot.legal":"कानूनी",
     "foot.about":"परिचय","foot.careers":"करियर","foot.press":"प्रेस","foot.contact":"संपर्क",
-    "foot.privacy":"निजता","foot.terms":"शर्तें","foot.cookies":"कुकीज़",
+    "foot.privacy":"गोपनीयता","foot.terms":"शर्तें","foot.cookies":"कुकीज़",
     "foot.rights":"© 2026 VALO Tech Pte. Ltd. सर्वाधिकार सुरक्षित।","foot.loc":"सिंगापुर",
     "problem.eyebrow":"समस्या",
     "problem.1nl":"खाई",
@@ -1906,7 +1919,7 @@
     "foot.tagline":"تبني VALO Tech Pte. Ltd. منظومةً أصيلةً في الذكاء الاصطناعي، للأعمال الحقيقية في القطاعات الخاضعة للتنظيم.",
     "foot.product":"المنتج","foot.company":"الشركة","foot.legal":"الشؤون القانونية",
     "foot.about":"من نحن","foot.careers":"الوظائف","foot.press":"الصحافة","foot.contact":"تواصل معنا",
-    "foot.privacy":"الخصوصية","foot.terms":"الشروط","foot.cookies":"ملفات تعريف الارتباط (Cookie)",
+    "foot.privacy":"الخصوصية","foot.terms":"الشروط","foot.cookies":"ملفات تعريف الارتباط",
     "foot.rights":"© 2026 VALO Tech Pte. Ltd. جميع الحقوق محفوظة.","foot.loc":"سنغافورة",
     "problem.eyebrow":"التحدي",
     "problem.1nl":"الفجوة",
@@ -3290,7 +3303,7 @@
     "foot.tagline":"VALO Tech Pte. Ltd., düzenlemeye tabi gerçek dünya işletmeleri için AI yerlisi bir ekosistem kurar.",
     "foot.product":"Ürün","foot.company":"Şirket","foot.legal":"Hukuki",
     "foot.about":"Hakkımızda","foot.careers":"Kariyer","foot.press":"Basın","foot.contact":"İletişim",
-    "foot.privacy":"Gizlilik","foot.terms":"Koşullar","foot.cookies":"Cookie",
+    "foot.privacy":"Gizlilik","foot.terms":"Koşullar","foot.cookies":"Çerezler",
     "foot.rights":"© 2026 VALO Tech Pte. Ltd. Tüm hakları saklıdır.","foot.loc":"Singapur",
     "problem.eyebrow":"Sorun",
     "problem.1nl":"boşluk",
@@ -3463,7 +3476,7 @@
     "foot.tagline":"VALO Tech Pte. Ltd.는 규제받는 현실 세계의 비즈니스를 위한, AI 네이티브 에코시스템을 만들어 갑니다.",
     "foot.product":"제품","foot.company":"회사","foot.legal":"법무",
     "foot.about":"소개","foot.careers":"채용","foot.press":"보도","foot.contact":"문의",
-    "foot.privacy":"개인정보","foot.terms":"약관","foot.cookies":"Cookie",
+    "foot.privacy":"개인정보","foot.terms":"약관","foot.cookies":"쿠키",
     "foot.rights":"© 2026 VALO Tech Pte. Ltd. 모든 권리 보유.","foot.loc":"싱가포르",
     "problem.eyebrow":"문제",
     "problem.1nl":"간극",

@@ -1,0 +1,159 @@
+[
+  {
+    "concept": "cookie — the browser storage mechanism, in UI labels and legal pages",
+    "preferred": [
+      "Cookie"
+    ],
+    "forbidden": [],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/assets/i18n.js:foot.cookies",
+      "VALOAds/apps/web/src/messages/zh.json:marketing.footer.legal.cookies",
+      "VALOPocket/apps/web/app/i18n/messages/zh.json:legal.cookies.title",
+      "Shimmra/apps/web/messages/zh.json:footer.cookies"
+    ]
+  },
+  {
+    "concept": "AI — artificial intelligence, as a product and capability label",
+    "preferred": [
+      "AI"
+    ],
+    "forbidden": [],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/assets/i18n.js:people.h.r",
+      "VALOAds/apps/web/src/messages/zh.json:admin.aiModelsTitle",
+      "VALOPocket/apps/web/app/i18n/messages/zh.json:console.surface.ai_model_mode",
+      "Shimmra/apps/mobile/lib/core/localization/arb/app_zh.arb:timelineAiGenerated"
+    ]
+  },
+  {
+    "concept": "session — an authenticated period of use, listed and revocable by the account holder",
+    "preferred": [
+      "会话"
+    ],
+    "forbidden": [
+      "Session"
+    ],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/apps/web/src/messages/zh.json:sessions.title",
+      "VALOAds/apps/mobile/lib/core/localization/arb/app_zh.arb:sessions",
+      "VALOPocket/apps/mobile/lib/core/localization/arb/app_zh.arb:sessionExpiredTitle",
+      "Shimmra/apps/web/messages/zh.json:support.actAs.banner.session"
+    ]
+  },
+  {
+    "concept": "browser — the web browser the reader is using",
+    "preferred": [
+      "浏览器"
+    ],
+    "forbidden": [
+      "Browser"
+    ],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/assets/legal-i18n.js:lp.storedTitle",
+      "VALOAds/apps/web/src/messages/zh.json:advertiser.bidModifiersPage.dimension_browser",
+      "VALOPocket/apps/web/app/i18n/messages/zh.json:legal.cookies.p3b",
+      "Amavo/apps/mobile/lib/core/localization/arb/app_zh.arb:privacyNoticeLinkHint"
+    ]
+  },
+  {
+    "concept": "email — the address a person signs in with, and electronic mail generally",
+    "preferred": [
+      "邮箱",
+      "电子邮箱"
+    ],
+    "forbidden": [
+      "Email"
+    ],
+    "basis": "ratified",
+    "sources": [
+      "VALOTech/apps/web/src/messages/zh.json:account.identity.email",
+      "VALOAds/apps/mobile/lib/core/localization/arb/app_zh.arb:email",
+      "VALOPocket/apps/web/app/i18n/messages/zh.json:cta.email",
+      "Shimmra/apps/web/messages/zh.json:login.emailLabel"
+    ]
+  },
+  {
+    "concept": "account — the record a person signs in to, and its state",
+    "preferred": [
+      "账户"
+    ],
+    "forbidden": [
+      "Account"
+    ],
+    "basis": "ratified",
+    "sources": [
+      "VALOTech/apps/web/src/messages/zh.json:hall.nav.account",
+      "VALOAds/apps/api/pkg/i18n/messages/zh.json:notification.category.account",
+      "VALOPocket/apps/mobile/lib/core/localization/arb/app_zh.arb:accountTitle",
+      "Shimmra/apps/web/messages/zh.json:accounts.lookup.idLabel"
+    ]
+  },
+  {
+    "concept": "password — the secret a person signs in with",
+    "preferred": [
+      "密码"
+    ],
+    "forbidden": [
+      "Password"
+    ],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/apps/web/src/messages/zh.json:signIn.password",
+      "VALOAds/apps/mobile/lib/core/localization/arb/app_zh.arb:password",
+      "VALOPocket/apps/mobile/lib/core/localization/arb/app_zh.arb:registerPhoneStepBody",
+      "Shimmra/apps/web/messages/zh.json:console.stepUp.passwordLabel"
+    ]
+  },
+  {
+    "concept": "sign in — the act of authenticating, as button label and as prose verb",
+    "preferred": [
+      "登录"
+    ],
+    "forbidden": [
+      "Sign in",
+      "登入"
+    ],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/apps/web/src/messages/zh.json:mailPreference.signIn",
+      "VALOAds/apps/mobile/lib/core/localization/arb/app_zh.arb:signIn",
+      "VALOPocket/apps/mobile/lib/core/localization/arb/app_zh.arb:loginSubmit",
+      "Shimmra/apps/mobile/lib/core/localization/arb/app_zh.arb:loginTitle"
+    ]
+  },
+  {
+    "concept": "privacy — the data-protection subject area and the page that states it",
+    "preferred": [
+      "隐私"
+    ],
+    "forbidden": [
+      "Privacy"
+    ],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/assets/i18n.js:foot.privacy",
+      "VALOAds/apps/mobile/lib/core/localization/arb/app_zh.arb:privacy",
+      "VALOPocket/apps/web/app/i18n/messages/zh.json:foot.privacy",
+      "Shimmra/apps/mobile/lib/core/localization/arb/app_zh.arb:settingsPrivacySectionTitle"
+    ]
+  },
+  {
+    "concept": "investor hall — VALO Tech's signed-in surface where the company publishes its reporting to investors",
+    "preferred": [
+      "投资人大厅"
+    ],
+    "forbidden": [
+      "投资人专区"
+    ],
+    "basis": "ratified",
+    "sources": [
+      "VALOTech/apps/web/src/messages/zh.json:hall.title",
+      "VALOTech/apps/web/src/messages/zh.json:signIn.intro",
+      "VALOTech/apps/web/src/messages/zh.json:invitationMail.subject"
+    ]
+  }
+]

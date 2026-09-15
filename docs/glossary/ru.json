@@ -1,0 +1,168 @@
+[
+  {
+    "concept": "cookie — the browser storage mechanism, in UI labels and legal pages",
+    "preferred": [
+      "файлы cookie"
+    ],
+    "forbidden": [],
+    "basis": "ratified",
+    "sources": [
+      "VALOTech/assets/legal-i18n.js:lc.title",
+      "VALOTech/assets/legal-i18n.js:lc.necessaryBody",
+      "Amavo/apps/web/src/messages:footer.links.cookies",
+      "Shimmra/apps/web/messages:footer.cookies",
+      "VALOPocket/apps/web/app/i18n/messages:legal.cookies.title",
+      "VALOAds/apps/web/src/messages:consent.footer.manage"
+    ]
+  },
+  {
+    "concept": "AI — artificial intelligence, in marketing and product prose",
+    "preferred": [
+      "ИИ"
+    ],
+    "forbidden": [
+      "AI"
+    ],
+    "basis": "ratified",
+    "sources": [
+      "VALOTech/assets/i18n.js:hero.eyebrow",
+      "VALOTech/assets/i18n.js:problem.2t",
+      "VALOTech/assets/i18n.js:stats.2l",
+      "Amavo/apps/web/src/messages:trust.fakes.body",
+      "Shimmra/apps/web/messages:timeline.aiGenerated"
+    ]
+  },
+  {
+    "concept": "session — the signed-in session the server issues and the reader can end",
+    "preferred": [
+      "сессия"
+    ],
+    "forbidden": [
+      "сеанс"
+    ],
+    "basis": "ratified",
+    "sources": [
+      "VALOTech/assets/legal-i18n.js:lp.storedBody",
+      "VALOTech/assets/i18n.js:cap.7a",
+      "Shimmra/apps/web/messages:moderation.columns.session",
+      "VALOPocket/apps/mobile/lib/core/localization/arb:sessionExpiredTitle",
+      "VALOAds/apps/web/src/messages:account.toasts.sessionRevoked",
+      "Amavo/apps/web/src/messages:console.verification.claim.error.unauthenticated"
+    ]
+  },
+  {
+    "concept": "browser — the web browser the reader is reading in",
+    "preferred": [
+      "браузер"
+    ],
+    "forbidden": [],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/assets/legal-i18n.js:lp.storedTitle",
+      "VALOTech/apps/web/src/messages:sessions.intro",
+      "Amavo/apps/mobile/lib/core/localization/arb:safetyLinkInstruction",
+      "VALOAds/apps/web/src/messages:advertiser.bidModifiersPage.dimension_browser",
+      "VALOPocket/apps/web/app/i18n/messages:legal.cookies.p3b"
+    ]
+  },
+  {
+    "concept": "email — an email address, in form labels and privacy prose",
+    "preferred": [
+      "электронная почта",
+      "адрес электронной почты"
+    ],
+    "forbidden": [
+      "email"
+    ],
+    "basis": "ratified",
+    "sources": [
+      "VALOTech/apps/web/src/messages:signIn.email",
+      "VALOTech/assets/legal-i18n.js:lp.writeBody",
+      "Amavo/apps/mobile/lib/core/localization/arb:credentialEmailLabel",
+      "VALOAds/apps/web/src/messages:admin.am.portfolio.detail.emailLabel",
+      "VALOPocket/apps/web/app/i18n/messages:legal.privacy.c2"
+    ]
+  },
+  {
+    "concept": "account — a person's account in the investor hall",
+    "preferred": [
+      "учётная запись"
+    ],
+    "forbidden": [
+      "аккаунт"
+    ],
+    "basis": "ratified",
+    "sources": [
+      "VALOTech/apps/web/src/messages:sessions.intro",
+      "VALOTech/apps/web/src/messages:privacy.rightsObjection",
+      "VALOTech/assets/legal-i18n.js:lp.hallTitle",
+      "VALOAds/apps/web/src/messages:admin.user360.twoFactorReset.description",
+      "Shimmra/apps/web/messages:accounts.panel.reasonHint",
+      "VALOPocket/apps/web/app/i18n/messages:console.state.noAccess.body"
+    ]
+  },
+  {
+    "concept": "password — the credential a person signs in with",
+    "preferred": [
+      "пароль"
+    ],
+    "forbidden": [],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/apps/web/src/messages:signIn.password",
+      "VALOTech/assets/i18n.js:inv.pw",
+      "Shimmra/apps/web/messages:login.passwordLabel",
+      "Amavo/apps/mobile/lib/core/localization/arb:credentialPasswordLabel",
+      "VALOAds/apps/web/src/messages:admin.rtb.stepUp.passwordLabel"
+    ]
+  },
+  {
+    "concept": "sign in — authenticating into the investor hall, and the label on the control",
+    "preferred": [
+      "вход",
+      "войти"
+    ],
+    "forbidden": [],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/apps/web/src/messages:signIn.submit",
+      "VALOTech/apps/web/src/messages:signIn.title",
+      "Shimmra/apps/web/messages:login.submit",
+      "VALOAds/apps/web/src/messages:auth.signIn",
+      "VALOPocket/apps/mobile/lib/core/localization/arb:loginSubmit",
+      "Amavo/apps/mobile/lib/core/localization/arb:landingSignIn"
+    ]
+  },
+  {
+    "concept": "privacy — the concept, and the notice that documents it",
+    "preferred": [
+      "конфиденциальность"
+    ],
+    "forbidden": [],
+    "basis": "ratified",
+    "sources": [
+      "VALOTech/assets/i18n.js:foot.privacy",
+      "VALOTech/assets/legal-i18n.js:lp.title",
+      "Amavo/apps/mobile/lib/core/localization/arb:settingsPrivacy",
+      "Shimmra/apps/web/messages:footer.privacy",
+      "VALOPocket/apps/web/app/i18n/messages:consent.title",
+      "VALOAds/apps/web/src/messages:admin.auditActions.us_consumer_request_denied"
+    ]
+  },
+  {
+    "concept": "investor hall — VALO Tech's signed-in surface, everything behind the sign-in",
+    "preferred": [
+      "зал инвесторов"
+    ],
+    "forbidden": [
+      "зал для инвесторов"
+    ],
+    "basis": "ratified",
+    "sources": [
+      "VALOTech/apps/web/src/messages/ru.json:hall.title",
+      "VALOTech/apps/web/src/messages:hall.title",
+      "VALOTech/apps/web/src/messages:invitationMail.subject",
+      "VALOTech/apps/web/src/messages:signIn.intro"
+    ]
+  }
+]

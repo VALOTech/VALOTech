@@ -1,0 +1,162 @@
+[
+  {
+    "concept": "cookie — the browser storage mechanism, in UI labels and legal pages",
+    "preferred": [
+      "คุกกี้"
+    ],
+    "forbidden": [
+      "Cookie",
+      "Cookies"
+    ],
+    "basis": "ratified",
+    "sources": [
+      "VALOAds/apps/web/src/messages/th.json:marketing.footer.legal.cookies",
+      "VALOPocket/apps/web/app/i18n/messages/th.json:legal.cookies.title",
+      "Shimmra/apps/web/messages/th.json:footer.cookies",
+      "Amavo/apps/web/src/messages/th.json:footer.links.cookies"
+    ]
+  },
+  {
+    "concept": "AI — artificial intelligence, as a product and capability label",
+    "preferred": [
+      "AI"
+    ],
+    "forbidden": [],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/assets/i18n.js:people.h.r",
+      "VALOAds/apps/web/src/messages/th.json:admin.aiModelsTitle",
+      "VALOPocket/apps/web/app/i18n/messages/th.json:console.surface.ai_model_mode",
+      "Shimmra/apps/mobile/lib/core/localization/arb/app_th.arb:timelineAiGenerated"
+    ]
+  },
+  {
+    "concept": "session — an authenticated period of use, listed and revocable by the account holder",
+    "preferred": [
+      "เซสชัน"
+    ],
+    "forbidden": [
+      "Session"
+    ],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/apps/web/src/messages/th.json:sessions.title",
+      "VALOAds/apps/mobile/lib/core/localization/arb/app_th.arb:sessions",
+      "VALOPocket/apps/mobile/lib/core/localization/arb/app_th.arb:sessionExpiredTitle",
+      "Shimmra/apps/web/messages/th.json:moderation.columns.session"
+    ]
+  },
+  {
+    "concept": "browser — the web browser the reader is using",
+    "preferred": [
+      "เบราว์เซอร์"
+    ],
+    "forbidden": [
+      "Browser"
+    ],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/assets/legal-i18n.js:lp.storedTitle",
+      "VALOAds/apps/web/src/messages/th.json:advertiser.bidModifiersPage.dimension_browser",
+      "VALOPocket/apps/web/app/i18n/messages/th.json:legal.cookies.p3b",
+      "Amavo/apps/mobile/lib/core/localization/arb/app_th.arb:privacyNoticeLinkHint"
+    ]
+  },
+  {
+    "concept": "email — the address a person signs in with, and electronic mail generally",
+    "preferred": [
+      "อีเมล"
+    ],
+    "forbidden": [
+      "Email",
+      "E-mail"
+    ],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/apps/web/src/messages/th.json:account.identity.email",
+      "VALOAds/apps/mobile/lib/core/localization/arb/app_th.arb:email",
+      "VALOPocket/apps/mobile/lib/core/localization/arb/app_th.arb:notificationChannelEmail",
+      "Shimmra/apps/web/messages/th.json:login.emailLabel"
+    ]
+  },
+  {
+    "concept": "account — the record a person signs in to, and its state",
+    "preferred": [
+      "บัญชี"
+    ],
+    "forbidden": [
+      "Account"
+    ],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/apps/web/src/messages/th.json:hall.nav.account",
+      "VALOAds/apps/web/src/messages/th.json:admin.am.portfolio.workload.category_account",
+      "VALOPocket/apps/mobile/lib/core/localization/arb/app_th.arb:accountTitle",
+      "Shimmra/apps/web/messages/th.json:accounts.lookup.idLabel"
+    ]
+  },
+  {
+    "concept": "password — the secret a person signs in with",
+    "preferred": [
+      "รหัสผ่าน"
+    ],
+    "forbidden": [
+      "Password"
+    ],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/apps/web/src/messages/th.json:signIn.password",
+      "VALOAds/apps/mobile/lib/core/localization/arb/app_th.arb:password",
+      "VALOPocket/apps/mobile/lib/core/localization/arb/app_th.arb:registerPhoneStepBody",
+      "Shimmra/apps/web/messages/th.json:console.stepUp.passwordLabel"
+    ]
+  },
+  {
+    "concept": "sign in — the act of authenticating, as button label and as prose verb",
+    "preferred": [
+      "เข้าสู่ระบบ"
+    ],
+    "forbidden": [
+      "Sign in",
+      "ลงชื่อเข้าใช้"
+    ],
+    "basis": "ratified",
+    "sources": [
+      "VALOTech/apps/web/src/messages/th.json:mailPreference.signIn",
+      "VALOAds/apps/mobile/lib/core/localization/arb/app_th.arb:signIn",
+      "VALOPocket/apps/mobile/lib/core/localization/arb/app_th.arb:loginSubmit",
+      "Shimmra/apps/mobile/lib/core/localization/arb/app_th.arb:loginTitle"
+    ]
+  },
+  {
+    "concept": "privacy — the data-protection subject area and the page that states it",
+    "preferred": [
+      "ความเป็นส่วนตัว"
+    ],
+    "forbidden": [
+      "Privacy"
+    ],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/assets/i18n.js:foot.privacy",
+      "VALOAds/apps/mobile/lib/core/localization/arb/app_th.arb:privacy",
+      "VALOPocket/apps/web/app/i18n/messages/th.json:foot.privacy",
+      "Shimmra/apps/mobile/lib/core/localization/arb/app_th.arb:settingsPrivacySectionTitle"
+    ]
+  },
+  {
+    "concept": "investor hall — VALO Tech's signed-in surface where the company publishes its reporting to investors",
+    "preferred": [
+      "โถงนักลงทุน"
+    ],
+    "forbidden": [
+      "พื้นที่นักลงทุน"
+    ],
+    "basis": "ratified",
+    "sources": [
+      "VALOTech/apps/web/src/messages/th.json:hall.title",
+      "VALOTech/apps/web/src/messages/th.json:signIn.intro",
+      "VALOTech/apps/web/src/messages/th.json:invitationMail.subject"
+    ]
+  }
+]

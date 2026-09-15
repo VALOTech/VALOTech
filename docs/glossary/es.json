@@ -1,0 +1,172 @@
+[
+  {
+    "concept": "cookie — the browser storage mechanism, in UI labels and legal pages",
+    "preferred": [
+      "cookie",
+      "cookies"
+    ],
+    "forbidden": [],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/assets/legal-i18n.js:lc.sessionWhat",
+      "VALOTech/assets/legal-i18n.js:lc.title",
+      "VALOAds/apps/web/src/messages/es.json:legal.cookies.pageTitle",
+      "VALOPocket/apps/web/app/i18n/messages/es.json:legal.cookies.title",
+      "Shimmra/apps/web/messages/es.json:consent.body",
+      "Amavo/apps/web/src/messages/es.json:legal.titles.cookies"
+    ]
+  },
+  {
+    "concept": "AI — artificial intelligence, as the product and marketing term",
+    "preferred": [
+      "IA"
+    ],
+    "forbidden": [
+      "AI"
+    ],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/assets/i18n.js:brand.slogan",
+      "VALOTech/assets/i18n.js:nav.workforce",
+      "VALOAds/apps/web/src/messages/es.json:admin.aiModelsTitle",
+      "VALOPocket/apps/web/app/i18n/messages/es.json:console.surface.ai_model_mode",
+      "Shimmra/apps/web/messages/es.json:timeline.aiGenerated",
+      "Amavo/apps/web/src/messages/es.json:console.config.group.ai"
+    ]
+  },
+  {
+    "concept": "session — a signed-in session the reader can see and end",
+    "preferred": [
+      "sesión"
+    ],
+    "forbidden": [],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/apps/web/src/messages/es.json:sessions.title",
+      "VALOTech/assets/legal-i18n.js:lc.sessionWhat",
+      "VALOAds/apps/web/src/messages/es.json:nav.sessions",
+      "VALOPocket/apps/web/app/i18n/messages/es.json:console.signOut",
+      "Shimmra/apps/web/messages/es.json:moderation.columns.session",
+      "Shimmra/apps/mobile/lib/core/localization/arb/app_es.arb:liveRoomSessionLabel"
+    ]
+  },
+  {
+    "concept": "browser — the reader's web browser",
+    "preferred": [
+      "navegador"
+    ],
+    "forbidden": [
+      "browser"
+    ],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/assets/legal-i18n.js:lp.storedTitle",
+      "VALOTech/apps/web/src/messages/es.json:sessions.intro",
+      "VALOAds/apps/web/src/messages/es.json:advertiser.bidModifiersPage.dimension_browser",
+      "VALOPocket/apps/web/app/i18n/messages/es.json:legal.cookies.p3b",
+      "Amavo/apps/mobile/lib/core/localization/arb/app_es.arb:privacyNoticeLinkHint"
+    ]
+  },
+  {
+    "concept": "email — an e-mail address, in form labels and running prose",
+    "preferred": [
+      "correo electrónico",
+      "correo"
+    ],
+    "forbidden": [
+      "email"
+    ],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/apps/web/src/messages/es.json:signIn.email",
+      "VALOTech/assets/legal-i18n.js:lp.writeBody",
+      "VALOAds/apps/web/src/messages/es.json:auth.checkYourEmail",
+      "VALOPocket/apps/web/app/i18n/messages/es.json:cta.email",
+      "Shimmra/apps/web/messages/es.json:login.emailLabel",
+      "Amavo/apps/mobile/lib/core/localization/arb/app_es.arb:credentialEmailLabel"
+    ]
+  },
+  {
+    "concept": "account — the reader's account record and the surfaces that manage it",
+    "preferred": [
+      "cuenta"
+    ],
+    "forbidden": [],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/apps/web/src/messages/es.json:hall.nav.account",
+      "VALOTech/assets/legal-i18n.js:lp.hallTitle",
+      "VALOAds/apps/web/src/messages/es.json:admin.am.portfolio.workload.category_account",
+      "VALOPocket/apps/web/app/i18n/messages/es.json:console.customer_360.account.heading",
+      "Shimmra/apps/web/messages/es.json:accounts.lookup.idLabel",
+      "Amavo/apps/web/src/messages/es.json:help.category.account"
+    ]
+  },
+  {
+    "concept": "password — the secret used to sign in, in form labels and prose",
+    "preferred": [
+      "contraseña"
+    ],
+    "forbidden": [],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/apps/web/src/messages/es.json:signIn.password",
+      "VALOTech/assets/i18n.js:inv.pw",
+      "VALOAds/apps/web/src/messages/es.json:admin.rtb.stepUp.passwordLabel",
+      "Shimmra/apps/web/messages/es.json:login.passwordLabel",
+      "Amavo/apps/web/src/messages/es.json:console.stepUp.password",
+      "Amavo/apps/mobile/lib/core/localization/arb/app_es.arb:credentialPasswordLabel"
+    ]
+  },
+  {
+    "concept": "sign in — the act of signing in, and the sign-in surface",
+    "preferred": [
+      "iniciar sesión",
+      "inicio de sesión"
+    ],
+    "forbidden": [],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/apps/web/src/messages/es.json:signIn.submit",
+      "VALOTech/assets/legal-i18n.js:lc.sessionWhen",
+      "VALOAds/apps/web/src/messages/es.json:auth.login",
+      "VALOPocket/apps/api/pkg/i18n/messages/es.json:idp.consent.title",
+      "Shimmra/apps/web/messages/es.json:login.title",
+      "Amavo/apps/mobile/lib/core/localization/arb/app_es.arb:landingSignIn"
+    ]
+  },
+  {
+    "concept": "privacy — the privacy notice and the footer link that reaches it",
+    "preferred": [
+      "privacidad"
+    ],
+    "forbidden": [],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/assets/i18n.js:foot.privacy",
+      "VALOTech/assets/legal-i18n.js:lp.title",
+      "VALOAds/apps/web/src/messages/es.json:marketing.footer.legal.privacy",
+      "VALOPocket/apps/web/app/i18n/messages/es.json:foot.privacy",
+      "Shimmra/apps/web/messages/es.json:footer.privacy",
+      "Amavo/apps/web/src/messages/es.json:footer.links.privacy"
+    ]
+  },
+  {
+    "concept": "investor hall — the gated surface behind the sign-in, this product's own term",
+    "preferred": [
+      "sala de inversores"
+    ],
+    "forbidden": [
+      "área de inversores",
+      "el área"
+    ],
+    "basis": "ratified",
+    "sources": [
+      "VALOTech/apps/web/src/messages/es.json:hall.nav.hall",
+      "VALOTech/apps/web/src/messages/es.json:hall.title",
+      "VALOTech/assets/legal-i18n.js:lc.hallTitle",
+      "VALOTech/assets/legal-i18n.js:lc.sessionWhen",
+      "VALOTech/assets/legal-i18n.js:lp.hallTitle"
+    ]
+  }
+]

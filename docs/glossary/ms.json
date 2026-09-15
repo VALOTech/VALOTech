@@ -1,0 +1,187 @@
+[
+  {
+    "concept": "cookie — the browser storage mechanism, in UI labels and legal pages",
+    "preferred": [
+      "kuki"
+    ],
+    "forbidden": [
+      "cookie"
+    ],
+    "basis": "ratified",
+    "sources": [
+      "Amavo/apps/web/src/messages/ms.json:footer.links.cookies",
+      "Shimmra/apps/web/messages/ms.json:footer.cookies",
+      "VALOAds/apps/web/src/messages/ms.json:marketing.footer.legal.cookies",
+      "VALOCompliance/apps/web/src/messages/ms.json:footer.links.cookies"
+    ]
+  },
+  {
+    "concept": "AI — artificial intelligence, as the product category and the workforce it names",
+    "preferred": [
+      "AI"
+    ],
+    "forbidden": [],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/assets/i18n.js:people.h.r",
+      "VALOTech/assets/i18n.js:deliver.s2t",
+      "Amavo/apps/web/src/messages/ms.json:console.sections.ai",
+      "Shimmra/apps/mobile/lib/core/localization/arb/app_ms.arb:timelineAiGenerated",
+      "VALOAds/apps/api/pkg/i18n/messages/ms.json:ai_transparency.interaction",
+      "VALOCompliance/apps/web/src/messages/ms.json:console.aiGovernance.kind.ai-system"
+    ]
+  },
+  {
+    "concept": "session — a signed-in session, listed to the member and endable by them",
+    "preferred": [
+      "sesi"
+    ],
+    "forbidden": [
+      "session"
+    ],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/assets/i18n.js:cap.7a",
+      "VALOTech/assets/legal-i18n.js:lc.sessionWhat",
+      "VALOTech/assets/legal-i18n.js:lc.clearBody",
+      "Amavo/apps/web/src/messages/ms.json:console.events.errors.unauthenticated",
+      "Shimmra/apps/mobile/lib/core/localization/arb/app_ms.arb:liveRoomSessionLabel",
+      "VALOAds/apps/api/pkg/i18n/messages/ms.json:debugOverlay.sessionRefreshes",
+      "VALOCompliance/apps/web/src/messages/ms.json:console.contentOperations.guard.expired.title"
+    ]
+  },
+  {
+    "concept": "browser — the web browser the member is reading in",
+    "preferred": [
+      "pelayar"
+    ],
+    "forbidden": [
+      "browser"
+    ],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/assets/legal-i18n.js:lp.storedTitle",
+      "VALOTech/assets/legal-i18n.js:lc.title",
+      "VALOTech/apps/web/src/messages/ms.json:sessions.intro",
+      "Amavo/apps/mobile/lib/core/localization/arb/app_ms.arb:privacyNoticeLinkHint",
+      "VALOAds/apps/api/pkg/i18n/messages/ms.json:ticket.reply.template.technical",
+      "VALOCompliance/apps/web/src/messages/ms.json:trustPage.stamp.source.browser",
+      "VALOPocket/apps/web/app/i18n/messages/ms.json:legal.cookies.p3b"
+    ]
+  },
+  {
+    "concept": "email — an email address, as a form label and in prose",
+    "preferred": [
+      "e-mel"
+    ],
+    "forbidden": [
+      "email",
+      "emel",
+      "surel"
+    ],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/assets/legal-i18n.js:lp.writeBody",
+      "VALOTech/assets/legal-i18n.js:lp.hallBody",
+      "VALOTech/apps/web/src/messages/ms.json:account.identity.email",
+      "Amavo/apps/api/pkg/i18n/messages/ms.json:canned_reply.account.password_reset",
+      "Shimmra/apps/web/messages/ms.json:login.emailLabel",
+      "VALOAds/apps/api/pkg/i18n/messages/ms.json:email.verification.subject",
+      "VALOCompliance/apps/web/src/messages/ms.json:connectorCredentials.feature.email_delivery"
+    ]
+  },
+  {
+    "concept": "account — the member record a person signs in to",
+    "preferred": [
+      "akaun"
+    ],
+    "forbidden": [
+      "akun"
+    ],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/assets/legal-i18n.js:lp.hallTitle",
+      "VALOTech/assets/legal-i18n.js:lc.hallBody",
+      "VALOTech/apps/web/src/messages/ms.json:hall.nav.account",
+      "Amavo/apps/api/pkg/i18n/messages/ms.json:notice.account_update.title",
+      "Shimmra/apps/mobile/lib/core/localization/arb/app_ms.arb:settingsDataErasureConfirmAction",
+      "VALOAds/apps/api/pkg/i18n/messages/ms.json:notification.category.account_suspension",
+      "VALOCompliance/apps/web/src/messages/ms.json:console.auditEngagement.banner.denied.title"
+    ]
+  },
+  {
+    "concept": "password — the secret a member signs in with",
+    "preferred": [
+      "kata laluan"
+    ],
+    "forbidden": [
+      "kata sandi",
+      "password"
+    ],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/assets/i18n.js:inv.pw",
+      "VALOTech/assets/i18n.js:inv.error",
+      "VALOTech/apps/web/src/messages/ms.json:signIn.password",
+      "Amavo/apps/api/pkg/i18n/messages/ms.json:canned_reply.account.password_reset",
+      "Shimmra/apps/web/messages/ms.json:console.stepUp.passwordLabel",
+      "VALOAds/apps/api/pkg/i18n/messages/ms.json:email.password_reset.subject",
+      "VALOCompliance/apps/web/src/messages/ms.json:console.platformMailer.file.secret"
+    ]
+  },
+  {
+    "concept": "sign in — the act of authenticating, as a button label and in prose",
+    "preferred": [
+      "log masuk"
+    ],
+    "forbidden": [
+      "login",
+      "sign in"
+    ],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/assets/legal-i18n.js:lc.sessionWhen",
+      "VALOTech/assets/legal-i18n.js:lc.hallBody",
+      "VALOTech/apps/web/src/messages/ms.json:mailPreference.signIn",
+      "Amavo/apps/api/pkg/i18n/messages/ms.json:error.unauthorized",
+      "Shimmra/apps/api/pkg/i18n/messages/ms.json:error.unauthorized",
+      "VALOAds/apps/mobile/lib/core/localization/arb/app_ms.arb:signIn",
+      "VALOCompliance/apps/web/src/messages/ms.json:console.contentOperations.guard.expired.description"
+    ]
+  },
+  {
+    "concept": "privacy — privacy as a policy subject and a page title",
+    "preferred": [
+      "privasi"
+    ],
+    "forbidden": [
+      "privacy"
+    ],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/assets/i18n.js:foot.privacy",
+      "VALOTech/assets/legal-i18n.js:lp.title",
+      "VALOTech/assets/legal-i18n.js:lc.hallBody",
+      "Amavo/apps/mobile/lib/core/localization/arb/app_ms.arb:settingsPrivacy",
+      "Shimmra/apps/mobile/lib/core/localization/arb/app_ms.arb:settingsPrivacySectionTitle",
+      "VALOAds/apps/api/pkg/i18n/messages/ms.json:ticket.reply.template.pdpa_ph_complaint",
+      "VALOCompliance/apps/web/src/messages/ms.json:capabilities.privacy.title"
+    ]
+  },
+  {
+    "concept": "investor hall — VALO Tech's gated investor-relations area",
+    "preferred": [
+      "dewan pelabur"
+    ],
+    "forbidden": [
+      "aula investor",
+      "investor hall"
+    ],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/assets/legal-i18n.js:lc.sessionWhen",
+      "VALOTech/assets/legal-i18n.js:lc.hallTitle",
+      "VALOTech/apps/web/src/messages/ms.json:hall.title"
+    ]
+  }
+]

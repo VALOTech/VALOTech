@@ -1,0 +1,168 @@
+[
+  {
+    "concept": "cookie — the browser storage mechanism, in UI labels and legal pages",
+    "preferred": [
+      "cookie"
+    ],
+    "forbidden": [],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/assets/legal-i18n.js:lc.title",
+      "VALOTech/assets/legal-i18n.js:lc.hallBody",
+      "Amavo/apps/web/src/messages/tl.json:footer.links.cookies",
+      "Shimmra/apps/web/messages/tl.json:consent.body",
+      "VALOAds/apps/web/src/messages/tl.json:legal.cookies.pageTitle",
+      "VALOPocket/apps/web/app/i18n/messages/tl.json:legal.cookies.title"
+    ]
+  },
+  {
+    "concept": "AI — artificial intelligence, as the product category and the workforce it names",
+    "preferred": [
+      "AI"
+    ],
+    "forbidden": [],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/assets/i18n.js:people.h.r",
+      "VALOTech/assets/i18n.js:deliver.s2t",
+      "Amavo/apps/web/src/messages/tl.json:console.sections.ai",
+      "Shimmra/apps/mobile/lib/core/localization/arb/app_tl.arb:timelineAiGenerated",
+      "VALOAds/apps/api/pkg/i18n/messages/tl.json:ai_transparency.interaction",
+      "VALOPocket/apps/web/app/i18n/messages/tl.json:console.surface.ai_model_mode"
+    ]
+  },
+  {
+    "concept": "session — a signed-in session, listed to the member and endable by them",
+    "preferred": [
+      "session"
+    ],
+    "forbidden": [
+      "sesyon"
+    ],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/assets/i18n.js:cap.7a",
+      "VALOTech/assets/legal-i18n.js:lc.clearBody",
+      "VALOTech/assets/legal-i18n.js:lp.hallBody",
+      "Amavo/apps/web/src/messages/tl.json:console.events.errors.unauthenticated",
+      "Shimmra/apps/mobile/lib/core/localization/arb/app_tl.arb:scamReportErrorUnauth",
+      "VALOAds/apps/api/pkg/i18n/messages/tl.json:debugOverlay.sessionRefreshes",
+      "VALOPocket/apps/api/pkg/i18n/messages/tl.json:error.sessionExpired"
+    ]
+  },
+  {
+    "concept": "browser — the web browser the member is reading in",
+    "preferred": [
+      "browser"
+    ],
+    "forbidden": [],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/assets/legal-i18n.js:lp.storedTitle",
+      "VALOTech/assets/legal-i18n.js:lc.title",
+      "VALOTech/apps/web/src/messages/tl.json:sessions.intro",
+      "Amavo/apps/mobile/lib/core/localization/arb/app_tl.arb:privacyNoticeLinkHint",
+      "VALOAds/apps/api/pkg/i18n/messages/tl.json:ticket.reply.template.technical",
+      "VALOPocket/apps/web/app/i18n/messages/tl.json:legal.cookies.p3b"
+    ]
+  },
+  {
+    "concept": "email — an email address, as a form label and in prose",
+    "preferred": [
+      "email"
+    ],
+    "forbidden": [
+      "e-mail"
+    ],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/apps/web/src/messages/tl.json:signIn.error",
+      "Amavo/apps/api/pkg/i18n/messages/tl.json:canned_reply.account.password_reset",
+      "Shimmra/apps/web/messages/tl.json:login.error",
+      "VALOAds/apps/api/pkg/i18n/messages/tl.json:email.verification.subject",
+      "VALOPocket/apps/web/app/i18n/messages/tl.json:legal.privacy.c2"
+    ]
+  },
+  {
+    "concept": "account — the member record a person signs in to",
+    "preferred": [
+      "account"
+    ],
+    "forbidden": [],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/assets/legal-i18n.js:lp.hallTitle",
+      "VALOTech/assets/legal-i18n.js:lc.hallBody",
+      "VALOTech/apps/web/src/messages/tl.json:account.delete.submit",
+      "Amavo/apps/api/pkg/i18n/messages/tl.json:notice.account_update.title",
+      "Shimmra/apps/mobile/lib/core/localization/arb/app_tl.arb:settingsDataErasureConfirmAction",
+      "VALOAds/apps/api/pkg/i18n/messages/tl.json:notification.category.account_suspension",
+      "VALOPocket/apps/api/pkg/i18n/messages/tl.json:doc.statement.title"
+    ]
+  },
+  {
+    "concept": "password — the secret a member signs in with",
+    "preferred": [
+      "password"
+    ],
+    "forbidden": [],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/assets/i18n.js:inv.error",
+      "VALOTech/apps/web/src/messages/tl.json:account.password.new",
+      "Amavo/apps/api/pkg/i18n/messages/tl.json:canned_reply.account.password_reset",
+      "Shimmra/apps/web/messages/tl.json:login.error",
+      "VALOAds/apps/api/pkg/i18n/messages/tl.json:email.password_reset.subject",
+      "VALOPocket/apps/api/pkg/i18n/messages/tl.json:doc.disclosure.risk_warning.body"
+    ]
+  },
+  {
+    "concept": "sign in — the act of authenticating, as a button label and in prose",
+    "preferred": [
+      "sign in",
+      "mag-sign in"
+    ],
+    "forbidden": [],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/assets/legal-i18n.js:lc.sessionWhen",
+      "VALOTech/assets/legal-i18n.js:lc.hallBody",
+      "VALOTech/apps/web/src/messages/tl.json:mailPreference.signIn",
+      "Amavo/apps/api/pkg/i18n/messages/tl.json:error.unauthorized",
+      "Shimmra/apps/api/pkg/i18n/messages/tl.json:error.unauthorized",
+      "VALOAds/apps/mobile/lib/core/localization/arb/app_tl.arb:signIn",
+      "VALOPocket/apps/api/pkg/i18n/messages/tl.json:idp.consent.title"
+    ]
+  },
+  {
+    "concept": "privacy — privacy as a policy subject and a page title",
+    "preferred": [
+      "privacy"
+    ],
+    "forbidden": [],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/assets/legal-i18n.js:lp.title",
+      "VALOTech/assets/legal-i18n.js:lc.hallBody",
+      "Amavo/apps/mobile/lib/core/localization/arb/app_tl.arb:helpCategoryPrivacy",
+      "Shimmra/apps/mobile/lib/core/localization/arb/app_tl.arb:messagesSendErrorPrivacy",
+      "VALOAds/apps/api/pkg/i18n/messages/tl.json:ticket.reply.template.pdpa_ph_complaint",
+      "VALOPocket/apps/mobile/lib/core/localization/arb/app_tl.arb:accountPrivacyChoices"
+    ]
+  },
+  {
+    "concept": "investor hall — VALO Tech's gated investor-relations area",
+    "preferred": [
+      "bulwagan ng mamumuhunan"
+    ],
+    "forbidden": [
+      "investor hall"
+    ],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/assets/legal-i18n.js:lc.sessionWhen",
+      "VALOTech/assets/legal-i18n.js:lc.hallTitle",
+      "VALOTech/apps/web/src/messages/tl.json:hall.title"
+    ]
+  }
+]

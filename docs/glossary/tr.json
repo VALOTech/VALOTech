@@ -1,0 +1,175 @@
+[
+  {
+    "concept": "cookie — the browser storage mechanism, in UI labels and legal pages",
+    "preferred": [
+      "çerez",
+      "çerezler"
+    ],
+    "forbidden": [
+      "Cookie",
+      "Cookies"
+    ],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/assets/legal-i18n.js:lc.title",
+      "VALOTech/assets/legal-i18n.js:lc.sessionWhat",
+      "VALOPocket/apps/web/app/i18n/messages/tr.json:legal.cookies.title",
+      "Shimmra/apps/web/messages/tr.json:footer.cookies",
+      "Amavo/apps/web/src/messages/tr.json:legal.titles.cookies",
+      "VALOCompliance/apps/web/src/messages/tr.json:consent.footer.manage"
+    ]
+  },
+  {
+    "concept": "AI — artificial intelligence, as the product and marketing term",
+    "preferred": [
+      "yapay zekâ"
+    ],
+    "forbidden": [
+      "AI"
+    ],
+    "basis": "ratified",
+    "sources": [
+      "Amavo/apps/web/src/messages/tr.json:console.config.group.ai",
+      "Amavo/apps/web/src/messages/tr.json:trust.fakes.body",
+      "Shimmra/apps/mobile/lib/core/localization/arb/app_tr.arb:timelineAiGenerated",
+      "Shimmra/apps/web/messages/tr.json:timeline.aiGenerated",
+      "VALOPocket/apps/web/app/i18n/messages/tr.json:console.surface.ai_model_mode",
+      "VALOTech/assets/i18n.js:brand.slogan"
+    ]
+  },
+  {
+    "concept": "session — a signed-in session the reader can see and end",
+    "preferred": [
+      "oturum"
+    ],
+    "forbidden": [],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/apps/web/src/messages/tr.json:sessions.title",
+      "VALOTech/assets/legal-i18n.js:lc.sessionWhat",
+      "VALOPocket/apps/web/app/i18n/messages/tr.json:console.signOut",
+      "Shimmra/apps/web/messages/tr.json:moderation.columns.session",
+      "Shimmra/apps/mobile/lib/core/localization/arb/app_tr.arb:liveRoomSessionLabel",
+      "Amavo/apps/web/src/messages/tr.json:console.verification.claim.error.unauthenticated"
+    ]
+  },
+  {
+    "concept": "browser — the reader's web browser",
+    "preferred": [
+      "tarayıcı"
+    ],
+    "forbidden": [
+      "browser"
+    ],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/assets/legal-i18n.js:lp.storedTitle",
+      "VALOTech/apps/web/src/messages/tr.json:sessions.intro",
+      "VALOPocket/apps/web/app/i18n/messages/tr.json:legal.cookies.p3b",
+      "Amavo/apps/mobile/lib/core/localization/arb/app_tr.arb:privacyNoticeLinkHint"
+    ]
+  },
+  {
+    "concept": "email — an e-mail address, in form labels and running prose",
+    "preferred": [
+      "e-posta"
+    ],
+    "forbidden": [
+      "email"
+    ],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/apps/web/src/messages/tr.json:signIn.email",
+      "VALOTech/assets/legal-i18n.js:lp.writeBody",
+      "VALOPocket/apps/web/app/i18n/messages/tr.json:cta.email",
+      "Shimmra/apps/web/messages/tr.json:login.emailLabel",
+      "Amavo/apps/web/src/messages/tr.json:console.members.identifierEmail",
+      "Amavo/apps/mobile/lib/core/localization/arb/app_tr.arb:credentialEmailLabel"
+    ]
+  },
+  {
+    "concept": "account — the reader's account record and the surfaces that manage it",
+    "preferred": [
+      "hesap"
+    ],
+    "forbidden": [],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/apps/web/src/messages/tr.json:hall.nav.account",
+      "VALOTech/assets/legal-i18n.js:lp.hallTitle",
+      "VALOPocket/apps/web/app/i18n/messages/tr.json:console.customer_360.account.heading",
+      "VALOPocket/apps/mobile/lib/core/localization/arb/app_tr.arb:accountTitle",
+      "Shimmra/apps/mobile/lib/core/localization/arb/app_tr.arb:settingsDataErasureConfirmAction",
+      "Amavo/apps/api/pkg/i18n/messages/tr.json:notice.account_update.title"
+    ]
+  },
+  {
+    "concept": "password — the secret used to sign in, in form labels and prose",
+    "preferred": [
+      "parola"
+    ],
+    "forbidden": [],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/apps/web/src/messages/tr.json:signIn.password",
+      "VALOTech/assets/i18n.js:inv.pw",
+      "Shimmra/apps/web/messages/tr.json:login.passwordLabel",
+      "Amavo/apps/web/src/messages/tr.json:console.stepUp.password",
+      "Amavo/apps/mobile/lib/core/localization/arb/app_tr.arb:credentialPasswordLabel"
+    ]
+  },
+  {
+    "concept": "sign in — the act of signing in, and the sign-in surface",
+    "preferred": [
+      "giriş yap",
+      "giriş"
+    ],
+    "forbidden": [
+      "oturum aç",
+      "oturum açmak"
+    ],
+    "basis": "ratified",
+    "sources": [
+      "VALOTech/apps/web/src/messages/tr.json:signIn.submit",
+      "VALOTech/assets/i18n.js:nav.investor",
+      "VALOTech/apps/web/src/messages/tr.json:signIn.title",
+      "Shimmra/apps/web/messages/tr.json:login.title",
+      "Shimmra/apps/mobile/lib/core/localization/arb/app_tr.arb:loginTitle",
+      "Amavo/apps/mobile/lib/core/localization/arb/app_tr.arb:landingSignIn",
+      "Amavo/apps/api/pkg/i18n/messages/tr.json:error.unauthorized",
+      "VALOPocket/apps/web/app/i18n/messages/tr.json:console.state.signIn.title"
+    ]
+  },
+  {
+    "concept": "privacy — the privacy notice and the footer link that reaches it",
+    "preferred": [
+      "gizlilik"
+    ],
+    "forbidden": [],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/assets/i18n.js:foot.privacy",
+      "VALOTech/assets/legal-i18n.js:lp.title",
+      "VALOPocket/apps/web/app/i18n/messages/tr.json:foot.privacy",
+      "Shimmra/apps/web/messages/tr.json:footer.privacy",
+      "Amavo/apps/web/src/messages/tr.json:footer.links.privacy",
+      "VALOCompliance/apps/web/src/messages/tr.json:footer.links.privacy"
+    ]
+  },
+  {
+    "concept": "investor hall — the gated surface behind the sign-in, this product's own term",
+    "preferred": [
+      "yatırımcı salonu",
+      "salon"
+    ],
+    "forbidden": [],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/apps/web/src/messages/tr.json:hall.title",
+      "VALOTech/apps/web/src/messages/tr.json:hall.nav.hall",
+      "VALOTech/assets/legal-i18n.js:lp.hallTitle",
+      "VALOTech/assets/legal-i18n.js:lc.hallTitle",
+      "VALOTech/assets/legal-i18n.js:lc.sessionWhen"
+    ]
+  }
+]

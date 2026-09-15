@@ -1,0 +1,1554 @@
+[
+  {
+    "locale": "bn",
+    "key": "app:privacy.heldIdentity",
+    "term": "email",
+    "shipped": "ই-মেইল",
+    "settled": "ইমেল",
+    "reason": "Two spellings of the same word ship side by side in this locale, and the English source carries the same split. Clears when the affected strings are re-authored together, English first."
+  },
+  {
+    "locale": "bn",
+    "key": "app:privacy.whereBody",
+    "term": "email",
+    "shipped": "ই-মেইল",
+    "settled": "ইমেল",
+    "reason": "Two spellings of the same word ship side by side in this locale, and the English source carries the same split. Clears when the affected strings are re-authored together, English first."
+  },
+  {
+    "locale": "bn",
+    "key": "gateway:inv.title",
+    "term": "sign in",
+    "shipped": "লগইন",
+    "settled": "সাইন ইন",
+    "reason": "The catalogue uses a second verb for signing in alongside the settled one. **Two of these are an English defect rather than a translation one**: `assets/i18n.js` says `Investor login` where the application says `Investor sign-in`, and every locale followed whichever English it was handed. Fixing the two English strings corrects twenty languages at once -- but it rewrites words on the public page, so it wants the owner's review first (`.claude/CLAUDE.md` §15)."
+  },
+  {
+    "locale": "bn",
+    "key": "gateway:nav.investor",
+    "term": "sign in",
+    "shipped": "লগইন",
+    "settled": "সাইন ইন",
+    "reason": "The catalogue uses a second verb for signing in alongside the settled one. **Two of these are an English defect rather than a translation one**: `assets/i18n.js` says `Investor login` where the application says `Investor sign-in`, and every locale followed whichever English it was handed. Fixing the two English strings corrects twenty languages at once -- but it rewrites words on the public page, so it wants the owner's review first (`.claude/CLAUDE.md` §15)."
+  },
+  {
+    "locale": "bn",
+    "key": "legal:lc.clearBody",
+    "term": "investor hall",
+    "shipped": "হলঘর",
+    "settled": "বিনিয়োগকারী সভাকক্ষ",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "bn",
+    "key": "legal:lc.hallBody",
+    "term": "investor hall",
+    "shipped": "হলঘর",
+    "settled": "বিনিয়োগকারী সভাকক্ষ",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "bn",
+    "key": "legal:lc.hallTitle",
+    "term": "investor hall",
+    "shipped": "হলঘর",
+    "settled": "বিনিয়োগকারী সভাকক্ষ",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "bn",
+    "key": "legal:lc.lede",
+    "term": "investor hall",
+    "shipped": "হলঘর",
+    "settled": "বিনিয়োগকারী সভাকক্ষ",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "bn",
+    "key": "legal:lc.necessaryBody",
+    "term": "investor hall",
+    "shipped": "হলঘর",
+    "settled": "বিনিয়োগকারী সভাকক্ষ",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "bn",
+    "key": "legal:lc.sessionWhen",
+    "term": "investor hall",
+    "shipped": "হলঘর",
+    "settled": "বিনিয়োগকারী সভাকক্ষ",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "bn",
+    "key": "legal:lp.hallBody",
+    "term": "email",
+    "shipped": "ই-মেইল",
+    "settled": "ইমেল",
+    "reason": "Two spellings of the same word ship side by side in this locale, and the English source carries the same split. Clears when the affected strings are re-authored together, English first."
+  },
+  {
+    "locale": "bn",
+    "key": "legal:lp.hallBody",
+    "term": "investor hall",
+    "shipped": "হলঘর",
+    "settled": "বিনিয়োগকারী সভাকক্ষ",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "bn",
+    "key": "legal:lp.hallTitle",
+    "term": "investor hall",
+    "shipped": "হলঘর",
+    "settled": "বিনিয়োগকারী সভাকক্ষ",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "bn",
+    "key": "legal:lp.storedBody",
+    "term": "investor hall",
+    "shipped": "হলঘর",
+    "settled": "বিনিয়োগকারী সভাকক্ষ",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "bn",
+    "key": "legal:lp.writeBody",
+    "term": "email",
+    "shipped": "ই-মেইল",
+    "settled": "ইমেল",
+    "reason": "Two spellings of the same word ship side by side in this locale, and the English source carries the same split. Clears when the affected strings are re-authored together, English first."
+  },
+  {
+    "locale": "en",
+    "key": "app:privacy.heldIdentity",
+    "term": "email",
+    "shipped": "e-mail",
+    "settled": "email",
+    "reason": "Two spellings of the same word ship side by side in this locale, and the English source carries the same split. Clears when the affected strings are re-authored together, English first."
+  },
+  {
+    "locale": "en",
+    "key": "app:privacy.whereBody",
+    "term": "email",
+    "shipped": "e-mail",
+    "settled": "email",
+    "reason": "Two spellings of the same word ship side by side in this locale, and the English source carries the same split. Clears when the affected strings are re-authored together, English first."
+  },
+  {
+    "locale": "en",
+    "key": "gateway:inv.title",
+    "term": "sign in",
+    "shipped": "login",
+    "settled": "sign in",
+    "reason": "The catalogue uses a second verb for signing in alongside the settled one. **Two of these are an English defect rather than a translation one**: `assets/i18n.js` says `Investor login` where the application says `Investor sign-in`, and every locale followed whichever English it was handed. Fixing the two English strings corrects twenty languages at once -- but it rewrites words on the public page, so it wants the owner's review first (`.claude/CLAUDE.md` §15)."
+  },
+  {
+    "locale": "en",
+    "key": "gateway:nav.investor",
+    "term": "sign in",
+    "shipped": "login",
+    "settled": "sign in",
+    "reason": "The catalogue uses a second verb for signing in alongside the settled one. **Two of these are an English defect rather than a translation one**: `assets/i18n.js` says `Investor login` where the application says `Investor sign-in`, and every locale followed whichever English it was handed. Fixing the two English strings corrects twenty languages at once -- but it rewrites words on the public page, so it wants the owner's review first (`.claude/CLAUDE.md` §15)."
+  },
+  {
+    "locale": "en",
+    "key": "legal:lp.hallBody",
+    "term": "email",
+    "shipped": "e-mail",
+    "settled": "email",
+    "reason": "Two spellings of the same word ship side by side in this locale, and the English source carries the same split. Clears when the affected strings are re-authored together, English first."
+  },
+  {
+    "locale": "en",
+    "key": "legal:lp.writeBody",
+    "term": "email",
+    "shipped": "e-mail",
+    "settled": "email",
+    "reason": "Two spellings of the same word ship side by side in this locale, and the English source carries the same split. Clears when the affected strings are re-authored together, English first."
+  },
+  {
+    "locale": "es",
+    "key": "legal:lc.clearBody",
+    "term": "investor hall",
+    "shipped": "área de inversores, el área",
+    "settled": "sala de inversores",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "es",
+    "key": "legal:lc.hallBody",
+    "term": "investor hall",
+    "shipped": "el área",
+    "settled": "sala de inversores",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "es",
+    "key": "legal:lc.hallTitle",
+    "term": "investor hall",
+    "shipped": "área de inversores, el área",
+    "settled": "sala de inversores",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "es",
+    "key": "legal:lc.lede",
+    "term": "investor hall",
+    "shipped": "área de inversores, el área",
+    "settled": "sala de inversores",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "es",
+    "key": "legal:lc.necessaryBody",
+    "term": "investor hall",
+    "shipped": "el área",
+    "settled": "sala de inversores",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "es",
+    "key": "legal:lc.sessionWhen",
+    "term": "investor hall",
+    "shipped": "área de inversores, el área",
+    "settled": "sala de inversores",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "es",
+    "key": "legal:lp.hallBody",
+    "term": "investor hall",
+    "shipped": "el área",
+    "settled": "sala de inversores",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "es",
+    "key": "legal:lp.hallTitle",
+    "term": "investor hall",
+    "shipped": "área de inversores, el área",
+    "settled": "sala de inversores",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "es",
+    "key": "legal:lp.storedBody",
+    "term": "investor hall",
+    "shipped": "el área",
+    "settled": "sala de inversores",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "fr",
+    "key": "gateway:inv.title",
+    "term": "investor hall",
+    "shipped": "espace investisseurs",
+    "settled": "hall investisseurs",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "fr",
+    "key": "gateway:nav.investor",
+    "term": "investor hall",
+    "shipped": "espace investisseurs",
+    "settled": "hall investisseurs",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "fr",
+    "key": "legal:lc.clearBody",
+    "term": "investor hall",
+    "shipped": "espace investisseurs, l'espace",
+    "settled": "hall investisseurs",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "fr",
+    "key": "legal:lc.hallBody",
+    "term": "investor hall",
+    "shipped": "l'espace",
+    "settled": "hall investisseurs",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "fr",
+    "key": "legal:lc.hallTitle",
+    "term": "investor hall",
+    "shipped": "espace investisseurs, l'espace",
+    "settled": "hall investisseurs",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "fr",
+    "key": "legal:lc.lede",
+    "term": "investor hall",
+    "shipped": "espace investisseurs, l'espace",
+    "settled": "hall investisseurs",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "fr",
+    "key": "legal:lc.necessaryBody",
+    "term": "investor hall",
+    "shipped": "l'espace",
+    "settled": "hall investisseurs",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "fr",
+    "key": "legal:lc.sessionWhen",
+    "term": "investor hall",
+    "shipped": "espace investisseurs, l'espace",
+    "settled": "hall investisseurs",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "fr",
+    "key": "legal:lp.hallBody",
+    "term": "investor hall",
+    "shipped": "l'espace",
+    "settled": "hall investisseurs",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "fr",
+    "key": "legal:lp.hallTitle",
+    "term": "investor hall",
+    "shipped": "espace investisseurs, l'espace",
+    "settled": "hall investisseurs",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "fr",
+    "key": "legal:lp.storedBody",
+    "term": "investor hall",
+    "shipped": "l'espace",
+    "settled": "hall investisseurs",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "hi",
+    "key": "app:privacy.heldIdentity",
+    "term": "email",
+    "shipped": "ई-मेल",
+    "settled": "ईमेल",
+    "reason": "Two spellings of the same word ship side by side in this locale, and the English source carries the same split. Clears when the affected strings are re-authored together, English first."
+  },
+  {
+    "locale": "hi",
+    "key": "app:privacy.whereBody",
+    "term": "email",
+    "shipped": "ई-मेल",
+    "settled": "ईमेल",
+    "reason": "Two spellings of the same word ship side by side in this locale, and the English source carries the same split. Clears when the affected strings are re-authored together, English first."
+  },
+  {
+    "locale": "hi",
+    "key": "gateway:cap.7a",
+    "term": "session",
+    "shipped": "सेशन",
+    "settled": "सत्र",
+    "reason": "Two renderings of `session` ship in this locale, one of them naming a different concept in the ecosystem's other products. Clears when the sentence is re-authored."
+  },
+  {
+    "locale": "hi",
+    "key": "gateway:deliver.p1m1d",
+    "term": "account",
+    "shipped": "अकाउंट",
+    "settled": "खाता",
+    "reason": "Two renderings of `account` ship in this locale, both correct in isolation. The glossary settled the one this repository already uses on its legal and admin surfaces; the other sits inside sentences. Clears when those are re-authored."
+  },
+  {
+    "locale": "hi",
+    "key": "gateway:inv.title",
+    "term": "sign in",
+    "shipped": "लॉगिन",
+    "settled": "साइन इन",
+    "reason": "The catalogue uses a second verb for signing in alongside the settled one. **Two of these are an English defect rather than a translation one**: `assets/i18n.js` says `Investor login` where the application says `Investor sign-in`, and every locale followed whichever English it was handed. Fixing the two English strings corrects twenty languages at once -- but it rewrites words on the public page, so it wants the owner's review first (`.claude/CLAUDE.md` §15)."
+  },
+  {
+    "locale": "hi",
+    "key": "gateway:nav.investor",
+    "term": "sign in",
+    "shipped": "लॉगिन",
+    "settled": "साइन इन",
+    "reason": "The catalogue uses a second verb for signing in alongside the settled one. **Two of these are an English defect rather than a translation one**: `assets/i18n.js` says `Investor login` where the application says `Investor sign-in`, and every locale followed whichever English it was handed. Fixing the two English strings corrects twenty languages at once -- but it rewrites words on the public page, so it wants the owner's review first (`.claude/CLAUDE.md` §15)."
+  },
+  {
+    "locale": "hi",
+    "key": "gateway:problem.3d",
+    "term": "account",
+    "shipped": "अकाउंट",
+    "settled": "खाता",
+    "reason": "Two renderings of `account` ship in this locale, both correct in isolation. The glossary settled the one this repository already uses on its legal and admin surfaces; the other sits inside sentences. Clears when those are re-authored."
+  },
+  {
+    "locale": "hi",
+    "key": "legal:lc.hallBody",
+    "term": "privacy",
+    "shipped": "निजता",
+    "settled": "गोपनीयता",
+    "reason": "The settled word is the one the sibling products use for the bare label; this string still carries another form inside a sentence. Clears when it is re-authored."
+  },
+  {
+    "locale": "hi",
+    "key": "legal:lp.hallBody",
+    "term": "email",
+    "shipped": "ई-मेल",
+    "settled": "ईमेल",
+    "reason": "Two spellings of the same word ship side by side in this locale, and the English source carries the same split. Clears when the affected strings are re-authored together, English first."
+  },
+  {
+    "locale": "hi",
+    "key": "legal:lp.title",
+    "term": "privacy",
+    "shipped": "निजता",
+    "settled": "गोपनीयता",
+    "reason": "The settled word is the one the sibling products use for the bare label; this string still carries another form inside a sentence. Clears when it is re-authored."
+  },
+  {
+    "locale": "hi",
+    "key": "legal:lp.writeBody",
+    "term": "email",
+    "shipped": "ई-मेल",
+    "settled": "ईमेल",
+    "reason": "Two spellings of the same word ship side by side in this locale, and the English source carries the same split. Clears when the affected strings are re-authored together, English first."
+  },
+  {
+    "locale": "id",
+    "key": "app:privacy.heldIdentity",
+    "term": "email",
+    "shipped": "surel",
+    "settled": "email",
+    "reason": "Two spellings of the same word ship side by side in this locale, and the English source carries the same split. Clears when the affected strings are re-authored together, English first."
+  },
+  {
+    "locale": "id",
+    "key": "app:privacy.whereBody",
+    "term": "email",
+    "shipped": "surel",
+    "settled": "email",
+    "reason": "Two spellings of the same word ship side by side in this locale, and the English source carries the same split. Clears when the affected strings are re-authored together, English first."
+  },
+  {
+    "locale": "id",
+    "key": "legal:lp.hallBody",
+    "term": "email",
+    "shipped": "surel",
+    "settled": "email",
+    "reason": "Two spellings of the same word ship side by side in this locale, and the English source carries the same split. Clears when the affected strings are re-authored together, English first."
+  },
+  {
+    "locale": "id",
+    "key": "legal:lp.writeBody",
+    "term": "email",
+    "shipped": "surel",
+    "settled": "email",
+    "reason": "Two spellings of the same word ship side by side in this locale, and the English source carries the same split. Clears when the affected strings are re-authored together, English first."
+  },
+  {
+    "locale": "ja",
+    "key": "gateway:inv.title",
+    "term": "sign in",
+    "shipped": "ログイン",
+    "settled": "サインイン",
+    "reason": "The catalogue uses a second verb for signing in alongside the settled one. **Two of these are an English defect rather than a translation one**: `assets/i18n.js` says `Investor login` where the application says `Investor sign-in`, and every locale followed whichever English it was handed. Fixing the two English strings corrects twenty languages at once -- but it rewrites words on the public page, so it wants the owner's review first (`.claude/CLAUDE.md` §15)."
+  },
+  {
+    "locale": "ja",
+    "key": "gateway:nav.investor",
+    "term": "sign in",
+    "shipped": "ログイン",
+    "settled": "サインイン",
+    "reason": "The catalogue uses a second verb for signing in alongside the settled one. **Two of these are an English defect rather than a translation one**: `assets/i18n.js` says `Investor login` where the application says `Investor sign-in`, and every locale followed whichever English it was handed. Fixing the two English strings corrects twenty languages at once -- but it rewrites words on the public page, so it wants the owner's review first (`.claude/CLAUDE.md` §15)."
+  },
+  {
+    "locale": "ms",
+    "key": "legal:lc.clearBody",
+    "term": "cookie",
+    "shipped": "cookie",
+    "settled": "kuki",
+    "reason": "This locale's word for `cookie` was settled from the sibling products; the string here still carries another rendering inside a sentence, where replacing it changes the grammar around it. Clears when the sentence is re-authored."
+  },
+  {
+    "locale": "ms",
+    "key": "legal:lc.hallBody",
+    "term": "cookie",
+    "shipped": "cookie",
+    "settled": "kuki",
+    "reason": "This locale's word for `cookie` was settled from the sibling products; the string here still carries another rendering inside a sentence, where replacing it changes the grammar around it. Clears when the sentence is re-authored."
+  },
+  {
+    "locale": "ms",
+    "key": "legal:lc.necessaryBody",
+    "term": "cookie",
+    "shipped": "cookie",
+    "settled": "kuki",
+    "reason": "This locale's word for `cookie` was settled from the sibling products; the string here still carries another rendering inside a sentence, where replacing it changes the grammar around it. Clears when the sentence is re-authored."
+  },
+  {
+    "locale": "ms",
+    "key": "legal:lc.sessionWhat",
+    "term": "cookie",
+    "shipped": "cookie",
+    "settled": "kuki",
+    "reason": "This locale's word for `cookie` was settled from the sibling products; the string here still carries another rendering inside a sentence, where replacing it changes the grammar around it. Clears when the sentence is re-authored."
+  },
+  {
+    "locale": "ms",
+    "key": "legal:lc.title",
+    "term": "cookie",
+    "shipped": "cookie",
+    "settled": "kuki",
+    "reason": "This locale's word for `cookie` was settled from the sibling products; the string here still carries another rendering inside a sentence, where replacing it changes the grammar around it. Clears when the sentence is re-authored."
+  },
+  {
+    "locale": "ms",
+    "key": "legal:lp.storedBody",
+    "term": "cookie",
+    "shipped": "cookie",
+    "settled": "kuki",
+    "reason": "This locale's word for `cookie` was settled from the sibling products; the string here still carries another rendering inside a sentence, where replacing it changes the grammar around it. Clears when the sentence is re-authored."
+  },
+  {
+    "locale": "pt",
+    "key": "app:account.identity.signInChanges",
+    "term": "sign in",
+    "shipped": "Entrar",
+    "settled": "iniciar sessão",
+    "reason": "The catalogue uses a second verb for signing in alongside the settled one. **Two of these are an English defect rather than a translation one**: `assets/i18n.js` says `Investor login` where the application says `Investor sign-in`, and every locale followed whichever English it was handed. Fixing the two English strings corrects twenty languages at once -- but it rewrites words on the public page, so it wants the owner's review first (`.claude/CLAUDE.md` §15)."
+  },
+  {
+    "locale": "pt",
+    "key": "app:forgot.unavailable",
+    "term": "sign in",
+    "shipped": "Entrar",
+    "settled": "iniciar sessão",
+    "reason": "The catalogue uses a second verb for signing in alongside the settled one. **Two of these are an English defect rather than a translation one**: `assets/i18n.js` says `Investor login` where the application says `Investor sign-in`, and every locale followed whichever English it was handed. Fixing the two English strings corrects twenty languages at once -- but it rewrites words on the public page, so it wants the owner's review first (`.claude/CLAUDE.md` §15)."
+  },
+  {
+    "locale": "pt",
+    "key": "gateway:deliver.p3lead",
+    "term": "sign in",
+    "shipped": "Entrar",
+    "settled": "iniciar sessão",
+    "reason": "The catalogue uses a second verb for signing in alongside the settled one. **Two of these are an English defect rather than a translation one**: `assets/i18n.js` says `Investor login` where the application says `Investor sign-in`, and every locale followed whichever English it was handed. Fixing the two English strings corrects twenty languages at once -- but it rewrites words on the public page, so it wants the owner's review first (`.claude/CLAUDE.md` §15)."
+  },
+  {
+    "locale": "pt",
+    "key": "legal:lc.clearBody",
+    "term": "investor hall",
+    "shipped": "área de investidores",
+    "settled": "salão de investidores",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "pt",
+    "key": "legal:lc.hallBody",
+    "term": "investor hall",
+    "shipped": "a área",
+    "settled": "salão de investidores",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "pt",
+    "key": "legal:lc.hallTitle",
+    "term": "investor hall",
+    "shipped": "área de investidores, a área",
+    "settled": "salão de investidores",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "pt",
+    "key": "legal:lc.lede",
+    "term": "investor hall",
+    "shipped": "área de investidores",
+    "settled": "salão de investidores",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "pt",
+    "key": "legal:lc.necessaryBody",
+    "term": "investor hall",
+    "shipped": "a área",
+    "settled": "salão de investidores",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "pt",
+    "key": "legal:lc.sessionWhen",
+    "term": "investor hall",
+    "shipped": "área de investidores",
+    "settled": "salão de investidores",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "pt",
+    "key": "legal:lp.hallBody",
+    "term": "investor hall",
+    "shipped": "a área",
+    "settled": "salão de investidores",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "pt",
+    "key": "legal:lp.hallTitle",
+    "term": "investor hall",
+    "shipped": "área de investidores",
+    "settled": "salão de investidores",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "pt",
+    "key": "legal:lp.storedBody",
+    "term": "investor hall",
+    "shipped": "a área",
+    "settled": "salão de investidores",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "ru",
+    "key": "app:account.delete.goes",
+    "term": "session",
+    "shipped": "сеанс",
+    "settled": "сессия",
+    "reason": "Two renderings of `session` ship in this locale, one of them naming a different concept in the ecosystem's other products. Clears when the sentence is re-authored."
+  },
+  {
+    "locale": "ru",
+    "key": "app:account.notice.passwordChanged",
+    "term": "session",
+    "shipped": "сеанс",
+    "settled": "сессия",
+    "reason": "Two renderings of `session` ship in this locale, one of them naming a different concept in the ecosystem's other products. Clears when the sentence is re-authored."
+  },
+  {
+    "locale": "ru",
+    "key": "app:account.password.endsOthers",
+    "term": "session",
+    "shipped": "сеанс",
+    "settled": "сессия",
+    "reason": "Two renderings of `session` ship in this locale, one of them naming a different concept in the ecosystem's other products. Clears when the sentence is re-authored."
+  },
+  {
+    "locale": "ru",
+    "key": "app:hall.nav.account",
+    "term": "account",
+    "shipped": "аккаунт",
+    "settled": "учётная запись",
+    "reason": "Two renderings of `account` ship in this locale, both correct in isolation. The glossary settled the one this repository already uses on its legal and admin surfaces; the other sits inside sentences. Clears when those are re-authored."
+  },
+  {
+    "locale": "ru",
+    "key": "app:privacy.heldSessions",
+    "term": "session",
+    "shipped": "сеанс",
+    "settled": "сессия",
+    "reason": "Two renderings of `session` ship in this locale, one of them naming a different concept in the ecosystem's other products. Clears when the sentence is re-authored."
+  },
+  {
+    "locale": "ru",
+    "key": "app:sessions.endEverywhereHint",
+    "term": "session",
+    "shipped": "сеанс",
+    "settled": "сессия",
+    "reason": "Two renderings of `session` ship in this locale, one of them naming a different concept in the ecosystem's other products. Clears when the sentence is re-authored."
+  },
+  {
+    "locale": "ru",
+    "key": "app:sessions.title",
+    "term": "session",
+    "shipped": "сеанс",
+    "settled": "сессия",
+    "reason": "Two renderings of `session` ship in this locale, one of them naming a different concept in the ecosystem's other products. Clears when the sentence is re-authored."
+  },
+  {
+    "locale": "ru",
+    "key": "legal:lc.sessionWhen",
+    "term": "investor hall",
+    "shipped": "зал для инвесторов",
+    "settled": "зал инвесторов",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "th",
+    "key": "app:account.delete.lastAdmin",
+    "term": "sign in",
+    "shipped": "ลงชื่อเข้าใช้",
+    "settled": "เข้าสู่ระบบ",
+    "reason": "The catalogue uses a second verb for signing in alongside the settled one. **Two of these are an English defect rather than a translation one**: `assets/i18n.js` says `Investor login` where the application says `Investor sign-in`, and every locale followed whichever English it was handed. Fixing the two English strings corrects twenty languages at once -- but it rewrites words on the public page, so it wants the owner's review first (`.claude/CLAUDE.md` §15)."
+  },
+  {
+    "locale": "th",
+    "key": "app:account.identity.signInChanges",
+    "term": "sign in",
+    "shipped": "ลงชื่อเข้าใช้",
+    "settled": "เข้าสู่ระบบ",
+    "reason": "The catalogue uses a second verb for signing in alongside the settled one. **Two of these are an English defect rather than a translation one**: `assets/i18n.js` says `Investor login` where the application says `Investor sign-in`, and every locale followed whichever English it was handed. Fixing the two English strings corrects twenty languages at once -- but it rewrites words on the public page, so it wants the owner's review first (`.claude/CLAUDE.md` §15)."
+  },
+  {
+    "locale": "th",
+    "key": "app:account.notice.deleteLastAdmin",
+    "term": "sign in",
+    "shipped": "ลงชื่อเข้าใช้",
+    "settled": "เข้าสู่ระบบ",
+    "reason": "The catalogue uses a second verb for signing in alongside the settled one. **Two of these are an English defect rather than a translation one**: `assets/i18n.js` says `Investor login` where the application says `Investor sign-in`, and every locale followed whichever English it was handed. Fixing the two English strings corrects twenty languages at once -- but it rewrites words on the public page, so it wants the owner's review first (`.claude/CLAUDE.md` §15)."
+  },
+  {
+    "locale": "th",
+    "key": "app:account.password.endsOthers",
+    "term": "sign in",
+    "shipped": "ลงชื่อเข้าใช้",
+    "settled": "เข้าสู่ระบบ",
+    "reason": "The catalogue uses a second verb for signing in alongside the settled one. **Two of these are an English defect rather than a translation one**: `assets/i18n.js` says `Investor login` where the application says `Investor sign-in`, and every locale followed whichever English it was handed. Fixing the two English strings corrects twenty languages at once -- but it rewrites words on the public page, so it wants the owner's review first (`.claude/CLAUDE.md` §15)."
+  },
+  {
+    "locale": "th",
+    "key": "app:sessions.began",
+    "term": "sign in",
+    "shipped": "ลงชื่อเข้าใช้",
+    "settled": "เข้าสู่ระบบ",
+    "reason": "The catalogue uses a second verb for signing in alongside the settled one. **Two of these are an English defect rather than a translation one**: `assets/i18n.js` says `Investor login` where the application says `Investor sign-in`, and every locale followed whichever English it was handed. Fixing the two English strings corrects twenty languages at once -- but it rewrites words on the public page, so it wants the owner's review first (`.claude/CLAUDE.md` §15)."
+  },
+  {
+    "locale": "th",
+    "key": "app:sessions.endEverywhereHint",
+    "term": "sign in",
+    "shipped": "ลงชื่อเข้าใช้",
+    "settled": "เข้าสู่ระบบ",
+    "reason": "The catalogue uses a second verb for signing in alongside the settled one. **Two of these are an English defect rather than a translation one**: `assets/i18n.js` says `Investor login` where the application says `Investor sign-in`, and every locale followed whichever English it was handed. Fixing the two English strings corrects twenty languages at once -- but it rewrites words on the public page, so it wants the owner's review first (`.claude/CLAUDE.md` §15)."
+  },
+  {
+    "locale": "th",
+    "key": "app:sessions.intro",
+    "term": "sign in",
+    "shipped": "ลงชื่อเข้าใช้",
+    "settled": "เข้าสู่ระบบ",
+    "reason": "The catalogue uses a second verb for signing in alongside the settled one. **Two of these are an English defect rather than a translation one**: `assets/i18n.js` says `Investor login` where the application says `Investor sign-in`, and every locale followed whichever English it was handed. Fixing the two English strings corrects twenty languages at once -- but it rewrites words on the public page, so it wants the owner's review first (`.claude/CLAUDE.md` §15)."
+  },
+  {
+    "locale": "th",
+    "key": "legal:lc.clearBody",
+    "term": "cookie",
+    "shipped": "Cookie",
+    "settled": "คุกกี้",
+    "reason": "This locale's word for `cookie` was settled from the sibling products; the string here still carries another rendering inside a sentence, where replacing it changes the grammar around it. Clears when the sentence is re-authored."
+  },
+  {
+    "locale": "th",
+    "key": "legal:lc.clearBody",
+    "term": "investor hall",
+    "shipped": "พื้นที่นักลงทุน",
+    "settled": "โถงนักลงทุน",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "th",
+    "key": "legal:lc.hallBody",
+    "term": "cookie",
+    "shipped": "Cookie",
+    "settled": "คุกกี้",
+    "reason": "This locale's word for `cookie` was settled from the sibling products; the string here still carries another rendering inside a sentence, where replacing it changes the grammar around it. Clears when the sentence is re-authored."
+  },
+  {
+    "locale": "th",
+    "key": "legal:lc.hallBody",
+    "term": "investor hall",
+    "shipped": "พื้นที่นักลงทุน",
+    "settled": "โถงนักลงทุน",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "th",
+    "key": "legal:lc.hallTitle",
+    "term": "investor hall",
+    "shipped": "พื้นที่นักลงทุน",
+    "settled": "โถงนักลงทุน",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "th",
+    "key": "legal:lc.lede",
+    "term": "investor hall",
+    "shipped": "พื้นที่นักลงทุน",
+    "settled": "โถงนักลงทุน",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "th",
+    "key": "legal:lc.necessaryBody",
+    "term": "cookie",
+    "shipped": "Cookie",
+    "settled": "คุกกี้",
+    "reason": "This locale's word for `cookie` was settled from the sibling products; the string here still carries another rendering inside a sentence, where replacing it changes the grammar around it. Clears when the sentence is re-authored."
+  },
+  {
+    "locale": "th",
+    "key": "legal:lc.necessaryBody",
+    "term": "investor hall",
+    "shipped": "พื้นที่นักลงทุน",
+    "settled": "โถงนักลงทุน",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "th",
+    "key": "legal:lc.sessionWhat",
+    "term": "cookie",
+    "shipped": "Cookie",
+    "settled": "คุกกี้",
+    "reason": "This locale's word for `cookie` was settled from the sibling products; the string here still carries another rendering inside a sentence, where replacing it changes the grammar around it. Clears when the sentence is re-authored."
+  },
+  {
+    "locale": "th",
+    "key": "legal:lc.sessionWhen",
+    "term": "investor hall",
+    "shipped": "พื้นที่นักลงทุน",
+    "settled": "โถงนักลงทุน",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "th",
+    "key": "legal:lc.title",
+    "term": "cookie",
+    "shipped": "Cookie",
+    "settled": "คุกกี้",
+    "reason": "This locale's word for `cookie` was settled from the sibling products; the string here still carries another rendering inside a sentence, where replacing it changes the grammar around it. Clears when the sentence is re-authored."
+  },
+  {
+    "locale": "th",
+    "key": "legal:lp.hallBody",
+    "term": "investor hall",
+    "shipped": "พื้นที่นักลงทุน",
+    "settled": "โถงนักลงทุน",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "th",
+    "key": "legal:lp.hallTitle",
+    "term": "investor hall",
+    "shipped": "พื้นที่นักลงทุน",
+    "settled": "โถงนักลงทุน",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "th",
+    "key": "legal:lp.storedBody",
+    "term": "cookie",
+    "shipped": "Cookie",
+    "settled": "คุกกี้",
+    "reason": "This locale's word for `cookie` was settled from the sibling products; the string here still carries another rendering inside a sentence, where replacing it changes the grammar around it. Clears when the sentence is re-authored."
+  },
+  {
+    "locale": "th",
+    "key": "legal:lp.storedBody",
+    "term": "investor hall",
+    "shipped": "พื้นที่นักลงทุน",
+    "settled": "โถงนักลงทุน",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "tl",
+    "key": "app:privacy.heldIdentity",
+    "term": "email",
+    "shipped": "e-mail",
+    "settled": "email",
+    "reason": "Two spellings of the same word ship side by side in this locale, and the English source carries the same split. Clears when the affected strings are re-authored together, English first."
+  },
+  {
+    "locale": "tl",
+    "key": "app:privacy.heldSessions",
+    "term": "session",
+    "shipped": "sesyon",
+    "settled": "session",
+    "reason": "Two renderings of `session` ship in this locale, one of them naming a different concept in the ecosystem's other products. Clears when the sentence is re-authored."
+  },
+  {
+    "locale": "tl",
+    "key": "app:privacy.whereBody",
+    "term": "email",
+    "shipped": "e-mail",
+    "settled": "email",
+    "reason": "Two spellings of the same word ship side by side in this locale, and the English source carries the same split. Clears when the affected strings are re-authored together, English first."
+  },
+  {
+    "locale": "tl",
+    "key": "legal:lp.hallBody",
+    "term": "email",
+    "shipped": "e-mail",
+    "settled": "email",
+    "reason": "Two spellings of the same word ship side by side in this locale, and the English source carries the same split. Clears when the affected strings are re-authored together, English first."
+  },
+  {
+    "locale": "tl",
+    "key": "legal:lp.writeBody",
+    "term": "email",
+    "shipped": "e-mail",
+    "settled": "email",
+    "reason": "Two spellings of the same word ship side by side in this locale, and the English source carries the same split. Clears when the affected strings are re-authored together, English first."
+  },
+  {
+    "locale": "tr",
+    "key": "app:invitationMail.action",
+    "term": "sign in",
+    "shipped": "oturum açmak",
+    "settled": "giriş yap",
+    "reason": "The catalogue uses a second verb for signing in alongside the settled one. **Two of these are an English defect rather than a translation one**: `assets/i18n.js` says `Investor login` where the application says `Investor sign-in`, and every locale followed whichever English it was handed. Fixing the two English strings corrects twenty languages at once -- but it rewrites words on the public page, so it wants the owner's review first (`.claude/CLAUDE.md` §15)."
+  },
+  {
+    "locale": "tr",
+    "key": "app:registrationExistsMail.action",
+    "term": "sign in",
+    "shipped": "oturum açmak",
+    "settled": "giriş yap",
+    "reason": "The catalogue uses a second verb for signing in alongside the settled one. **Two of these are an English defect rather than a translation one**: `assets/i18n.js` says `Investor login` where the application says `Investor sign-in`, and every locale followed whichever English it was handed. Fixing the two English strings corrects twenty languages at once -- but it rewrites words on the public page, so it wants the owner's review first (`.claude/CLAUDE.md` §15)."
+  },
+  {
+    "locale": "tr",
+    "key": "app:registrationMail.action",
+    "term": "sign in",
+    "shipped": "oturum açmak",
+    "settled": "giriş yap",
+    "reason": "The catalogue uses a second verb for signing in alongside the settled one. **Two of these are an English defect rather than a translation one**: `assets/i18n.js` says `Investor login` where the application says `Investor sign-in`, and every locale followed whichever English it was handed. Fixing the two English strings corrects twenty languages at once -- but it rewrites words on the public page, so it wants the owner's review first (`.claude/CLAUDE.md` §15)."
+  },
+  {
+    "locale": "tr",
+    "key": "gateway:answer.big",
+    "term": "AI",
+    "shipped": "AI",
+    "settled": "yapay zekâ",
+    "reason": "The owner settled this locale on the ecosystem's measurement: every genuinely translated Turkish catalogue uses the native term and none uses the Latin token. These are gateway marketing strings, so changing them rewrites words on the public page and wants the owner's review (`.claude/CLAUDE.md` §15); several carry Turkish suffixation on the Latin token and cannot be swapped word for word."
+  },
+  {
+    "locale": "tr",
+    "key": "gateway:answer.sub",
+    "term": "AI",
+    "shipped": "AI",
+    "settled": "yapay zekâ",
+    "reason": "The owner settled this locale on the ecosystem's measurement: every genuinely translated Turkish catalogue uses the native term and none uses the Latin token. These are gateway marketing strings, so changing them rewrites words on the public page and wants the owner's review (`.claude/CLAUDE.md` §15); several carry Turkish suffixation on the Latin token and cannot be swapped word for word."
+  },
+  {
+    "locale": "tr",
+    "key": "gateway:brand.slogan",
+    "term": "AI",
+    "shipped": "AI",
+    "settled": "yapay zekâ",
+    "reason": "The owner settled this locale on the ecosystem's measurement: every genuinely translated Turkish catalogue uses the native term and none uses the Latin token. These are gateway marketing strings, so changing them rewrites words on the public page and wants the owner's review (`.claude/CLAUDE.md` §15); several carry Turkish suffixation on the Latin token and cannot be swapped word for word."
+  },
+  {
+    "locale": "tr",
+    "key": "gateway:deliver.p2b",
+    "term": "AI",
+    "shipped": "AI",
+    "settled": "yapay zekâ",
+    "reason": "The owner settled this locale on the ecosystem's measurement: every genuinely translated Turkish catalogue uses the native term and none uses the Latin token. These are gateway marketing strings, so changing them rewrites words on the public page and wants the owner's review (`.claude/CLAUDE.md` §15); several carry Turkish suffixation on the Latin token and cannot be swapped word for word."
+  },
+  {
+    "locale": "tr",
+    "key": "gateway:deliver.p2c",
+    "term": "AI",
+    "shipped": "AI",
+    "settled": "yapay zekâ",
+    "reason": "The owner settled this locale on the ecosystem's measurement: every genuinely translated Turkish catalogue uses the native term and none uses the Latin token. These are gateway marketing strings, so changing them rewrites words on the public page and wants the owner's review (`.claude/CLAUDE.md` §15); several carry Turkish suffixation on the Latin token and cannot be swapped word for word."
+  },
+  {
+    "locale": "tr",
+    "key": "gateway:deliver.p2foot",
+    "term": "AI",
+    "shipped": "AI",
+    "settled": "yapay zekâ",
+    "reason": "The owner settled this locale on the ecosystem's measurement: every genuinely translated Turkish catalogue uses the native term and none uses the Latin token. These are gateway marketing strings, so changing them rewrites words on the public page and wants the owner's review (`.claude/CLAUDE.md` §15); several carry Turkish suffixation on the Latin token and cannot be swapped word for word."
+  },
+  {
+    "locale": "tr",
+    "key": "gateway:deliver.p2lead",
+    "term": "AI",
+    "shipped": "AI",
+    "settled": "yapay zekâ",
+    "reason": "The owner settled this locale on the ecosystem's measurement: every genuinely translated Turkish catalogue uses the native term and none uses the Latin token. These are gateway marketing strings, so changing them rewrites words on the public page and wants the owner's review (`.claude/CLAUDE.md` §15); several carry Turkish suffixation on the Latin token and cannot be swapped word for word."
+  },
+  {
+    "locale": "tr",
+    "key": "gateway:deliver.p2m1d",
+    "term": "AI",
+    "shipped": "AI",
+    "settled": "yapay zekâ",
+    "reason": "The owner settled this locale on the ecosystem's measurement: every genuinely translated Turkish catalogue uses the native term and none uses the Latin token. These are gateway marketing strings, so changing them rewrites words on the public page and wants the owner's review (`.claude/CLAUDE.md` §15); several carry Turkish suffixation on the Latin token and cannot be swapped word for word."
+  },
+  {
+    "locale": "tr",
+    "key": "gateway:deliver.p2m3d",
+    "term": "AI",
+    "shipped": "AI",
+    "settled": "yapay zekâ",
+    "reason": "The owner settled this locale on the ecosystem's measurement: every genuinely translated Turkish catalogue uses the native term and none uses the Latin token. These are gateway marketing strings, so changing them rewrites words on the public page and wants the owner's review (`.claude/CLAUDE.md` §15); several carry Turkish suffixation on the Latin token and cannot be swapped word for word."
+  },
+  {
+    "locale": "tr",
+    "key": "gateway:deliver.p2m4d",
+    "term": "AI",
+    "shipped": "AI",
+    "settled": "yapay zekâ",
+    "reason": "The owner settled this locale on the ecosystem's measurement: every genuinely translated Turkish catalogue uses the native term and none uses the Latin token. These are gateway marketing strings, so changing them rewrites words on the public page and wants the owner's review (`.claude/CLAUDE.md` §15); several carry Turkish suffixation on the Latin token and cannot be swapped word for word."
+  },
+  {
+    "locale": "tr",
+    "key": "gateway:deliver.p3a",
+    "term": "AI",
+    "shipped": "AI",
+    "settled": "yapay zekâ",
+    "reason": "The owner settled this locale on the ecosystem's measurement: every genuinely translated Turkish catalogue uses the native term and none uses the Latin token. These are gateway marketing strings, so changing them rewrites words on the public page and wants the owner's review (`.claude/CLAUDE.md` §15); several carry Turkish suffixation on the Latin token and cannot be swapped word for word."
+  },
+  {
+    "locale": "tr",
+    "key": "gateway:deliver.p3lead",
+    "term": "AI",
+    "shipped": "AI",
+    "settled": "yapay zekâ",
+    "reason": "The owner settled this locale on the ecosystem's measurement: every genuinely translated Turkish catalogue uses the native term and none uses the Latin token. These are gateway marketing strings, so changing them rewrites words on the public page and wants the owner's review (`.claude/CLAUDE.md` §15); several carry Turkish suffixation on the Latin token and cannot be swapped word for word."
+  },
+  {
+    "locale": "tr",
+    "key": "gateway:deliver.p3m1t",
+    "term": "AI",
+    "shipped": "AI",
+    "settled": "yapay zekâ",
+    "reason": "The owner settled this locale on the ecosystem's measurement: every genuinely translated Turkish catalogue uses the native term and none uses the Latin token. These are gateway marketing strings, so changing them rewrites words on the public page and wants the owner's review (`.claude/CLAUDE.md` §15); several carry Turkish suffixation on the Latin token and cannot be swapped word for word."
+  },
+  {
+    "locale": "tr",
+    "key": "gateway:deliver.s2d",
+    "term": "AI",
+    "shipped": "AI",
+    "settled": "yapay zekâ",
+    "reason": "The owner settled this locale on the ecosystem's measurement: every genuinely translated Turkish catalogue uses the native term and none uses the Latin token. These are gateway marketing strings, so changing them rewrites words on the public page and wants the owner's review (`.claude/CLAUDE.md` §15); several carry Turkish suffixation on the Latin token and cannot be swapped word for word."
+  },
+  {
+    "locale": "tr",
+    "key": "gateway:deliver.s2t",
+    "term": "AI",
+    "shipped": "AI",
+    "settled": "yapay zekâ",
+    "reason": "The owner settled this locale on the ecosystem's measurement: every genuinely translated Turkish catalogue uses the native term and none uses the Latin token. These are gateway marketing strings, so changing them rewrites words on the public page and wants the owner's review (`.claude/CLAUDE.md` §15); several carry Turkish suffixation on the Latin token and cannot be swapped word for word."
+  },
+  {
+    "locale": "tr",
+    "key": "gateway:deliver.tab2",
+    "term": "AI",
+    "shipped": "AI",
+    "settled": "yapay zekâ",
+    "reason": "The owner settled this locale on the ecosystem's measurement: every genuinely translated Turkish catalogue uses the native term and none uses the Latin token. These are gateway marketing strings, so changing them rewrites words on the public page and wants the owner's review (`.claude/CLAUDE.md` §15); several carry Turkish suffixation on the Latin token and cannot be swapped word for word."
+  },
+  {
+    "locale": "tr",
+    "key": "gateway:foot.tagline",
+    "term": "AI",
+    "shipped": "AI",
+    "settled": "yapay zekâ",
+    "reason": "The owner settled this locale on the ecosystem's measurement: every genuinely translated Turkish catalogue uses the native term and none uses the Latin token. These are gateway marketing strings, so changing them rewrites words on the public page and wants the owner's review (`.claude/CLAUDE.md` §15); several carry Turkish suffixation on the Latin token and cannot be swapped word for word."
+  },
+  {
+    "locale": "tr",
+    "key": "gateway:hero.eyebrow",
+    "term": "AI",
+    "shipped": "AI",
+    "settled": "yapay zekâ",
+    "reason": "The owner settled this locale on the ecosystem's measurement: every genuinely translated Turkish catalogue uses the native term and none uses the Latin token. These are gateway marketing strings, so changing them rewrites words on the public page and wants the owner's review (`.claude/CLAUDE.md` §15); several carry Turkish suffixation on the Latin token and cannot be swapped word for word."
+  },
+  {
+    "locale": "tr",
+    "key": "gateway:hero.h1",
+    "term": "AI",
+    "shipped": "AI",
+    "settled": "yapay zekâ",
+    "reason": "The owner settled this locale on the ecosystem's measurement: every genuinely translated Turkish catalogue uses the native term and none uses the Latin token. These are gateway marketing strings, so changing them rewrites words on the public page and wants the owner's review (`.claude/CLAUDE.md` §15); several carry Turkish suffixation on the Latin token and cannot be swapped word for word."
+  },
+  {
+    "locale": "tr",
+    "key": "gateway:hero.sub",
+    "term": "AI",
+    "shipped": "AI",
+    "settled": "yapay zekâ",
+    "reason": "The owner settled this locale on the ecosystem's measurement: every genuinely translated Turkish catalogue uses the native term and none uses the Latin token. These are gateway marketing strings, so changing them rewrites words on the public page and wants the owner's review (`.claude/CLAUDE.md` §15); several carry Turkish suffixation on the Latin token and cannot be swapped word for word."
+  },
+  {
+    "locale": "tr",
+    "key": "gateway:nav.workforce",
+    "term": "AI",
+    "shipped": "AI",
+    "settled": "yapay zekâ",
+    "reason": "The owner settled this locale on the ecosystem's measurement: every genuinely translated Turkish catalogue uses the native term and none uses the Latin token. These are gateway marketing strings, so changing them rewrites words on the public page and wants the owner's review (`.claude/CLAUDE.md` §15); several carry Turkish suffixation on the Latin token and cannot be swapped word for word."
+  },
+  {
+    "locale": "tr",
+    "key": "gateway:people.h.r",
+    "term": "AI",
+    "shipped": "AI",
+    "settled": "yapay zekâ",
+    "reason": "The owner settled this locale on the ecosystem's measurement: every genuinely translated Turkish catalogue uses the native term and none uses the Latin token. These are gateway marketing strings, so changing them rewrites words on the public page and wants the owner's review (`.claude/CLAUDE.md` §15); several carry Turkish suffixation on the Latin token and cannot be swapped word for word."
+  },
+  {
+    "locale": "tr",
+    "key": "gateway:people.tag",
+    "term": "AI",
+    "shipped": "AI",
+    "settled": "yapay zekâ",
+    "reason": "The owner settled this locale on the ecosystem's measurement: every genuinely translated Turkish catalogue uses the native term and none uses the Latin token. These are gateway marketing strings, so changing them rewrites words on the public page and wants the owner's review (`.claude/CLAUDE.md` §15); several carry Turkish suffixation on the Latin token and cannot be swapped word for word."
+  },
+  {
+    "locale": "tr",
+    "key": "gateway:phases.3o",
+    "term": "AI",
+    "shipped": "AI",
+    "settled": "yapay zekâ",
+    "reason": "The owner settled this locale on the ecosystem's measurement: every genuinely translated Turkish catalogue uses the native term and none uses the Latin token. These are gateway marketing strings, so changing them rewrites words on the public page and wants the owner's review (`.claude/CLAUDE.md` §15); several carry Turkish suffixation on the Latin token and cannot be swapped word for word."
+  },
+  {
+    "locale": "tr",
+    "key": "gateway:phases.4d",
+    "term": "AI",
+    "shipped": "AI",
+    "settled": "yapay zekâ",
+    "reason": "The owner settled this locale on the ecosystem's measurement: every genuinely translated Turkish catalogue uses the native term and none uses the Latin token. These are gateway marketing strings, so changing them rewrites words on the public page and wants the owner's review (`.claude/CLAUDE.md` §15); several carry Turkish suffixation on the Latin token and cannot be swapped word for word."
+  },
+  {
+    "locale": "tr",
+    "key": "gateway:phases.5d",
+    "term": "AI",
+    "shipped": "AI",
+    "settled": "yapay zekâ",
+    "reason": "The owner settled this locale on the ecosystem's measurement: every genuinely translated Turkish catalogue uses the native term and none uses the Latin token. These are gateway marketing strings, so changing them rewrites words on the public page and wants the owner's review (`.claude/CLAUDE.md` §15); several carry Turkish suffixation on the Latin token and cannot be swapped word for word."
+  },
+  {
+    "locale": "tr",
+    "key": "gateway:phases.5l",
+    "term": "AI",
+    "shipped": "AI",
+    "settled": "yapay zekâ",
+    "reason": "The owner settled this locale on the ecosystem's measurement: every genuinely translated Turkish catalogue uses the native term and none uses the Latin token. These are gateway marketing strings, so changing them rewrites words on the public page and wants the owner's review (`.claude/CLAUDE.md` §15); several carry Turkish suffixation on the Latin token and cannot be swapped word for word."
+  },
+  {
+    "locale": "tr",
+    "key": "gateway:phases.5o",
+    "term": "AI",
+    "shipped": "AI",
+    "settled": "yapay zekâ",
+    "reason": "The owner settled this locale on the ecosystem's measurement: every genuinely translated Turkish catalogue uses the native term and none uses the Latin token. These are gateway marketing strings, so changing them rewrites words on the public page and wants the owner's review (`.claude/CLAUDE.md` §15); several carry Turkish suffixation on the Latin token and cannot be swapped word for word."
+  },
+  {
+    "locale": "tr",
+    "key": "gateway:phases.5t",
+    "term": "AI",
+    "shipped": "AI",
+    "settled": "yapay zekâ",
+    "reason": "The owner settled this locale on the ecosystem's measurement: every genuinely translated Turkish catalogue uses the native term and none uses the Latin token. These are gateway marketing strings, so changing them rewrites words on the public page and wants the owner's review (`.claude/CLAUDE.md` §15); several carry Turkish suffixation on the Latin token and cannot be swapped word for word."
+  },
+  {
+    "locale": "tr",
+    "key": "gateway:phases.lede",
+    "term": "AI",
+    "shipped": "AI",
+    "settled": "yapay zekâ",
+    "reason": "The owner settled this locale on the ecosystem's measurement: every genuinely translated Turkish catalogue uses the native term and none uses the Latin token. These are gateway marketing strings, so changing them rewrites words on the public page and wants the owner's review (`.claude/CLAUDE.md` §15); several carry Turkish suffixation on the Latin token and cannot be swapped word for word."
+  },
+  {
+    "locale": "tr",
+    "key": "gateway:problem.2d",
+    "term": "AI",
+    "shipped": "AI",
+    "settled": "yapay zekâ",
+    "reason": "The owner settled this locale on the ecosystem's measurement: every genuinely translated Turkish catalogue uses the native term and none uses the Latin token. These are gateway marketing strings, so changing them rewrites words on the public page and wants the owner's review (`.claude/CLAUDE.md` §15); several carry Turkish suffixation on the Latin token and cannot be swapped word for word."
+  },
+  {
+    "locale": "tr",
+    "key": "gateway:problem.2n",
+    "term": "AI",
+    "shipped": "AI",
+    "settled": "yapay zekâ",
+    "reason": "The owner settled this locale on the ecosystem's measurement: every genuinely translated Turkish catalogue uses the native term and none uses the Latin token. These are gateway marketing strings, so changing them rewrites words on the public page and wants the owner's review (`.claude/CLAUDE.md` §15); several carry Turkish suffixation on the Latin token and cannot be swapped word for word."
+  },
+  {
+    "locale": "tr",
+    "key": "gateway:problem.2t",
+    "term": "AI",
+    "shipped": "AI",
+    "settled": "yapay zekâ",
+    "reason": "The owner settled this locale on the ecosystem's measurement: every genuinely translated Turkish catalogue uses the native term and none uses the Latin token. These are gateway marketing strings, so changing them rewrites words on the public page and wants the owner's review (`.claude/CLAUDE.md` §15); several carry Turkish suffixation on the Latin token and cannot be swapped word for word."
+  },
+  {
+    "locale": "tr",
+    "key": "gateway:problem.3d",
+    "term": "AI",
+    "shipped": "AI",
+    "settled": "yapay zekâ",
+    "reason": "The owner settled this locale on the ecosystem's measurement: every genuinely translated Turkish catalogue uses the native term and none uses the Latin token. These are gateway marketing strings, so changing them rewrites words on the public page and wants the owner's review (`.claude/CLAUDE.md` §15); several carry Turkish suffixation on the Latin token and cannot be swapped word for word."
+  },
+  {
+    "locale": "tr",
+    "key": "gateway:problem.3n",
+    "term": "AI",
+    "shipped": "AI",
+    "settled": "yapay zekâ",
+    "reason": "The owner settled this locale on the ecosystem's measurement: every genuinely translated Turkish catalogue uses the native term and none uses the Latin token. These are gateway marketing strings, so changing them rewrites words on the public page and wants the owner's review (`.claude/CLAUDE.md` §15); several carry Turkish suffixation on the Latin token and cannot be swapped word for word."
+  },
+  {
+    "locale": "tr",
+    "key": "gateway:problem.lede",
+    "term": "AI",
+    "shipped": "AI",
+    "settled": "yapay zekâ",
+    "reason": "The owner settled this locale on the ecosystem's measurement: every genuinely translated Turkish catalogue uses the native term and none uses the Latin token. These are gateway marketing strings, so changing them rewrites words on the public page and wants the owner's review (`.claude/CLAUDE.md` §15); several carry Turkish suffixation on the Latin token and cannot be swapped word for word."
+  },
+  {
+    "locale": "tr",
+    "key": "gateway:stats.1l",
+    "term": "AI",
+    "shipped": "AI",
+    "settled": "yapay zekâ",
+    "reason": "The owner settled this locale on the ecosystem's measurement: every genuinely translated Turkish catalogue uses the native term and none uses the Latin token. These are gateway marketing strings, so changing them rewrites words on the public page and wants the owner's review (`.claude/CLAUDE.md` §15); several carry Turkish suffixation on the Latin token and cannot be swapped word for word."
+  },
+  {
+    "locale": "tr",
+    "key": "gateway:stats.2l",
+    "term": "AI",
+    "shipped": "AI",
+    "settled": "yapay zekâ",
+    "reason": "The owner settled this locale on the ecosystem's measurement: every genuinely translated Turkish catalogue uses the native term and none uses the Latin token. These are gateway marketing strings, so changing them rewrites words on the public page and wants the owner's review (`.claude/CLAUDE.md` §15); several carry Turkish suffixation on the Latin token and cannot be swapped word for word."
+  },
+  {
+    "locale": "tr",
+    "key": "gateway:valostack.cap",
+    "term": "AI",
+    "shipped": "AI",
+    "settled": "yapay zekâ",
+    "reason": "The owner settled this locale on the ecosystem's measurement: every genuinely translated Turkish catalogue uses the native term and none uses the Latin token. These are gateway marketing strings, so changing them rewrites words on the public page and wants the owner's review (`.claude/CLAUDE.md` §15); several carry Turkish suffixation on the Latin token and cannot be swapped word for word."
+  },
+  {
+    "locale": "tr",
+    "key": "gateway:workforce.eyebrow",
+    "term": "AI",
+    "shipped": "AI",
+    "settled": "yapay zekâ",
+    "reason": "The owner settled this locale on the ecosystem's measurement: every genuinely translated Turkish catalogue uses the native term and none uses the Latin token. These are gateway marketing strings, so changing them rewrites words on the public page and wants the owner's review (`.claude/CLAUDE.md` §15); several carry Turkish suffixation on the Latin token and cannot be swapped word for word."
+  },
+  {
+    "locale": "tr",
+    "key": "gateway:workforce.h2",
+    "term": "AI",
+    "shipped": "AI",
+    "settled": "yapay zekâ",
+    "reason": "The owner settled this locale on the ecosystem's measurement: every genuinely translated Turkish catalogue uses the native term and none uses the Latin token. These are gateway marketing strings, so changing them rewrites words on the public page and wants the owner's review (`.claude/CLAUDE.md` §15); several carry Turkish suffixation on the Latin token and cannot be swapped word for word."
+  },
+  {
+    "locale": "ur",
+    "key": "app:account.delete.final",
+    "term": "investor hall",
+    "shipped": "سرمایہ کار ہال",
+    "settled": "سرمایہ کاروں کا ہال",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "ur",
+    "key": "app:account.delete.lastAdmin",
+    "term": "investor hall",
+    "shipped": "سرمایہ کار ہال",
+    "settled": "سرمایہ کاروں کا ہال",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "ur",
+    "key": "app:account.notice.deleteLastAdmin",
+    "term": "investor hall",
+    "shipped": "سرمایہ کار ہال",
+    "settled": "سرمایہ کاروں کا ہال",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "ur",
+    "key": "app:invitationMail.intro",
+    "term": "investor hall",
+    "shipped": "سرمایہ کار ہال",
+    "settled": "سرمایہ کاروں کا ہال",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "ur",
+    "key": "app:invitationMail.subject",
+    "term": "investor hall",
+    "shipped": "سرمایہ کار ہال",
+    "settled": "سرمایہ کاروں کا ہال",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "ur",
+    "key": "app:registrationExistsMail.intro",
+    "term": "investor hall",
+    "shipped": "سرمایہ کار ہال",
+    "settled": "سرمایہ کاروں کا ہال",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "ur",
+    "key": "app:registrationMail.intro",
+    "term": "investor hall",
+    "shipped": "سرمایہ کار ہال",
+    "settled": "سرمایہ کاروں کا ہال",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "ur",
+    "key": "app:registrationMail.subject",
+    "term": "investor hall",
+    "shipped": "سرمایہ کار ہال",
+    "settled": "سرمایہ کاروں کا ہال",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "ur",
+    "key": "app:resetMail.intro",
+    "term": "investor hall",
+    "shipped": "سرمایہ کار ہال",
+    "settled": "سرمایہ کاروں کا ہال",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "ur",
+    "key": "app:setPassword.intro",
+    "term": "investor hall",
+    "shipped": "سرمایہ کار ہال",
+    "settled": "سرمایہ کاروں کا ہال",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "ur",
+    "key": "gateway:inv.title",
+    "term": "sign in",
+    "shipped": "لاگ اِن",
+    "settled": "سائن اِن",
+    "reason": "The catalogue uses a second verb for signing in alongside the settled one. **Two of these are an English defect rather than a translation one**: `assets/i18n.js` says `Investor login` where the application says `Investor sign-in`, and every locale followed whichever English it was handed. Fixing the two English strings corrects twenty languages at once -- but it rewrites words on the public page, so it wants the owner's review first (`.claude/CLAUDE.md` §15)."
+  },
+  {
+    "locale": "ur",
+    "key": "gateway:nav.investor",
+    "term": "sign in",
+    "shipped": "لاگ اِن",
+    "settled": "سائن اِن",
+    "reason": "The catalogue uses a second verb for signing in alongside the settled one. **Two of these are an English defect rather than a translation one**: `assets/i18n.js` says `Investor login` where the application says `Investor sign-in`, and every locale followed whichever English it was handed. Fixing the two English strings corrects twenty languages at once -- but it rewrites words on the public page, so it wants the owner's review first (`.claude/CLAUDE.md` §15)."
+  },
+  {
+    "locale": "ur",
+    "key": "legal:lc.clearBody",
+    "term": "investor hall",
+    "shipped": "سرمایہ کار ہال",
+    "settled": "سرمایہ کاروں کا ہال",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "ur",
+    "key": "legal:lc.hallBody",
+    "term": "sign in",
+    "shipped": "لاگ اِن",
+    "settled": "سائن اِن",
+    "reason": "The catalogue uses a second verb for signing in alongside the settled one. **Two of these are an English defect rather than a translation one**: `assets/i18n.js` says `Investor login` where the application says `Investor sign-in`, and every locale followed whichever English it was handed. Fixing the two English strings corrects twenty languages at once -- but it rewrites words on the public page, so it wants the owner's review first (`.claude/CLAUDE.md` §15)."
+  },
+  {
+    "locale": "ur",
+    "key": "legal:lc.hallTitle",
+    "term": "investor hall",
+    "shipped": "سرمایہ کار ہال",
+    "settled": "سرمایہ کاروں کا ہال",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "ur",
+    "key": "legal:lc.lede",
+    "term": "investor hall",
+    "shipped": "سرمایہ کار ہال",
+    "settled": "سرمایہ کاروں کا ہال",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "ur",
+    "key": "legal:lc.sessionWhen",
+    "term": "investor hall",
+    "shipped": "سرمایہ کار ہال",
+    "settled": "سرمایہ کاروں کا ہال",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "ur",
+    "key": "legal:lc.sessionWhen",
+    "term": "sign in",
+    "shipped": "لاگ اِن",
+    "settled": "سائن اِن",
+    "reason": "The catalogue uses a second verb for signing in alongside the settled one. **Two of these are an English defect rather than a translation one**: `assets/i18n.js` says `Investor login` where the application says `Investor sign-in`, and every locale followed whichever English it was handed. Fixing the two English strings corrects twenty languages at once -- but it rewrites words on the public page, so it wants the owner's review first (`.claude/CLAUDE.md` §15)."
+  },
+  {
+    "locale": "ur",
+    "key": "legal:lp.hallTitle",
+    "term": "investor hall",
+    "shipped": "سرمایہ کار ہال",
+    "settled": "سرمایہ کاروں کا ہال",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "ur",
+    "key": "legal:lp.storedBody",
+    "term": "sign in",
+    "shipped": "لاگ اِن",
+    "settled": "سائن اِن",
+    "reason": "The catalogue uses a second verb for signing in alongside the settled one. **Two of these are an English defect rather than a translation one**: `assets/i18n.js` says `Investor login` where the application says `Investor sign-in`, and every locale followed whichever English it was handed. Fixing the two English strings corrects twenty languages at once -- but it rewrites words on the public page, so it wants the owner's review first (`.claude/CLAUDE.md` §15)."
+  },
+  {
+    "locale": "vi",
+    "key": "gateway:cap.7a",
+    "term": "session",
+    "shipped": "phiên làm việc",
+    "settled": "phiên",
+    "reason": "Two renderings of `session` ship in this locale, one of them naming a different concept in the ecosystem's other products. Clears when the sentence is re-authored."
+  },
+  {
+    "locale": "vi",
+    "key": "legal:lc.clearBody",
+    "term": "investor hall",
+    "shipped": "khu vực nhà đầu tư",
+    "settled": "Sảnh nhà đầu tư",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "vi",
+    "key": "legal:lc.hallBody",
+    "term": "investor hall",
+    "shipped": "khu vực nhà đầu tư",
+    "settled": "Sảnh nhà đầu tư",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "vi",
+    "key": "legal:lc.hallTitle",
+    "term": "investor hall",
+    "shipped": "khu vực nhà đầu tư",
+    "settled": "Sảnh nhà đầu tư",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "vi",
+    "key": "legal:lc.lede",
+    "term": "investor hall",
+    "shipped": "khu vực nhà đầu tư",
+    "settled": "Sảnh nhà đầu tư",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "vi",
+    "key": "legal:lc.necessaryBody",
+    "term": "investor hall",
+    "shipped": "khu vực nhà đầu tư",
+    "settled": "Sảnh nhà đầu tư",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "vi",
+    "key": "legal:lc.sessionWhen",
+    "term": "investor hall",
+    "shipped": "khu vực nhà đầu tư",
+    "settled": "Sảnh nhà đầu tư",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "vi",
+    "key": "legal:lp.hallTitle",
+    "term": "investor hall",
+    "shipped": "khu vực nhà đầu tư",
+    "settled": "Sảnh nhà đầu tư",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "vi",
+    "key": "legal:lp.storedBody",
+    "term": "investor hall",
+    "shipped": "khu vực nhà đầu tư",
+    "settled": "Sảnh nhà đầu tư",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "zh",
+    "key": "legal:lc.clearBody",
+    "term": "investor hall",
+    "shipped": "投资人专区",
+    "settled": "投资人大厅",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "zh",
+    "key": "legal:lc.hallTitle",
+    "term": "investor hall",
+    "shipped": "投资人专区",
+    "settled": "投资人大厅",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "zh",
+    "key": "legal:lc.lede",
+    "term": "investor hall",
+    "shipped": "投资人专区",
+    "settled": "投资人大厅",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "zh",
+    "key": "legal:lc.sessionWhen",
+    "term": "investor hall",
+    "shipped": "投资人专区",
+    "settled": "投资人大厅",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "zh",
+    "key": "legal:lp.hallTitle",
+    "term": "investor hall",
+    "shipped": "投资人专区",
+    "settled": "投资人大厅",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "zt",
+    "key": "legal:lc.clearBody",
+    "term": "investor hall",
+    "shipped": "投資人專區",
+    "settled": "投資人大廳",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "zt",
+    "key": "legal:lc.hallTitle",
+    "term": "investor hall",
+    "shipped": "投資人專區",
+    "settled": "投資人大廳",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "zt",
+    "key": "legal:lc.lede",
+    "term": "investor hall",
+    "shipped": "投資人專區",
+    "settled": "投資人大廳",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "zt",
+    "key": "legal:lc.sessionWhen",
+    "term": "investor hall",
+    "shipped": "投資人專區",
+    "settled": "投資人大廳",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  },
+  {
+    "locale": "zt",
+    "key": "legal:lp.hallTitle",
+    "term": "investor hall",
+    "shipped": "投資人專區",
+    "settled": "投資人大廳",
+    "reason": "The legal pages name the hall with a phrase other than the one the application's own `hall.title` puts on the surface, which the owner settled as canonical. Changing it inside these sentences moves agreement around it, so it is a translation round rather than a substitution. Clears when `assets/legal-i18n.js` carries the settled phrase for this locale."
+  }
+]

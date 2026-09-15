@@ -1,0 +1,140 @@
+[
+  {
+    "concept": "cookie — the browser storage mechanism, in UI labels and legal pages",
+    "preferred": [
+      "cookie",
+      "cookies"
+    ],
+    "forbidden": [],
+    "basis": "ratified",
+    "sources": [
+      "VALOTech/assets/i18n.js:foot.cookies",
+      "VALOTech/assets/legal-i18n.js:lc.title",
+      "VALOTech/assets/legal-i18n.js:lc.sessionWhat"
+    ]
+  },
+  {
+    "concept": "AI — artificial intelligence, in marketing and product prose",
+    "preferred": [
+      "AI"
+    ],
+    "forbidden": [],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/assets/i18n.js:brand.slogan",
+      "VALOTech/assets/i18n.js:hero.eyebrow",
+      "VALOTech/assets/i18n.js:deliver.s2t"
+    ]
+  },
+  {
+    "concept": "session — the signed-in session the server issues and the reader can end",
+    "preferred": [
+      "session"
+    ],
+    "forbidden": [],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/apps/web/src/messages:sessions.title",
+      "VALOTech/assets/legal-i18n.js:lc.sessionWhat",
+      "VALOTech/assets/i18n.js:cap.7a"
+    ]
+  },
+  {
+    "concept": "browser — the web browser the reader is reading in",
+    "preferred": [
+      "browser"
+    ],
+    "forbidden": [],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/assets/legal-i18n.js:lp.storedTitle",
+      "VALOTech/assets/legal-i18n.js:lc.title",
+      "VALOTech/apps/web/src/messages:sessions.intro"
+    ]
+  },
+  {
+    "concept": "email — an email address, in form labels and privacy prose",
+    "preferred": [
+      "email"
+    ],
+    "forbidden": [
+      "e-mail"
+    ],
+    "basis": "ratified",
+    "sources": [
+      "VALOTech/apps/web/src/messages:signIn.email",
+      "VALOTech/apps/web/src/messages:forgot.email",
+      "VALOTech/apps/web/src/messages:account.identity.email"
+    ]
+  },
+  {
+    "concept": "account — a person's account in the investor hall",
+    "preferred": [
+      "account"
+    ],
+    "forbidden": [],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/apps/web/src/messages:sessions.intro",
+      "VALOTech/assets/legal-i18n.js:lp.hallTitle",
+      "VALOTech/apps/web/src/messages:privacy.heldRole"
+    ]
+  },
+  {
+    "concept": "password — the credential a person signs in with",
+    "preferred": [
+      "password"
+    ],
+    "forbidden": [],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/apps/web/src/messages:signIn.password",
+      "VALOTech/assets/i18n.js:inv.pw",
+      "VALOTech/apps/web/src/messages:setPassword.title"
+    ]
+  },
+  {
+    "concept": "sign in — authenticating into the investor hall, and the label on the control",
+    "preferred": [
+      "sign in",
+      "sign-in"
+    ],
+    "forbidden": [
+      "login"
+    ],
+    "basis": "ratified",
+    "sources": [
+      "VALOTech/apps/web/src/messages:signIn.title",
+      "VALOTech/apps/web/src/messages:signIn.submit",
+      "VALOTech/apps/web/src/messages:forgot.backToSignIn",
+      "VALOTech/apps/web/src/messages:sessions.endEverywhere"
+    ]
+  },
+  {
+    "concept": "privacy — the concept, and the notice that documents it",
+    "preferred": [
+      "privacy",
+      "privacy notice"
+    ],
+    "forbidden": [],
+    "basis": "ratified",
+    "sources": [
+      "VALOTech/assets/i18n.js:foot.privacy",
+      "VALOTech/assets/legal-i18n.js:lp.title",
+      "VALOTech/assets/legal-i18n.js:lc.hallBody"
+    ]
+  },
+  {
+    "concept": "investor hall — VALO Tech's signed-in surface, everything behind the sign-in",
+    "preferred": [
+      "investor hall"
+    ],
+    "forbidden": [],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/apps/web/src/messages:hall.title",
+      "VALOTech/apps/web/src/messages:invitationMail.subject",
+      "VALOTech/assets/legal-i18n.js:lp.hallTitle"
+    ]
+  }
+]

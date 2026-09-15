@@ -1,0 +1,177 @@
+[
+  {
+    "concept": "cookie — the browser storage mechanism, in UI labels and legal pages",
+    "preferred": [
+      "কুকি"
+    ],
+    "forbidden": [
+      "Cookie"
+    ],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/assets/i18n.js:foot.cookies",
+      "VALOTech/assets/legal-i18n.js:lc.sessionWhat",
+      "VALOTech/assets/legal-i18n.js:lc.title",
+      "Amavo/apps/web/src/messages/bn.json:footer.links.cookies",
+      "Shimmra/apps/web/messages/bn.json:footer.cookies",
+      "VALOPocket/apps/web/app/i18n/messages/bn.json:legal.cookies.title"
+    ]
+  },
+  {
+    "concept": "AI — artificial intelligence, as the product category and the workforce it names",
+    "preferred": [
+      "AI"
+    ],
+    "forbidden": [],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/assets/i18n.js:people.h.r",
+      "VALOTech/assets/i18n.js:deliver.s2t",
+      "Amavo/apps/web/src/messages/bn.json:console.sections.ai",
+      "Shimmra/apps/mobile/lib/core/localization/arb/app_bn.arb:timelineAiGenerated",
+      "VALOPocket/apps/web/app/i18n/messages/bn.json:console.surface.ai_model_mode"
+    ]
+  },
+  {
+    "concept": "session — a signed-in session, listed to the member and endable by them",
+    "preferred": [
+      "সেশন"
+    ],
+    "forbidden": [
+      "session"
+    ],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/assets/i18n.js:cap.7a",
+      "VALOTech/assets/legal-i18n.js:lc.sessionWhat",
+      "VALOTech/assets/legal-i18n.js:lc.clearBody",
+      "Amavo/apps/web/src/messages/bn.json:console.events.errors.unauthenticated",
+      "Shimmra/apps/mobile/lib/core/localization/arb/app_bn.arb:liveRoomSessionLabel",
+      "VALOPocket/apps/api/pkg/i18n/messages/bn.json:error.sessionExpired"
+    ]
+  },
+  {
+    "concept": "browser — the web browser the member is reading in",
+    "preferred": [
+      "ব্রাউজার"
+    ],
+    "forbidden": [
+      "browser"
+    ],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/assets/legal-i18n.js:lp.storedTitle",
+      "VALOTech/assets/legal-i18n.js:lc.title",
+      "VALOTech/apps/web/src/messages/bn.json:sessions.intro",
+      "Amavo/apps/mobile/lib/core/localization/arb/app_bn.arb:privacyNoticeLinkHint",
+      "VALOPocket/apps/web/app/i18n/messages/bn.json:legal.cookies.p3b"
+    ]
+  },
+  {
+    "concept": "email — an email address, as a form label and in prose",
+    "preferred": [
+      "ইমেল"
+    ],
+    "forbidden": [
+      "ই-মেইল",
+      "email"
+    ],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/apps/web/src/messages/bn.json:account.identity.email",
+      "Amavo/apps/api/pkg/i18n/messages/bn.json:canned_reply.account.password_reset",
+      "Shimmra/apps/web/messages/bn.json:login.emailLabel",
+      "VALOPocket/apps/mobile/lib/core/localization/arb/app_bn.arb:notificationChannelEmail"
+    ]
+  },
+  {
+    "concept": "account — the member record a person signs in to",
+    "preferred": [
+      "অ্যাকাউন্ট"
+    ],
+    "forbidden": [
+      "account"
+    ],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/assets/legal-i18n.js:lp.hallTitle",
+      "VALOTech/assets/legal-i18n.js:lc.hallBody",
+      "VALOTech/apps/web/src/messages/bn.json:hall.nav.account",
+      "Amavo/apps/api/pkg/i18n/messages/bn.json:notice.account_update.title",
+      "Shimmra/apps/mobile/lib/core/localization/arb/app_bn.arb:settingsDataErasureConfirmAction",
+      "VALOPocket/apps/api/pkg/i18n/messages/bn.json:doc.statement.title"
+    ]
+  },
+  {
+    "concept": "password — the secret a member signs in with",
+    "preferred": [
+      "পাসওয়ার্ড"
+    ],
+    "forbidden": [
+      "password"
+    ],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/assets/i18n.js:inv.pw",
+      "VALOTech/assets/i18n.js:inv.error",
+      "VALOTech/apps/web/src/messages/bn.json:signIn.password",
+      "Amavo/apps/api/pkg/i18n/messages/bn.json:canned_reply.account.password_reset",
+      "Shimmra/apps/web/messages/bn.json:console.stepUp.passwordLabel",
+      "VALOPocket/apps/api/pkg/i18n/messages/bn.json:doc.disclosure.risk_warning.body"
+    ]
+  },
+  {
+    "concept": "sign in — the act of authenticating, as a button label and in prose",
+    "preferred": [
+      "সাইন ইন"
+    ],
+    "forbidden": [
+      "লগইন",
+      "sign in"
+    ],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/assets/legal-i18n.js:lc.sessionWhen",
+      "VALOTech/assets/legal-i18n.js:lc.hallBody",
+      "VALOTech/apps/web/src/messages/bn.json:mailPreference.signIn",
+      "Amavo/apps/mobile/lib/core/localization/arb/app_bn.arb:landingSignIn",
+      "Shimmra/apps/api/pkg/i18n/messages/bn.json:error.unauthorized",
+      "VALOPocket/apps/api/pkg/i18n/messages/bn.json:idp.consent.title"
+    ]
+  },
+  {
+    "concept": "privacy — privacy as a policy subject and a page title",
+    "preferred": [
+      "গোপনীয়তা"
+    ],
+    "forbidden": [
+      "privacy"
+    ],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/assets/i18n.js:foot.privacy",
+      "VALOTech/assets/legal-i18n.js:lp.title",
+      "VALOTech/assets/legal-i18n.js:lc.hallBody",
+      "Amavo/apps/mobile/lib/core/localization/arb/app_bn.arb:settingsPrivacy",
+      "Shimmra/apps/mobile/lib/core/localization/arb/app_bn.arb:settingsPrivacySectionTitle",
+      "VALOPocket/apps/mobile/lib/core/localization/arb/app_bn.arb:accountPrivacyChoices"
+    ]
+  },
+  {
+    "concept": "investor hall — VALO Tech's gated investor-relations area",
+    "preferred": [
+      "বিনিয়োগকারী সভাকক্ষ"
+    ],
+    "forbidden": [
+      "হলঘর",
+      "investor hall"
+    ],
+    "basis": "ratified",
+    "sources": [
+      "VALOTech/apps/web/src/messages/bn.json:hall.title",
+      "VALOTech/apps/web/src/messages/bn.json:registrationMail.subject",
+      "VALOTech/apps/web/src/messages/bn.json:invitationMail.subject",
+      "VALOTech/apps/web/src/messages/bn.json:setPassword.intro"
+    ]
+  }
+]

@@ -1,0 +1,157 @@
+[
+  {
+    "concept": "cookie — the browser storage mechanism, in UI labels and legal pages",
+    "preferred": [
+      "Cookie"
+    ],
+    "forbidden": [],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/assets/i18n.js:foot.cookies",
+      "VALOAds/apps/web/src/messages/vi.json:marketing.footer.legal.cookies",
+      "VALOPocket/apps/web/app/i18n/messages/vi.json:legal.cookies.title",
+      "Shimmra/apps/web/messages/vi.json:footer.cookies"
+    ]
+  },
+  {
+    "concept": "AI — artificial intelligence, as a product and capability label",
+    "preferred": [
+      "AI"
+    ],
+    "forbidden": [],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/assets/i18n.js:people.h.r",
+      "VALOAds/apps/web/src/messages/vi.json:admin.aiModelsTitle",
+      "VALOPocket/apps/web/app/i18n/messages/vi.json:console.surface.ai_model_mode",
+      "Shimmra/apps/mobile/lib/core/localization/arb/app_vi.arb:timelineAiGenerated"
+    ]
+  },
+  {
+    "concept": "session — an authenticated period of use, listed and revocable by the account holder",
+    "preferred": [
+      "phiên",
+      "phiên đăng nhập"
+    ],
+    "forbidden": [
+      "Session",
+      "phiên làm việc"
+    ],
+    "basis": "ratified",
+    "sources": [
+      "VALOTech/apps/web/src/messages/vi.json:sessions.title",
+      "VALOAds/apps/mobile/lib/core/localization/arb/app_vi.arb:sessions",
+      "VALOPocket/apps/mobile/lib/core/localization/arb/app_vi.arb:sessionExpiredTitle",
+      "Shimmra/apps/web/messages/vi.json:moderation.columns.session"
+    ]
+  },
+  {
+    "concept": "browser — the web browser the reader is using",
+    "preferred": [
+      "trình duyệt"
+    ],
+    "forbidden": [
+      "Browser"
+    ],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/assets/legal-i18n.js:lp.storedTitle",
+      "VALOAds/apps/web/src/messages/vi.json:advertiser.bidModifiersPage.dimension_browser",
+      "VALOPocket/apps/web/app/i18n/messages/vi.json:legal.cookies.p3b",
+      "Amavo/apps/mobile/lib/core/localization/arb/app_vi.arb:privacyNoticeLinkHint"
+    ]
+  },
+  {
+    "concept": "email — the address a person signs in with, and electronic mail generally",
+    "preferred": [
+      "email"
+    ],
+    "forbidden": [],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/apps/web/src/messages/vi.json:account.identity.email",
+      "VALOAds/apps/web/src/messages/vi.json:legal.dsaNotice.submitterEmailLabel",
+      "VALOPocket/apps/web/app/i18n/messages/vi.json:cta.email",
+      "Shimmra/apps/web/messages/vi.json:login.error"
+    ]
+  },
+  {
+    "concept": "account — the record a person signs in to, and its state",
+    "preferred": [
+      "tài khoản"
+    ],
+    "forbidden": [
+      "Account"
+    ],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/apps/web/src/messages/vi.json:hall.nav.account",
+      "VALOAds/apps/api/pkg/i18n/messages/vi.json:notification.category.account",
+      "VALOPocket/apps/mobile/lib/core/localization/arb/app_vi.arb:accountTitle",
+      "Shimmra/apps/web/messages/vi.json:accounts.lookup.idLabel"
+    ]
+  },
+  {
+    "concept": "password — the secret a person signs in with",
+    "preferred": [
+      "mật khẩu"
+    ],
+    "forbidden": [
+      "Password"
+    ],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/apps/web/src/messages/vi.json:signIn.password",
+      "VALOAds/apps/mobile/lib/core/localization/arb/app_vi.arb:password",
+      "VALOPocket/apps/mobile/lib/core/localization/arb/app_vi.arb:registerPhoneStepBody",
+      "Shimmra/apps/web/messages/vi.json:console.stepUp.passwordLabel"
+    ]
+  },
+  {
+    "concept": "sign in — the act of authenticating, as button label and as prose verb",
+    "preferred": [
+      "đăng nhập"
+    ],
+    "forbidden": [
+      "Sign in"
+    ],
+    "basis": "harvested",
+    "sources": [
+      "VALOTech/apps/web/src/messages/vi.json:mailPreference.signIn",
+      "VALOAds/apps/mobile/lib/core/localization/arb/app_vi.arb:signIn",
+      "VALOPocket/apps/mobile/lib/core/localization/arb/app_vi.arb:loginSubmit",
+      "Shimmra/apps/mobile/lib/core/localization/arb/app_vi.arb:loginTitle"
+    ]
+  },
+  {
+    "concept": "privacy — the data-protection subject area and the page that states it",
+    "preferred": [
+      "quyền riêng tư"
+    ],
+    "forbidden": [
+      "Privacy"
+    ],
+    "basis": "ratified",
+    "sources": [
+      "VALOTech/assets/i18n.js:foot.privacy",
+      "VALOAds/apps/mobile/lib/core/localization/arb/app_vi.arb:privacy",
+      "VALOPocket/apps/web/app/i18n/messages/vi.json:foot.privacy",
+      "Shimmra/apps/mobile/lib/core/localization/arb/app_vi.arb:settingsPrivacySectionTitle"
+    ]
+  },
+  {
+    "concept": "investor hall — VALO Tech's signed-in surface where the company publishes its reporting to investors",
+    "preferred": [
+      "Sảnh nhà đầu tư"
+    ],
+    "forbidden": [
+      "khu vực nhà đầu tư"
+    ],
+    "basis": "ratified",
+    "sources": [
+      "VALOTech/apps/web/src/messages/vi.json:hall.title",
+      "VALOTech/apps/web/src/messages/vi.json:signIn.intro",
+      "VALOTech/apps/web/src/messages/vi.json:invitationMail.subject"
+    ]
+  }
+]
