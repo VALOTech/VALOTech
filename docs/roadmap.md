@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_322 tasks in the plan, 262 closed, 60 outstanding._
+_326 tasks in the plan, 265 closed, 61 outstanding._
 
 ---
 
@@ -77,7 +77,7 @@ _74/75 closed (98%) · 1 outstanding — 0 buildable now · 1 waiting on the own
 
 _The three content types, and the compliance posture that governs what is held about the people reading them. Updates come before decks, and not only because they are the simpler shape of the same problem: they are what the hall is for. An investor signs in to find out what has happened since they last looked._
 
-_57/63 closed (90%) · 6 outstanding — 1 buildable now · 1 waiting on the owner · 3 external residue · 1 parked to a later wave._
+_60/67 closed (89%) · 7 outstanding — 1 buildable now · 1 waiting on the owner · 3 external residue · 2 parked to a later wave._
 
 - **DECK-001** · Deck authoring — 6/6 closed
 - **LEGAL-SG-001** · PDPA posture — 5/8 closed · depth 7
@@ -88,6 +88,9 @@ _57/63 closed (90%) · 6 outstanding — 1 buildable now · 1 waiting on the own
 - **MAIL-001** · Investor mail — 8/8 closed
 - **POST-001** · Update authoring — 6/6 closed
 - **RPT-001** · Investor report authoring — 5/5 closed
+- **AUTH-005** · Registration for people considering an investment — 3/4 closed · depth 8
+  - `[!] AUTH-005/T3` — The form on the gateway, in twenty locales, operable by keyboard  · _cross-wave-parked_ · **Blocked by:** SITE-005/T1 — the gateway is not served by the application, so there is no page that can carry the form.
+
 - **DECK-002** · Deck versioning and publishing — 5/6 closed · depth 8
   - `[!] DECK-002/T3` — An unpinned reader is told once when the version changed, with what changed by section  · _cross-wave-parked_ · **Blocked by:** DECK-003/T1 (the deck reading view) — DECK-002 §3 puts the notice in the reading view itself, where an unpinned reader whose deck has moved is told o…
 

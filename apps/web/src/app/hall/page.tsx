@@ -12,13 +12,14 @@ import { updateStream } from '../../content/stream';
 import { isNarrowed, search } from '../../content/search';
 import { hasOpened, unreadUpdateCount } from '../../content/unread';
 import type { PortfolioStage } from '../../db/types';
-import { standing } from '../../portfolio/board';
+import type { Standing } from '../../portfolio/standing';
 import { PRODUCT_LABEL } from '../../portfolio/labels';
 
 import { log } from '../../ops/logger';
 
 import { block } from './block';
 import { narrowest, readHallQuery, withoutNarrowing } from './query';
+import { progressBoardFor } from './reader';
 import styles from './hall.module.css';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -50,12 +51,15 @@ const STAGE_KEY: Readonly<Record<PortfolioStage, string>> = {
  * §3): what is new, where things stand, the current report, and the decks they
  * hold. The progress board sits above the report deliberately — the board is a
  * state a reader absorbs in ten seconds and the report is twenty minutes they
- * may not have now.
+ * may not have now — and a reader still deciding is composed a page without it
+ * (`AUTH-005/T4`), which is the order and weight `INV-DEC-02` reserves to the
+ * reader's type and the whole of what that type decides here.
  *
  * **Every read takes the reader** (`DATA-R05`), and the gate is the server's
  * (`SEC-R01`): `requireInvestorPage` answers an actor or the page never renders.
- * The five reads are issued together because none depends on another's result,
- * so the landing costs one round trip's latency rather than five.
+ * Four of the five reads are issued together because none depends on another's
+ * result; the board's waits on the reader's type, because a block this reader is
+ * not shown is a block their page does not fetch.
  *
  * **Each of the four says its own absence in its own words** (`INV-001` §3). A
  * first-time investor's hall is legitimately near-empty, and a blank area is
@@ -144,6 +148,15 @@ export default async function HallPage({
   }
 
 
+  // The board is the one block whose read waits on something, and what it waits
+  // on is the reader's type rather than another block's data (`AUTH-005/T4`). A
+  // reader recorded as still deciding is not shown the board at all, so their
+  // page does not fetch it: a row read for somebody who must not see it is the
+  // shape that becomes a disclosure the first time a value is handed to a client
+  // component. The other four start now and are unaffected, so the landing still
+  // costs one round trip's latency for everything except this.
+  const board = progressBoardFor(actor.id);
+
   // The dictionary and the formatter are not settled with the rest: a block
   // that cannot be read has words to say so, and a page that cannot read its
   // words has nothing to render at all.
@@ -151,7 +164,7 @@ export default async function HallPage({
     Promise.allSettled([
       unreadUpdateCount(actor),
       updateStream(actor),
-      standing(),
+      board,
       currentReport(actor),
       grantedDecksForAccount(actor.id),
     ]),
@@ -161,7 +174,16 @@ export default async function HallPage({
 
   const unread = block(reads[0], 'unread');
   const stream = block(reads[1], 'stream');
-  const board = block(reads[2], 'standing');
+  const standings = block(reads[2], 'standing');
+
+  // `null` inside a fulfilled read is the reader who is not shown the board at
+  // all, which is a different fact from a read that failed and is rendered
+  // differently: the first is silent, the second says so. A failure shows the
+  // heading and the failure sentence and never a stage or a headline, so the
+  // block that could not decide discloses nothing either way.
+  const boardIsForThisReader = !standings.ok || standings.value !== null;
+  const boardRows: readonly Standing[] =
+    standings.ok && standings.value !== null ? standings.value : [];
   const report = block(reads[3], 'report');
   const decks = block(reads[4], 'decks');
 
@@ -243,39 +265,50 @@ export default async function HallPage({
         )}
       </section>
 
-      {/* 2. Where things stand — the board, and the page's centre of gravity.
-          Six cards rather than six rows, because a product is an object a
-          reader compares against the others and a row is a line they scan past.
-          All six always render, and a product nobody has written a row for says
-          so rather than showing this module's assumption as a statement
-          (`INV-003/T4`). The stage is a word in a neutral pill and never a hue:
-          the brand's one accent marks the interactive and the current, and a
-          stage is neither (`INV-003/T5`, `A11Y-R03`). */}
-      <section aria-labelledby="hall-standing">
-        <h2 id="hall-standing" className={styles.eyebrow}>
-          {t('standing.heading')}
-        </h2>
-        {!board.ok ? <div className={styles.panel}>{failed}</div> : null}
-        {board.ok && board.value.every((entry) => !entry.set) ? (
-          <p className={`${styles.panel} ${styles.empty}`}>{t('standing.empty')}</p>
-        ) : null}
-        <ul className={styles.board}>
-          {(board.ok ? board.value : []).map((entry) => (
-            <li key={entry.product} className={`${styles.panel} ${styles.product}`}>
-              <div className={styles.productHead}>
-                <span className={styles.productName}>{PRODUCT_LABEL[entry.product]}</span>
-                <span className={`${styles.stage}${entry.set ? '' : ` ${styles.stageUnset}`}`}>
-                  {t(STAGE_KEY[entry.stage])}
+      {/* 2. Where things stand — the board, and the page's centre of gravity for
+          a reader who has invested. Six cards rather than six rows, because a
+          product is an object a reader compares against the others and a row is
+          a line they scan past. All six always render, and a product nobody has
+          written a row for says so rather than showing this module's assumption
+          as a statement (`INV-003/T4`). The stage is a word in a neutral pill and
+          never a hue: the brand's one accent marks the interactive and the
+          current, and a stage is neither (`INV-003/T5`, `A11Y-R03`).
+
+          A reader still deciding does not get this block, and its absence is
+          silent — no heading, no empty state (`AUTH-005/T4`). The board carries a
+          stage and a headline per product that the gateway does not publish, so
+          showing it to anybody who can type an address would make it public by a
+          side door without anybody deciding it should be. That is weight set to
+          nothing, which is what `INV-DEC-02` reserves to the type; which
+          documents any reader may open is still `CMS-006`'s alone and is not
+          consulted here. */}
+      {boardIsForThisReader ? (
+        <section aria-labelledby="hall-standing">
+          <h2 id="hall-standing" className={styles.eyebrow}>
+            {t('standing.heading')}
+          </h2>
+          {!standings.ok ? <div className={styles.panel}>{failed}</div> : null}
+          {standings.ok && boardRows.every((entry) => !entry.set) ? (
+            <p className={`${styles.panel} ${styles.empty}`}>{t('standing.empty')}</p>
+          ) : null}
+          <ul className={styles.board}>
+            {boardRows.map((entry) => (
+              <li key={entry.product} className={`${styles.panel} ${styles.product}`}>
+                <div className={styles.productHead}>
+                  <span className={styles.productName}>{PRODUCT_LABEL[entry.product]}</span>
+                  <span className={`${styles.stage}${entry.set ? '' : ` ${styles.stageUnset}`}`}>
+                    {t(STAGE_KEY[entry.stage])}
+                  </span>
+                </div>
+                <span className={styles.meta}>
+                  {entry.set && entry.changedAt !== null ? day(entry.changedAt) : t('standing.unset')}
                 </span>
-              </div>
-              <span className={styles.meta}>
-                {entry.set && entry.changedAt !== null ? day(entry.changedAt) : t('standing.unset')}
-              </span>
-              {entry.headline === null ? null : <p className={styles.headline}>{entry.headline}</p>}
-            </li>
-          ))}
-        </ul>
-      </section>
+                {entry.headline === null ? null : <p className={styles.headline}>{entry.headline}</p>}
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
 
       {/* 3. The current report — one card and not the document. It is the most
           recent period this reader may read rather than the most recent
