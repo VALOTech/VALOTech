@@ -82,6 +82,23 @@
     "ignore": "Nếu đó không phải là bạn, mật khẩu của bạn không thay đổi và bạn không cần làm gì cả.",
     "signature": "VALO Tech"
   },
+  "registrationMail": {
+    "subject": "Quyền truy cập sảnh nhà đầu tư VALO Tech của bạn",
+    "greeting": "Chào {name},",
+    "intro": "Có người đã yêu cầu quyền truy cập sảnh nhà đầu tư VALO Tech bằng địa chỉ này. Mở liên kết bên dưới vừa là chọn mật khẩu, vừa xác nhận địa chỉ này là của bạn.",
+    "action": "Mở liên kết này để chọn mật khẩu và đăng nhập:",
+    "expiry": "Liên kết chỉ dùng được một lần và sẽ hết hiệu lực sau {days, plural, other {# ngày}}.",
+    "ignore": "Nếu bạn không yêu cầu điều này, bạn có thể bỏ qua thư này. Không có gì xảy ra cho đến khi liên kết được mở.",
+    "signature": "VALO Tech"
+  },
+  "registrationExistsMail": {
+    "subject": "Bạn đã có tài khoản VALO Tech",
+    "greeting": "Chào {name},",
+    "intro": "Có người đã yêu cầu quyền truy cập sảnh nhà đầu tư VALO Tech bằng địa chỉ này, và đã có một tài khoản dùng địa chỉ đó. Không có tài khoản thứ hai nào được tạo.",
+    "action": "Mở liên kết này để đăng nhập. Nếu bạn quên mật khẩu, trang đó có liên kết để chọn mật khẩu mới:",
+    "ignore": "Nếu đó không phải là bạn, không có gì thay đổi và bạn không cần làm gì cả.",
+    "signature": "VALO Tech"
+  },
   "forgot": {
     "title": "Đặt lại mật khẩu của bạn",
     "intro": "Nhập địa chỉ email của bạn. Nếu có tài khoản dùng địa chỉ đó, một liên kết để chọn mật khẩu mới sẽ được gửi tới đó.",

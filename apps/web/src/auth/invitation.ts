@@ -41,6 +41,8 @@ import type { Locale } from '../i18n/locales';
 import {
   deliverByPort,
   invitationMessage,
+  registrationExistsMessage,
+  registrationMessage,
   resetMessage,
   type Addressee,
   type Deliver,
@@ -500,6 +502,15 @@ function resetLink(token: string): string {
 }
 
 /**
+ * Where somebody who already holds an account is pointed. It carries no token
+ * and grants nothing: it is the page they would have reached by typing the
+ * address of the hall.
+ */
+function signInLink(): string {
+  return `${getConfig().app.origin}/sign-in`;
+}
+
+/**
  * Create an `invited` account and the invitation that lets that person set
  * their own password. The only way an account comes to exist: there is no
  * self-registration, and no admin sets a password on somebody else's behalf.
@@ -853,6 +864,178 @@ export async function requestReset(
       }
 
       return deliver(person, await resetMessage(person, resetLink(token)));
+    },
+  };
+}
+
+/**
+ * The person opening the door from the outside (`AUTH-005/T1`).
+ *
+ * A name and an address, because a person deciding whether to invest should not
+ * have to hand over more than a person who was invited (`DATA-R01`). The locale
+ * is not a third question: it is the language the page they registered on was
+ * being served in, which the route already resolved and which decides nothing
+ * except which catalogue their message is composed from.
+ */
+export interface Registrant {
+  readonly name: string;
+  readonly email: string;
+  readonly locale: Locale | null;
+}
+
+/**
+ * The message a registration leaves to be sent, handed back rather than sent —
+ * the shape `ResetDelivery` takes and for the same reason.
+ *
+ * Handing a message to a mail server is a network round trip against the low
+ * milliseconds the statements below cost, so a request that waited for it would
+ * answer slowly for one address and quickly for the other. Which message is sent
+ * is decided inside `send`, after the answer has already gone, so the route takes
+ * no branch the database's answer decides.
+ *
+ * `null` means nothing was sent because the address resolved to no account,
+ * which only a row deleted between the write and the send can produce.
+ */
+export interface RegistrationDelivery {
+  readonly send: (deliver?: Deliver) => Promise<TransactionalOutcome | null>;
+}
+
+/**
+ * The id the invitation insert narrows to when no account was created.
+ *
+ * `accounts.id` is `gen_random_uuid()`, a version-4 value whose version and
+ * variant bits are never all zero, so no row can hold this. It is paired with
+ * the address in the same `WHERE` regardless, so even a row that somehow held it
+ * could not be reached by an address it does not carry.
+ */
+const NO_ACCOUNT = '00000000-0000-0000-0000-000000000000';
+
+/**
+ * Register somebody who has not been invited. Answers the same for an address an
+ * account holds and one it does not (`SEC-R03`, `AUTH-005/T2`).
+ *
+ * **The row is the row an invitation writes.** Same table, same `role`, same
+ * `invited` state left to the column default, same single-use token from the same
+ * `invitations` table — the one difference is `investor_type`, set to `prospect`,
+ * which records how this person arrived and, by `INV-DEC-02`, decides nothing
+ * about what they may read. A second account state or a second token kind would
+ * be a second mechanism to keep single-use right in, and the second one is the
+ * one that goes stale.
+ *
+ * **An address that already holds an account is not written to, and nothing is
+ * minted for it.** Re-issuing would be worse than useless in both directions it
+ * could go: for an `active` account it is a self-service password reset for
+ * anybody who knows an address, and for an `invited` one it destroys the link
+ * that person is waiting on — the denial of access `requestReset` closes by
+ * narrowing to `active` ([`AUTH-DEC-04`](../../../../docs/decisions-log.md)), left
+ * open here for an anonymous caller to aim at a named investor. What that address
+ * gets instead is a message saying an account already uses it.
+ *
+ * **The same statements run whatever the address is.** The token and its hash
+ * are minted before the transaction, so the CSPRNG read and the SHA-256 are paid
+ * for either way; the address lock is the address's rather than a row's, so both
+ * answers cost the same wait under concurrency; the account insert is one
+ * statement that writes a row or does not; and the invitation insert is an
+ * `INSERT … SELECT` narrowed to the row that insert returned, so it runs in both
+ * cases and simply matches nothing in one of them. A lookup followed by a
+ * conditional insert would put the existence test in this process, where it
+ * becomes a branch, and a branch is what a timing measurement reads.
+ *
+ * What remains unequal is what the database writes — two rows in one case and
+ * none in the other — which is the residual `requestReset` carries for the same
+ * reason, and which the route's per-address and per-network-address limiters
+ * bound: a difference too small to read in one request must also be too
+ * expensive to average over many.
+ *
+ * **No audit row.** The trail holds one account reaching into another's access
+ * (`SEC-R04`), and a person asking for their own is neither privileged nor
+ * anybody else's — the same reason a self-service reset is unaudited
+ * (`ADMIN-DEC-03`). A row here would also be one written only when the address
+ * was free, which is the existence oracle moved into the trail. How the person
+ * arrived is on the account row, as `investor_type`, where an admin reading the
+ * list sees it.
+ */
+export async function registerAccount(person: Registrant): Promise<RegistrationDelivery> {
+  const address = normaliseAddress(person.email);
+  const name = person.name.trim();
+
+  // Refused for its length alone, which the sender already knows and which
+  // distinguishes no account: `AUTH-001` turns the same length away at the door,
+  // so no account that could ever sign in holds it. The same shape is returned
+  // as every other path, carrying nothing to send, so a caller that had to tell
+  // this case apart would be a caller with a branch.
+  if (address.length === 0 || address.length > MAX_EMAIL_LENGTH) {
+    return { send: async () => null };
+  }
+
+  const token = randomBytes(TOKEN_BYTES).toString('base64url');
+  const tokenHash = hashOf(token);
+
+  const registered = await getDb()
+    .transaction()
+    .execute(async (trx) => {
+      await lockAddress(trx, address);
+
+      // DO NOTHING rather than a caught unique violation, for `inviteAccount`'s
+      // reason: the conflict is an ordinary answer to an ordinary request. DO
+      // UPDATE would be the dangerous spelling — it would let an anonymous post
+      // overwrite the name and locale of an account somebody else holds.
+      //
+      // `state` and `password_hash` are left to the column defaults, so this
+      // insert produces exactly the row an invitation produces and neither value
+      // is stated twice against the migration that owns it.
+      const created = await trx
+        .insertInto('accounts')
+        .values({
+          email: address,
+          name,
+          role: 'investor',
+          locale: person.locale,
+          investor_type: 'prospect',
+        })
+        .onConflict((oc) => oc.column('email').doNothing())
+        .returning('id')
+        .executeTakeFirst();
+
+      await trx
+        .insertInto('invitations')
+        .columns(['account_id', 'token_hash', 'expires_at'])
+        .expression((eb) =>
+          eb
+            .selectFrom('accounts')
+            .select((inner) => [
+              'accounts.id',
+              inner.val(tokenHash).as('token_hash'),
+              expiresIn(INVITATION_TTL_SECONDS).as('expires_at'),
+            ])
+            .where('accounts.email', '=', address)
+            .where('accounts.id', '=', created?.id ?? NO_ACCOUNT),
+        )
+        .execute();
+
+      return created !== undefined;
+    });
+
+  return {
+    send: async (deliver: Deliver = deliverByPort): Promise<TransactionalOutcome | null> => {
+      const addressee = await getDb()
+        .selectFrom('accounts')
+        .select(['id', 'email', 'name', 'locale'])
+        .where('email', '=', address)
+        .executeTakeFirst();
+
+      if (addressee === undefined) {
+        return null;
+      }
+
+      // The existing account's own language, not the registrant's: the person
+      // this reaches is whoever holds the mailbox, and they were written to in
+      // one language already.
+      const message = registered
+        ? await registrationMessage(addressee, inviteLink(token))
+        : await registrationExistsMessage(addressee, signInLink());
+
+      return deliver(addressee, message);
     },
   };
 }

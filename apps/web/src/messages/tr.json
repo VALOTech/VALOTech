@@ -82,6 +82,23 @@
     "ignore": "Bu siz değilseniz parolanız değişmedi ve yapmanız gereken bir şey yok.",
     "signature": "VALO Tech"
   },
+  "registrationMail": {
+    "subject": "VALO Tech yatırımcı salonuna erişiminiz",
+    "greeting": "Merhaba {name},",
+    "intro": "Birisi bu adresle VALO Tech yatırımcı salonuna erişim istedi. Aşağıdaki bağlantıyı açmak hem parolanızı belirler hem de adresin size ait olduğunu doğrular.",
+    "action": "Parola belirlemek ve oturum açmak için bu bağlantıyı açın:",
+    "expiry": "Bağlantı yalnızca bir kez kullanılabilir ve {days, plural, one {# gün} other {# gün}} sonra çalışmayı durdurur.",
+    "ignore": "Bunu siz istemediyseniz bu iletiyi yok sayabilirsiniz. Bağlantı açılana kadar hiçbir şey olmaz.",
+    "signature": "VALO Tech"
+  },
+  "registrationExistsMail": {
+    "subject": "Zaten bir VALO Tech hesabınız var",
+    "greeting": "Merhaba {name},",
+    "intro": "Birisi bu adresle VALO Tech yatırımcı salonuna erişim istedi; bu adresi kullanan bir hesap zaten var. İkinci bir hesap oluşturulmadı.",
+    "action": "Oturum açmak için bu bağlantıyı açın. Parolanızı unuttuysanız, o sayfada yeni bir parola belirlemek için bir bağlantı var:",
+    "ignore": "Bu siz değilseniz hiçbir şey değişmedi ve yapmanız gereken bir şey yok.",
+    "signature": "VALO Tech"
+  },
   "forgot": {
     "title": "Parolanızı sıfırlayın",
     "intro": "E-posta adresinizi girin. Bir hesap bu adresi kullanıyorsa, yeni parola belirlemek için oraya bir bağlantı gönderilir.",

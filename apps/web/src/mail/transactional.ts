@@ -109,10 +109,16 @@ function localeOf(addressee: Addressee): Locale {
  * broken across two lines by a greeting run together with it is a link that does
  * not work, and this is the one line in the message that has to.
  */
-function body(t: Translator, name: string, intro: MessageValues, link: string, expiry: string): string {
-  return [t('greeting', { name }), t('intro', intro), t('action'), link, expiry, t('ignore'), t('signature')].join(
-    '\n\n',
-  );
+function body(
+  t: Translator,
+  name: string,
+  intro: MessageValues,
+  link: string,
+  expiry: string | null,
+): string {
+  const paragraphs = [t('greeting', { name }), t('intro', intro), t('action'), link, expiry, t('ignore'), t('signature')];
+
+  return paragraphs.filter((paragraph): paragraph is string => paragraph !== null).join('\n\n');
 }
 
 /** The invitation: who invited them, what the link does, and when it stops working. */
@@ -124,6 +130,54 @@ export async function invitationMessage(
   const t = await translatorFor(localeOf(addressee), 'invitationMail');
 
   return compose(t('subject'), body(t, addressee.name, { inviter }, link, t('expiry', { days: INVITATION_DAYS })));
+}
+
+/**
+ * The registration: that they asked for their own access, and the link that both
+ * sets a password and settles that the address is theirs (`AUTH-005/T1`).
+ *
+ * Its own namespace rather than the invitation's, because the invitation's first
+ * sentence names the person who sent it and this message has nobody to name. A
+ * shared namespace would need that name to become optional, and an optional name
+ * in a sentence is a sentence with two readings in twenty languages.
+ *
+ * Transactional for the same reason the other two are: it is the message without
+ * which the person cannot reach the account they just asked for, so `MAIL-002`'s
+ * suppression list is not consulted (`MAIL-002/T3`).
+ */
+export async function registrationMessage(addressee: Addressee, link: string): Promise<ComposedMessage> {
+  const t = await translatorFor(localeOf(addressee), 'registrationMail');
+
+  return compose(t('subject'), body(t, addressee.name, {}, link, t('expiry', { days: INVITATION_DAYS })));
+}
+
+/**
+ * The answer to a registration for an address an account already holds: that one
+ * does, that no second was made, and the way in (`AUTH-005/T2`).
+ *
+ * **This message is what lets the form answer identically either way.** The
+ * screen cannot say whether the address was known without becoming the
+ * membership test `SEC-R03` refuses, so the difference is moved into a mailbox
+ * only the address's own holder can open. Somebody probing addresses learns
+ * nothing; the person who actually typed theirs is told what happened.
+ *
+ * It carries the sign-in page and no token. A link that set a password would be
+ * a self-service reset for anybody who knows an address, and re-issuing the
+ * invitation an `invited` account is already waiting on would let an anonymous
+ * post destroy the link somebody was sent — the denial of access
+ * `requestReset`'s narrowing closes from the other side.
+ *
+ * It carries no expiry, because nothing in it expires: the sign-in page is where
+ * it was yesterday. `body` drops the paragraph rather than printing an empty
+ * one, so the message reads as written rather than as a template with a hole.
+ */
+export async function registrationExistsMessage(
+  addressee: Addressee,
+  signIn: string,
+): Promise<ComposedMessage> {
+  const t = await translatorFor(localeOf(addressee), 'registrationExistsMail');
+
+  return compose(t('subject'), body(t, addressee.name, {}, signIn, null));
 }
 
 /** The reset: that somebody asked, what to do if it was not them, and the hour it lasts. */

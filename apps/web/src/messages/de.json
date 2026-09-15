@@ -82,6 +82,23 @@
     "ignore": "Wenn Sie das nicht waren, hat sich Ihr Passwort nicht geändert und Sie müssen nichts tun.",
     "signature": "VALO Tech"
   },
+  "registrationMail": {
+    "subject": "Ihr Zugang zum Investorenbereich von VALO Tech",
+    "greeting": "Hallo {name},",
+    "intro": "Jemand hat mit dieser Adresse Zugang zum Investorenbereich von VALO Tech angefordert. Wenn Sie den Link unten öffnen, wählen Sie ein Passwort und bestätigen damit zugleich, dass die Adresse Ihnen gehört.",
+    "action": "Öffnen Sie diesen Link, um ein Passwort zu wählen und sich anzumelden:",
+    "expiry": "Der Link lässt sich einmal verwenden und funktioniert nach {days, plural, one {# Tag} other {# Tagen}} nicht mehr.",
+    "ignore": "Wenn Sie das nicht angefordert haben, können Sie diese Nachricht ignorieren. Es geschieht nichts, bis der Link geöffnet wird.",
+    "signature": "VALO Tech"
+  },
+  "registrationExistsMail": {
+    "subject": "Sie haben bereits ein VALO-Tech-Konto",
+    "greeting": "Hallo {name},",
+    "intro": "Jemand hat mit dieser Adresse Zugang zum Investorenbereich von VALO Tech angefordert, und ein Konto verwendet sie bereits. Ein zweites wurde nicht angelegt.",
+    "action": "Öffnen Sie diesen Link, um sich anzumelden. Wenn Sie Ihr Passwort vergessen haben, finden Sie auf dieser Seite einen Link, um ein neues zu wählen:",
+    "ignore": "Wenn Sie das nicht waren, hat sich nichts geändert und Sie müssen nichts tun.",
+    "signature": "VALO Tech"
+  },
   "forgot": {
     "title": "Passwort zurücksetzen",
     "intro": "Geben Sie Ihre E-Mail-Adresse ein. Wenn ein Konto sie verwendet, wird dorthin ein Link zum Wählen eines neuen Passworts geschickt.",

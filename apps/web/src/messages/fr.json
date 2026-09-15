@@ -82,6 +82,23 @@
     "ignore": "Si ce n’était pas vous, votre mot de passe n’a pas changé et vous n’avez rien à faire.",
     "signature": "VALO Tech"
   },
+  "registrationMail": {
+    "subject": "Votre accès au hall investisseurs de VALO Tech",
+    "greeting": "Bonjour {name},",
+    "intro": "Quelqu’un a demandé l’accès au hall investisseurs de VALO Tech avec cette adresse. Ouvrir le lien ci-dessous choisit votre mot de passe et établit du même coup que l’adresse est la vôtre.",
+    "action": "Ouvrez ce lien pour choisir un mot de passe et vous connecter :",
+    "expiry": "Le lien ne peut servir qu’une fois et cesse de fonctionner au bout de {days, plural, one {# jour} other {# jours}}.",
+    "ignore": "Si vous n’avez rien demandé, vous pouvez ignorer ce message. Rien ne se produit tant que le lien n’est pas ouvert.",
+    "signature": "VALO Tech"
+  },
+  "registrationExistsMail": {
+    "subject": "Vous avez déjà un compte VALO Tech",
+    "greeting": "Bonjour {name},",
+    "intro": "Quelqu’un a demandé l’accès au hall investisseurs de VALO Tech avec cette adresse, et un compte l’utilise déjà. Aucun second compte n’a été créé.",
+    "action": "Ouvrez ce lien pour vous connecter. Si vous avez oublié votre mot de passe, cette page propose un lien pour en choisir un nouveau :",
+    "ignore": "Si ce n’était pas vous, rien n’a changé et vous n’avez rien à faire.",
+    "signature": "VALO Tech"
+  },
   "forgot": {
     "title": "Réinitialisez votre mot de passe",
     "intro": "Saisissez votre adresse e-mail. Si un compte l’utilise, un lien pour choisir un nouveau mot de passe y sera envoyé.",

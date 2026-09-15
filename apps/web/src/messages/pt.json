@@ -82,6 +82,23 @@
     "ignore": "Se não foi você, a sua palavra-passe não mudou e não tem nada a fazer.",
     "signature": "VALO Tech"
   },
+  "registrationMail": {
+    "subject": "O seu acesso ao salão de investidores da VALO Tech",
+    "greeting": "Olá {name},",
+    "intro": "Alguém pediu acesso ao salão de investidores da VALO Tech com este endereço. Abrir a ligação abaixo escolhe a sua palavra-passe e confirma, ao mesmo tempo, que o endereço é seu.",
+    "action": "Abra esta ligação para escolher uma palavra-passe e iniciar sessão:",
+    "expiry": "A ligação só pode ser usada uma vez e deixa de funcionar ao fim de {days, plural, one {# dia} other {# dias}}.",
+    "ignore": "Se não pediu nada, pode ignorar esta mensagem. Nada acontece até a ligação ser aberta.",
+    "signature": "VALO Tech"
+  },
+  "registrationExistsMail": {
+    "subject": "Já tem uma conta na VALO Tech",
+    "greeting": "Olá {name},",
+    "intro": "Alguém pediu acesso ao salão de investidores da VALO Tech com este endereço, e já existe uma conta que o usa. Não foi criada uma segunda conta.",
+    "action": "Abra esta ligação para iniciar sessão. Se se esqueceu da palavra-passe, essa página tem uma ligação para escolher uma nova:",
+    "ignore": "Se não foi você, nada mudou e não tem nada a fazer.",
+    "signature": "VALO Tech"
+  },
   "forgot": {
     "title": "Redefina a sua palavra-passe",
     "intro": "Introduza o seu endereço de e-mail. Se alguma conta o usar, será enviada para lá uma ligação para escolher uma nova palavra-passe.",

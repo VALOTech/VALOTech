@@ -82,6 +82,23 @@
     "ignore": "Kung hindi ikaw iyon, hindi nagbago ang iyong password at wala kang kailangang gawin.",
     "signature": "VALO Tech"
   },
+  "registrationMail": {
+    "subject": "Ang iyong akses sa bulwagan ng mamumuhunan ng VALO Tech",
+    "greeting": "Kumusta {name},",
+    "intro": "May humiling ng akses sa bulwagan ng mamumuhunan ng VALO Tech gamit ang address na ito. Ang pagbubukas ng link sa ibaba ang pipili ng iyong password at magpapatunay na sa iyo ang address na ito.",
+    "action": "Buksan ang link na ito upang pumili ng password at mag-sign in:",
+    "expiry": "Isang beses lang magagamit ang link, at hihinto itong gumana pagkatapos ng {days, plural, other {# araw}}.",
+    "ignore": "Kung hindi mo ito hiniling, maaari mong balewalain ang mensaheng ito. Walang mangyayari hangga't hindi binubuksan ang link.",
+    "signature": "VALO Tech"
+  },
+  "registrationExistsMail": {
+    "subject": "May account ka na sa VALO Tech",
+    "greeting": "Kumusta {name},",
+    "intro": "May humiling ng akses sa bulwagan ng mamumuhunan ng VALO Tech gamit ang address na ito, at may account nang gumagamit nito. Walang pangalawang account na ginawa.",
+    "action": "Buksan ang link na ito upang mag-sign in. Kung nakalimutan mo ang iyong password, may link sa pahinang iyon para pumili ng bago:",
+    "ignore": "Kung hindi ikaw iyon, walang nagbago at wala kang kailangang gawin.",
+    "signature": "VALO Tech"
+  },
   "forgot": {
     "title": "I-reset ang iyong password",
     "intro": "Ilagay ang iyong email address. Kung may account na gumagamit nito, ipapadala doon ang link para pumili ng bagong password.",

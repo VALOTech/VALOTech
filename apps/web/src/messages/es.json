@@ -82,6 +82,23 @@
     "ignore": "Si no fue usted, su contraseña no ha cambiado y no tiene que hacer nada.",
     "signature": "VALO Tech"
   },
+  "registrationMail": {
+    "subject": "Su acceso a la sala de inversores de VALO Tech",
+    "greeting": "Hola {name}:",
+    "intro": "Alguien ha solicitado acceso a la sala de inversores de VALO Tech con esta dirección. Al abrir el enlace de abajo elegirá una contraseña y quedará confirmado que la dirección es suya.",
+    "action": "Abra este enlace para elegir una contraseña e iniciar sesión:",
+    "expiry": "El enlace puede usarse una sola vez y deja de funcionar después de {days, plural, one {# día} other {# días}}.",
+    "ignore": "Si no lo ha solicitado, puede ignorar este mensaje. No ocurre nada hasta que se abre el enlace.",
+    "signature": "VALO Tech"
+  },
+  "registrationExistsMail": {
+    "subject": "Ya tiene una cuenta en VALO Tech",
+    "greeting": "Hola {name}:",
+    "intro": "Alguien ha solicitado acceso a la sala de inversores de VALO Tech con esta dirección, y ya hay una cuenta que la usa. No se ha creado una segunda cuenta.",
+    "action": "Abra este enlace para iniciar sesión. Si ha olvidado su contraseña, esa página tiene un enlace para elegir una nueva:",
+    "ignore": "Si no fue usted, nada ha cambiado y no tiene que hacer nada.",
+    "signature": "VALO Tech"
+  },
   "forgot": {
     "title": "Restablezca su contraseña",
     "intro": "Introduzca su dirección de correo electrónico. Si alguna cuenta la usa, allí se enviará un enlace para elegir una contraseña nueva.",

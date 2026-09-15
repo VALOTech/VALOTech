@@ -82,6 +82,23 @@
     "ignore": "如果这不是您本人，您的密码没有改变，您无需采取任何行动。",
     "signature": "VALO Tech"
   },
+  "registrationMail": {
+    "subject": "您的 VALO Tech 投资人大厅访问权限",
+    "greeting": "{name}，您好：",
+    "intro": "有人使用此邮箱地址申请了 VALO Tech 投资人大厅的访问权限。打开下面的链接即可设置密码，同时确认该地址属于您。",
+    "action": "打开此链接以设置密码并登录：",
+    "expiry": "此链接仅可使用一次，{days, plural, other {# 天}}后失效。",
+    "ignore": "如果这不是您本人的申请，可以忽略此邮件。在链接被打开之前不会发生任何事情。",
+    "signature": "VALO Tech"
+  },
+  "registrationExistsMail": {
+    "subject": "您已拥有 VALO Tech 账户",
+    "greeting": "{name}，您好：",
+    "intro": "有人使用此邮箱地址申请了 VALO Tech 投资人大厅的访问权限，而该地址已有账户。没有创建第二个账户。",
+    "action": "打开此链接登录。如果您忘记了密码，该页面上有设置新密码的链接：",
+    "ignore": "如果这不是您本人，没有任何改变，您无需采取任何行动。",
+    "signature": "VALO Tech"
+  },
   "forgot": {
     "title": "重置您的密码",
     "intro": "请输入您的邮箱地址。如果有账户使用该地址，设置新密码的链接将发送到那里。",

@@ -82,6 +82,23 @@
     "ignore": "Jika itu bukan anda, kata laluan anda tidak berubah dan tiada apa-apa yang perlu anda lakukan.",
     "signature": "VALO Tech"
   },
+  "registrationMail": {
+    "subject": "Akses anda ke dewan pelabur VALO Tech",
+    "greeting": "Helo {name},",
+    "intro": "Seseorang telah meminta akses ke dewan pelabur VALO Tech menggunakan alamat ini. Membuka pautan di bawah sekali gus memilih kata laluan anda dan mengesahkan bahawa alamat ini milik anda.",
+    "action": "Buka pautan ini untuk memilih kata laluan dan log masuk:",
+    "expiry": "Pautan ini hanya boleh digunakan sekali, dan tamat selepas {days, plural, other {# hari}}.",
+    "ignore": "Jika anda tidak meminta ini, anda boleh mengabaikan mesej ini. Tiada apa-apa berlaku sehingga pautan dibuka.",
+    "signature": "VALO Tech"
+  },
+  "registrationExistsMail": {
+    "subject": "Anda sudah mempunyai akaun VALO Tech",
+    "greeting": "Helo {name},",
+    "intro": "Seseorang telah meminta akses ke dewan pelabur VALO Tech menggunakan alamat ini, dan sebuah akaun sudah menggunakannya. Tiada akaun kedua dicipta.",
+    "action": "Buka pautan ini untuk log masuk. Jika anda terlupa kata laluan, halaman itu ada pautan untuk memilih yang baharu:",
+    "ignore": "Jika itu bukan anda, tiada apa-apa berubah dan tiada apa-apa yang perlu anda lakukan.",
+    "signature": "VALO Tech"
+  },
   "forgot": {
     "title": "Tetapkan semula kata laluan anda",
     "intro": "Masukkan alamat e-mel anda. Jika ada akaun yang menggunakannya, pautan untuk memilih kata laluan baharu akan dihantar ke sana.",

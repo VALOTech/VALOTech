@@ -82,6 +82,23 @@
     "ignore": "If that was not you, your password has not changed and there is nothing you need to do.",
     "signature": "VALO Tech"
   },
+  "registrationMail": {
+    "subject": "Your access to the VALO Tech investor hall",
+    "greeting": "Hello {name},",
+    "intro": "Somebody asked for access to the VALO Tech investor hall using this address. Opening the link below chooses a password and settles that the address is yours.",
+    "action": "Open this link to choose a password and sign in:",
+    "expiry": "The link can be used once, and it stops working after {days, plural, one {# day} other {# days}}.",
+    "ignore": "If you did not ask for this, you can ignore this message. Nothing happens until the link is opened.",
+    "signature": "VALO Tech"
+  },
+  "registrationExistsMail": {
+    "subject": "You already have a VALO Tech account",
+    "greeting": "Hello {name},",
+    "intro": "Somebody asked for access to the VALO Tech investor hall using this address, and an account already uses it. No second account was created.",
+    "action": "Open this link to sign in. If you have forgotten your password, that page has a link for choosing a new one:",
+    "ignore": "If that was not you, nothing has changed and there is nothing you need to do.",
+    "signature": "VALO Tech"
+  },
   "forgot": {
     "title": "Reset your password",
     "intro": "Enter your email address. If an account uses it, a link for choosing a new password is sent there.",

@@ -82,6 +82,23 @@
     "ignore": "如果這不是您本人，您的密碼並未改變，您無需採取任何行動。",
     "signature": "VALO Tech"
   },
+  "registrationMail": {
+    "subject": "您的 VALO Tech 投資人大廳存取權限",
+    "greeting": "{name}，您好：",
+    "intro": "有人使用此電子郵件地址申請了 VALO Tech 投資人大廳的存取權限。開啟下方的連結即可設定密碼，同時確認該地址屬於您。",
+    "action": "開啟此連結以設定密碼並登入：",
+    "expiry": "此連結僅可使用一次，{days, plural, other {# 天}}後失效。",
+    "ignore": "如果這不是您本人的申請，可以忽略此郵件。在連結被開啟之前不會發生任何事情。",
+    "signature": "VALO Tech"
+  },
+  "registrationExistsMail": {
+    "subject": "您已擁有 VALO Tech 帳戶",
+    "greeting": "{name}，您好：",
+    "intro": "有人使用此電子郵件地址申請了 VALO Tech 投資人大廳的存取權限，而該地址已有帳戶。並未建立第二個帳戶。",
+    "action": "開啟此連結登入。如果您忘記了密碼，該頁面上有設定新密碼的連結：",
+    "ignore": "如果這不是您本人，沒有任何改變，您無需採取任何行動。",
+    "signature": "VALO Tech"
+  },
   "forgot": {
     "title": "重設您的密碼",
     "intro": "請輸入您的電子郵件地址。如果有帳戶使用該地址，設定新密碼的連結將寄送至該處。",

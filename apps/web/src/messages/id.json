@@ -82,6 +82,23 @@
     "ignore": "Jika itu bukan Anda, kata sandi Anda tidak berubah dan tidak ada yang perlu Anda lakukan.",
     "signature": "VALO Tech"
   },
+  "registrationMail": {
+    "subject": "Akses Anda ke aula investor VALO Tech",
+    "greeting": "Halo {name},",
+    "intro": "Seseorang meminta akses ke aula investor VALO Tech menggunakan alamat ini. Membuka tautan di bawah sekaligus memilih kata sandi Anda dan memastikan alamat ini milik Anda.",
+    "action": "Buka tautan ini untuk memilih kata sandi dan masuk:",
+    "expiry": "Tautan ini hanya dapat digunakan sekali, dan berhenti berlaku setelah {days, plural, other {# hari}}.",
+    "ignore": "Jika Anda tidak meminta ini, Anda dapat mengabaikan pesan ini. Tidak ada yang terjadi sampai tautan dibuka.",
+    "signature": "VALO Tech"
+  },
+  "registrationExistsMail": {
+    "subject": "Anda sudah memiliki akun VALO Tech",
+    "greeting": "Halo {name},",
+    "intro": "Seseorang meminta akses ke aula investor VALO Tech menggunakan alamat ini, dan sebuah akun sudah memakainya. Tidak ada akun kedua yang dibuat.",
+    "action": "Buka tautan ini untuk masuk. Jika Anda lupa kata sandi, halaman itu punya tautan untuk memilih yang baru:",
+    "ignore": "Jika itu bukan Anda, tidak ada yang berubah dan tidak ada yang perlu Anda lakukan.",
+    "signature": "VALO Tech"
+  },
   "forgot": {
     "title": "Atur ulang kata sandi Anda",
     "intro": "Masukkan alamat email Anda. Jika ada akun yang menggunakannya, tautan untuk memilih kata sandi baru akan dikirim ke sana.",
