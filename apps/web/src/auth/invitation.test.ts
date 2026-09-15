@@ -34,6 +34,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
 import { getConfig } from '../config/index';
 import { closeDb, getDb } from '../db/index';
+import { issue } from './session';
 import type { AccountsTable, AccountState, AuditAction, AuditTable, InvitationsTable } from '../db/types';
 import type { ComposedMessage } from '../mail/mailer';
 import type { Addressee } from '../mail/transactional';
@@ -91,6 +92,7 @@ process.env.APP_ORIGIN = ORIGIN;
 process.env.SESSION_SECRET = 's'.repeat(40);
 
 const INVITEE = 'invitation-invitee@example.test';
+const OTHER_INVITEE = 'invitation-other@example.test';
 const OTHER = 'invitation-other@example.test';
 /** The admin whose id every invitation in this suite is audited against. */
 const INVITER = 'invitation-inviter@example.test';
@@ -136,6 +138,17 @@ function hashOf(token: string): string {
 /** A token of the shape `issueToken` mints, for a row that was never written. */
 function unissuedToken(): string {
   return randomBytes(32).toString('base64url');
+}
+
+/** How many sessions the account holds — the whole of what a reset must clear. */
+async function liveSessionCount(id: string): Promise<number> {
+  const rows = await getDb()
+    .selectFrom('sessions')
+    .select('id')
+    .where('account_id', '=', id)
+    .execute();
+
+  return rows.length;
 }
 
 async function accountId(email: string): Promise<string> {
@@ -657,6 +670,51 @@ describe.skipIf(!HAS_DATABASE)('AUTH-003 invitation and reset tokens', () => {
       // whole reason the column holds a hash.
       expect(await consumeToken(hashOf(token))).toBeNull();
       expect((await rowFor(token))?.consumed_at).toBeNull();
+    });
+  });
+
+  describe('what a completed reset does to the sessions already open', () => {
+    it('ends every session the account holds', async () => {
+      // A reset is what somebody asks for when they believe their account is in
+      // the wrong hands. `AUTH-002` makes a password change a privilege change
+      // and requires every session to go with it; a reset that left the other
+      // party's session alive would return the account's name to its owner and
+      // its access to whoever took it.
+      const id = await clearInvitations(INVITEE);
+      await issue(id);
+      await issue(id);
+      expect(await liveSessionCount(id)).toBe(2);
+
+      const token = await issueToken(id, INVITATION_TTL_SECONDS);
+      expect(await setPasswordWithToken(token, 'a-hash')).toEqual({ kind: 'set', accountId: id });
+
+      expect(await liveSessionCount(id)).toBe(0);
+    });
+
+    it("leaves another account's sessions alone", async () => {
+      const mine = await clearInvitations(INVITEE);
+      const theirs = await accountId(OTHER_INVITEE);
+      await issue(mine);
+      await issue(theirs);
+
+      const token = await issueToken(mine, INVITATION_TTL_SECONDS);
+      await setPasswordWithToken(token, 'a-hash');
+
+      expect(await liveSessionCount(mine)).toBe(0);
+      expect(await liveSessionCount(theirs)).toBe(1);
+    });
+
+    it('ends nothing when the reset is refused', async () => {
+      // A refusal that still emptied the sessions would be a denial of service
+      // anybody holding a spent token could aim at an account.
+      const id = await clearInvitations(INVITEE);
+      await issue(id);
+      const token = await issueToken(id, INVITATION_TTL_SECONDS);
+      await setPasswordWithToken(token, 'a-hash');
+      await issue(id);
+
+      expect(await setPasswordWithToken(token, 'another-hash')).toEqual({ kind: 'invalid' });
+      expect(await liveSessionCount(id)).toBe(1);
     });
   });
 

@@ -296,6 +296,15 @@ export async function setPasswordWithToken(
         return { kind: 'suspended' };
       }
 
+      // A password change is a privilege change, and `AUTH-002` says every
+      // session for the account goes with it. This path is the one where that
+      // matters most: a reset is what somebody asks for when they believe their
+      // account is in the wrong hands, and a reset that leaves the other party's
+      // session alive returns the account's name to its owner and its access to
+      // whoever took it. In the same transaction as the hash, because a window
+      // between the two is the window that keeps them signed in.
+      await trx.deleteFrom('sessions').where('account_id', '=', accountId).execute();
+
       return { kind: 'set', accountId };
     });
 }
