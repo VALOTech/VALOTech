@@ -20,7 +20,7 @@
     ]
   },
   {
-    "concept": "AI — artificial intelligence, as the product and marketing term",
+    "concept": "AI — artificial intelligence, in product copy; the company slogan keeps the Latin token (I18N-DEC-04)",
     "preferred": [
       "yapay zekâ"
     ],
@@ -33,8 +33,7 @@
       "Amavo/apps/web/src/messages/tr.json:trust.fakes.body",
       "Shimmra/apps/mobile/lib/core/localization/arb/app_tr.arb:timelineAiGenerated",
       "Shimmra/apps/web/messages/tr.json:timeline.aiGenerated",
-      "VALOPocket/apps/web/app/i18n/messages/tr.json:console.surface.ai_model_mode",
-      "VALOTech/assets/i18n.js:brand.slogan"
+      "VALOPocket/apps/web/app/i18n/messages/tr.json:console.surface.ai_model_mode"
     ]
   },
   {

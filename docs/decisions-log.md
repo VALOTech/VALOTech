@@ -176,6 +176,17 @@ An entry is filed the moment the choice surfaces, not when it is answered. Nothi
 
 ---
 
+<a id="I18N-DEC-04"></a>
+### `I18N-DEC-04` — Whether the company's slogan follows the glossary into each language — RESOLVED 2026-09-15
+
+- **Decision:** `I18N-DEC-03` settles a technical term once per locale, and Turkish settled `AI` as `yapay zekâ`. `brand.slogan` is one of the strings that carries the term, and it is the one sentence on the page where the company names itself rather than describing a product. Does the glossary reach it?
+- **Options:** **A** The slogan follows the glossary like any other string, so Turkish reads `Gerçek dünya için güvenilir yapay zekâ.` · **B** The slogan is brand rather than copy and keeps `AI` in every locale that does not already translate it · **C** Hold the whole Turkish change until the page is reviewed as a body of copy.
+- **Decision owner:** user
+- **Settled by:** user
+- **Blocks:** — none —
+- **Revises:** `I18N-001/T5` — the glossary settled `AI` for `tr` with no exception, and this is the exception
+- **Status:** RESOLVED 2026-09-15 — **B**, narrowed to what was actually asked. Forty-three occurrences across forty values became `yapay zekâ`; `brand.slogan` keeps `AI`. The reason the owner gave is the one that distinguishes it: every other string on that page describes what the company builds, and the slogan is what the company calls itself, which `brand/GUIDELINES.md` treats as an asset rather than as copy. **The cost is visible and was accepted**: a Turkish reader meets `yapay zekâ` thirty-five times and `AI` once, in the boldest line, which is the shape of inconsistency the glossary exists to remove. It is one string, it is marked permanent in `docs/glossary/exemptions.json` so it is never counted as work owed, and `es`, `fr`, `pt`, `de`, `ru` and `ar` already translate the term in their own slogans — so this is a Turkish carve-out rather than a rule about slogans.
+
 <a id="I18N-DEC-03"></a>
 ### `I18N-DEC-03` — Whether a technical term stays in English in a locale that does not use the Latin script — RESOLVED 2026-09-15
 

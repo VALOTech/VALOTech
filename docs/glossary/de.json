@@ -124,7 +124,10 @@
       "anmelden",
       "Anmeldung"
     ],
-    "forbidden": [],
+    "forbidden": [
+      "Log-in",
+      "Login"
+    ],
     "basis": "harvested",
     "sources": [
       "VALOTech/apps/web/src/messages/de.json:signIn.submit",

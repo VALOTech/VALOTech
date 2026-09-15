@@ -122,7 +122,10 @@
       "sign in",
       "mag-sign in"
     ],
-    "forbidden": [],
+    "forbidden": [
+      "log in",
+      "login"
+    ],
     "basis": "harvested",
     "sources": [
       "VALOTech/assets/legal-i18n.js:lc.sessionWhen",

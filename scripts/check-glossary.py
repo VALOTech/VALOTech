@@ -24,6 +24,12 @@ only allowed to shrink: an exemption for a key that no longer violates anything
 is reported as stale, because a list nobody empties is this gate with its eyes
 shut, and it would take exactly as long to write.
 
+**A row marked `permanent` is a decision, not a debt.** Where the owner has
+settled that one string keeps a rendering the glossary otherwise refuses -- the
+Turkish slogan, `I18N-DEC-04` -- counting it among the work owed leaves the
+number that is supposed to fall unable to reach zero, and a target nobody can
+hit is a target nobody aims at. The two counts are reported separately.
+
 Run: python scripts/check-glossary.py
 """
 
@@ -173,11 +179,18 @@ def main():
         return 1
 
     exempt = {}
+    permanent = set()
     exemption_path = os.path.join(ROOT, EXEMPTIONS)
     if os.path.exists(exemption_path):
         with io.open(exemption_path, encoding="utf-8") as handle:
             for row in json.load(handle):
-                exempt[(row["locale"], row["key"], row["term"])] = row.get("reason", "")
+                key = (row["locale"], row["key"], row["term"])
+                exempt[key] = row.get("reason", "")
+                # A carve-out the owner decided is not work owed, and counting it
+                # as such leaves the number that is supposed to fall unable to
+                # reach zero -- which is how a list stops being read at all.
+                if row.get("permanent") is True:
+                    permanent.add(key)
 
     gateway_source = read(GATEWAY_CATALOGUE)
     legal_source = read(LEGAL_CATALOGUE)
@@ -239,9 +252,11 @@ def main():
             print("  FAIL " + problem)
         return 1
 
+    owed = len(exempt) - len(permanent)
     print("glossary: %d term(s) across %d locale(s), checked against %d served string(s); "
-          "%d exemption(s), every one still covering a real violation"
-          % (terms_seen, len(files), strings_scanned, len(exempt)))
+          "%d exemption(s), every one still covering a real violation -- %d owed and %d "
+          "decided as permanent"
+          % (terms_seen, len(files), strings_scanned, len(exempt), owed, len(permanent)))
     return 0
 
 

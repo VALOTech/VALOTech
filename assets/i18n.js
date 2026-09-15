@@ -13,8 +13,9 @@
    answer per locale, settled once in docs/glossary/<locale>.json and checked by
    scripts/check-glossary.py -- because no blanket rule survives them. hi, bn and
    ur keep `AI` and translate `cookie`; es, fr, pt and de translate `AI` and keep
-   `cookie`; tr translates both and ar translates both. The sets cross, so the
-   rule is per term (docs/decisions-log.md#I18N-DEC-03). */
+   `cookie`; ar translates both; and tr translates both in product copy while
+   its slogan keeps `AI` (docs/decisions-log.md#I18N-DEC-04). The sets cross,
+   so the rule is per term (docs/decisions-log.md#I18N-DEC-03). */
 (function (w) {
   "use strict";
 
@@ -38,7 +39,7 @@
   var en = {
     "a11y.skip":"Skip to content","a11y.home":"VALO Tech home","a11y.navPrimary":"Primary","a11y.theme":"Theme","a11y.menu":"Menu","a11y.top":"Back to top","a11y.trustRegion":"Why teams trust the platform","a11y.ecoHub":"VALO ecosystem hub","a11y.valostackNet":"ValoStack network",
     "phases.outcome":"Outcome.",
-    "nav.approach":"Approach","nav.workforce":"Workforce","nav.trust":"Trust","nav.ecosystem":"Ecosystem","nav.pricing":"Pricing","nav.investor":"Investor login","inv.title":"Investor login","inv.id":"Investor ID","inv.pw":"Password","inv.submit":"Open the detail","inv.error":"That ID and password do not match.","inv.locked":"Detail available to investors","a11y.close":"Close",
+    "nav.approach":"Approach","nav.workforce":"Workforce","nav.trust":"Trust","nav.ecosystem":"Ecosystem","nav.pricing":"Pricing","nav.investor":"Investor sign-in","inv.title":"Investor sign-in","inv.id":"Investor ID","inv.pw":"Password","inv.submit":"Open the detail","inv.error":"That ID and password do not match.","inv.locked":"Detail available to investors","a11y.close":"Close",
     "cta.start":"Start the conversation","cta.approach":"See the approach",
     "lang.label":"Language","theme.light":"Light theme","theme.dark":"Dark theme","theme.auto":"Match system",
     "brand.slogan":"Trustworthy AI for the real world.",
@@ -1249,7 +1250,7 @@
   var tl = {
     "a11y.skip":"Lumaktaw sa nilalaman","a11y.home":"Home ng VALO Tech","a11y.navPrimary":"Pangunahing nabigasyon","a11y.theme":"Tema","a11y.menu":"Menu","a11y.top":"Bumalik sa itaas","a11y.trustRegion":"Bakit pinagkakatiwalaan ng mga team ang platform","a11y.ecoHub":"Hub ng ekosistema ng VALO","a11y.valostackNet":"Network ng ValoStack",
     "phases.outcome":"Resulta.",
-    "nav.approach":"Pamamaraan","nav.workforce":"AI Workforce","nav.trust":"Tiwala","nav.ecosystem":"Ekosistema","nav.pricing":"Presyo","nav.investor":"Investor login","inv.title":"Investor login","inv.id":"Investor ID","inv.pw":"Password","inv.submit":"Buksan ang detalye","inv.error":"Hindi tugma ang ID at password.","inv.locked":"Para sa mga investor ang detalye","a11y.close":"Isara",
+    "nav.approach":"Pamamaraan","nav.workforce":"AI Workforce","nav.trust":"Tiwala","nav.ecosystem":"Ekosistema","nav.pricing":"Presyo","nav.investor":"Pag-sign in ng investor","inv.title":"Pag-sign in ng investor","inv.id":"Investor ID","inv.pw":"Password","inv.submit":"Buksan ang detalye","inv.error":"Hindi tugma ang ID at password.","inv.locked":"Para sa mga investor ang detalye","a11y.close":"Isara",
     "cta.start":"Simulan ang usapan","cta.approach":"Tingnan ang pamamaraan",
     "lang.label":"Wika","theme.light":"Maliwanag na tema","theme.dark":"Madilim na tema","theme.auto":"Sumunod sa system",
     "brand.slogan":"Mapagkakatiwalaang AI para sa totoong mundo.",
@@ -1422,7 +1423,7 @@
   var hi = {
     "a11y.skip":"सामग्री पर जाएँ","a11y.home":"VALO Tech होम","a11y.navPrimary":"मुख्य नेविगेशन","a11y.theme":"थीम","a11y.menu":"मेन्यू","a11y.top":"ऊपर वापस जाएँ","a11y.trustRegion":"टीमें इस प्लैटफ़ॉर्म पर भरोसा क्यों करती हैं","a11y.ecoHub":"VALO इकोसिस्टम हब","a11y.valostackNet":"ValoStack नेटवर्क",
     "phases.outcome":"परिणाम।",
-    "nav.approach":"पद्धति","nav.workforce":"AI टीम","nav.trust":"भरोसा","nav.ecosystem":"इकोसिस्टम","nav.pricing":"मूल्य","nav.investor":"निवेशक लॉगिन","inv.title":"निवेशक लॉगिन","inv.id":"निवेशक आईडी","inv.pw":"पासवर्ड","inv.submit":"विवरण खोलें","inv.error":"आईडी या पासवर्ड मेल नहीं खाता।","inv.locked":"विवरण निवेशकों के लिए उपलब्ध है","a11y.close":"बंद करें",
+    "nav.approach":"पद्धति","nav.workforce":"AI टीम","nav.trust":"भरोसा","nav.ecosystem":"इकोसिस्टम","nav.pricing":"मूल्य","nav.investor":"निवेशक साइन-इन","inv.title":"निवेशक साइन-इन","inv.id":"निवेशक आईडी","inv.pw":"पासवर्ड","inv.submit":"विवरण खोलें","inv.error":"आईडी या पासवर्ड मेल नहीं खाता।","inv.locked":"विवरण निवेशकों के लिए उपलब्ध है","a11y.close":"बंद करें",
     "cta.start":"बातचीत शुरू करें","cta.approach":"पद्धति देखें",
     "lang.label":"भाषा","theme.light":"लाइट थीम","theme.dark":"डार्क थीम","theme.auto":"सिस्टम के अनुसार",
     "brand.slogan":"वास्तविक दुनिया के लिए भरोसेमंद AI।",
@@ -1941,7 +1942,7 @@
   var fr = {
     "a11y.skip":"Aller au contenu","a11y.home":"Accueil VALO Tech","a11y.navPrimary":"Navigation principale","a11y.theme":"Thème","a11y.menu":"Menu","a11y.top":"Retour en haut","a11y.trustRegion":"Pourquoi les équipes font confiance à la plateforme","a11y.ecoHub":"Pôle de l'écosystème VALO","a11y.valostackNet":"Réseau ValoStack",
     "phases.outcome":"Résultat.",
-    "nav.approach":"Approche","nav.workforce":"Équipe d'IA","nav.trust":"Confiance","nav.ecosystem":"Écosystème","nav.pricing":"Tarifs","nav.investor":"Espace investisseurs","inv.title":"Espace investisseurs","inv.id":"Identifiant investisseur","inv.pw":"Mot de passe","inv.submit":"Ouvrir le détail","inv.error":"L'identifiant et le mot de passe ne correspondent pas.","inv.locked":"Détail réservé aux investisseurs","a11y.close":"Fermer",
+    "nav.approach":"Approche","nav.workforce":"Équipe d'IA","nav.trust":"Confiance","nav.ecosystem":"Écosystème","nav.pricing":"Tarifs","nav.investor":"Connexion investisseurs","inv.title":"Connexion investisseurs","inv.id":"Identifiant investisseur","inv.pw":"Mot de passe","inv.submit":"Ouvrir le détail","inv.error":"L'identifiant et le mot de passe ne correspondent pas.","inv.locked":"Détail réservé aux investisseurs","a11y.close":"Fermer",
     "cta.start":"Engager la conversation","cta.approach":"Découvrir l'approche",
     "lang.label":"Langue","theme.light":"Thème clair","theme.dark":"Thème sombre","theme.auto":"Selon le système",
     "brand.slogan":"Une IA digne de confiance, pour le monde réel.",
@@ -2114,7 +2115,7 @@
   var bn = {
     "a11y.skip":"মূল কন্টেন্টে যান","a11y.home":"VALO Tech হোম","a11y.navPrimary":"প্রধান নেভিগেশন","a11y.theme":"থিম","a11y.menu":"মেনু","a11y.top":"উপরে ফিরে যান","a11y.trustRegion":"কেন দলগুলো এই প্ল্যাটফর্মে আস্থা রাখে","a11y.ecoHub":"VALO ইকোসিস্টেম হাব","a11y.valostackNet":"ValoStack নেটওয়ার্ক",
     "phases.outcome":"ফলাফল।",
-    "nav.approach":"পদ্ধতি","nav.workforce":"AI টিম","nav.trust":"আস্থা","nav.ecosystem":"ইকোসিস্টেম","nav.pricing":"খরচ","nav.investor":"বিনিয়োগকারী লগইন","inv.title":"বিনিয়োগকারী লগইন","inv.id":"বিনিয়োগকারী আইডি","inv.pw":"পাসওয়ার্ড","inv.submit":"বিস্তারিত খুলুন","inv.error":"আইডি বা পাসওয়ার্ড মিলছে না।","inv.locked":"বিস্তারিত বিনিয়োগকারীদের জন্য","a11y.close":"বন্ধ করুন",
+    "nav.approach":"পদ্ধতি","nav.workforce":"AI টিম","nav.trust":"আস্থা","nav.ecosystem":"ইকোসিস্টেম","nav.pricing":"খরচ","nav.investor":"বিনিয়োগকারী সাইন-ইন","inv.title":"বিনিয়োগকারী সাইন-ইন","inv.id":"বিনিয়োগকারী আইডি","inv.pw":"পাসওয়ার্ড","inv.submit":"বিস্তারিত খুলুন","inv.error":"আইডি বা পাসওয়ার্ড মিলছে না।","inv.locked":"বিস্তারিত বিনিয়োগকারীদের জন্য","a11y.close":"বন্ধ করুন",
     "cta.start":"কথা বলা শুরু করুন","cta.approach":"পদ্ধতিটি দেখুন",
     "lang.label":"ভাষা","theme.light":"হালকা থিম","theme.dark":"গাঢ় থিম","theme.auto":"সিস্টেম অনুযায়ী",
     "brand.slogan":"বাস্তব জগতের জন্য নির্ভরযোগ্য AI।",
@@ -2633,7 +2634,7 @@
   var ur = {
     "a11y.skip":"مواد پر جائیں","a11y.home":"VALO Tech ہوم","a11y.navPrimary":"بنیادی نیویگیشن","a11y.theme":"تھیم","a11y.menu":"مینو","a11y.top":"اوپر واپس جائیں","a11y.trustRegion":"ٹیمیں اس پلیٹ فارم پر کیوں بھروسا کرتی ہیں","a11y.ecoHub":"VALO ایکو سسٹم ہب","a11y.valostackNet":"ValoStack نیٹ ورک",
     "phases.outcome":"نتیجہ۔",
-    "nav.approach":"طریقہ کار","nav.workforce":"AI ٹیم","nav.trust":"اعتماد","nav.ecosystem":"ایکو سسٹم","nav.pricing":"قیمت","nav.investor":"سرمایہ کار لاگ اِن","inv.title":"سرمایہ کار لاگ اِن","inv.id":"سرمایہ کار آئی ڈی","inv.pw":"پاس ورڈ","inv.submit":"تفصیل کھولیں","inv.error":"آئی ڈی یا پاس ورڈ مطابقت نہیں رکھتے۔","inv.locked":"تفصیل سرمایہ کاروں کے لیے ہے","a11y.close":"بند کریں",
+    "nav.approach":"طریقہ کار","nav.workforce":"AI ٹیم","nav.trust":"اعتماد","nav.ecosystem":"ایکو سسٹم","nav.pricing":"قیمت","nav.investor":"سرمایہ کار سائن اِن","inv.title":"سرمایہ کار سائن اِن","inv.id":"سرمایہ کار آئی ڈی","inv.pw":"پاس ورڈ","inv.submit":"تفصیل کھولیں","inv.error":"آئی ڈی یا پاس ورڈ مطابقت نہیں رکھتے۔","inv.locked":"تفصیل سرمایہ کاروں کے لیے ہے","a11y.close":"بند کریں",
     "cta.start":"گفتگو کا آغاز کیجیے","cta.approach":"ہمارا طریقہ کار دیکھیے",
     "lang.label":"زبان","theme.light":"روشن تھیم","theme.dark":"گہری تھیم","theme.auto":"سسٹم کے مطابق",
     "brand.slogan":"حقیقی دنیا کے لیے ایسا AI، جس پر بھروسا کیا جا سکے۔",
@@ -2806,7 +2807,7 @@
   var de = {
     "a11y.skip":"Zum Inhalt springen","a11y.home":"VALO Tech Startseite","a11y.navPrimary":"Hauptnavigation","a11y.theme":"Erscheinungsbild","a11y.menu":"Menü","a11y.top":"Nach oben","a11y.trustRegion":"Warum Teams der Plattform vertrauen","a11y.ecoHub":"VALO Ökosystem-Hub","a11y.valostackNet":"ValoStack-Netzwerk",
     "phases.outcome":"Ergebnis.",
-    "nav.approach":"Ansatz","nav.workforce":"Belegschaft","nav.trust":"Vertrauen","nav.ecosystem":"Ökosystem","nav.pricing":"Preise","nav.investor":"Investoren-Login","inv.title":"Investoren-Login","inv.id":"Investoren-ID","inv.pw":"Passwort","inv.submit":"Details öffnen","inv.error":"ID und Passwort stimmen nicht überein.","inv.locked":"Details für Investoren","a11y.close":"Schließen",
+    "nav.approach":"Ansatz","nav.workforce":"Belegschaft","nav.trust":"Vertrauen","nav.ecosystem":"Ökosystem","nav.pricing":"Preise","nav.investor":"Investoren-Anmeldung","inv.title":"Investoren-Anmeldung","inv.id":"Investoren-ID","inv.pw":"Passwort","inv.submit":"Details öffnen","inv.error":"ID und Passwort stimmen nicht überein.","inv.locked":"Details für Investoren","a11y.close":"Schließen",
     "cta.start":"Das Gespräch beginnen","cta.approach":"Den Ansatz kennenlernen",
     "lang.label":"Sprache","theme.light":"Helles Design","theme.dark":"Dunkles Design","theme.auto":"An System anpassen",
     "brand.slogan":"Vertrauenswürdige KI für die reale Welt.",
@@ -2979,7 +2980,7 @@
   var ja = {
     "a11y.skip":"コンテンツへスキップ","a11y.home":"VALO Tech ホーム","a11y.navPrimary":"メインナビゲーション","a11y.theme":"テーマ","a11y.menu":"メニュー","a11y.top":"トップへ戻る","a11y.trustRegion":"チームがこのプラットフォームを信頼する理由","a11y.ecoHub":"VALO エコシステムハブ","a11y.valostackNet":"ValoStack ネットワーク",
     "phases.outcome":"成果。",
-    "nav.approach":"アプローチ","nav.workforce":"AI チーム","nav.trust":"信頼","nav.ecosystem":"エコシステム","nav.pricing":"料金","nav.investor":"投資家ログイン","inv.title":"投資家ログイン","inv.id":"投資家ID","inv.pw":"パスワード","inv.submit":"詳細を開く","inv.error":"IDまたはパスワードが一致しません。","inv.locked":"詳細は投資家向けです","a11y.close":"閉じる",
+    "nav.approach":"アプローチ","nav.workforce":"AI チーム","nav.trust":"信頼","nav.ecosystem":"エコシステム","nav.pricing":"料金","nav.investor":"投資家サインイン","inv.title":"投資家サインイン","inv.id":"投資家ID","inv.pw":"パスワード","inv.submit":"詳細を開く","inv.error":"IDまたはパスワードが一致しません。","inv.locked":"詳細は投資家向けです","a11y.close":"閉じる",
     "cta.start":"まずはお話ししましょう","cta.approach":"アプローチを見る",
     "lang.label":"言語","theme.light":"ライトテーマ","theme.dark":"ダークテーマ","theme.auto":"システムに合わせる",
     "brand.slogan":"現実のビジネスに、信頼できる AI を。",
@@ -3152,15 +3153,15 @@
   var tr = {
     "a11y.skip":"İçeriğe geç","a11y.home":"VALO Tech ana sayfa","a11y.navPrimary":"Ana gezinme","a11y.theme":"Tema","a11y.menu":"Menü","a11y.top":"Yukarı dön","a11y.trustRegion":"Ekipler platforma neden güveniyor","a11y.ecoHub":"VALO ekosistem merkezi","a11y.valostackNet":"ValoStack ağı",
     "phases.outcome":"Sonuç.",
-    "nav.approach":"Yaklaşım","nav.workforce":"AI ekibi","nav.trust":"Güven","nav.ecosystem":"Ekosistem","nav.pricing":"Fiyatlandırma","nav.investor":"Yatırımcı girişi","inv.title":"Yatırımcı girişi","inv.id":"Yatırımcı kimliği","inv.pw":"Parola","inv.submit":"Ayrıntıyı aç","inv.error":"Kimlik veya parola eşleşmiyor.","inv.locked":"Ayrıntı yatırımcılara açık","a11y.close":"Kapat",
+    "nav.approach":"Yaklaşım","nav.workforce":"Yapay zekâ ekibi","nav.trust":"Güven","nav.ecosystem":"Ekosistem","nav.pricing":"Fiyatlandırma","nav.investor":"Yatırımcı girişi","inv.title":"Yatırımcı girişi","inv.id":"Yatırımcı kimliği","inv.pw":"Parola","inv.submit":"Ayrıntıyı aç","inv.error":"Kimlik veya parola eşleşmiyor.","inv.locked":"Ayrıntı yatırımcılara açık","a11y.close":"Kapat",
     "cta.start":"Görüşmeyi başlatın","cta.approach":"Yaklaşımı inceleyin",
     "lang.label":"Dil","theme.light":"Açık tema","theme.dark":"Koyu tema","theme.auto":"Sistemle eşleştir",
     "brand.slogan":"Gerçek dünya için güvenilir AI.",
     "nf.title":"Bu sayfa bulunamadı","nf.body":"Aradığınız sayfa taşınmış olabilir. Sizi ana sayfaya geri götürelim.","nf.home":"Ana sayfaya dön",
 
-    "hero.eyebrow":"AI ekibi · düzenlemeye tabi sektörler",
-    "hero.h1":"Kendi <span class=\"grad-text\">temiz verinizin</span> üzerinde çalışan bir AI ekibi.",
-    "hero.sub":"Ortamınızın içinde sizin için kurduğumuz bir veri temeli üzerinde çalışan, çok ajanlı bir AI ekibi. İlk günden itibaren denetim karşısında savunulabilir.",
+    "hero.eyebrow":"Yapay zekâ ekibi · düzenlemeye tabi sektörler",
+    "hero.h1":"Kendi <span class=\"grad-text\">temiz verinizin</span> üzerinde çalışan bir yapay zekâ ekibi.",
+    "hero.sub":"Ortamınızın içinde sizin için kurduğumuz bir veri temeli üzerinde çalışan, çok ajanlı bir yapay zekâ ekibi. İlk günden itibaren denetim karşısında savunulabilir.",
     "hero.m1":"Sizin ortamınızda kurulur","hero.m2":"Denetimde savunulabilir","hero.m3":"Sonsuza dek sizin",
 
     "trust.1t":"Kural koddan gelir","trust.1d":"Ajanlar kuralları çiğneyemez. Yönetişim, ajanın dışında, kodun içinde işler.",
@@ -3168,56 +3169,56 @@
     "trust.3t":"Sizin verileriniz, sizin bulutunuz","trust.3d":"Platform sizin ortamınızda yaşar. Ona siz sahip olur, onu siz işletirsiniz.",
 
     "stats.1n":"5","stats.2n":"9","stats.3n":"7","stats.4n":"6",
-    "stats.1l":"aşama, temelden AI ekibine","stats.2l":"AI departmanı, size özel kurgulanmış","stats.3l":"yönetişim yeteneği","stats.4l":"ekosistem ürünü",
+    "stats.1l":"aşama, temelden yapay zekâ ekibine","stats.2l":"yapay zekâ departmanı, size özel kurgulanmış","stats.3l":"yönetişim yeteneği","stats.4l":"ekosistem ürünü",
 
     "problem.h2":"Bugün kurumsal liderlerin önündeki sorun",
-    "problem.lede":"Size bir AI aracı daha gerekmiyor. Size bir AI ekibi gerekiyor ve onun altındaki temiz veri temeli.",
+    "problem.lede":"Size bir yapay zekâ aracı daha gerekmiyor. Size bir yapay zekâ ekibi gerekiyor ve onun altındaki temiz veri temeli.",
     "problem.1t":"İşe alım yavaş ve pahalı","problem.1d":"Ürün, tasarım, mühendislik, QA, operasyon, destek, finans, pazarlama. Her işe alım aylar alır. Her ayrılış, biriken bilgiyi de kapıdan dışarı çıkarır.",
-    "problem.2t":"Tekil AI araçları birbirine bağlanmıyor","problem.2d":"Bir AI yazı yazar, bir başkası kod, bir başkası analiz üretir. Hiçbiri bağlamı paylaşmaz, işinizi anlamaz, geçen hafta ne yapıldığını da hatırlamaz.",
-    "problem.3t":"Verileriniz darmadağınık","problem.3d":"Bir portföy sistemi, bir CRM, bir ERP, bir muhasebe yazılımı ve bir düzine elektronik tablo. Bu veriler birleştirilip etiketlenmedikçe hiçbir AI onların üzerinde güvenilir biçimde çalışamaz.",
+    "problem.2t":"Tekil yapay zekâ araçları birbirine bağlanmıyor","problem.2d":"Bir yapay zekâ yazı yazar, bir başkası kod, bir başkası analiz üretir. Hiçbiri bağlamı paylaşmaz, işinizi anlamaz, geçen hafta ne yapıldığını da hatırlamaz.",
+    "problem.3t":"Verileriniz darmadağınık","problem.3d":"Bir portföy sistemi, bir CRM, bir ERP, bir muhasebe yazılımı ve bir düzine elektronik tablo. Bu veriler birleştirilip etiketlenmedikçe hiçbir yapay zekâ onların üzerinde güvenilir biçimde çalışamaz.",
 
     "answer.eyebrow":"Yanıt",
-    "answer.big":"Kendi temiz verilerinizin üzerinde çalışan, işinize göre özelleştirilmiş, eksiksiz bir AI ekibi.",
-    "answer.sub":"Bir chatbot değil. Sıradan, herkese aynı verilen bir lisans da değil. İşinizi anlayan, AI'nizin ihtiyaç duyduğu veri temelini kuran ve ekibinizin yönettiği, alanına özel ayarlanmış bir AI ekibini devreye alan, beş aşamalı bir iş birliği.",
+    "answer.big":"Kendi temiz verilerinizin üzerinde çalışan, işinize göre özelleştirilmiş, eksiksiz bir yapay zekâ ekibi.",
+    "answer.sub":"Bir chatbot değil. Sıradan, herkese aynı verilen bir lisans da değil. İşinizi anlayan, yapay zekânızın ihtiyaç duyduğu veri temelini kuran ve ekibinizin yönettiği, alanına özel ayarlanmış bir yapay zekâ ekibini devreye alan, beş aşamalı bir iş birliği.",
 
     "deliver.h2":"Size neler sunuyoruz",
     "deliver.lede":"Birbirini izleyen iki evre ve bir de paralel yürüyen bir iz; hepsi sahibi olduğunuz bir temelin üzerinde.",
     "deliver.s1tag":"Evre 1","deliver.s1t":"Dijitalleştirme","deliver.s1d":"Sistemleriniz ve elle yürüttüğünüz süreçler, tek bir dijital ortama dönüşür.",
-    "deliver.s2tag":"Evre 2","deliver.s2t":"AI ve Veri Platformu","deliver.s2d":"Temel önce kalkış pistine dönüşür, ardından AI ekibi onun üzerinde devreye alınır.",
+    "deliver.s2tag":"Evre 2","deliver.s2t":"Yapay Zekâ ve Veri Platformu","deliver.s2d":"Temel önce kalkış pistine dönüşür, ardından yapay zekâ ekibi onun üzerinde devreye alınır.",
     "deliver.track":"Paralelde ilerler; aynı yönetişim altında, ortamınıza tam oturan sistemleri kurar.",
-    "deliver.tab1":"Dijitalleştirme","deliver.tab2":"AI ve Veri Platformu","deliver.tab3":"Yazılım Mühendisliği",
+    "deliver.tab1":"Dijitalleştirme","deliver.tab2":"Yapay Zekâ ve Veri Platformu","deliver.tab3":"Yazılım Mühendisliği",
     "deliver.p1lead":"Teknoloji çoğu zaman, veri, insan ve mevzuat zemini hazır olmadan önce gelir. Biz önce o zemini sağlam atarız; mekanik olarak uygulanan, ilk günden gözden geçirilebilir bir zemin.",
     "deliver.p1a":"Hâlihazırda işleyeni söküp atmadan modernleşin.","deliver.p1b":"Üzerinde hiçbir şey çalışmaya başlamadan önce yönetişim altyapısını yerine koyun.","deliver.p1c":"Dağınık sistemleri ve elle yürüttüğünüz süreçleri tek bir ortamda toplayın.",
     "deliver.p1foot":"Birbirinden kopuk dört ürün değil. Tek bir temel; sonraki her aşamanın üzerinde yükseldiği zemin.",
-    "deliver.p2lead":"Çoğu AI girişimi, altındaki veri dağınık ve güvenilmez olduğu için başarısız olur. Biz bunu tersinden yaparız: temel önce kalkış pistine dönüşür, AI ekibi de onun üzerinde devreye alınır.",
-    "deliver.p2a":"Ekibinizi, Evre 1'de kurulan platformu işletmesi için eğitin.","deliver.p2b":"AI ekibini ilk günden denetim kaydıyla birlikte o platformun üzerinde devreye alın.","deliver.p2c":"AI ekibini sıradan bir modele göre değil, kendi alanınıza göre özelleştirin.",
-    "deliver.p2foot":"Tek bir kalkış pisti ve tek bir AI ekibi: platformu 4. Aşama'dan, ekibi 5. Aşama'dan itibaren siz işletirsiniz.",
-    "deliver.p3lead":"Özel yazılım, işin yürüdüğü gerçek bağlam kurguya hiç katılmadığında başarısız olur. Burada, operasyonlarınızı yürüten AI ekibinin ta kendisi, aynı yönetişim altında yazılımı da yazar.",
-    "deliver.p3a":"Ayrı bir geliştirme adasında değil, AI ekibinizin tam içinde kurulur.","deliver.p3b":"Ajanın diğer her eylemiyle birebir aynı mekanik kalite kapılarından geçer.","deliver.p3c":"Sıradan bir şablona göre değil, kendi alanınıza göre biçimlenir.",
+    "deliver.p2lead":"Çoğu yapay zekâ girişimi, altındaki veri dağınık ve güvenilmez olduğu için başarısız olur. Biz bunu tersinden yaparız: temel önce kalkış pistine dönüşür, yapay zekâ ekibi de onun üzerinde devreye alınır.",
+    "deliver.p2a":"Ekibinizi, Evre 1'de kurulan platformu işletmesi için eğitin.","deliver.p2b":"Yapay zekâ ekibini ilk günden denetim kaydıyla birlikte o platformun üzerinde devreye alın.","deliver.p2c":"Yapay zekâ ekibini sıradan bir modele göre değil, kendi alanınıza göre özelleştirin.",
+    "deliver.p2foot":"Tek bir kalkış pisti ve tek bir yapay zekâ ekibi: platformu 4. Aşama'dan, ekibi 5. Aşama'dan itibaren siz işletirsiniz.",
+    "deliver.p3lead":"Özel yazılım, işin yürüdüğü gerçek bağlam kurguya hiç katılmadığında başarısız olur. Burada, operasyonlarınızı yürüten yapay zekâ ekibinin ta kendisi, aynı yönetişim altında yazılımı da yazar.",
+    "deliver.p3a":"Ayrı bir geliştirme adasında değil, yapay zekâ ekibinizin tam içinde kurulur.","deliver.p3b":"Ajanın diğer her eylemiyle birebir aynı mekanik kalite kapılarından geçer.","deliver.p3c":"Sıradan bir şablona göre değil, kendi alanınıza göre biçimlenir.",
     "deliver.p3foot":"Ajan tanımları da, kodun tümü de sizin kalır; saklayabilir, çatallayabilir ya da geliştirebilirsiniz.",
     "deliver.meanh":"Bunun işiniz açısından anlamı",
     "deliver.p1m1t":"Dağınık sistemlerden tek bir temele","deliver.p1m1d":"Bir portföy sistemi, bir CRM, bir ERP, bir muhasebe yazılımı ve bir düzine elektronik tablo; bir de bunları birbirine bağlayan, elle yürüttüğünüz süreçler. 1'den 3'e kadarki aşamalar bunların tümünü tek bir ortamda toplar; her kayıt, sahibi olduğunuz altyapıda yer alır.",
     "deliver.p1m2t":"Elle yürüyen süreçler, dijitale taşınmış","deliver.p1m2d":"Sistemlerinizin çevresindeki her manuel süreci haritalandırır; neyin dijitalleştirileceğine, neyin sisteme bağlanacağına, neyin olduğu gibi kalacağına birlikte karar veririz. 3. Aşama'ya gelindiğinde operasyondaki dikiş izleri ortadan kalkar.",
     "deliver.p1m3t":"Bir şey çalışmadan önce yönetişim","deliver.p1m3d":"Denetim kaydı, risk düzeyine göre sınıflandırma, mevzuat maddelerinin izlenmesi ve kalite kapıları, 2. ve 3. Aşama'da en baştan kurulur; sonradan üstüne eklenmez.",
     "deliver.p1m4t":"Gerçek verileriniz üzerinde bir kavram kanıtı","deliver.p1m4d":"2. Aşama, onaylı bir teknik tasarımın yanı sıra, gerçek verilerinizin bir diliminde uçtan uca çalışan bir PoC üretir; üretime dair herhangi bir taahhütten önce.",
-    "deliver.p2m1t":"İşinize göre yapılandırılmış","deliver.p2m1d":"AI ekibi, 5. Aşama'da; departmanlarınıza, süreçlerinize, mevzuat bağlamınıza ve kendi sözcüklerinize çoktan biçimlenmiş olarak gelir. Her devreye alış, size özgü bir devreye alıştır.",
+    "deliver.p2m1t":"İşinize göre yapılandırılmış","deliver.p2m1d":"Yapay zekâ ekibi, 5. Aşama'da; departmanlarınıza, süreçlerinize, mevzuat bağlamınıza ve kendi sözcüklerinize çoktan biçimlenmiş olarak gelir. Her devreye alış, size özgü bir devreye alıştır.",
     "deliver.p2m2t":"Bir ekip; bir model değil","deliver.p2m2d":"Departmanlar boyunca ortak hafızayı, ortak sözlüğü ve ortak yönetişimi paylaşan, bütünleşik ve çok ajanlı bir sistem. Asıl ürün ekiptir; model yalnızca onun zeminidir.",
-    "deliver.p2m3t":"Ekibiniz 4. Aşama'dan itibaren işletir","deliver.p2m3d":"4. Aşama'ya gelindiğinde kullanıcılarınız sorguları kendileri çalıştırır, BI araçlarını bağlar ve günlük katılımımız olmadan basit AI görevlerini yürütür.",
-    "deliver.p2m4t":"Her iş birliği üst üste birikir","deliver.p2m4d":"AI ekibi, ValoStack sayesinde her iş birliğinde biraz daha akıllanır. Bilgilendirilmiş onayınızla, doğrulanmış alan mantığı ağı besler; verileriniz ise sizin kalmaya devam eder.",
-    "deliver.p3m1t":"AI ekibiniz tarafından kurulur","deliver.p3m1d":"Mühendislik departmanı tasarlar, kodlar ve yayına alır. İkinci bir tedarikçi yok, bir devir teslim kopukluğu yok. Neyin kurulacağına karar veren ajanlar, onu eliyle kuran ajanlardır.",
+    "deliver.p2m3t":"Ekibiniz 4. Aşama'dan itibaren işletir","deliver.p2m3d":"4. Aşama'ya gelindiğinde kullanıcılarınız sorguları kendileri çalıştırır, BI araçlarını bağlar ve günlük katılımımız olmadan basit yapay zekâ görevlerini yürütür.",
+    "deliver.p2m4t":"Her iş birliği üst üste birikir","deliver.p2m4d":"Yapay zekâ ekibi, ValoStack sayesinde her iş birliğinde biraz daha akıllanır. Bilgilendirilmiş onayınızla, doğrulanmış alan mantığı ağı besler; verileriniz ise sizin kalmaya devam eder.",
+    "deliver.p3m1t":"Yapay zekâ ekibiniz tarafından kurulur","deliver.p3m1d":"Mühendislik departmanı tasarlar, kodlar ve yayına alır. İkinci bir tedarikçi yok, bir devir teslim kopukluğu yok. Neyin kurulacağına karar veren ajanlar, onu eliyle kuran ajanlardır.",
     "deliver.p3m2t":"Mekanik kalite kapıları","deliver.p3m2d":"Her değişiklik, ajanın diğer her eylemiyle aynı, denetim kaydına işlenen kapılardan geçer. Güvenlik, performans, erişilebilirlik ve uyumluluk, birleştirmeden önce doğrulanır.",
     "deliver.p3m3t":"İşleyişinize göre biçimlenir","deliver.p3m3d":"Süreçlerinize, mevzuat bağlamınıza ve kendi sözcüklerinize göre tasarlanır. Burada özelleştirme varsayılandır; üstünüze giydirilen, herkese aynı verilen bir SaaS değil.",
     "deliver.p3m4t":"Kod da, ajanlar da sizin kalır","deliver.p3m4d":"Ajanlar birer markdown dosyasıdır. Kod sizindir. Sistem sizin bulutunuzda çalışır. Size sunduğumuz her şeyi saklayabilir, çatallayabilir ya da geliştirebilirsiniz.",
 
     "phases.h2":"Peki bunu nasıl hayata geçiriyoruz",
-    "phases.lede":"Beş aşama; her biri bir öncekinin üzerine kurulur. İlk dördü kalkış pistini hazırlar. Beşincisinde, AI ekibiniz havalanır.",
+    "phases.lede":"Beş aşama; her biri bir öncekinin üzerine kurulur. İlk dördü kalkış pistini hazırlar. Beşincisinde, yapay zekâ ekibiniz havalanır.",
     "phases.1l":"1. Aşama · Keşif","phases.1t":"Keşif ve yol haritası","phases.1d":"Kaynak sistemlerinizi, süreçlerinizi, veri kalitenizi ve mevzuat bağlamınızı inceler, ardından en yüksek değeri en önce açığa çıkaran kullanım senaryolarını önceliklendiririz.","phases.1o":"Önceliklendirilmiş kullanım senaryoları ve bir hedef mimari içeren, stratejik bir yol haritası. İlerlemeye değip değmeyeceğine ve nasıl ilerleneceğine siz karar verirsiniz.",
     "phases.2l":"2. Aşama · Mimari ve PoC","phases.2t":"Mimari ve kavram kanıtı","phases.2d":"Önce veri platformunun temelini tasarlar, ardından gerçek verilerinizin bir diliminde uçtan uca çalışan bir kavram kanıtı kurarız.","phases.2o":"Onaylı bir teknik tasarımın yanı sıra, gerçek sistemlerinizde çalışan bir PoC; üretime dair herhangi bir taahhütten önce.",
-    "phases.3l":"3. Aşama · İnşa","phases.3t":"Veri platformunu inşa edin","phases.3d":"Ortamınızda veri alımını, dönüşümü, katmanları, orkestrasyonu ve izlemeyi hayata geçiririz. Her kayıt, sonunda temizlenmiş, etiketlenmiş ve sorgulanabilir hâle gelir.","phases.3o":"Kendi bulutunuzda, üretime hazır bir veri platformu; AI ekibinizin üzerinde çalıştığı kalkış pisti.",
-    "phases.4l":"4. Aşama · Platform eğitimi","phases.4t":"Ekibinizi işletmesi için eğitin","phases.4d":"İç kullanıcılarınız, günlük katılımımız olmadan BI araçlarını bağlamayı, merkezîleştirilmiş veriyi sorgulamayı ve basit AI görevlerini yürütmeyi öğrenir.","phases.4o":"Platformu uçtan uca, kendi başına işleten iç kullanıcılar.",
-    "phases.5l":"5. Aşama · AI ekibinin devreye alınması","phases.5t":"Size özel AI ekibinizi devreye alın","phases.5d":"Çok ajanlı AI ekibini departmanlarınıza, süreçlerinize ve sözcüklerinize göre ayarlar, ValoStack'i devreye alır ve ekibinizi onu yönetmesi için eğitiriz.","phases.5o":"Temiz verilerinizin üzerinde çalışan, alanına özel ayarlanmış bir AI ekibi; onu işletmek üzere eğitilmiş ekibinizle birlikte.",
+    "phases.3l":"3. Aşama · İnşa","phases.3t":"Veri platformunu inşa edin","phases.3d":"Ortamınızda veri alımını, dönüşümü, katmanları, orkestrasyonu ve izlemeyi hayata geçiririz. Her kayıt, sonunda temizlenmiş, etiketlenmiş ve sorgulanabilir hâle gelir.","phases.3o":"Kendi bulutunuzda, üretime hazır bir veri platformu; yapay zekâ ekibinizin üzerinde çalıştığı kalkış pisti.",
+    "phases.4l":"4. Aşama · Platform eğitimi","phases.4t":"Ekibinizi işletmesi için eğitin","phases.4d":"İç kullanıcılarınız, günlük katılımımız olmadan BI araçlarını bağlamayı, merkezîleştirilmiş veriyi sorgulamayı ve basit yapay zekâ görevlerini yürütmeyi öğrenir.","phases.4o":"Platformu uçtan uca, kendi başına işleten iç kullanıcılar.",
+    "phases.5l":"5. Aşama · Yapay zekâ ekibinin devreye alınması","phases.5t":"Size özel yapay zekâ ekibinizi devreye alın","phases.5d":"Çok ajanlı yapay zekâ ekibini departmanlarınıza, süreçlerinize ve sözcüklerinize göre ayarlar, ValoStack'i devreye alır ve ekibinizi onu yönetmesi için eğitiriz.","phases.5o":"Temiz verilerinizin üzerinde çalışan, alanına özel ayarlanmış bir yapay zekâ ekibi; onu işletmek üzere eğitilmiş ekibinizle birlikte.",
 
-    "workforce.h2":"AI ekibiniz neler yapar",
+    "workforce.h2":"Yapay zekâ ekibiniz neler yapar",
     "workforce.lede":"Modern bir şirketin gerçek işlevlerine eşlenmiş ve hâlihazırda çalışma biçiminize göre özelleştirilmiş dokuz departman. 5. Aşama devreye girdiği an iş başında.",
     "workforce.1n":"Sırada ne yapılacağına karar verin","workforce.1t":"Ürün ve Strateji","workforce.1d":"Gereksinimleri yazar, yol haritanızı önceliklendirir, fiyatlandırmayı modeller.",
     "workforce.2n":"Deneyimi sevilesi kılın","workforce.2t":"Tasarım ve Deneyim","workforce.2d":"Arayüzleri tasarlar, içerik yazar, markayı tutarlı tutar.",
@@ -3234,7 +3235,7 @@
     "valostack.b1":"Her devreye alış; iş akışlarınızı, kararlarınızı ve alan mantığınızı, türü belirlenmiş, zaman damgalı ve uzmanca doğrulanmış bir hafızaya kaydeder.",
     "valostack.b2":"Bilgilendirilmiş onayla bu bilgi, müşteriler arası ortak zihnimiz ValoStack'i besler. Her ortağımız, ilk günden sektörler ötesi birikimi devralır.",
     "valostack.b3":"Verileriniz sizin kalır. Yalnızca örüntüler ve doğrulanmış alan mantığı, paylaşılan ortak bir avantaja dönüşür.",
-    "valostack.cap":"Önceki her iş birliğinden öğrendiklerini tümüyle koruyan ve her çıktının nasıl elde edildiğini açıklayan bir denetim kaydı üreten bir AI ekibi.",
+    "valostack.cap":"Önceki her iş birliğinden öğrendiklerini tümüyle koruyan ve her çıktının nasıl elde edildiğini açıklayan bir denetim kaydı üreten bir yapay zekâ ekibi.",
     "vs.work":"İşiniz","vs.brain":"bilgi beyni","vs.engage":"İş birliği",
 
     "cap.h2":"Kurumsal liderler neden ValoLab'e güveniyor",
@@ -3266,13 +3267,13 @@
 
     "people.h2":"Çalışanlarınızın bu tabloda yeri",
     "people.lede":"Bu, ekibinizin yerini almakla ilgili değil. Ekibinizin neyi yöneteceğiyle ilgili.",
-    "people.h.l":"Sizin çalışanlarınız","people.h.r":"AI ekibi",
+    "people.h.l":"Sizin çalışanlarınız","people.h.r":"Yapay zekâ ekibi",
     "people.1l":"Stratejiyi ve öncelikleri belirler","people.1r":"O önceliklere göre işi yürütür",
     "people.2l":"Yüksek riskli kararları verir","people.2r":"Seçenekleri analiziyle birlikte hazırlar",
     "people.3l":"Neyin yayınlanacağını onaylar","people.3r":"İnceleme ve QA sürecini yürütür",
     "people.4l":"Müşteri ilişkilerine sahip çıkar","people.4r":"Destek yükünü ve geri bildirimi karşılar",
     "people.5l":"Markayı tanımlar","people.5r":"Marka kurallarını tutarlı biçimde uygular",
-    "people.tag":"Kararı çalışanlarınız verir. İşi AI ekibi teslim eder.",
+    "people.tag":"Kararı çalışanlarınız verir. İşi yapay zekâ ekibi teslim eder.",
 
     "custom.leadt":"Her devreye alış bizim değil, sizindir","custom.leadd":"Platform bir çerçeve olarak gelir. Şirketinizde fiilen yaşayan sürüm ise yalnızca sizin için kurulur.",
     "custom.1t":"Sizin departmanlarınız","custom.1d":"Dokuz departman, gerçek organizasyon şemanıza eşlenir. İhtiyaç duymadığınız hiçbir işlev yer almaz.",
@@ -3300,7 +3301,7 @@
     "close.fine":"30 dakikalık, keşif amaçlı bir görüşme. Teklif baskısı yok, satış metni yok.",
 
     "foot.eco":"VALO ekosistemini keşfedin",
-    "foot.tagline":"VALO Tech Pte. Ltd., düzenlemeye tabi gerçek dünya işletmeleri için AI yerlisi bir ekosistem kurar.",
+    "foot.tagline":"VALO Tech Pte. Ltd., düzenlemeye tabi gerçek dünya işletmeleri için yapay zekâ yerlisi bir ekosistem kurar.",
     "foot.product":"Ürün","foot.company":"Şirket","foot.legal":"Hukuki",
     "foot.about":"Hakkımızda","foot.careers":"Kariyer","foot.press":"Basın","foot.contact":"İletişim",
     "foot.privacy":"Gizlilik","foot.terms":"Koşullar","foot.cookies":"Çerezler",
@@ -3309,13 +3310,13 @@
     "problem.1nl":"boşluk",
     "problem.1n":"teknoloji geldi ama veri, insan ve düzenleme zemini hazır değil",
     "problem.2nl":"bedel",
-    "problem.2n":"her AI girişimi veri katmanında tıkanıyor",
+    "problem.2n":"her yapay zekâ girişimi veri katmanında tıkanıyor",
     "problem.3nl":"çözüm",
-    "problem.3n":"önce temeli atın, AI ekibini sonra üzerine kurun",
+    "problem.3n":"önce temeli atın, yapay zekâ ekibini sonra üzerine kurun",
     "answer.covers":"Kapsanan aşamalar",
     "answer.standalone":"Bağımsız, her zaman",
     "phases.eyebrow":"Nasıl teslim ediyoruz",
-    "workforce.eyebrow":"AI ekibi",
+    "workforce.eyebrow":"Yapay zekâ ekibi",
     "valostack.eyebrow":"ValoStack",
     "cap.eyebrow":"Neden ValoLab",
     "people.eyebrow":"Sizin çalışanlarınız",
