@@ -107,6 +107,45 @@
     "expired": "Pautan ini tidak lagi berfungsi. Log masuk untuk menukar tetapan ini pada halaman akaun anda, atau hubungi orang yang menjemput anda.",
     "signIn": "Log masuk"
   },
+  "account": {
+    "identity": {
+      "title": "Nama dan alamat e-mel anda",
+      "intro": "Apa yang dicatat oleh akaun anda tentang anda. Betulkan sendiri di sini, tanpa perlu meminta sesiapa.",
+      "name": "Nama",
+      "email": "Alamat e-mel",
+      "signInChanges": "Alamat e-mel ialah apa yang anda gunakan untuk log masuk, jadi menukarnya bermakna menukar cara anda log masuk. Ia juga menghentikan jemputan atau pautan tetapan semula yang belum anda gunakan, kerana pautan itu dihantar ke alamat lama.",
+      "submit": "Simpan perubahan"
+    },
+    "password": {
+      "title": "Kata laluan anda",
+      "intro": "Masukkan kata laluan yang anda guna sekarang, kemudian kata laluan yang anda mahu.",
+      "current": "Kata laluan semasa",
+      "new": "Kata laluan baharu",
+      "endsOthers": "Menukar kata laluan menamatkan setiap sesi lain. Anda kekal log masuk di sini.",
+      "submit": "Tukar kata laluan"
+    },
+    "delete": {
+      "title": "Padam akaun anda",
+      "goes": "Akaun anda dipadam, berserta sesi yang sedang dibuka, jemputan yang pernah dihantar kepada anda, akses yang diberikan kepada anda, dan rekod tentang apa yang pernah anda buka.",
+      "stays": "Apa yang anda tulis untuk syarikat kekal, dengan nama anda ditanggalkan daripadanya. Sandaran tersulit masih menyimpan akaun anda sehingga dua belas bulan, dan sandaran hanya dipulihkan untuk memulihkan data yang hilang.",
+      "final": "Tiada apa-apa yang membatalkannya. Untuk membaca apa-apa di dewan pelabur semula, anda memerlukan jemputan baharu.",
+      "confirmLabel": "Taip {name} untuk mengesahkan",
+      "submit": "Padam akaun saya",
+      "lastAdmin": "Anda satu-satunya pentadbir yang boleh log masuk, jadi akaun ini tidak boleh dipadam: dewan pelabur akan tinggal tanpa sesiapa yang boleh menguruskannya. Mintalah pentadbir kedua ditambah dahulu."
+    },
+    "notice": {
+      "passwordChanged": "Kata laluan anda telah ditukar. Setiap sesi lain telah tamat.",
+      "passwordRefused": "Itu bukan kata laluan yang dipegang akaun ini sekarang, jadi tiada apa-apa yang ditukar.",
+      "identityChanged": "Nama dan alamat e-mel anda telah disimpan.",
+      "identityChangedInvitationEnded": "Nama dan alamat e-mel anda telah disimpan. Jemputan atau pautan tetapan semula yang belum anda gunakan sudah berhenti berfungsi, kerana ia dihantar ke alamat lama anda; mintalah yang baharu daripada orang yang menjemput anda.",
+      "identityUnchanged": "Tiada apa-apa berubah — akaun anda memang sudah menyimpan apa yang anda minta.",
+      "nameNeeded": "Nama diperlukan.",
+      "emailInvalid": "Itu bukan alamat yang boleh disimpan oleh sistem ini.",
+      "emailUnavailable": "Alamat itu tidak boleh digunakan untuk akaun ini. Jika ia milik anda, hubungi orang yang menjemput anda.",
+      "deleteNameMismatch": "Nama yang anda taip bukan nama pada akaun anda, jadi tiada apa-apa yang dipadam.",
+      "deleteLastAdmin": "Akaun anda tidak dipadam: anda satu-satunya pentadbir yang boleh log masuk, dan dewan pelabur akan tinggal tanpa sesiapa yang boleh menguruskannya."
+    }
+  },
   "hall": {
     "failed": "Bahagian ini gagal dimuatkan.",
     "retry": "Cuba lagi",

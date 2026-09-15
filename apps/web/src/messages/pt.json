@@ -107,6 +107,45 @@
     "expired": "Esta ligação já não funciona. Inicie sessão para alterar esta definição na página da sua conta, ou contacte quem o convidou.",
     "signIn": "Iniciar sessão"
   },
+  "account": {
+    "identity": {
+      "title": "O seu nome e o seu endereço de e-mail",
+      "intro": "O que a sua conta diz sobre si. Corrija-o aqui mesmo; não precisa de pedir a ninguém.",
+      "name": "Nome",
+      "email": "Endereço de e-mail",
+      "signInChanges": "O endereço é aquilo com que inicia sessão, por isso alterá-lo altera a sua forma de entrar. Também anula o convite ou a ligação de redefinição que ainda não tenha usado, porque essa ligação foi enviada para o endereço anterior.",
+      "submit": "Guardar as alterações"
+    },
+    "password": {
+      "title": "A sua palavra-passe",
+      "intro": "Introduza a palavra-passe que usa agora e, depois, aquela que quer em vez dela.",
+      "current": "Palavra-passe atual",
+      "new": "Nova palavra-passe",
+      "endsOthers": "Alterar a palavra-passe termina todas as outras sessões. Aqui mantém a sessão iniciada.",
+      "submit": "Alterar a palavra-passe"
+    },
+    "delete": {
+      "title": "Eliminar a sua conta",
+      "goes": "A sua conta desaparece, e com ela as sessões que tiver abertas, qualquer convite que lhe tenha sido enviado, o acesso que lhe foi concedido e o registo do que abriu.",
+      "stays": "O que escreveu para a empresa fica, com o seu nome retirado. Uma cópia de segurança cifrada mantém a sua conta até doze meses, e uma cópia só é restaurada para recuperar dados perdidos.",
+      "final": "Nada desfaz isto. Para voltar a ler seja o que for no salão de investidores precisaria de um novo convite.",
+      "confirmLabel": "Escreva {name} para confirmar",
+      "submit": "Eliminar a minha conta",
+      "lastAdmin": "É o único administrador que consegue iniciar sessão, por isso esta conta não pode ser eliminada: o salão de investidores ficaria sem ninguém que o pudesse gerir. Peça primeiro que seja acrescentado um segundo administrador."
+    },
+    "notice": {
+      "passwordChanged": "A sua palavra-passe foi alterada. Todas as outras sessões terminaram.",
+      "passwordRefused": "Essa não é a palavra-passe que esta conta tem agora, por isso nada foi alterado.",
+      "identityChanged": "O seu nome e o seu endereço foram guardados.",
+      "identityChangedInvitationEnded": "O seu nome e o seu endereço foram guardados. O convite ou a ligação de redefinição que não tinha usado deixou de funcionar, porque foi enviado para o seu endereço anterior; peça um novo a quem o convidou.",
+      "identityUnchanged": "Nada mudou: a sua conta já tinha o que pediu.",
+      "nameNeeded": "É necessário um nome.",
+      "emailInvalid": "Esse não é um endereço que este sistema possa guardar.",
+      "emailUnavailable": "Esse endereço não pode ser usado nesta conta. Se for seu, contacte quem o convidou.",
+      "deleteNameMismatch": "O nome que escreveu não é o nome da sua conta, por isso nada foi eliminado.",
+      "deleteLastAdmin": "A sua conta não foi eliminada: é o único administrador que consegue iniciar sessão, e o salão de investidores ficaria sem ninguém que o pudesse gerir."
+    }
+  },
   "hall": {
     "failed": "Isto não foi carregado.",
     "retry": "Tentar de novo",

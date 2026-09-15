@@ -107,6 +107,45 @@
     "expired": "Dieser Link funktioniert nicht mehr. Melden Sie sich an, um diese Einstellung auf Ihrer Kontoseite zu ändern, oder wenden Sie sich an die Person, die Sie eingeladen hat.",
     "signIn": "Anmelden"
   },
+  "account": {
+    "identity": {
+      "title": "Ihr Name und Ihre E-Mail-Adresse",
+      "intro": "Was Ihr Konto über Sie sagt. Berichtigen Sie es hier selbst; Sie müssen niemanden darum bitten.",
+      "name": "Name",
+      "email": "E-Mail-Adresse",
+      "signInChanges": "Mit der Adresse melden Sie sich an, ihre Änderung ändert also Ihre Anmeldung. Sie beendet außerdem eine Einladung oder einen Zurücksetzungslink, den Sie noch nicht verwendet haben, denn dieser Link ging an die alte Adresse.",
+      "submit": "Änderungen speichern"
+    },
+    "password": {
+      "title": "Ihr Passwort",
+      "intro": "Geben Sie das Passwort ein, das Sie jetzt verwenden, und danach das, das Sie stattdessen möchten.",
+      "current": "Aktuelles Passwort",
+      "new": "Neues Passwort",
+      "endsOthers": "Eine Passwortänderung beendet jede andere Sitzung. Hier bleiben Sie angemeldet.",
+      "submit": "Passwort ändern"
+    },
+    "delete": {
+      "title": "Ihr Konto löschen",
+      "goes": "Ihr Konto wird gelöscht, und mit ihm die Sitzungen, die Sie geöffnet haben, jede Einladung, die Ihnen geschickt wurde, der Zugang, der Ihnen gewährt wurde, und die Aufzeichnung dessen, was Sie geöffnet haben.",
+      "stays": "Was Sie für das Unternehmen geschrieben haben, bleibt, allerdings ohne Ihren Namen. Eine verschlüsselte Sicherung enthält Ihr Konto noch bis zu zwölf Monate, und eine Sicherung wird ausschließlich zur Wiederherstellung verlorener Daten eingespielt.",
+      "final": "Nichts macht das rückgängig. Um im Investorenbereich wieder etwas zu lesen, bräuchten Sie eine neue Einladung.",
+      "confirmLabel": "Geben Sie zur Bestätigung {name} ein",
+      "submit": "Mein Konto löschen",
+      "lastAdmin": "Sie sind der einzige Administrator, der sich anmelden kann, deshalb lässt sich dieses Konto nicht löschen: Dem Investorenbereich bliebe niemand, der ihn verwalten könnte. Bitten Sie zuerst darum, einen zweiten Administrator hinzuzufügen."
+    },
+    "notice": {
+      "passwordChanged": "Ihr Passwort wurde geändert. Jede andere Sitzung ist beendet.",
+      "passwordRefused": "Das ist nicht das Passwort, das dieses Konto derzeit hat, deshalb wurde nichts geändert.",
+      "identityChanged": "Ihr Name und Ihre Adresse wurden gespeichert.",
+      "identityChangedInvitationEnded": "Ihr Name und Ihre Adresse wurden gespeichert. Eine Einladung oder ein Zurücksetzungslink, den Sie nicht verwendet hatten, funktioniert nicht mehr, denn er ging an Ihre alte Adresse; bitten Sie die Person, die Sie eingeladen hat, um einen neuen.",
+      "identityUnchanged": "Nichts hat sich geändert — Ihr Konto enthielt bereits das, worum Sie gebeten haben.",
+      "nameNeeded": "Ein Name wird benötigt.",
+      "emailInvalid": "Das ist keine Adresse, die dieses System speichern kann.",
+      "emailUnavailable": "Diese Adresse lässt sich für dieses Konto nicht verwenden. Wenn sie Ihnen gehört, wenden Sie sich an die Person, die Sie eingeladen hat.",
+      "deleteNameMismatch": "Der eingegebene Name ist nicht der Name Ihres Kontos, deshalb wurde nichts gelöscht.",
+      "deleteLastAdmin": "Ihr Konto wurde nicht gelöscht: Sie sind der einzige Administrator, der sich anmelden kann, und dem Investorenbereich bliebe niemand, der ihn verwalten könnte."
+    }
+  },
   "hall": {
     "failed": "Dies konnte nicht geladen werden.",
     "retry": "Erneut versuchen",

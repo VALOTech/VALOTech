@@ -107,6 +107,45 @@
     "expired": "Tautan ini sudah tidak berlaku. Masuk untuk mengubah setelan ini di halaman akun Anda, atau hubungi orang yang mengundang Anda.",
     "signIn": "Masuk"
   },
+  "account": {
+    "identity": {
+      "title": "Nama dan alamat email Anda",
+      "intro": "Apa yang dicatat akun Anda tentang Anda. Perbaiki sendiri di sini, tanpa perlu meminta siapa pun.",
+      "name": "Nama",
+      "email": "Alamat email",
+      "signInChanges": "Alamat email adalah yang Anda pakai untuk masuk, jadi mengubahnya berarti mengubah cara Anda masuk. Ini juga menghentikan undangan atau tautan pengaturan ulang yang belum Anda pakai, karena tautan itu dikirim ke alamat lama.",
+      "submit": "Simpan perubahan"
+    },
+    "password": {
+      "title": "Kata sandi Anda",
+      "intro": "Masukkan kata sandi yang Anda pakai sekarang, lalu kata sandi yang Anda inginkan.",
+      "current": "Kata sandi saat ini",
+      "new": "Kata sandi baru",
+      "endsOthers": "Mengubah kata sandi mengakhiri setiap sesi lain. Anda tetap masuk di sini.",
+      "submit": "Ubah kata sandi"
+    },
+    "delete": {
+      "title": "Hapus akun Anda",
+      "goes": "Akun Anda dihapus, beserta sesi yang sedang terbuka, undangan yang pernah dikirim kepada Anda, akses yang diberikan kepada Anda, dan catatan tentang apa yang pernah Anda buka.",
+      "stays": "Apa yang Anda tulis untuk perusahaan tetap ada, dengan nama Anda dilepas darinya. Cadangan terenkripsi masih menyimpan akun Anda hingga dua belas bulan, dan cadangan hanya dipulihkan untuk memulihkan data yang hilang.",
+      "final": "Tidak ada yang membatalkan ini. Untuk membaca apa pun di aula investor lagi, Anda memerlukan undangan baru.",
+      "confirmLabel": "Ketik {name} untuk mengonfirmasi",
+      "submit": "Hapus akun saya",
+      "lastAdmin": "Anda satu-satunya administrator yang dapat masuk, sehingga akun ini tidak dapat dihapus: aula investor akan tinggal tanpa seorang pun yang dapat mengelolanya. Mintalah administrator kedua ditambahkan lebih dulu."
+    },
+    "notice": {
+      "passwordChanged": "Kata sandi Anda telah diubah. Setiap sesi lain telah berakhir.",
+      "passwordRefused": "Itu bukan kata sandi yang dipegang akun ini sekarang, jadi tidak ada yang diubah.",
+      "identityChanged": "Nama dan alamat email Anda telah disimpan.",
+      "identityChangedInvitationEnded": "Nama dan alamat email Anda telah disimpan. Undangan atau tautan pengaturan ulang yang belum Anda pakai berhenti bekerja, karena dikirim ke alamat lama Anda; mintalah yang baru kepada orang yang mengundang Anda.",
+      "identityUnchanged": "Tidak ada yang berubah — akun Anda memang sudah berisi apa yang Anda minta.",
+      "nameNeeded": "Nama diperlukan.",
+      "emailInvalid": "Itu bukan alamat yang dapat disimpan sistem ini.",
+      "emailUnavailable": "Alamat itu tidak dapat dipakai untuk akun ini. Jika itu milik Anda, hubungi orang yang mengundang Anda.",
+      "deleteNameMismatch": "Nama yang Anda ketik bukan nama pada akun Anda, jadi tidak ada yang dihapus.",
+      "deleteLastAdmin": "Akun Anda tidak dihapus: Anda satu-satunya administrator yang dapat masuk, dan aula investor akan tinggal tanpa seorang pun yang dapat mengelolanya."
+    }
+  },
   "hall": {
     "failed": "Bagian ini gagal dimuat.",
     "retry": "Coba lagi",

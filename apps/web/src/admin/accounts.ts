@@ -1,10 +1,21 @@
 /**
- * What an admin does to somebody else's account (`ADMIN-001`): the list of who
- * can sign in and the one person behind a row of it, the eight acts that change
- * an account — suspend, role change, reinstate, end every session, erase, honour
- * a read-tracking objection, correct a name or an address, and say whether the
- * person has invested or is deciding — and a read of everything held about one,
- * for a data-portability request (`LEGAL-GLOBAL-001/T2`).
+ * What is done to an account (`ADMIN-001`): the list of who can sign in and the
+ * one person behind a row of it, the eight acts an admin performs on somebody
+ * else's account — suspend, role change, reinstate, end every session, erase,
+ * honour a read-tracking objection, correct a name or an address, and say
+ * whether the person has invested or is deciding — the erasure a person performs
+ * on their own, and a read of everything held about one, for a data-portability
+ * request (`LEGAL-GLOBAL-001/T2`).
+ *
+ * **Two of these acts have a second caller, and it is the account holder.**
+ * [`ADMIN-DEC-06`](../../docs/decisions-log.md#ADMIN-DEC-06) lets a signed-in
+ * reader correct their own name and address and delete their own account from
+ * `/hall/account`, and the acts they reach are these rather than copies of them:
+ * a second function writing `accounts.email` would be a second answer to what a
+ * correction refuses, and the refusals are the whole content of the act. So
+ * `correctIdentity` serves both callers unchanged, and erasure is one write body
+ * behind two entry points that differ in exactly one refusal — stated below,
+ * where the refusals are.
  *
  * The reads are plain and carry none of what follows. Each act is one carrying
  * several writes, and the design is that the writes are one
@@ -35,14 +46,26 @@
  * anything, which is also `false` for an id no account holds — in both cases
  * the answer to the caller is that nothing was written.
  *
- * **No act may strand the hall or turn on the actor** (`ADMIN-DEC-01`). An
- * admin cannot suspend, demote, or erase their own account, and no single act
- * may leave the hall with no admin who can sign in; both are refused before
- * anything is written, returning the same `false` a no-op returns. The guard is
- * fail-closed rather than advisory because a hall with no admin who can sign in
- * cannot recover itself — reinstating a suspended admin is an admin act, and no
- * bootstrap creates a first admin — so a stranded hall is recoverable only from
- * the database.
+ * **Two refusals, and they are not the same rule.** *No act may strand the
+ * hall*: no single act may leave the hall with no admin who can sign in, and
+ * that one binds every path there is or ever will be, because a hall with no
+ * admin who can sign in cannot recover itself — reinstating a suspended admin is
+ * an admin act, and no bootstrap creates a first admin — so it is recoverable
+ * only from the database. *No admin may turn a privileged act on themselves*
+ * (`ADMIN-DEC-01`): an admin cannot suspend, demote, or erase their own account
+ * from the console, and the reason that costs nothing is the one the decision
+ * gives — the hall has two admins, so the act they wanted is one they ask the
+ * other admin for. Both are refused before anything is written, returning the
+ * same `false` a no-op returns.
+ *
+ * The second rule is about privilege and not about the subject, which is why it
+ * does not travel to the account holder's own erasure. A person deleting their
+ * own account is not reaching past what they may do; they are exercising the
+ * erasure right the regime gives them (`DATA-R03`), and a refusal that fired on
+ * *actor is subject* would refuse precisely the case the control exists for. The
+ * first rule does travel, unchanged: an erasure that stranded the hall would be
+ * as unrecoverable arriving from `/hall/account` as from the console, so
+ * `eraseOwnAccount` takes it and `ADMIN-DEC-06` says so.
  *
  * The account row is locked by the update before suspension touches
  * `invitations`, which is the order the invitation path takes too, so an invite
@@ -196,6 +219,28 @@ async function isLastActiveAdmin(trx: Transaction<Database>, subjectId: string):
     .execute();
 
   return activeAdmins.length === 1 && activeAdmins[0]?.id === subjectId;
+}
+
+/**
+ * Whether this account is the only admin who can sign in, asked outside any act
+ * — so a surface can say that erasure is closed to them instead of offering a
+ * control the service would refuse (the `ADMIN-DEC-01` precedent, where the
+ * person page hides the suspend control on the actor's own account).
+ *
+ * It opens a transaction to reach the same predicate the guards use rather than
+ * spelling a second one. Two spellings of *the last admin who can sign in* would
+ * be two chances to count it differently, and the disagreement would surface as
+ * a page that offers a control the act refuses, or hides one it would allow.
+ *
+ * What it answers is true when it is read and is not a guarantee: another admin
+ * can be suspended between this read and the press. That is why it decides what
+ * is rendered and never what is permitted — the guard inside the act is the
+ * control, and it re-evaluates under the lock.
+ */
+export async function isLastActiveAdminAccount(accountId: string): Promise<boolean> {
+  return getDb()
+    .transaction()
+    .execute((trx) => isLastActiveAdmin(trx, accountId));
 }
 
 /**
@@ -790,18 +835,14 @@ export async function erasureCounts(accountId: string): Promise<ErasureCounts> {
  * `false` when the act is refused before anything is written.
  *
  * The guard matters more here than anywhere, because erasure is final and has no
- * inverse (`ADMIN-DEC-01`): an admin may not erase their own account, and no
+ * inverse: an admin may not erase their own account (`ADMIN-DEC-01`), and no
  * single act may leave the hall with no admin who can sign in. A suspension that
  * stranded the hall could be undone from the database; an erasure could not be
  * undone at all. Both refusals return the `false` a no-op returns, before any
  * write.
  *
- * No session is ended by hand, unlike a suspension's: deleting the accounts row
- * cascades to `sessions`, so the person is signed out by the statement that
- * erases them. The `account.delete` audit row outlives the account it names —
- * `actor_id` and `subject_id` are bare uuids, not foreign keys, so the record of
- * who erased whom survives its own subject (`SEC-002`, `DATA-R03`) — and it is
- * written in the same transaction as the delete, so the two are one act.
+ * This is the console's door. The account holder's own is `eraseOwnAccount`, and
+ * the two reach one write body.
  */
 export async function eraseAccount(accountId: string, actorId: string): Promise<boolean> {
   return getDb()
@@ -809,34 +850,89 @@ export async function eraseAccount(accountId: string, actorId: string): Promise<
     .execute(async (trx) => {
       // Safe default for ADMIN-DEC-01, before anything is written, and weightier
       // than suspension's because there is no way back: an admin may not erase
-      // their own access, and no single act may leave the hall with no admin who
-      // can sign in. Both return the same `false` a no-op returns.
+      // their own access from the console. The stranding guard below binds every
+      // path and is taken inside `eraseIn`.
       if (actorId === accountId) {
         return false;
       }
-      if (await isLastActiveAdmin(trx, accountId)) {
-        return false;
-      }
 
-      const erased = await trx
-        .deleteFrom('accounts')
-        .where('id', '=', accountId)
-        .returning('id')
-        .executeTakeFirst();
-
-      if (erased === undefined) {
-        return false;
-      }
-
-      await recordAudit(trx, {
-        actorId,
-        action: 'account.delete',
-        subjectType: 'account',
-        subjectId: accountId,
-      });
-
-      return true;
+      return eraseIn(trx, accountId, actorId);
     });
+}
+
+/**
+ * Erase the account the reader is signed in as, at their own request
+ * ([`ADMIN-DEC-06`](../../docs/decisions-log.md#ADMIN-DEC-06), `DATA-R03`).
+ *
+ * It takes one id, not two, and that is the authorisation expressed as a
+ * signature: the actor and the subject of this act are one account by
+ * definition, so there is no pair for a caller to get wrong and no id a posted
+ * body could supply. Who that account is, is the session's answer and the
+ * handler's question.
+ *
+ * One refusal stands and one does not. *No act may leave the hall with no admin
+ * who can sign in* holds here exactly as it holds in the console — the sole
+ * remaining admin is told so and is not erased — because the hall it would
+ * strand is the same hall and an erasure is as final from this door as from the
+ * other. *An admin may not act on their own access* is the console's rule and is
+ * not carried over: it exists so that a privileged act passes a second pair of
+ * eyes, and this act is not privileged — it is a person exercising erasure over
+ * their own record, which is the one case where actor and subject being equal is
+ * the point rather than the hazard.
+ *
+ * Returns whether a row was erased — `false` for the stranding refusal and for
+ * an id no account holds, in both of which nothing is written.
+ */
+export async function eraseOwnAccount(accountId: string): Promise<boolean> {
+  return getDb()
+    .transaction()
+    .execute((trx) => eraseIn(trx, accountId, accountId));
+}
+
+/**
+ * The erasure itself, inside the caller's transaction: the stranding guard, the
+ * delete, and the audit row that records it.
+ *
+ * It is one body behind both doors so that what erasure *does* cannot differ by
+ * the path taken to it. Only the refusal that is genuinely about privilege lives
+ * outside, at the console's entry point, where the privilege is.
+ *
+ * No session is ended by hand, unlike a suspension's: deleting the accounts row
+ * cascades to `sessions`, so the person is signed out by the statement that
+ * erases them. The `account.delete` audit row outlives the account it names —
+ * `actor_id` and `subject_id` are bare uuids, not foreign keys, so the record of
+ * who erased whom survives its own subject (`SEC-002`, `DATA-R03`) — and it is
+ * written in the same transaction as the delete, so the two are one act. When
+ * the person erased themselves the two ids are equal, which is the trail stating
+ * exactly that and not a field left unfilled.
+ */
+async function eraseIn(
+  trx: Transaction<Database>,
+  accountId: string,
+  actorId: string,
+): Promise<boolean> {
+  if (await isLastActiveAdmin(trx, accountId)) {
+    return false;
+  }
+
+  const erased = await trx
+    .deleteFrom('accounts')
+    .where('id', '=', accountId)
+    .returning('id')
+    .executeTakeFirst();
+
+  if (erased === undefined) {
+    return false;
+  }
+
+  await recordAudit(trx, {
+    actorId,
+    action: 'account.delete',
+    subjectType: 'account',
+    subjectId: accountId,
+  });
+
+  return true;
 }
 
 /**

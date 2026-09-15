@@ -59,6 +59,16 @@ PATH_RE = re.compile(
 TASK_CODE_RE = re.compile(r"\b(?:[A-Z][A-Z0-9-]*-\d{3}|REVIEW)/T\d+[a-z]?\d*\b")
 SHA_RE = re.compile(r"(?<![\w])(?:commit\s+)?([0-9a-f]{7,40})(?![\w])")
 MAKE_RE = re.compile(r"\bmake\s+([a-z][a-z0-9-]*)")
+# `make` is also an ordinary English verb, and an evidence line saying a control
+# would "make the form a test" is not citing a target. The words that can follow
+# the verb and never name one are a short, closed set; excluding them keeps the
+# check able to catch a mistyped target, which excluding everything unbracketed
+# would not -- citations in this ledger are written both inside backticks and
+# bare, so the backtick is no signal either.
+NOT_A_TARGET = frozenset(
+    "a an the it its this that these those them their his her my our your one "
+    "some any no every each both either sure up".split()
+)
 
 
 def git(*args):
@@ -165,6 +175,8 @@ def main():
             else:
                 resolved += 1
         for target in MAKE_RE.findall(body):
+            if target in NOT_A_TARGET:
+                continue
             if target not in targets:
                 problems.append(
                     "%s — the Makefile declares no `%s` target" % (code, target)

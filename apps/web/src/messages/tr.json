@@ -107,6 +107,45 @@
     "expired": "Bu bağlantı artık çalışmıyor. Bu ayarı hesap sayfanızda değiştirmek için giriş yapın ya da sizi davet eden kişiyle iletişime geçin.",
     "signIn": "Giriş yap"
   },
+  "account": {
+    "identity": {
+      "title": "Adınız ve e-posta adresiniz",
+      "intro": "Hesabınızın sizin hakkınızda söyledikleri. Burada kendiniz düzeltebilirsiniz, kimseden istemenize gerek yok.",
+      "name": "Ad",
+      "email": "E-posta adresi",
+      "signInChanges": "Giriş yaparken kullandığınız şey e-posta adresidir, dolayısıyla onu değiştirmek girişinizi de değiştirir. Ayrıca henüz kullanmadığınız bir daveti veya sıfırlama bağlantısını da geçersiz kılar, çünkü o bağlantı eski adrese gönderilmişti.",
+      "submit": "Değişiklikleri kaydet"
+    },
+    "password": {
+      "title": "Parolanız",
+      "intro": "Şu anda kullandığınız parolayı, ardından yerine koymak istediğiniz parolayı girin.",
+      "current": "Mevcut parola",
+      "new": "Yeni parola",
+      "endsOthers": "Parolayı değiştirmek diğer tüm oturumları sonlandırır. Burada oturumunuz açık kalır.",
+      "submit": "Parolayı değiştir"
+    },
+    "delete": {
+      "title": "Hesabınızı silin",
+      "goes": "Hesabınız silinir; açık oturumlarınız, size gönderilmiş her davet, size verilen erişim ve neleri açtığınıza dair kayıt da onunla birlikte gider.",
+      "stays": "Şirket için yazdıklarınız kalır, ancak adınız bunlardan çıkarılır. Şifrelenmiş bir yedek hesabınızı on iki aya kadar saklar ve bir yedek yalnızca kaybolan veriyi kurtarmak için geri yüklenir.",
+      "final": "Bunu geri alacak bir şey yok. Yatırımcı salonunda yeniden bir şey okuyabilmek için yeni bir davet gerekir.",
+      "confirmLabel": "Onaylamak için {name} yazın",
+      "submit": "Hesabımı sil",
+      "lastAdmin": "Giriş yapabilen tek yönetici sizsiniz, bu yüzden bu hesap silinemez: yatırımcı salonu onu yönetebilecek kimsesiz kalırdı. Önce ikinci bir yöneticinin eklenmesini isteyin."
+    },
+    "notice": {
+      "passwordChanged": "Parolanız değiştirildi. Diğer tüm oturumlar sonlandı.",
+      "passwordRefused": "Bu, hesabın şu anki parolası değil, bu yüzden hiçbir şey değiştirilmedi.",
+      "identityChanged": "Adınız ve adresiniz kaydedildi.",
+      "identityChangedInvitationEnded": "Adınız ve adresiniz kaydedildi. Kullanmadığınız davet veya sıfırlama bağlantısı artık çalışmıyor, çünkü eski adresinize gönderilmişti; sizi davet eden kişiden yenisini isteyin.",
+      "identityUnchanged": "Hiçbir şey değişmedi — hesabınızda zaten istediğiniz bilgi vardı.",
+      "nameNeeded": "Bir ad gerekli.",
+      "emailInvalid": "Bu, bu sistemin saklayabileceği bir adres değil.",
+      "emailUnavailable": "Bu adres bu hesap için kullanılamaz. Size aitse, sizi davet eden kişiyle iletişime geçin.",
+      "deleteNameMismatch": "Yazdığınız ad hesabınızdaki ad değil, bu yüzden hiçbir şey silinmedi.",
+      "deleteLastAdmin": "Hesabınız silinmedi: giriş yapabilen tek yönetici sizsiniz ve yatırımcı salonu onu yönetebilecek kimsesiz kalırdı."
+    }
+  },
   "hall": {
     "failed": "Bu bölüm yüklenemedi.",
     "retry": "Yeniden dene",

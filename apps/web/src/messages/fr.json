@@ -107,6 +107,45 @@
     "expired": "Ce lien ne fonctionne plus. Connectez-vous pour modifier ce réglage sur la page de votre compte, ou contactez la personne qui vous a invité.",
     "signIn": "Se connecter"
   },
+  "account": {
+    "identity": {
+      "title": "Votre nom et votre adresse e-mail",
+      "intro": "Ce que votre compte dit de vous. Corrigez-le ici même, sans avoir à le demander à quiconque.",
+      "name": "Nom",
+      "email": "Adresse e-mail",
+      "signInChanges": "L’adresse est ce avec quoi vous vous connectez, donc la modifier modifie votre connexion. Cela met aussi fin à l’invitation ou au lien de réinitialisation que vous n’avez pas encore utilisé, car ce lien a été envoyé à l’ancienne adresse.",
+      "submit": "Enregistrer les modifications"
+    },
+    "password": {
+      "title": "Votre mot de passe",
+      "intro": "Saisissez le mot de passe que vous utilisez actuellement, puis celui que vous voulez à la place.",
+      "current": "Mot de passe actuel",
+      "new": "Nouveau mot de passe",
+      "endsOthers": "Changer de mot de passe met fin à toutes les autres sessions. Vous restez connecté ici.",
+      "submit": "Changer le mot de passe"
+    },
+    "delete": {
+      "title": "Supprimer votre compte",
+      "goes": "Votre compte disparaît, ainsi que les sessions que vous avez ouvertes, toute invitation qui vous a été envoyée, l’accès qui vous a été accordé et le relevé de ce que vous avez ouvert.",
+      "stays": "Ce que vous avez écrit pour l’entreprise reste, votre nom en étant retiré. Une sauvegarde chiffrée conserve encore votre compte pendant douze mois au plus, et une sauvegarde n’est restaurée que pour récupérer des données perdues.",
+      "final": "Rien n’annule cette action. Pour lire de nouveau quoi que ce soit dans le hall investisseurs, il vous faudrait une nouvelle invitation.",
+      "confirmLabel": "Saisissez {name} pour confirmer",
+      "submit": "Supprimer mon compte",
+      "lastAdmin": "Vous êtes le seul administrateur à pouvoir se connecter, ce compte ne peut donc pas être supprimé : le hall investisseurs se retrouverait sans personne pour le gérer. Demandez d’abord l’ajout d’un second administrateur."
+    },
+    "notice": {
+      "passwordChanged": "Votre mot de passe a été changé. Toutes les autres sessions ont pris fin.",
+      "passwordRefused": "Ce n’est pas le mot de passe que ce compte contient actuellement, rien n’a donc été changé.",
+      "identityChanged": "Votre nom et votre adresse ont été enregistrés.",
+      "identityChangedInvitationEnded": "Votre nom et votre adresse ont été enregistrés. L’invitation ou le lien de réinitialisation que vous n’aviez pas utilisé a cessé de fonctionner, car il avait été envoyé à votre ancienne adresse ; demandez-en un nouveau à la personne qui vous a invité.",
+      "identityUnchanged": "Rien n’a changé : votre compte contenait déjà ce que vous avez demandé.",
+      "nameNeeded": "Un nom est nécessaire.",
+      "emailInvalid": "Ce n’est pas une adresse que ce système peut enregistrer.",
+      "emailUnavailable": "Cette adresse ne peut pas être utilisée pour ce compte. Si elle est la vôtre, contactez la personne qui vous a invité.",
+      "deleteNameMismatch": "Le nom que vous avez saisi n’est pas celui de votre compte, rien n’a donc été supprimé.",
+      "deleteLastAdmin": "Votre compte n’a pas été supprimé : vous êtes le seul administrateur à pouvoir se connecter, et le hall investisseurs se retrouverait sans personne pour le gérer."
+    }
+  },
   "hall": {
     "failed": "Ceci n’a pas pu être chargé.",
     "retry": "Réessayer",

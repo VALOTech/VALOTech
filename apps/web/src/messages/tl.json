@@ -107,6 +107,45 @@
     "expired": "Hindi na gumagana ang link na ito. Mag-sign in para baguhin ang setting sa pahina ng iyong account, o makipag-ugnayan sa taong nag-imbita sa iyo.",
     "signIn": "Mag-sign in"
   },
+  "account": {
+    "identity": {
+      "title": "Ang pangalan at email address mo",
+      "intro": "Ang sinasabi ng iyong account tungkol sa iyo. Itama mo ito rito — hindi mo kailangang humingi kaninuman.",
+      "name": "Pangalan",
+      "email": "Email address",
+      "signInChanges": "Ang email address ang ginagamit mo para mag-sign in, kaya ang pagpapalit nito ay pagpapalit sa paraan ng pag-sign in mo. Pinapahinto rin nito ang imbitasyon o reset link na hindi mo pa nagagamit, dahil ipinadala iyon sa lumang address.",
+      "submit": "I-save ang mga pagbabago"
+    },
+    "password": {
+      "title": "Ang password mo",
+      "intro": "Ilagay ang password na ginagamit mo ngayon, at saka ang gusto mong ipalit.",
+      "current": "Kasalukuyang password",
+      "new": "Bagong password",
+      "endsOthers": "Ang pagpapalit ng password ay nagtatapos sa bawat ibang session. Mananatili kang naka-sign in dito.",
+      "submit": "Palitan ang password"
+    },
+    "delete": {
+      "title": "Burahin ang iyong account",
+      "goes": "Mawawala ang iyong account, pati na ang mga session na bukas mo, ang imbitasyong ipinadala sa iyo, ang access na ibinigay sa iyo, at ang tala ng mga binuksan mo.",
+      "stays": "Mananatili ang isinulat mo para sa kompanya, ngunit aalisin doon ang pangalan mo. May naka-encrypt na backup na humahawak pa rin sa account mo nang hanggang labindalawang buwan, at ibinabalik lang ang backup kapag may nawalang datos na kailangang mabawi.",
+      "final": "Walang makakapagbawi nito. Para makabasa ulit ng anuman sa bulwagan ng mamumuhunan, kakailanganin mo ng bagong imbitasyon.",
+      "confirmLabel": "I-type ang {name} para kumpirmahin",
+      "submit": "Burahin ang account ko",
+      "lastAdmin": "Ikaw lang ang administrador na makakapag-sign in, kaya hindi mabubura ang account na ito: mawawalan ng makakapamahala ang bulwagan ng mamumuhunan. Humiling munang magdagdag ng pangalawang administrador."
+    },
+    "notice": {
+      "passwordChanged": "Napalitan ang password mo. Natapos na ang bawat ibang session.",
+      "passwordRefused": "Hindi iyan ang password na hawak ng account na ito ngayon, kaya walang nabago.",
+      "identityChanged": "Na-save ang pangalan at email address mo.",
+      "identityChangedInvitationEnded": "Na-save ang pangalan at email address mo. Huminto na sa paggana ang imbitasyon o reset link na hindi mo pa nagagamit, dahil ipinadala iyon sa lumang address mo; humingi ng bago sa taong nag-imbita sa iyo.",
+      "identityUnchanged": "Walang nabago — iyan na ang nakalagay sa account mo.",
+      "nameNeeded": "Kailangan ng pangalan.",
+      "emailInvalid": "Hindi iyan address na kayang itago ng sistemang ito.",
+      "emailUnavailable": "Hindi magagamit ang address na iyan para sa account na ito. Kung sa iyo iyan, makipag-ugnayan sa taong nag-imbita sa iyo.",
+      "deleteNameMismatch": "Hindi tugma ang pangalang na-type mo sa pangalan sa account mo, kaya walang nabura.",
+      "deleteLastAdmin": "Hindi nabura ang account mo: ikaw lang ang administrador na makakapag-sign in, at mawawalan ng makakapamahala ang bulwagan ng mamumuhunan."
+    }
+  },
   "hall": {
     "failed": "Hindi ito na-load.",
     "retry": "Subukan ulit",

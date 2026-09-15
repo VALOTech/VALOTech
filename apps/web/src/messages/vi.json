@@ -107,6 +107,45 @@
     "expired": "Liên kết này không còn hiệu lực. Hãy đăng nhập để thay đổi thiết lập trên trang tài khoản của bạn, hoặc liên hệ người đã mời bạn.",
     "signIn": "Đăng nhập"
   },
+  "account": {
+    "identity": {
+      "title": "Tên và địa chỉ email của bạn",
+      "intro": "Những gì tài khoản ghi về bạn. Bạn tự sửa ngay tại đây, không cần hỏi ai.",
+      "name": "Tên",
+      "email": "Địa chỉ email",
+      "signInChanges": "Địa chỉ email chính là thứ bạn dùng để đăng nhập, nên đổi nó là đổi cách bạn đăng nhập. Việc này cũng làm mất hiệu lực lời mời hoặc liên kết đặt lại mật khẩu mà bạn chưa dùng, vì liên kết đó đã gửi tới địa chỉ cũ.",
+      "submit": "Lưu thay đổi"
+    },
+    "password": {
+      "title": "Mật khẩu của bạn",
+      "intro": "Nhập mật khẩu bạn đang dùng, rồi nhập mật khẩu bạn muốn thay vào.",
+      "current": "Mật khẩu hiện tại",
+      "new": "Mật khẩu mới",
+      "endsOthers": "Đổi mật khẩu sẽ kết thúc mọi phiên khác. Bạn vẫn đăng nhập ở đây.",
+      "submit": "Đổi mật khẩu"
+    },
+    "delete": {
+      "title": "Xóa tài khoản của bạn",
+      "goes": "Tài khoản của bạn sẽ bị xóa, cùng với các phiên đang mở, lời mời từng gửi cho bạn, quyền truy cập bạn được cấp, và ghi nhận về những gì bạn đã mở.",
+      "stays": "Những gì bạn viết cho công ty vẫn ở lại, nhưng tên bạn được gỡ khỏi đó. Bản sao lưu đã mã hóa vẫn giữ tài khoản của bạn tối đa mười hai tháng, và bản sao lưu chỉ được khôi phục khi cần cứu dữ liệu bị mất.",
+      "final": "Không có cách nào hoàn tác. Muốn đọc lại bất cứ thứ gì trong sảnh nhà đầu tư, bạn sẽ cần một lời mời mới.",
+      "confirmLabel": "Nhập {name} để xác nhận",
+      "submit": "Xóa tài khoản của tôi",
+      "lastAdmin": "Bạn là quản trị viên duy nhất còn đăng nhập được, nên tài khoản này không thể xóa: sảnh nhà đầu tư sẽ không còn ai quản lý. Hãy đề nghị thêm một quản trị viên thứ hai trước đã."
+    },
+    "notice": {
+      "passwordChanged": "Mật khẩu của bạn đã được đổi. Mọi phiên khác đã kết thúc.",
+      "passwordRefused": "Đó không phải mật khẩu hiện tại của tài khoản này, nên không có gì thay đổi.",
+      "identityChanged": "Đã lưu tên và địa chỉ email của bạn.",
+      "identityChangedInvitationEnded": "Đã lưu tên và địa chỉ email của bạn. Lời mời hoặc liên kết đặt lại mật khẩu bạn chưa dùng đã ngừng hoạt động, vì nó được gửi tới địa chỉ cũ; hãy xin người đã mời bạn một liên kết mới.",
+      "identityUnchanged": "Không có gì thay đổi — tài khoản của bạn vốn đã ghi đúng như vậy.",
+      "nameNeeded": "Cần có tên.",
+      "emailInvalid": "Đây không phải địa chỉ mà hệ thống có thể lưu.",
+      "emailUnavailable": "Không thể dùng địa chỉ này cho tài khoản này. Nếu đó đúng là địa chỉ của bạn, hãy liên hệ người đã mời bạn.",
+      "deleteNameMismatch": "Tên bạn nhập không khớp với tên trên tài khoản, nên không có gì bị xóa.",
+      "deleteLastAdmin": "Tài khoản của bạn chưa bị xóa: bạn là quản trị viên duy nhất còn đăng nhập được, và sảnh nhà đầu tư sẽ không còn ai quản lý."
+    }
+  },
   "hall": {
     "failed": "Phần này không tải được.",
     "retry": "Thử lại",

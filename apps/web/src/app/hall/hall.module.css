@@ -525,7 +525,12 @@
   box-shadow: 0 28px 60px rgba(0, 0, 0, 0.72), inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
-.searchField {
+/* The field shape is declared once and worn by both surfaces that have fields.
+   The account page's controls are the same object as the search panel's — a
+   label over an input in a column — and a second set of values for them would
+   be a second set to keep level. */
+.searchField,
+.accountField {
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
@@ -534,7 +539,8 @@
 
 /* A real label, not a placeholder standing in for one: a placeholder leaves the
    moment somebody types, which is when a reader who lost their place needs it. */
-.searchLabel {
+.searchLabel,
+.accountLabel {
   color: var(--text-dim);
   font-family: var(--mono);
   font-size: 12px;
@@ -543,7 +549,8 @@
 }
 
 .searchInput,
-.searchSelect {
+.searchSelect,
+.accountInput {
   padding: 0.5rem 0.7rem;
   border: 1px solid var(--card-border);
   border-radius: var(--r-ctrl, 10px);
@@ -559,7 +566,8 @@
 }
 
 .searchInput:hover,
-.searchSelect:hover {
+.searchSelect:hover,
+.accountInput:hover {
   border-color: rgba(170, 195, 255, 0.4);
 }
 
@@ -747,6 +755,85 @@
 .accountButton:hover {
   border-color: rgba(170, 195, 255, 0.6);
   background: rgba(140, 158, 255, 0.2);
+}
+
+/* A form on this page is the button plus the fields it submits, so it gets the
+   act's spacing and a column to hold them. */
+.accountForm {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  margin-block-start: 1.1rem;
+  max-width: 34rem;
+}
+
+.accountForm > .accountButton,
+.accountForm > .accountFinalButton {
+  align-self: flex-start;
+}
+
+/* What the page says about the act just carried out, read at the top because a
+   page with no client script cannot put it beside the field that caused it. The
+   accent marks it as the one thing on the page that has just changed, which is
+   what the accent is for here. */
+.accountNotice {
+  margin: 0.9rem 0 0;
+  max-width: 56ch;
+  padding: 0.6rem 0.85rem;
+  border: 1px solid rgba(140, 170, 255, 0.35);
+  border-radius: var(--r-ctrl, 10px);
+  background: rgba(140, 158, 255, 0.1);
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* A rule a reader is standing outside of, marked by a bar down the inline start
+   rather than by a hue alone, so it stays distinguishable from the ordinary
+   sentences around it for somebody who does not separate the two (`A11Y-R03`). */
+.accountRefusal {
+  margin: 0;
+  max-width: 56ch;
+  padding-inline-start: 0.85rem;
+  border-inline-start: 2px solid var(--accent);
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* The rule the field's own value has to satisfy, sitting under it and named by
+   the input's `aria-describedby`, so it is read out with the field rather than
+   found afterwards. */
+.accountHint {
+  margin: 0;
+  color: var(--text-dim);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* The one control on this surface that nothing undoes. It is not red — this
+   theme carries no alarm hue and inventing one for a single button is how a
+   palette grows a shade nobody governs — so what sets it apart is that it is
+   quiet where the others are lit: an outline on the void, which reads as
+   deliberate rather than as the obvious thing to press. */
+.accountFinalButton {
+  align-self: flex-start;
+  padding: 0.5rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.34);
+  border-radius: var(--r-ctrl, 10px);
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+  transition:
+    background 0.2s var(--ease),
+    border-color 0.2s var(--ease);
+}
+
+.accountFinalButton:hover {
+  border-color: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.06);
 }
 
 /* ---------------------------------------------------------------- The foot */

@@ -107,6 +107,45 @@
     "expired": "This link no longer works. Sign in to change the setting on your account page, or ask the person who invited you.",
     "signIn": "Sign in"
   },
+  "account": {
+    "identity": {
+      "title": "Your name and address",
+      "intro": "What your account says about you. Put it right here — you do not need to ask anybody.",
+      "name": "Name",
+      "email": "Email address",
+      "signInChanges": "The address is what you sign in with, so changing it changes your sign-in. It also stops an invitation or reset link you have not used yet, because that link was sent to the old address.",
+      "submit": "Save changes"
+    },
+    "password": {
+      "title": "Your password",
+      "intro": "Give the password you use now, then the one you want instead.",
+      "current": "Current password",
+      "new": "New password",
+      "endsOthers": "Changing your password ends every other session. You stay signed in here.",
+      "submit": "Change password"
+    },
+    "delete": {
+      "title": "Delete your account",
+      "goes": "Your account goes, and with it the sessions you have open, any invitation you were sent, the access you were granted, and the record of what you have opened.",
+      "stays": "What you wrote for the company stays, with your name taken off it. An encrypted backup still holds your account for up to twelve months, and a backup is only ever restored to recover from data loss.",
+      "final": "Nothing undoes this. To read anything in the hall again you would need a new invitation.",
+      "confirmLabel": "Type {name} to confirm",
+      "submit": "Delete my account",
+      "lastAdmin": "You are the only administrator who can sign in, so this account cannot be deleted: the hall would be left with nobody able to manage it. Ask for a second administrator first."
+    },
+    "notice": {
+      "passwordChanged": "Your password was changed. Every other session has ended.",
+      "passwordRefused": "That is not the password this account holds now, so nothing was changed.",
+      "identityChanged": "Your name and address were saved.",
+      "identityChangedInvitationEnded": "Your name and address were saved. An invitation or reset link you had not used has stopped working, because it was sent to your old address; ask the person who invited you for a new one.",
+      "identityUnchanged": "Nothing changed — your account already holds what you asked for.",
+      "nameNeeded": "A name is needed.",
+      "emailInvalid": "That is not an address this system can store.",
+      "emailUnavailable": "That address cannot be used for this account. If it is yours, ask the person who invited you.",
+      "deleteNameMismatch": "The name you typed is not the name on your account, so nothing was deleted.",
+      "deleteLastAdmin": "Your account was not deleted: you are the only administrator who can sign in, and the hall would be left with nobody able to manage it."
+    }
+  },
   "hall": {
     "failed": "This did not load.",
     "retry": "Try again",

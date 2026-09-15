@@ -111,18 +111,23 @@ leaves their access alone.
 ## Erasure — delete me
 
 **A signed-in reader deletes their own account** at `/hall/account`
-(`ADMIN-DEC-06`), with the same confirmation and the same two refusals. A request
-arriving here is from somebody who cannot sign in, or who wrote instead of
-looking; either way the identity check below is the step that stands in for the
-session they did not present.
+(`ADMIN-DEC-06`), typing their own name to confirm, exactly as this page asks you
+to type theirs. A request arriving here is from somebody who cannot sign in, or
+who wrote instead of looking; either way the identity check above is the step
+that stands in for the session they did not present.
 
 1. **`/admin/accounts/<id>`**, the Delete control.
 2. The confirmation lists what goes and what stays, and asks for the person's name
    to be typed (`ADMIN-001/T4`). Read that list to answer their question about
    what survives, rather than describing it from memory.
-3. Two refusals are real and are not faults: the last admin, and yourself
-   (`ADMIN-001/T5`).
-4. The act is audited as `account.delete`.
+3. Two refusals are real and are not faults on this page: the last admin who can
+   sign in, and yourself (`ADMIN-001/T5`). **Only the first of the two reaches the
+   reader's own path**, and the difference matters when somebody writes in
+   confused: an investor who presses Delete on their own account page is not
+   refused, and the sole remaining admin is — that page tells them so instead of
+   offering a control that would refuse them.
+4. The act is audited as `account.delete`, naming the person as both the actor and
+   the subject when they did it themselves.
 
 **Tell them about the backups.** An erased person is still in an encrypted backup
 for up to twelve months — seven daily, four weekly, twelve monthly

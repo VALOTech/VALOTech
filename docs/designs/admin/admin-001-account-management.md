@@ -6,7 +6,7 @@ prd_refs: [ADMIN-001, DATA-R01, DATA-R03, SEC-R04]
 depends_on: [ADMIN-002, AUTH-003, AUTH-004, SEC-002]
 depended_by: [DATA-002, DECK-004, INV-001, MAIL-001]
 layers_touched: [data, domain, service, api, frontend, ui]
-cross_cutting_rules: [DATA-R01, DATA-R02, DATA-R03, SEC-R04, A11Y-R01, A11Y-R02]
+cross_cutting_rules: [DATA-R01, DATA-R02, DATA-R03, SEC-R02, SEC-R04, A11Y-R01, A11Y-R02]
 status: implemented
 ---
 
@@ -110,9 +110,14 @@ gates on — a posted body is whatever the caller sent — and only then calls
 `eraseAccount`, which owns the refusals; a name that does not match is a `400`
 and nothing is erased.
 
-Deleting the last admin is refused. Deleting yourself is refused. Both are the
-kind of thing that is obvious until somebody is cleaning up at the end of a long
-day.
+Deleting the last admin who can sign in is refused, and so is an admin deleting
+their own account from the console. Both are the kind of thing that is obvious
+until somebody is cleaning up at the end of a long day, and they are not the same
+rule. The first is about the hall: it has no admin left to reinstate anybody, so
+it is recoverable only from the database, and it binds every path that erases
+anything. The second is about privilege passing a second pair of eyes
+(`ADMIN-DEC-01`), which is why it belongs to this door and not to the one the
+account holder uses below.
 
 ### Creating
 
@@ -244,12 +249,74 @@ the same legitimate-interests basis as the two behavioural rows beside it, and
 returned by the data-portability export — a request for what is held that omitted
 it would be answered incompletely (`LEGAL-GLOBAL-001/T2`).
 
+### The reader's own door
+
+Correcting a record and erasing it are rights the data-protection regimes give
+the person, and two of the acts above are also reached by the person they are
+about, from `/hall/account`
+([`ADMIN-DEC-06`](../../decisions-log.md#ADMIN-DEC-06)). A third act lives only
+there: changing the password, which is nobody's business but the account
+holder's and which the console deliberately cannot do — an admin who could set a
+password could sign in as that person.
+
+    POST /api/account/identity   { name, email }
+    POST /api/account/password   { currentPassword, newPassword }
+    POST /api/account/delete     { confirmName }
+
+**The acts are the ones above and not copies of them.** `correctIdentity` and the
+erasure serve both doors, because the refusals are the whole content of those
+acts and a second function writing the same column would be a second answer to
+each of them. What differs is the door, and it differs in four ways.
+
+**The session is the identity check.** The runbook has an admin establish who
+they are speaking to before touching a record, and an address is not proof of
+that on its own; a signed-in reader has already presented a session this system
+issued. Both paths stand, because somebody whose address is wrong cannot sign in
+to fix it, and that is the request the console path is for.
+
+**The stranding refusal travels and the self refusal does not.** The last admin
+who can sign in is refused here as there, because the hall it would strand is the
+same hall. An admin may not erase their own account *from the console* — that
+rule exists so a privileged act passes a second pair of eyes, and a person
+erasing their own record is not reaching past what they may do. Carrying it here
+would refuse exactly the case this door exists to serve.
+
+**A taken address is refused without being named as taken.** The console answers
+`409 email_taken`, which tells an admin nothing they could not read off the
+account list. An investor has no such list, so the same answer here would make
+the form a test for whether a named person holds an account in this hall, and
+that a named person is reading a fundraise is precisely what this system holds in
+confidence. The reader is told the address cannot be used and who to ask, and the
+attempt is counted against a limit so addresses cannot be tried in bulk.
+
+**Changing the password demands the current one, and ends every other session.**
+A session that can set the password it was opened with outlives every remedy,
+which is what makes the demand a step-up rather than a formality. A password
+change is a privilege change (`AUTH-002`), so the change and the deletion of
+every session are one transaction, and the response carries a fresh session —
+the reader stays signed in where they are standing, and every other device is
+turned out. The trail records the invalidation as `session.invalidate_all`,
+which is the act the sign-out-everywhere control writes for the same effect on
+the same table; the vocabulary carries no act for a password change and minting
+one is a migration (`DATA-R07`).
+
+**What is not here is the download.** `LEGAL-GLOBAL-001` §3 refuses a
+self-service export because a link to a person's whole record is a credential
+sitting in an inbox, and `ADMIN-DEC-06` left that refusal standing. A
+data-portability request is answered by an admin.
+
 ## 4. Integration
 
-**`ADMIN-002`** is the console and the destructive-action component.
-**`AUTH-003`** creates the invitation. **`AUTH-004`** ends the sessions.
-**`DECK-004`** supplies the per-account access list. **`SEC-002`** records every
-action. **`DATA-002`** is the erasure design this implements the admin half of.
+**`ADMIN-002`** is the console and the destructive-action component, whose
+typed-name predicate the reader's own erasure gates on too, so the two
+confirmations cannot drift into disagreeing about what counts as the name.
+**`AUTH-001`** owns the hashing and the policy the reader's new password passes.
+**`AUTH-003`** creates the invitation, and a corrected address destroys the
+outstanding one whichever door corrected it. **`AUTH-004`** ends the sessions, and
+its account page is where the reader's own three controls sit. **`INV-001`** is
+the hall that page belongs to. **`DECK-004`** supplies the per-account access
+list. **`SEC-002`** records every action. **`DATA-002`** is the erasure design
+this implements both halves of.
 
 ## 5. Cross-cutting compliance
 
@@ -258,10 +325,17 @@ action. **`DATA-002`** is the erasure design this implements the admin half of.
   said this person invested or is deciding, which the notice declares. Nothing
   else.
 - **`DATA-R02`** — no personal data in the audit or in a log.
-- **`DATA-R03`** — deletion is a delete, and the confirmation says what
-  survives.
+- **`DATA-R03`** — deletion is a delete, the confirmation says what survives, and
+  the person whose record it is can ask for it themselves.
 - **`SEC-R04`** — create, suspend, role change, correct, set the investor type,
-  delete, and every grant change.
+  delete, and every grant change. A reader acting on their own account is not a
+  privileged write and is audited only where the act is one the trail already
+  names: their correction and their erasure are recorded with them as both actor
+  and subject, and their password change is recorded as the bulk session
+  invalidation it performs.
+- **`SEC-R02`** — a password change is a privilege change, so every session the
+  account holds is deleted in the transaction that writes the hash and a fresh
+  one is issued on the response.
 - **`A11Y-R01`**, **`A11Y-R02`** — the lists and the confirmations are
   operable and named.
 
@@ -320,3 +394,4 @@ action. **`DATA-002`** is the erasure design this implements the admin half of.
 - `ADMIN-001/T9` — Audit resend-invitation and reset-password: two new audit.action values, and a recordAudit inside each act's transaction
 - `ADMIN-001/T10` — Correcting a person's name and address from their page, audited like every other act
 - `ADMIN-001/T11` — Whether a person has invested or is deciding, carried on the account and set from their page
+- `ADMIN-001/T12` — The reader's own name, address, password and erasure, from the hall

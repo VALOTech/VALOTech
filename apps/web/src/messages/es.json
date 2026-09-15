@@ -107,6 +107,45 @@
     "expired": "Este enlace ya no funciona. Inicie sesión para cambiar este ajuste en la página de su cuenta, o escriba a la persona que le invitó.",
     "signIn": "Iniciar sesión"
   },
+  "account": {
+    "identity": {
+      "title": "Su nombre y su dirección de correo",
+      "intro": "Lo que su cuenta dice de usted. Corríjalo aquí mismo; no necesita pedírselo a nadie.",
+      "name": "Nombre",
+      "email": "Dirección de correo electrónico",
+      "signInChanges": "La dirección es con lo que inicia sesión, así que cambiarla cambia su forma de entrar. También anula la invitación o el enlace de restablecimiento que aún no haya usado, porque ese enlace se envió a la dirección anterior.",
+      "submit": "Guardar los cambios"
+    },
+    "password": {
+      "title": "Su contraseña",
+      "intro": "Escriba la contraseña que usa ahora y, después, la que quiere en su lugar.",
+      "current": "Contraseña actual",
+      "new": "Nueva contraseña",
+      "endsOthers": "Cambiar la contraseña finaliza todas las demás sesiones. Aquí seguirá con la sesión iniciada.",
+      "submit": "Cambiar la contraseña"
+    },
+    "delete": {
+      "title": "Eliminar su cuenta",
+      "goes": "Su cuenta desaparece, y con ella las sesiones que tenga abiertas, cualquier invitación que se le haya enviado, el acceso que se le concedió y el registro de lo que ha abierto.",
+      "stays": "Lo que escribió para la empresa se queda, con su nombre retirado. Una copia de seguridad cifrada conserva su cuenta hasta doce meses, y una copia solo se restaura para recuperar datos perdidos.",
+      "final": "Nada deshace esto. Para volver a leer algo en la sala de inversores necesitaría una invitación nueva.",
+      "confirmLabel": "Escriba {name} para confirmar",
+      "submit": "Eliminar mi cuenta",
+      "lastAdmin": "Usted es el único administrador que puede iniciar sesión, por lo que esta cuenta no se puede eliminar: la sala de inversores se quedaría sin nadie que pudiera gestionarla. Pida primero que se añada un segundo administrador."
+    },
+    "notice": {
+      "passwordChanged": "Su contraseña se ha cambiado. Todas las demás sesiones han finalizado.",
+      "passwordRefused": "Esa no es la contraseña que tiene ahora esta cuenta, así que no se ha cambiado nada.",
+      "identityChanged": "Se han guardado su nombre y su dirección.",
+      "identityChangedInvitationEnded": "Se han guardado su nombre y su dirección. La invitación o el enlace de restablecimiento que no había usado ha dejado de funcionar, porque se envió a su dirección anterior; pida uno nuevo a la persona que le invitó.",
+      "identityUnchanged": "No ha cambiado nada: su cuenta ya contenía lo que ha pedido.",
+      "nameNeeded": "Hace falta un nombre.",
+      "emailInvalid": "Esa no es una dirección que este sistema pueda guardar.",
+      "emailUnavailable": "Esa dirección no se puede usar para esta cuenta. Si es suya, escriba a la persona que le invitó.",
+      "deleteNameMismatch": "El nombre que ha escrito no es el de su cuenta, así que no se ha eliminado nada.",
+      "deleteLastAdmin": "Su cuenta no se ha eliminado: usted es el único administrador que puede iniciar sesión, y la sala de inversores se quedaría sin nadie que pudiera gestionarla."
+    }
+  },
   "hall": {
     "failed": "Esto no se ha cargado.",
     "retry": "Inténtelo de nuevo",
