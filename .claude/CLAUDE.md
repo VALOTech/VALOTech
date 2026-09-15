@@ -99,7 +99,7 @@ Every document reads as if written correctly the first time. No "previously X, n
 
 ### 1.10 No over-engineering, and no under-building either
 
-Every line serves a real caller. This repository is small — two roles, roughly six tables — and the ecosystem's larger repositories are a shape to follow, not a volume to match: copying a hundred and seventy gate scripts here would be ceremony. Clarity, fail-closed defaults, edge cases and tests that pin committed behaviour are never over-engineering.
+Every line serves a real caller. This repository is small — three roles, roughly six tables — and the ecosystem's larger repositories are a shape to follow, not a volume to match: copying a hundred and seventy gate scripts here would be ceremony. Clarity, fail-closed defaults, edge cases and tests that pin committed behaviour are never over-engineering.
 
 ### 1.11 Decision hand-off
 
@@ -302,8 +302,9 @@ All configuration through environment variables; a missing required key fails st
 | Term | Meaning |
 |---|---|
 | `visitor` | Anyone reading the public gateway. Not authenticated, not identified. |
-| `investor` | A person granted access to the investor hall. **Their identity is personal data.** |
-| `admin` | Staff who manage accounts, posts, decks, mail and configuration. The only other role. |
+| `prospect` | Somebody who asked for access from the gateway and confirmed the address they gave. Nobody has vouched for who they are, so the hall admits them to what it publishes openly and to nothing else. **Their identity is personal data.** |
+| `investor` | A person an admin invited by name and granted access to the investor hall. **Their identity is personal data.** |
+| `admin` | Staff who manage accounts, posts, decks, mail and configuration. |
 | `gateway` | The public page at valotech.org |
 | `investor hall` | Everything behind the sign-in |
 | `deck` | An investor presentation: ordered sections, published as a version |
@@ -312,7 +313,9 @@ All configuration through environment variables; a missing required key fails st
 | `chapter` | One section of the gateway's argument |
 | `station` | Where the journey puts the world for a chapter |
 
-There are exactly two roles. Do not invent a third; if one seems needed, that is a decision (§1.12).
+There are exactly three roles, and the third was added by a decision rather than an edit ([`AUTH-DEC-06`](../docs/decisions-log.md#AUTH-DEC-06)). Do not invent a fourth; if one seems needed, that is a decision (§1.12). `apps/web/src/content/access.ts` refuses a role its predicate does not name rather than letting it inherit an audience, so a fourth stops the build until somebody decides what it may read.
+
+**`prospect` is a word two columns can hold and they mean different things.** `accounts.role` says how far the company has verified who somebody is; `accounts.investor_type` says whether they have invested yet (`INV-DEC-02`). A person an admin invited and recorded as still deciding is role `investor` and type `prospect` at once, and both readings are true of them. Only the role gates.
 
 ---
 

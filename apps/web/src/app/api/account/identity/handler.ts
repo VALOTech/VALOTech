@@ -38,7 +38,7 @@
  */
 
 import { correctIdentity } from '../../../../admin/accounts';
-import { requireInvestor } from '../../../../auth/gate';
+import { requireHallReader } from '../../../../auth/gate';
 import { getRateLimiter } from '../../../../auth/rate-limit';
 import { getConfig } from '../../../../config/index';
 import { backToAccount } from '../../../hall/account/outcomes';
@@ -53,7 +53,7 @@ export async function handleAccountIdentity(request: Request): Promise<Response>
     return new Response('cross_origin', { status: 403, headers: TEXT_HEADERS });
   }
 
-  const actor = await requireInvestor(request);
+  const actor = await requireHallReader(request);
   if (actor instanceof Response) {
     return actor;
   }

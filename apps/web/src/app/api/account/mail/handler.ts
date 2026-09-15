@@ -24,7 +24,7 @@
  * second lock rather than the only one.
  */
 
-import { requireInvestor } from '../../../../auth/gate';
+import { requireHallReader } from '../../../../auth/gate';
 import { getConfig } from '../../../../config/index';
 import { resumeInvestorMail, stopInvestorMail } from '../../../../mail/unsubscribe';
 
@@ -44,7 +44,7 @@ export async function handleAccountMail(request: Request): Promise<Response> {
     return new Response('cross_origin', { status: 403, headers: TEXT_HEADERS });
   }
 
-  const actor = await requireInvestor(request);
+  const actor = await requireHallReader(request);
   if (actor instanceof Response) {
     return actor;
   }

@@ -128,14 +128,14 @@ describe.skipIf(!HAS_DATABASE)('the progress board a reader is composed (AUTH-00
   it('is not composed for a reader recorded as still deciding', async () => {
     // `null` and not an empty board: an empty board is a state the landing has
     // words for, and this reader must not be told it.
-    expect(await progressBoardFor(prospect.id)).toBeNull();
+    expect(await progressBoardFor(prospect)).toBeNull();
   });
 
   it('is composed for a reader who has invested, and for one nobody has classified', async () => {
     const unclassified = await account('unclassified', 'investor', null);
 
     for (const reader of [invested, unclassified, admin]) {
-      const board = await progressBoardFor(reader.id);
+      const board = await progressBoardFor(reader);
       expect({ reader: reader.id, products: board?.map((entry) => entry.product) }).toEqual({
         reader: reader.id,
         products: [...PORTFOLIO_PRODUCTS],
@@ -144,19 +144,35 @@ describe.skipIf(!HAS_DATABASE)('the progress board a reader is composed (AUTH-00
   });
 
   it('carries the headline the gateway does not publish, which is why it is withheld', async () => {
-    const board = await progressBoardFor(invested.id);
+    const board = await progressBoardFor(invested);
 
     expect(board?.every((entry) => entry.headline !== null)).toBe(true);
-    expect(await progressBoardFor(prospect.id)).toBeNull();
+    expect(await progressBoardFor(prospect)).toBeNull();
+  });
+
+  it('is withheld from a prospect by their role, whatever the type later says', async () => {
+    // The role is the access fact and the type is the ordering one
+    // (`AUTH-DEC-06`, `INV-DEC-02`). Somebody who registered themselves is
+    // withheld from by the first, so an admin who classifies them wrongly --
+    // or promotes the type without promoting the role -- still does not put
+    // the company's own progress in front of a reader nobody has vouched for.
+    const registered = await account('registered', 'prospect', 'prospect');
+    expect(await progressBoardFor(registered)).toBeNull();
+
+    await classify(registered, 'current');
+    expect(await progressBoardFor(registered)).toBeNull();
+
+    await classify(registered, null);
+    expect(await progressBoardFor(registered)).toBeNull();
   });
 
   it('follows the type rather than the account, so reclassifying moves it', async () => {
     const mover = await account('mover', 'investor', 'current');
 
-    expect(await progressBoardFor(mover.id)).not.toBeNull();
+    expect(await progressBoardFor(mover)).not.toBeNull();
     await classify(mover, 'prospect');
-    expect(await progressBoardFor(mover.id)).toBeNull();
+    expect(await progressBoardFor(mover)).toBeNull();
     await classify(mover, 'current');
-    expect(await progressBoardFor(mover.id)).not.toBeNull();
+    expect(await progressBoardFor(mover)).not.toBeNull();
   });
 });

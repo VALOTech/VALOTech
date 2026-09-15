@@ -31,12 +31,13 @@ import { useEffect, useRef, useState } from 'react';
 import type { ReactElement } from 'react';
 
 import type { ErasureCounts } from '../../../../admin/accounts';
-import type { AccountState, InvestorType } from '../../../../db/types';
+import type { AccountRole, AccountState, InvestorType } from '../../../../db/types';
 import { DestructiveAction } from '../../destructive-action';
 
 import type { AccountAction, AccountActionAnswer, AccountDeleteAnswer } from './account-actions';
 import { CorrectIdentity } from './correction';
 import { SetInvestorType } from './investor-type';
+import { SetRole } from './role';
 import styles from './person.module.css';
 
 /** One act and the answer it came back with, held so the page can report it. */
@@ -347,6 +348,7 @@ export function PersonActions({
   name,
   email,
   state,
+  role,
   investorType,
   self,
   erasure,
@@ -357,6 +359,8 @@ export function PersonActions({
   /** The address the record holds, which the correction field opens on. */
   readonly email: string;
   readonly state: AccountState;
+  /** The role the record holds, which its control opens on. */
+  readonly role: AccountRole;
   /** What the record says about having invested, which its control opens on. */
   readonly investorType: InvestorType | null;
   /** Whether the admin reading the page is the person it is about. */
@@ -441,6 +445,13 @@ export function PersonActions({
 
       <h3>Correction</h3>
       <CorrectIdentity accountId={accountId} name={name} email={email} disabled={held} />
+
+      {/* Role before investor type, because the two read as a pair and only one
+          of them decides what the person may see. An admin meeting them in this
+          order is told what changes access before they are told what changes an
+          ordering. */}
+      <h3>Role</h3>
+      <SetRole accountId={accountId} role={role} disabled={held} />
 
       <h3>Investor type</h3>
       <SetInvestorType accountId={accountId} investorType={investorType} disabled={held} />

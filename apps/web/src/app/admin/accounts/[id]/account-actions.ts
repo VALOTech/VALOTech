@@ -10,7 +10,7 @@
  * clicking.
  */
 
-import type { CorrectionResult } from '../../../../admin/accounts';
+import type { CorrectionResult, RoleChangeOutcome } from '../../../../admin/accounts';
 
 export const ACCOUNT_ACTIONS = [
   'resend-invitation',
@@ -113,4 +113,17 @@ export type AccountCorrectionAnswer = Extract<
  */
 export interface InvestorTypeAnswer {
   readonly outcome: 'changed' | 'unchanged';
+}
+
+/**
+ * What a role change reported (`AUTH-DEC-06`, `ADMIN-001/T13`).
+ *
+ * It carries the service's own outcome rather than a boolean, because four
+ * different things stop a role change and only one of them is "the account
+ * already says that". A console that reported a refusal as a no-op would send an
+ * admin to press the same button again; a console that reported a no-op as a
+ * refusal would send them looking for a permission they already hold.
+ */
+export interface RoleChangeAnswer {
+  readonly outcome: RoleChangeOutcome;
 }

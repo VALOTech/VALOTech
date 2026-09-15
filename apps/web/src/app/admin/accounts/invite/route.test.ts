@@ -202,6 +202,22 @@ describe.skipIf(!HAS_DATABASE)('POST /admin/accounts/invite', () => {
       expect(await accountByEmail(email)).toHaveLength(0);
     });
 
+    it('refuses `prospect`, because an invitation is the act of vouching', async () => {
+      // `AUTH-DEC-06`. A prospect is somebody nobody has vouched for, so an
+      // admin inviting one by name contradicts itself — and the record would
+      // then say a person registered themselves when they did not. The role is
+      // a real one, unlike the case above, which is why the refusal has to be
+      // the narrower `INVITABLE_ROLES` and not the account's own vocabulary.
+      const email = invitee();
+      const response = await callPost(
+        { name: 'Ada', email, role: 'prospect' },
+        { cookie: admin.cookie, origin: ORIGIN },
+      );
+
+      expect(response.status).toBe(400);
+      expect(await accountByEmail(email)).toHaveLength(0);
+    });
+
     it('refuses a blank name and an address with no @', async () => {
       const blankName = await callPost({ name: '   ', email: invitee(), role: 'investor' }, { cookie: admin.cookie, origin: ORIGIN });
       expect(blankName.status).toBe(400);

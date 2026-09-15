@@ -119,8 +119,8 @@ The editor is a list of blocks and is operated as one: arrow keys move between
 blocks, `Enter` makes a new one, `Backspace` at the start merges. Every control
 has a name from the dictionary (`I18N-R01`, `A11Y-R02`), focus is visible on the
 block being edited, and the block-type menu is reachable without a pointer
-(`A11Y-R01`). This is an admin surface and the two roles are small, and none of
-that is a reason to build a surface one of them could not use.
+(`A11Y-R01`). This is an admin surface and the staff who use it are few, and
+neither is a reason to build a surface one of them could not use.
 
 ## 4. Integration
 

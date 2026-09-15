@@ -306,9 +306,31 @@ export async function suspendAccount(accountId: string, actorId: string): Promis
 }
 
 /**
- * Change an account's role, ending every session it holds. Returns whether the
- * role changed — `false` when the account already held it, in which case
- * nothing is written, nobody is signed out and nothing is recorded. The trail
+ * What a role change did, or the reason it did nothing.
+ *
+ * Four outcomes rather than a boolean, because four different things make a
+ * role change do nothing and a surface that cannot tell them apart says the
+ * wrong one out loud: an admin refused for demoting the last admin who can sign
+ * in would read “the account already says that”, which is a lie about a refusal
+ * — and a refusal an operator misreads as a no-op is the one they retry.
+ */
+export type RoleChangeOutcome =
+  | 'changed'
+  | 'unchanged'
+  | 'refused_self'
+  | 'refused_last_admin'
+  | 'no_such_account';
+
+/**
+ * Change an account's role, ending every session it holds. Says what it did:
+ * `unchanged` only when the account already held the role, and a named refusal
+ * otherwise, in which case nothing is written, nobody is signed out and nothing
+ * is recorded.
+ *
+ * This is how a `prospect` becomes an `investor` once they have invested
+ * (`AUTH-DEC-06`), the ordinary end of a registered person's first chapter
+ * rather than an exceptional act — which is why the refusals are named for the
+ * console rather than folded into one silent `false`. The trail
  * carries the role that was replaced beside the one that replaced it
  * (`SEC-DEC-01`), so a reader months later can tell which direction a privilege
  * moved without restoring a database.
@@ -330,7 +352,7 @@ export async function changeRole(
   accountId: string,
   newRole: AccountRole,
   actorId: string,
-): Promise<boolean> {
+): Promise<RoleChangeOutcome> {
   return getDb()
     .transaction()
     .execute(async (trx) => {
@@ -340,10 +362,10 @@ export async function changeRole(
       // admin set, so it is never the last one, and a self-change is refused
       // whichever direction it runs.
       if (actorId === accountId) {
-        return false;
+        return 'refused_self';
       }
       if (await isLastActiveAdmin(trx, accountId)) {
-        return false;
+        return 'refused_last_admin';
       }
 
       // The role as it stands, read under the lock the `UPDATE` will hold
@@ -360,7 +382,7 @@ export async function changeRole(
         .executeTakeFirst();
 
       if (held === undefined) {
-        return false;
+        return 'no_such_account';
       }
 
       const changed = await trx
@@ -372,7 +394,7 @@ export async function changeRole(
         .executeTakeFirst();
 
       if (changed === undefined) {
-        return false;
+        return 'unchanged';
       }
 
       await invalidateAllForAccountIn(trx, accountId);
@@ -386,7 +408,7 @@ export async function changeRole(
         after: { role: newRole },
       });
 
-      return true;
+      return 'changed';
     });
 }
 

@@ -914,13 +914,21 @@ const NO_ACCOUNT = '00000000-0000-0000-0000-000000000000';
  * Register somebody who has not been invited. Answers the same for an address an
  * account holds and one it does not (`SEC-R03`, `AUTH-005/T2`).
  *
- * **The row is the row an invitation writes.** Same table, same `role`, same
- * `invited` state left to the column default, same single-use token from the same
- * `invitations` table — the one difference is `investor_type`, set to `prospect`,
- * which records how this person arrived and, by `INV-DEC-02`, decides nothing
- * about what they may read. A second account state or a second token kind would
- * be a second mechanism to keep single-use right in, and the second one is the
- * one that goes stale.
+ * **The row is the row an invitation writes, in every respect but who it says
+ * this person is.** Same table, same `invited` state left to the column default,
+ * same single-use token from the same `invitations` table. A second account state
+ * or a second token kind would be a second mechanism to keep single-use right in,
+ * and the second one is the one that goes stale.
+ *
+ * Two columns differ, and they record two different things. `role` is `prospect`
+ * rather than `investor` (`AUTH-DEC-06`): nobody has vouched for who this is
+ * beyond an address they could receive mail at, so `content/access.ts` admits
+ * them to what the company publishes openly and to nothing else — and because
+ * an item's audience defaults to the investor one, an item nobody thought about
+ * is an item they cannot read. `investor_type` is `prospect` too, which is the
+ * separate fact that they have not invested (`INV-DEC-02`) and which orders the
+ * landing without gating it. An admin promoting somebody who has since invested
+ * writes both, and each write is true on its own.
  *
  * **An address that already holds an account is not written to, and nothing is
  * minted for it.** Re-issuing would be worse than useless in both directions it
@@ -989,7 +997,7 @@ export async function registerAccount(person: Registrant): Promise<RegistrationD
         .values({
           email: address,
           name,
-          role: 'investor',
+          role: 'prospect',
           locale: person.locale,
           investor_type: 'prospect',
         })

@@ -180,11 +180,20 @@ describe.skipIf(!HAS_DATABASE)('registerAccount (AUTH-005)', () => {
       ]);
 
       // Read back from the catalogue rather than asserted against what was
-      // passed in: the claim is that the two rows agree, and the only field that
-      // may differ is the one that records how the person arrived.
-      expect({ ...self, investor_type: byInvitation.investor_type }).toEqual(byInvitation);
+      // passed in: the claim is that the two rows agree everywhere except the
+      // two columns that record who this person is, so a divergence anywhere
+      // else fails whether or not this file knew to look for it.
+      expect({ ...self, role: byInvitation.role, investor_type: byInvitation.investor_type }).toEqual(
+        byInvitation,
+      );
+
+      // The two that do differ, and they differ about different things.
+      // `investor_type` says this person has not invested (`INV-DEC-02`), which
+      // an invited reader can equally be; `role` says nobody has vouched for who
+      // they are (`AUTH-DEC-06`), which only a registration produces.
       expect(self.investor_type).toBe('prospect');
-      expect(self.role).toBe('investor');
+      expect(self.role).toBe('prospect');
+      expect(byInvitation.role).toBe('investor');
       expect(self.state).toBe('invited');
       expect(self.password_hash).toBeNull();
     });

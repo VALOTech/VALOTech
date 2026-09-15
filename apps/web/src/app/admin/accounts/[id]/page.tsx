@@ -224,6 +224,7 @@ export default async function PersonPage({
           name={person.name}
           email={person.email}
           state={person.state}
+          role={person.role}
           investorType={person.investorType}
           self={self}
           erasure={erasure}

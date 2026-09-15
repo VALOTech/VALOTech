@@ -29,7 +29,18 @@ import type { Locale } from '../i18n/locales';
  * bare union types, so the constraint and the type can be compared with each
  * other rather than trusted to agree.
  */
-export const ACCOUNT_ROLES = ['investor', 'admin'] as const;
+export const ACCOUNT_ROLES = ['prospect', 'investor', 'admin'] as const;
+
+/**
+ * The roles an admin may invite somebody as (`AUTH-DEC-06`).
+ *
+ * `prospect` is absent, and its absence is the point: an invitation is the act
+ * of vouching for who somebody is, so inviting a person as somebody nobody has
+ * vouched for contradicts itself. A prospect exists only by having registered
+ * and confirmed their own address (`AUTH-005`), and leaves the role only by an
+ * admin promoting them once they have invested.
+ */
+export const INVITABLE_ROLES = ['investor', 'admin'] as const;
 
 export type AccountRole = (typeof ACCOUNT_ROLES)[number];
 

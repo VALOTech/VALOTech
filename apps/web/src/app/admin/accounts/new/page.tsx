@@ -12,7 +12,7 @@
 import { useState } from 'react';
 import type { FormEvent, ReactElement } from 'react';
 
-import { ACCOUNT_ROLES } from '../../../../db/types';
+import { INVITABLE_ROLES } from '../../../../db/types';
 import { languageName, LOCALES } from '../../../../i18n/locales';
 
 import styles from './invite.module.css';
@@ -87,7 +87,7 @@ export default function InvitePage(): ReactElement {
         <label className={styles.field}>
           <span>Role</span>
           <select value={role} onChange={(event) => setRole(event.target.value)}>
-            {ACCOUNT_ROLES.map((option) => (
+            {INVITABLE_ROLES.map((option) => (
               <option key={option} value={option}>
                 {option}
               </option>

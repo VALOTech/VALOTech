@@ -29,7 +29,7 @@ import { isAddressShaped, normaliseAddress } from '../../../../auth/address';
 import { requireAdmin } from '../../../../auth/gate';
 import { EmailTakenError, inviteAccount } from '../../../../auth/invitation';
 import { getConfig } from '../../../../config/index';
-import { ACCOUNT_ROLES, type AccountRole } from '../../../../db/types';
+import { INVITABLE_ROLES, type AccountRole } from '../../../../db/types';
 import { isLocale, type Locale } from '../../../../i18n/locales';
 import { withRequestId } from '../../../../ops/request-context';
 
@@ -48,9 +48,17 @@ function json(status: number, body: string): Response {
   return new Response(body, { status, headers: JSON_HEADERS });
 }
 
-/** Whether a posted value names one of the two roles; anything else is malformed. */
+/**
+ * Whether a posted value names a role an invitation may carry; anything else is
+ * malformed.
+ *
+ * Narrower than the account's own vocabulary, because `prospect` is not
+ * invitable (`db/types.ts:INVITABLE_ROLES`) — a posted `prospect` is refused
+ * here rather than reaching `inviteAccount`, so the one path that mints a
+ * vouched-for account cannot mint an unvouched one.
+ */
 function isRole(value: unknown): value is AccountRole {
-  return typeof value === 'string' && (ACCOUNT_ROLES as readonly string[]).includes(value);
+  return typeof value === 'string' && (INVITABLE_ROLES as readonly string[]).includes(value);
 }
 
 /**
@@ -96,7 +104,7 @@ async function handleInvite(request: Request): Promise<Response> {
     role?: unknown;
     locale?: unknown;
   };
-  // A name and an address the invitation can reach, and one of the two roles. The
+  // A name, an address the invitation can reach, and an invitable role. The
   // address is only shape-checked here, against the same predicate the correction
   // surface applies (`ADMIN-001/T10`) — `inviteAccount` normalises it and the
   // unique index is what actually settles who already exists.

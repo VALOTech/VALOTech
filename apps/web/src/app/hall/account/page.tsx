@@ -7,7 +7,7 @@ import { getFormatter, getTranslations } from 'next-intl/server';
 import { isLastActiveAdminAccount, personIdentity } from '../../../admin/accounts';
 import { MAX_EMAIL_LENGTH } from '../../../auth/address';
 import { presentedToken } from '../../../auth/gate';
-import { requireInvestorPage } from '../../../auth/page-guard';
+import { requireHallReaderPage } from '../../../auth/page-guard';
 import { MAX_PASSWORD_LENGTH, MIN_PASSWORD_LENGTH } from '../../../auth/password-policy';
 import { currentSessionId, liveSessionsForAccount } from '../../../auth/session';
 import { investorMailPreference } from '../../../mail/unsubscribe';
@@ -94,7 +94,7 @@ export default async function AccountPage({
 }: {
   readonly searchParams: Promise<Record<string, string | string[] | undefined>>;
 }): Promise<ReactElement> {
-  const actor = await requireInvestorPage();
+  const actor = await requireHallReaderPage();
   const token = presentedToken(await headers());
   const [
     currentId,

@@ -2,7 +2,7 @@
  * The consumer side of the gate, for a rendered page rather than a route
  * handler (`ADMIN-002`, and `INV-002` when it lands).
  *
- * `AUTH-002`'s `requireAdmin`/`requireInvestor` answer an `Actor` or the
+ * `AUTH-002`'s `requireAdmin`/`requireHallReader` answer an `Actor` or the
  * `Response` a caller should return. A route handler returns that `Response`
  * directly; a React Server Component cannot — it has no return channel for a
  * status — so it must translate the answer into the App Router's control flow:
@@ -26,7 +26,7 @@
 import { headers } from 'next/headers';
 import { notFound, redirect } from 'next/navigation';
 
-import { type Actor, requireAdmin, requireInvestor, type SessionRequest } from './gate';
+import { type Actor, requireAdmin, requireHallReader, type SessionRequest } from './gate';
 
 const SIGN_IN = '/sign-in';
 
@@ -65,6 +65,6 @@ export async function requireAdminPage(): Promise<Actor> {
  * surface such as the session list (`AUTH-004/T2`) is a reader's own, not the
  * console's, so it does not turn a signed-in investor away.
  */
-export async function requireInvestorPage(): Promise<Actor> {
-  return enforce(await requireInvestor(await currentRequest()));
+export async function requireHallReaderPage(): Promise<Actor> {
+  return enforce(await requireHallReader(await currentRequest()));
 }

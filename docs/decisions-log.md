@@ -10,30 +10,6 @@ An entry is filed the moment the choice surfaces, not when it is answered. Nothi
 
 ## Open decisions
 
-<a id="AUTH-DEC-06"></a>
-### `AUTH-DEC-06` — What a registered prospect may read, given that a registration gives them the investor role — OPEN
-
-- **Decision:** `AUTH-005` writes `role: investor` for somebody who registered themselves, and `CMS-006` §3 admits any account of that role to the `investor` audience — which is the audience `content_items.audience` defaults to. So a confirmed prospect reads every published item nobody deliberately narrowed, where this feature was specified to admit them to what is public. What should a prospect be admitted to?
-- **Options:** **A** Leave `CMS-006` alone: a prospect reads the `investor` audience, and the specification is corrected to say so · **B** Narrow what `investor` means, so a report or a deck reaches a prospect only by grant — a change to what every item already published is published to · **C** A third role, which `.claude/CLAUDE.md` §7.3 reserves to the owner · **D** Read `investor_type` in `visibleTo`, which is the second access model `INV-DEC-02` refused and which `apps/web/src/content/investor-type-access.test.ts` pins against.
-- **Recommendation:** **B**, narrowed to the two types that carry a body — `report` and `deck` default to `granted` while `update` keeps `investor`. It keeps one access model, keeps the type non-gating, and makes the promise true; the cost is a migration changing the column default and an admin habit of granting a report rather than relying on it. **D** is out under `INV-DEC-02` whatever its convenience, and **A** is the option to take only if a prospect reading investor updates is what was wanted.
-- **Decision owner:** user
-- **Blocks:** — none —
-- **Revises:** AUTH-005/T1, AUTH-005/T2, AUTH-005/T4 — all three ship the safe default; **B** or **C** changes what `registerAccount` writes or what `visibleTo` admits, and **A** corrects the specification instead
-- **Status:** OPEN. Safe default: `AUTH_REGISTRATION_OPEN` defaults to `false` and the route answers `503 registration_closed`, so no deployment can produce such a reader; the route is also closed whenever no message can be sent, so no unreachable account is written. The behaviour that makes the question real is pinned by `apps/web/src/content/prospect-access.test.ts:admits a prospect to the investor audience, because the predicate reads the role`.
-
----
-
-<a id="I18N-DEC-03"></a>
-### `I18N-DEC-03` — Whether a technical term stays in English in a locale that does not use the Latin script — OPEN
-
-- **Decision:** `assets/i18n.js` opens by stating that "product and technical terms [are] kept in English", and the dictionary does not follow it consistently: `foot.cookies` reads `Cookie` in `vi, zh, zt, th, id, ms, es, ja, tr, ko` and is translated or glossed in `hi (कुकीज़), bn (কুকিজ), ur (کوکیز), ar (ملفات تعريف الارتباط (Cookie)), ru (Файлы Cookie)`. Which of the two is the rule, for `cookie` and for every technical term after it?
-- **Options:** **A** The stated rule governs and the five translated locales are corrected to `Cookie` — one term, one spelling, and a reader who has met it on any VALO page meets the same word here · **B** The script governs: a Latin-script locale keeps the English term and a non-Latin one takes the word its own readers and its own regulator use, which is what the five locales already do and what `SITE-006`'s legal pages want (`çerez` in Turkish, `쿠키` in Korean, rather than a page headed with a Latin word) · **C** Per-term, decided once each and recorded in a glossary the way the Vietnamese renderings already are in `glossary-vi.json`.
-- **Recommendation:** **B**. The stated rule was written for product names — `ValoLab`, `ValoStack`, `VALO Ads` — where one spelling everywhere is the point, and `cookie` is not a product name but a word with a settled native form in most of these languages, including in the law each of them is read under. The five locales that already translate it are the ones whose scripts make a Latin run genuinely disruptive, so the dictionary's practice is more coherent than its stated rule, and the honest repair is to correct the sentence rather than five locales. **A**'s strongest case is real and is why this is the owner's: a person who meets `Cookie` in the footer of one VALO product and `çerez` on the next page of another cannot tell whether they are the same thing, and consistency across six products is worth more than naturalness on one page — that case wins if the ecosystem ever publishes a shared glossary, which is **C**.
-- **Decision owner:** user
-- **Blocks:** — none —
-- **Revises:** `SITE-006/T1` — the legal pages ship with the natural word in each locale, which is **B** in force before it is chosen
-- **Status:** OPEN. Safe default: the dictionary is left exactly as it is and the legal pages use each locale's natural word, so nothing is rewritten under a rule nobody has confirmed and a reader is never shown a term they cannot read. The mismatch a Turkish or Korean reader meets — a footer link labelled `Cookie` opening a page headed `Çerezler` / `쿠키` — is visible and harmless; the alternative, rewriting `foot.cookies` in five locales on the published page, is neither.
-
 <a id="OPS-DEC-02"></a>
 ### `OPS-DEC-02` — Which `X-Forwarded-For` hop is the client, for the sign-in rate limit — OPEN
 
@@ -185,6 +161,32 @@ An entry is filed the moment the choice surfaces, not when it is answered. Nothi
 
 ---
 ## Resolved decisions
+
+<a id="AUTH-DEC-06"></a>
+### `AUTH-DEC-06` — What a registered prospect may read, given that a registration gives them the investor role — RESOLVED 2026-09-15
+
+- **Decision:** `AUTH-005` writes `role: investor` for somebody who registered themselves, and `CMS-006` §3 admits any account of that role to the `investor` audience — which is the audience `content_items.audience` defaults to. So a confirmed prospect reads every published item nobody deliberately narrowed, where this feature was specified to admit them to what is public. What should a prospect be admitted to?
+- **Options:** **A** Leave `CMS-006` alone: a prospect reads the `investor` audience, and the specification is corrected to say so · **B** Narrow what `investor` means, so a report or a deck reaches a prospect only by grant — a change to what every item already published is published to · **C** A third role, which `.claude/CLAUDE.md` §7.3 reserves to the owner · **D** Read `investor_type` in `visibleTo`, which is the second access model `INV-DEC-02` refused and which `apps/web/src/content/investor-type-access.test.ts` pins against.
+- **Recommendation:** **B**, narrowed to the two types that carry a body — `report` and `deck` default to `granted` while `update` keeps `investor`. It keeps one access model, keeps the type non-gating, and makes the promise true; the cost is a migration changing the column default and an admin habit of granting a report rather than relying on it. **D** is out under `INV-DEC-02` whatever its convenience, and **A** is the option to take only if a prospect reading investor updates is what was wanted.
+- **Decision owner:** user
+- **Settled by:** user
+- **Blocks:** — none —
+- **Revises:** AUTH-005/T1, AUTH-005/T2, AUTH-005/T4 — all three shipped the safe default; **C** changes what `registerAccount` writes and what `visibleTo` admits, so all three are revised by `AUTH-005/T5`
+- **Status:** RESOLVED 2026-09-15 — **C**, a third role. `role` admits `prospect`, `registerAccount` writes it, and `visibleTo` gains a branch that admits the `public` audience and the items a grant names, and nothing else. It is the only option that makes the promise a guarantee rather than an administrative habit: **B** left a report one mistaken dropdown away from every prospect, and a feature whose whole purpose is bounding what an anonymous registrant sees cannot rest on somebody remembering. `INV-DEC-02` is untouched and stays true — `investor_type` still orders the landing and gates nothing, and the gating this adds is by role, which is what every other access decision in this hall already turns on. The cost the owner accepted is the one §7.3 reserves to them: a third word in the vocabulary, and an admin path that promotes a prospect to an investor once they have invested.
+
+---
+
+<a id="I18N-DEC-03"></a>
+### `I18N-DEC-03` — Whether a technical term stays in English in a locale that does not use the Latin script — RESOLVED 2026-09-15
+
+- **Decision:** `assets/i18n.js` opens by stating that "product and technical terms [are] kept in English", and the dictionary does not follow it consistently: `foot.cookies` reads `Cookie` in `vi, zh, zt, th, id, ms, es, ja, tr, ko` and is translated or glossed in `hi (कुकीज़), bn (কুকিজ), ur (کوکیز), ar (ملفات تعريف الارتباط (Cookie)), ru (Файлы Cookie)`. Which of the two is the rule, for `cookie` and for every technical term after it?
+- **Options:** **A** The stated rule governs and the five translated locales are corrected to `Cookie` — one term, one spelling, and a reader who has met it on any VALO page meets the same word here · **B** The script governs: a Latin-script locale keeps the English term and a non-Latin one takes the word its own readers and its own regulator use, which is what the five locales already do and what `SITE-006`'s legal pages want (`çerez` in Turkish, `쿠키` in Korean, rather than a page headed with a Latin word) · **C** Per-term, decided once each and recorded in a glossary the way the Vietnamese renderings already are in `glossary-vi.json`.
+- **Recommendation:** **B**. The stated rule was written for product names — `ValoLab`, `ValoStack`, `VALO Ads` — where one spelling everywhere is the point, and `cookie` is not a product name but a word with a settled native form in most of these languages, including in the law each of them is read under. The five locales that already translate it are the ones whose scripts make a Latin run genuinely disruptive, so the dictionary's practice is more coherent than its stated rule, and the honest repair is to correct the sentence rather than five locales. **A**'s strongest case is real and is why this is the owner's: a person who meets `Cookie` in the footer of one VALO product and `çerez` on the next page of another cannot tell whether they are the same thing, and consistency across six products is worth more than naturalness on one page — that case wins if the ecosystem ever publishes a shared glossary, which is **C**.
+- **Decision owner:** user
+- **Settled by:** user
+- **Blocks:** — none —
+- **Revises:** `SITE-006/T1` — the legal pages shipped with each locale's natural word, which the glossary is expected to ratify rather than overturn
+- **Status:** RESOLVED 2026-09-15 — **C**, a glossary decided once per term, **and the owner's answer went past the option**: this repository builds it, and it builds it by harvesting rather than by invention. VALO Tech is the ecosystem's hub, the sibling products have each already settled these words for themselves, and a hub that mints a twenty-first opinion is the reason six products disagree. So the glossary is assembled from what the siblings already publish, the remainder is authored through this repository's own translation process, and `assets/i18n.js`'s header sentence is rewritten to describe the rule the glossary states rather than one the file itself does not follow. Filed as `I18N-001/T5`.
 
 <a id="ADMIN-DEC-06"></a>
 ### `ADMIN-DEC-06` — What a reader may change about their own account without asking — RESOLVED 2026-09-15

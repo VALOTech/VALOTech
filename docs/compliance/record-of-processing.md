@@ -27,9 +27,12 @@ owner names a person, the notice publishes no name and this record claims none.
 | What they opened, and when | To show them what is unread; for a deck, to record which version they were shown | Legitimate interests, stated in the notice |
 | Whether they have invested or are deciding | To order the hall's landing so what they came for is first | Legitimate interests, stated in the notice |
 
-The people are investors and admins — the two roles this product has
-(`.claude/CLAUDE.md` §7.3). No other category of person has an account, and none
-is profiled. The last three rows are disclosed in the notice rather than assumed.
+The people are prospects, investors and admins — the three roles this product
+has (`.claude/CLAUDE.md` §7.3). A prospect is somebody who asked for access from
+the gateway and confirmed their own address (`AUTH-005`); the same rows are held
+about them as about an investor, gathered on the same basis, and the role decides
+what they may read rather than what is kept. No other category of person has an
+account, and none is profiled. The last three rows are disclosed in the notice rather than assumed.
 Two are behavioural, and what a person opened is theirs alone: not aggregated,
 not reported to an admin as analytics, and not kept after the account goes
 (`LEGAL-SG-001` §3). The third is an opinion an admin records rather than a

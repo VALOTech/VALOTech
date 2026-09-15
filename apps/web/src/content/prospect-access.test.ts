@@ -219,17 +219,30 @@ describe.skipIf(!HAS_DATABASE)('what a reader still deciding may read (AUTH-005/
     expect(Object.keys(prospect).sort()).toEqual(['id', 'role']);
   });
 
-  it('admits a prospect to the investor audience, because the predicate reads the role', async () => {
-    // The reason `AUTH_REGISTRATION_OPEN` ships false. `CMS-006` admits any
-    // account whose role is `investor` to the `investor` audience, and a
-    // registration writes exactly that role — so a confirmed prospect reads every
-    // published item nobody deliberately narrowed, which is not the hall the PRD
-    // describes for them. Whether that should change, and how, is the owner's;
-    // until it is answered the door that would produce such a reader stays shut,
-    // and this pins the behaviour so the question cannot stop being real without
-    // somebody editing this line.
+  it('admits an invited reader to the investor audience whatever their type says', async () => {
+    // The type has never gated and still does not. Somebody an admin invited by
+    // name holds the `investor` role, so `CMS-006` admits them to the `investor`
+    // audience — whether the company has recorded them as having invested or as
+    // still deciding.
     expect(await visible(prospect)).toContain('for-investors');
+  });
 
+  it('withholds the investor audience from somebody who registered themselves', async () => {
+    // `AUTH-DEC-06`, and the reason it is a role rather than a habit. The two
+    // readers below differ in nothing an admin chose per document: one was
+    // invited and one arrived through `AUTH-005`, and only the second is held to
+    // what the company publishes openly.
+    const registered = await account('registered', 'prospect', 'prospect');
+
+    expect(await visible(registered)).toEqual(['open-to-all']);
+    expect(await visible(prospect)).toContain('for-investors');
+  });
+
+  it('is fail-closed for an item nobody thought about, because the column defaults to investor', async () => {
+    // This is what makes the role worth its cost. An admin who creates a report
+    // and never touches the audience has published it to investors, and the
+    // registered reader is outside that by construction rather than by anybody
+    // having remembered a dropdown.
     const defaulted = await createItem({
       type: 'report',
       slug: `prospect-access-default-${randomUUID()}`,
@@ -237,5 +250,25 @@ describe.skipIf(!HAS_DATABASE)('what a reader still deciding may read (AUTH-005/
       period: '2026-Q3',
     });
     expect(defaulted.audience).toBe('investor');
+
+    // Both halves, because `not.toContain` alone is satisfied by a reader who
+    // sees nothing at all -- which is what a broken predicate returns, and it
+    // would look like a pass. The open item is what tells the two apart.
+    const registered = await account('unnarrowed', 'prospect', null);
+    const seen = await visible(registered);
+
+    expect(seen).toContain('open-to-all');
+    expect(seen).not.toContain(defaulted.slug);
+  });
+
+  it('opens a granted document to a registered reader who is named on it', async () => {
+    // An admin who wants one named person to read one document should not have
+    // to promote them to do it, so the grant clause is the registered reader's
+    // too — the role narrows the audience and never the grant.
+    const registered = await account('granted-registered', 'prospect', null);
+
+    expect(await visible(registered)).not.toContain('granted-to-neither');
+    await addGrant(id['granted-to-neither'], registered.id, admin.id);
+    expect(await visible(registered)).toContain('granted-to-neither');
   });
 });

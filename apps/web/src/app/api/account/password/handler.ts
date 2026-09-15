@@ -43,7 +43,7 @@
  * second lock rather than the only one.
  */
 
-import { requireInvestor } from '../../../../auth/gate';
+import { requireHallReader } from '../../../../auth/gate';
 import { changeOwnPassword } from '../../../../auth/password-change';
 import { checkPassword, type PasswordProblem } from '../../../../auth/password-policy';
 import { getRateLimiter } from '../../../../auth/rate-limit';
@@ -68,7 +68,7 @@ export async function handleAccountPassword(request: Request): Promise<Response>
     return new Response('cross_origin', { status: 403, headers: TEXT_HEADERS });
   }
 
-  const actor = await requireInvestor(request);
+  const actor = await requireHallReader(request);
   if (actor instanceof Response) {
     return actor;
   }

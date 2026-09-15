@@ -108,3 +108,4 @@ draws its chips from keys the dictionary already carried.
 - `I18N-001/T2` — The served copy and the dictionary cannot drift past a push
 - `I18N-001/T3` — Sixteen non-`en`/`vi`/`zh`/`zt` locales reviewed on seven mechanical classes; six corrected
 - `I18N-001/T4` — Eleven locales read as prose, sentence by sentence, by someone who speaks them
+- `I18N-001/T5` — The ecosystem glossary: one answer per technical term per locale, harvested from the siblings rather than minted here

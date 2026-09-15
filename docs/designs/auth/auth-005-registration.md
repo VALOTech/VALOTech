@@ -91,31 +91,41 @@ answers every other reader's. There is no second access model here and there mus
 not be — `INV-DEC-02` refused one, and a second thing able to deny a document is
 the one that goes stale when the rule changes.
 
-**What that predicate admits is wider than the hall this feature describes, and
-the difference is why the door ships shut.** A registration writes
-`role: investor`, and `CMS-006` §3 admits "any account whose role is `investor`
-or `admin`" to the `investor` audience — which is the audience
-`content_items.audience` defaults to. So a confirmed prospect reads every
-published item nobody has deliberately narrowed, where the PRD's own sentence for
-`AUTH-005` promises *a hall holding only what is public until somebody grants
-more*. The gap is not in `CMS-006`, which does exactly what it says; it is that a
-second kind of reader has been given the first kind's role.
+**A registration writes `role: prospect`, and that role is what bounds the hall
+it opens** ([`AUTH-DEC-06`](../../decisions-log.md#AUTH-DEC-06)). `visibleTo`
+gives it a branch of its own: the `public` audience, plus any item an admin has
+named them on by grant, and nothing else. The `investor` audience is the one it
+does not reach, and that is the whole of what the role buys — because
+`content_items.audience` defaults to `investor`, an item nobody thought about is
+an item a prospect cannot see.
 
-Three ways out exist and each costs something the loop may not spend. Reading
-`investor_type` in `visibleTo` is the second access model `INV-DEC-02` refused,
-in the owner's own words. A third role is a change to the two the vocabulary
-names, which §7.3 reserves. Narrowing what the `investor` audience means is a
-change to what every existing item is published to. So the choice belongs in the
-decision register and the door stays shut behind `AUTH_REGISTRATION_OPEN` until it
-is answered: no registration can produce such a reader in the meantime, and the
-behaviour that makes the question real is pinned by a test rather than described
-here.
+**Fail-closed by construction rather than by habit.** The alternative considered
+was to leave the role alone and have an admin choose a narrower audience for
+anything sensitive, which would have left a report one mistaken dropdown away
+from every person who can receive mail. A feature whose entire purpose is
+bounding what an anonymous registrant sees cannot rest on somebody remembering,
+so the bound is the predicate.
+
+`INV-DEC-02` is untouched and stays true. `investor_type` still orders the
+landing and gates nothing; what gates here is the role, which is what every other
+access decision in this hall already turns on. The two words coincide and the
+facts do not: an admin-invited person still deciding is role `investor` and type
+`prospect` at once.
+
+An admin promotes a prospect to an investor once they have invested
+(`ADMIN-001/T13`). `prospect` is not invitable and is not a destination for that
+promotion: somebody becomes one by registering and confirming their own address
+and by nothing else, so a record saying otherwise would say a person registered
+themselves when an admin invited them.
 
 ### Why the progress board is hidden from them, and why that is not a second gate
 
 The board is the one surface this rule does not already cover, because
 `portfolio` is not `content_items`: it carries no audience and `standing()` takes
-no reader. It is hidden from a prospect by `investor_type`.
+no reader. Two facts withhold it and they are not the same fact: the role, which
+costs no query and holds whatever anybody later records about the person; and the
+type, which is `INV-DEC-02`'s and withholds the reporting landing from an invited
+reader who is still deciding.
 
 That reads at first like the thing `INV-DEC-02` forbids, and it is worth stating
 why it is not. That decision says the type "never gates access. What a reader may
@@ -216,3 +226,4 @@ shows an admin who arrived this way, in the same list as everybody else.
 - `AUTH-005/T2` — One answer whatever the address, with the limiter on the path
 - `AUTH-005/T3` — The form on the gateway, in twenty locales, operable by keyboard
 - `AUTH-005/T4` — A prospect sees the public content and no progress board, asserted against the predicate
+- `AUTH-005/T5` — The `prospect` role: the vocabulary, the predicate's branch of its own, and the row a registration writes

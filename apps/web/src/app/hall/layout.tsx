@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { getLocale, getTranslations } from 'next-intl/server';
 import type { ReactElement, ReactNode } from 'react';
 
-import { requireInvestorPage } from '../../auth/page-guard';
+import { requireHallReaderPage } from '../../auth/page-guard';
 
 import './fonts.css';
 import { LocaleForm } from './locale-form';
@@ -39,7 +39,7 @@ import styles from './hall.module.css';
  * here with the surface it points at. `INV-001/T3` closes when all four stand.
  */
 export default async function HallLayout({ children }: { readonly children: ReactNode }): Promise<ReactElement> {
-  await requireInvestorPage();
+  await requireHallReaderPage();
   const [t, privacy, locale] = await Promise.all([
     getTranslations('hall'),
     getTranslations('privacy'),

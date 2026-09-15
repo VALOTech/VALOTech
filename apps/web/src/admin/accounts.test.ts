@@ -598,7 +598,7 @@ describe.skipIf(!HAS_DATABASE)('ADMIN-001 account mutations', () => {
       await issue(id);
       await issue(id);
 
-      expect(await changeRole(id, 'admin', actor)).toBe(true);
+      expect(await changeRole(id, 'admin', actor)).toBe('changed');
 
       expect(await roleOf(id)).toBe('admin');
       expect(await sessionCount(id)).toBe(0);
@@ -662,7 +662,7 @@ describe.skipIf(!HAS_DATABASE)('ADMIN-001 account mutations', () => {
       const id = await newAccount('active', 'investor');
       const token = await tokenFor(id);
 
-      expect(await changeRole(id, 'investor', randomUUID())).toBe(false);
+      expect(await changeRole(id, 'investor', randomUUID())).toBe('unchanged');
 
       expect(await roleOf(id)).toBe('investor');
       // Nobody is signed out for an act that did not happen: there is no
@@ -675,7 +675,7 @@ describe.skipIf(!HAS_DATABASE)('ADMIN-001 account mutations', () => {
     it('answers false for an id no account holds, writing nothing', async () => {
       const absent = randomUUID();
 
-      expect(await changeRole(absent, 'admin', randomUUID())).toBe(false);
+      expect(await changeRole(absent, 'admin', randomUUID())).toBe('no_such_account');
       expect(await auditFor(absent)).toHaveLength(0);
     });
 
@@ -696,7 +696,7 @@ describe.skipIf(!HAS_DATABASE)('ADMIN-001 account mutations', () => {
       const id = await newAccount('invited');
       const token = await issueToken(id, INVITATION_TTL_SECONDS);
 
-      expect(await changeRole(id, 'admin', randomUUID())).toBe(true);
+      expect(await changeRole(id, 'admin', randomUUID())).toBe('changed');
 
       // The person is still expected; what changed is what they will reach when
       // they arrive. Asked of the consumption path, because that is the link.
@@ -732,7 +732,7 @@ describe.skipIf(!HAS_DATABASE)('ADMIN-001 account mutations', () => {
     it('refuses to demote the last admin who can sign in, writing nothing', async () => {
       const admin = await newAccount('active', 'admin');
 
-      expect(await changeRole(admin, 'investor', randomUUID())).toBe(false);
+      expect(await changeRole(admin, 'investor', randomUUID())).toBe('refused_last_admin');
 
       expect(await roleOf(admin)).toBe('admin');
       expect(await auditFor(admin)).toHaveLength(0);
@@ -774,7 +774,7 @@ describe.skipIf(!HAS_DATABASE)('ADMIN-001 account mutations', () => {
       // would see two admins here and allow both acts, leaving the hall with no
       // admin able to sign in.
       expect(await suspendAccount(active, randomUUID())).toBe(false);
-      expect(await changeRole(active, 'investor', randomUUID())).toBe(false);
+      expect(await changeRole(active, 'investor', randomUUID())).toBe('refused_last_admin');
 
       expect(await stateOf(active)).toBe('active');
       expect(await roleOf(active)).toBe('admin');
@@ -787,7 +787,7 @@ describe.skipIf(!HAS_DATABASE)('ADMIN-001 account mutations', () => {
       await newAccount('active', 'admin');
 
       expect(await suspendAccount(admin, admin)).toBe(false);
-      expect(await changeRole(admin, 'investor', admin)).toBe(false);
+      expect(await changeRole(admin, 'investor', admin)).toBe('refused_self');
 
       expect(await stateOf(admin)).toBe('active');
       expect(await roleOf(admin)).toBe('admin');
@@ -809,7 +809,12 @@ describe.skipIf(!HAS_DATABASE)('ADMIN-001 account mutations', () => {
         changeRole(second, 'investor', randomUUID()),
       ]);
 
-      expect(answers.filter(Boolean)).toHaveLength(1);
+      // The outcomes are asserted as a pair rather than counted. A count over a
+      // boolean could not tell a refusal from a no-op, which is the very thing
+      // this race turns on: exactly one must demote and exactly one must be
+      // refused for the named reason, and either outcome appearing twice is a
+      // different defect.
+      expect([...answers].sort()).toEqual(['changed', 'refused_last_admin']);
       expect(await activeAdminCount()).toBe(1);
     });
   });

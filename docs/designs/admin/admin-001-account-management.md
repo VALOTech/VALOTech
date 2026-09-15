@@ -395,3 +395,4 @@ this implements both halves of.
 - `ADMIN-001/T10` — Correcting a person's name and address from their page, audited like every other act
 - `ADMIN-001/T11` — Whether a person has invested or is deciding, carried on the account and set from their page
 - `ADMIN-001/T12` — The reader's own name, address, password and erasure, from the hall
+- `ADMIN-001/T13` — The control that moves a person between roles, which is how a prospect becomes an investor

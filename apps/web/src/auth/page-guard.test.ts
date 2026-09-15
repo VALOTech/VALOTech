@@ -12,7 +12,7 @@
 
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-const { notFoundMock, redirectMock, requireAdminMock, requireInvestorMock } = vi.hoisted(() => ({
+const { notFoundMock, redirectMock, requireAdminMock, requireHallReaderMock } = vi.hoisted(() => ({
   notFoundMock: vi.fn(() => {
     throw new Error('NEXT_NOT_FOUND');
   }),
@@ -20,14 +20,14 @@ const { notFoundMock, redirectMock, requireAdminMock, requireInvestorMock } = vi
     throw new Error(`NEXT_REDIRECT:${url}`);
   }),
   requireAdminMock: vi.fn(),
-  requireInvestorMock: vi.fn(),
+  requireHallReaderMock: vi.fn(),
 }));
 
 vi.mock('next/navigation', () => ({ notFound: notFoundMock, redirect: redirectMock }));
 vi.mock('next/headers', () => ({ headers: vi.fn(() => Promise.resolve(new Headers())) }));
-vi.mock('./gate', () => ({ requireAdmin: requireAdminMock, requireInvestor: requireInvestorMock }));
+vi.mock('./gate', () => ({ requireAdmin: requireAdminMock, requireHallReader: requireHallReaderMock }));
 
-const { requireAdminPage, requireInvestorPage } = await import('./page-guard');
+const { requireAdminPage, requireHallReaderPage } = await import('./page-guard');
 
 describe('requireAdminPage', () => {
   beforeEach(() => {
@@ -62,33 +62,33 @@ describe('requireAdminPage', () => {
   });
 });
 
-describe('requireInvestorPage', () => {
+describe('requireHallReaderPage', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
   it('returns the actor when the gate admits an investor, touching neither escape', async () => {
-    requireInvestorMock.mockResolvedValue({ id: 'i1', role: 'investor' });
+    requireHallReaderMock.mockResolvedValue({ id: 'i1', role: 'investor' });
 
-    await expect(requireInvestorPage()).resolves.toEqual({ id: 'i1', role: 'investor' });
+    await expect(requireHallReaderPage()).resolves.toEqual({ id: 'i1', role: 'investor' });
     expect(notFoundMock).not.toHaveBeenCalled();
     expect(redirectMock).not.toHaveBeenCalled();
   });
 
   it('admits an admin, who may read whatever an investor may', async () => {
-    requireInvestorMock.mockResolvedValue({ id: 'a1', role: 'admin' });
+    requireHallReaderMock.mockResolvedValue({ id: 'a1', role: 'admin' });
 
-    await expect(requireInvestorPage()).resolves.toEqual({ id: 'a1', role: 'admin' });
+    await expect(requireHallReaderPage()).resolves.toEqual({ id: 'a1', role: 'admin' });
     expect(notFoundMock).not.toHaveBeenCalled();
     expect(redirectMock).not.toHaveBeenCalled();
   });
 
   it('redirects a signed-out reader to the sign-in form', async () => {
-    requireInvestorMock.mockResolvedValue(
+    requireHallReaderMock.mockResolvedValue(
       new Response(null, { status: 303, headers: { Location: '/sign-in' } }),
     );
 
-    await expect(requireInvestorPage()).rejects.toThrow('NEXT_REDIRECT:/sign-in');
+    await expect(requireHallReaderPage()).rejects.toThrow('NEXT_REDIRECT:/sign-in');
     expect(redirectMock).toHaveBeenCalledWith('/sign-in');
     expect(notFoundMock).not.toHaveBeenCalled();
   });

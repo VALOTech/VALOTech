@@ -14,7 +14,19 @@ CREATE TABLE accounts (
   id            uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   email         citext UNIQUE NOT NULL,
   name          text NOT NULL,
-  role          text NOT NULL CHECK (role IN ('investor', 'admin')),
+  -- Three roles, and the third is the narrow one. `prospect` is somebody who
+  -- asked for access from the gateway and confirmed the address they gave
+  -- (AUTH-005); nobody has vouched for who they are, so the hall admits them to
+  -- what it publishes openly and to nothing else. `investor` is somebody an
+  -- admin invited by name. An admin promotes the first to the second once the
+  -- person has invested, which is an ordinary role change and is audited as one.
+  --
+  -- The word also appears in investor_type below, and the two are not the same
+  -- fact: this column says how far the company has verified who somebody is,
+  -- and that one says whether they have invested yet. An admin-invited person
+  -- still deciding is role 'investor' and type 'prospect' at once, and both
+  -- readings are true of them.
+  role          text NOT NULL CHECK (role IN ('prospect', 'investor', 'admin')),
   password_hash text,
   state         text NOT NULL DEFAULT 'invited' CHECK (state IN ('invited', 'active', 'suspended')),
   -- Null means the person has never signed in, which is a state an invited

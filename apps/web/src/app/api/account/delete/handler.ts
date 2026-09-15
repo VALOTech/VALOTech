@@ -38,7 +38,7 @@
  */
 
 import { eraseOwnAccount, personIdentity } from '../../../../admin/accounts';
-import { requireInvestor } from '../../../../auth/gate';
+import { requireHallReader } from '../../../../auth/gate';
 import { signedOut } from '../../../../auth/sign-out';
 import { getConfig } from '../../../../config/index';
 import { typedNameMatches } from '../../../admin/destructive-actions';
@@ -54,7 +54,7 @@ export async function handleAccountDelete(request: Request): Promise<Response> {
     return new Response('cross_origin', { status: 403, headers: TEXT_HEADERS });
   }
 
-  const actor = await requireInvestor(request);
+  const actor = await requireHallReader(request);
   if (actor instanceof Response) {
     return actor;
   }

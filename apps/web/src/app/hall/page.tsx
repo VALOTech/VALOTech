@@ -5,7 +5,7 @@ import { getFormatter, getTranslations } from 'next-intl/server';
 
 import Link from 'next/link';
 
-import { requireInvestorPage } from '../../auth/page-guard';
+import { requireHallReaderPage } from '../../auth/page-guard';
 import { grantedDecksForAccount } from '../../content/decks';
 import { currentReport } from '../../content/reports';
 import { updateStream } from '../../content/stream';
@@ -56,7 +56,7 @@ const STAGE_KEY: Readonly<Record<PortfolioStage, string>> = {
  * reader's type and the whole of what that type decides here.
  *
  * **Every read takes the reader** (`DATA-R05`), and the gate is the server's
- * (`SEC-R01`): `requireInvestorPage` answers an actor or the page never renders.
+ * (`SEC-R01`): `requireHallReaderPage` answers an actor or the page never renders.
  * Four of the five reads are issued together because none depends on another's
  * result; the board's waits on the reader's type, because a block this reader is
  * not shown is a block their page does not fetch.
@@ -83,7 +83,7 @@ export default async function HallPage({
 }: {
   readonly searchParams: Promise<Record<string, string | string[] | undefined>>;
 }): Promise<ReactElement> {
-  const actor = await requireInvestorPage();
+  const actor = await requireHallReaderPage();
   const query = readHallQuery(await searchParams);
 
   // A narrowed hall is a different page, not the landing with a list appended:
@@ -155,7 +155,7 @@ export default async function HallPage({
   // shape that becomes a disclosure the first time a value is handed to a client
   // component. The other four start now and are unaffected, so the landing still
   // costs one round trip's latency for everything except this.
-  const board = progressBoardFor(actor.id);
+  const board = progressBoardFor(actor);
 
   // The dictionary and the formatter are not settled with the rest: a block
   // that cannot be read has words to say so, and a page that cannot read its

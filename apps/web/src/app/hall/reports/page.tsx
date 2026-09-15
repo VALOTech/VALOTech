@@ -3,7 +3,7 @@ import type { ReactElement } from 'react';
 
 import { getFormatter, getTranslations } from 'next-intl/server';
 
-import { requireInvestorPage } from '../../../auth/page-guard';
+import { requireHallReaderPage } from '../../../auth/page-guard';
 import { reportArchive } from '../../../content/reports';
 
 import styles from '../hall.module.css';
@@ -29,7 +29,7 @@ export async function generateMetadata(): Promise<Metadata> {
  * not-found page is one a reader tries twice.
  */
 export default async function ReportArchivePage(): Promise<ReactElement> {
-  const actor = await requireInvestorPage();
+  const actor = await requireHallReaderPage();
   const [years, t, format] = await Promise.all([
     reportArchive(actor),
     getTranslations('hall'),

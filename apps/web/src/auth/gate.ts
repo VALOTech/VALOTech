@@ -242,19 +242,30 @@ function notFound(): Response {
 /**
  * The reader of a hall surface, or the response to return instead.
  *
- * An admin passes: they may read what an investor may. Both roles are named
- * rather than the check being left to every account resolving, because a third
- * role is a decision rather than an edit (§7.3) and until somebody makes it,
- * one added to the vocabulary is refused here rather than admitted silently.
+ * All three roles pass, and they pass for different reasons. An admin may read
+ * what an investor may. A prospect asked for access from the gateway and
+ * confirmed their address (`AUTH-005`), so they are entitled to the hall as a
+ * place -- the chrome, their own account, the material the company publishes
+ * openly -- and `content/access.ts` is what decides that the material is less
+ * than an investor sees. **The gate admits; the predicate narrows.** Putting the
+ * narrowing here instead would mean a second place that decides what a reader
+ * may read, and the second one is the one that goes stale.
+ *
+ * Every role is named rather than the check being left to every account that
+ * resolves, so a fourth added to the vocabulary is refused here rather than
+ * admitted silently -- which is what this function did for `prospect` until
+ * `AUTH-DEC-06` made it a role.
  */
-export async function requireInvestor(request: SessionRequest): Promise<Actor | Response> {
+export async function requireHallReader(request: SessionRequest): Promise<Actor | Response> {
   const actor = await resolveSession(presentedToken(request.headers));
 
   if (actor === null) {
     return toSignIn(request);
   }
 
-  return actor.role === 'investor' || actor.role === 'admin' ? actor : notFound();
+  return actor.role === 'prospect' || actor.role === 'investor' || actor.role === 'admin'
+    ? actor
+    : notFound();
 }
 
 /**

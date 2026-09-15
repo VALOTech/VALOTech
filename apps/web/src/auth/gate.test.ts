@@ -32,7 +32,7 @@ import {
   hallDestination,
   rememberedDestination,
   requireAdmin,
-  requireInvestor,
+  requireHallReader,
   resolveSession,
   type Actor,
 } from './gate';
@@ -60,8 +60,9 @@ const INVESTOR = 'gate-investor@example.test';
 const ADMIN = 'gate-admin@example.test';
 const OTHER = 'gate-other@example.test';
 const SUSPENDABLE = 'gate-suspendable@example.test';
+const PROSPECT = 'gate-prospect@example.test';
 
-const SEEDED = [INVESTOR, ADMIN, OTHER, SUSPENDABLE];
+const SEEDED = [INVESTOR, ADMIN, OTHER, SUSPENDABLE, PROSPECT];
 
 const PASSWORD = 'a passphrase an investor would actually use';
 
@@ -251,6 +252,7 @@ describe.skipIf(!HAS_DATABASE)('the role gate', () => {
         { email: ADMIN, name: 'An Admin', role: 'admin', password_hash: encoded, state: 'active' },
         { email: OTHER, name: 'Another Investor', role: 'investor', password_hash: encoded, state: 'active' },
         { email: SUSPENDABLE, name: 'A Third Investor', role: 'investor', password_hash: encoded, state: 'active' },
+        { email: PROSPECT, name: 'A Prospect', role: 'prospect', password_hash: encoded, state: 'active' },
       ])
       .execute();
   }, 120_000);
@@ -272,16 +274,33 @@ describe.skipIf(!HAS_DATABASE)('the role gate', () => {
     });
 
     it('lets an investor into a hall surface', async () => {
-      const answer = await requireInvestor(presenting(await issuedFor(INVESTOR)));
+      const answer = await requireHallReader(presenting(await issuedFor(INVESTOR)));
 
       expect(actorOf(answer)).toEqual({ id: await accountId(INVESTOR), role: 'investor' });
+    });
+
+    it('lets a prospect into the hall, because the gate admits and the predicate narrows', async () => {
+      // `AUTH-DEC-06`. Somebody who registered themselves is entitled to the hall
+      // as a place -- their own account page, the chrome, what the company
+      // publishes openly -- and `content/access.ts` is the one thing that decides
+      // the material is less than an investor's. A gate that refused them here
+      // would be a second place deciding what a reader may read.
+      const answer = await requireHallReader(presenting(await issuedFor(PROSPECT)));
+
+      expect(actorOf(answer)).toEqual({ id: await accountId(PROSPECT), role: 'prospect' });
+    });
+
+    it('answers a prospect 404 at the console, the same as an investor', async () => {
+      const answer = await requireAdmin(presenting(await issuedFor(PROSPECT)));
+
+      expect(answer instanceof Response && answer.status).toBe(404);
     });
 
     it('lets an admin into both, because an admin may read what an investor may', async () => {
       const token = await issuedFor(ADMIN);
       const expected = { id: await accountId(ADMIN), role: 'admin' };
 
-      expect(actorOf(await requireInvestor(presenting(token)))).toEqual(expected);
+      expect(actorOf(await requireHallReader(presenting(token)))).toEqual(expected);
       expect(actorOf(await requireAdmin(presenting(token)))).toEqual(expected);
     });
 
@@ -289,8 +308,8 @@ describe.skipIf(!HAS_DATABASE)('the role gate', () => {
       const mine = await issuedFor(INVESTOR);
       const theirs = await issuedFor(OTHER);
 
-      const resolvedMine = actorOf(await requireInvestor(presenting(mine)));
-      const resolvedTheirs = actorOf(await requireInvestor(presenting(theirs)));
+      const resolvedMine = actorOf(await requireHallReader(presenting(mine)));
+      const resolvedTheirs = actorOf(await requireHallReader(presenting(theirs)));
 
       expect(resolvedMine.id).toBe(await accountId(INVESTOR));
       expect(resolvedTheirs.id).toBe(await accountId(OTHER));
@@ -300,7 +319,7 @@ describe.skipIf(!HAS_DATABASE)('the role gate', () => {
     it('finds the session cookie behind another cookie in the header', async () => {
       const token = await issuedFor(INVESTOR);
 
-      const answer = await requireInvestor(
+      const answer = await requireHallReader(
         request(`theme=dark; ${sessionCookieName()}=${signToken(token)}`),
       );
 
@@ -342,7 +361,7 @@ describe.skipIf(!HAS_DATABASE)('the role gate', () => {
     });
 
     it.each(REFUSED)('is sent to the form for %s', async (_case, build) => {
-      const response = responseOf(await requireInvestor(build()));
+      const response = responseOf(await requireHallReader(build()));
 
       expect(response.status).toBe(303);
       expect(response.headers.get('Location')).toBe('/sign-in');
@@ -360,7 +379,7 @@ describe.skipIf(!HAS_DATABASE)('the role gate', () => {
 
       expect(await resolveSession(carried)).not.toBeNull();
 
-      const answer = await requireInvestor(presentingRaw(carried));
+      const answer = await requireHallReader(presentingRaw(carried));
 
       expect(responseOf(answer).status).toBe(303);
     });
@@ -371,8 +390,8 @@ describe.skipIf(!HAS_DATABASE)('the role gate', () => {
       // The value resolves; only the name it arrives under is wrong. A parser
       // that read the first pair whatever it was called would authenticate a
       // token planted in any other cookie the reader carries.
-      expect(responseOf(await requireInvestor(request(`other=${token}`))).status).toBe(303);
-      expect(actorOf(await requireInvestor(presenting(token))).role).toBe('investor');
+      expect(responseOf(await requireHallReader(request(`other=${token}`))).status).toBe(303);
+      expect(actorOf(await requireHallReader(presenting(token))).role).toBe('investor');
     });
 
     it('refuses the stored hash presented as the token, which is what a dump holds', async () => {
@@ -404,7 +423,7 @@ describe.skipIf(!HAS_DATABASE)('the role gate', () => {
     it('sends the reader holding it to the form', async () => {
       const token = await writeSession(INVESTOR, '-10 minutes', '-1 second');
 
-      expect(responseOf(await requireInvestor(presenting(token))).status).toBe(303);
+      expect(responseOf(await requireHallReader(presenting(token))).status).toBe(303);
     });
   });
 
@@ -421,7 +440,7 @@ describe.skipIf(!HAS_DATABASE)('the role gate', () => {
         .execute();
 
       expect(await resolveSession(token)).toBeNull();
-      expect(responseOf(await requireInvestor(presenting(token))).status).toBe(303);
+      expect(responseOf(await requireHallReader(presenting(token))).status).toBe(303);
 
       // The row is still there: a suspension is enforced at the read, and
       // deleting the sessions is the privilege-change path's own work.
@@ -459,7 +478,7 @@ describe.skipIf(!HAS_DATABASE)('the role gate', () => {
       const id = await accountId(INVESTOR);
 
       const answers = await Promise.all(
-        Array.from({ length: 8 }, () => requireInvestor(presenting(token))),
+        Array.from({ length: 8 }, () => requireHallReader(presenting(token))),
       );
 
       for (const answer of answers) {

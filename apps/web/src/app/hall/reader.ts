@@ -1,6 +1,7 @@
 /**
- * Which blocks the hall's landing is composed from, where that turns on whether
- * the reader has invested or is still deciding (`INV-DEC-02`, `AUTH-005/T4`).
+ * Which blocks the hall's landing is composed from, where that turns on how far
+ * the company has verified who the reader is (`AUTH-DEC-06`) and on whether they
+ * have invested or are still deciding (`INV-DEC-02`, `AUTH-005/T4`).
  *
  * **The type is read here and never through the gate, on purpose.** `Actor` is an
  * id and a role and nothing else, which is what makes it impossible for a content
@@ -19,6 +20,7 @@
  * `standing()` takes no reader.
  */
 
+import type { Actor } from '../../auth/gate';
 import { getDb } from '../../db/index';
 import { standing } from '../../portfolio/board';
 import type { Standing } from '../../portfolio/standing';
@@ -31,16 +33,28 @@ import type { Standing } from '../../portfolio/standing';
  * reader who is not shown the block at all must not be told that. The two are
  * different facts and the page renders them differently.
  *
- * Only `prospect` is withheld from. A reader nobody has classified is not one:
- * the column is nullable and null means nobody has said, so an account created
- * before the column existed, or invited by an admin who did not classify them,
- * keeps the board the hall has always shown them.
+ * **Two facts withhold it, and they are not the same fact.** The role is asked
+ * first and costs no query: a `prospect` (`AUTH-DEC-06`) is admitted to what the
+ * company publishes openly, and the board is the company's own progress across
+ * six products rather than anything published, so it is not theirs to read
+ * whatever anybody later records about them. The type is asked second and is
+ * `INV-DEC-02`'s: a reader an admin invited and classified as still deciding
+ * gets the landing built to persuade rather than the one built to report.
+ *
+ * A reader nobody has classified is withheld from by neither. The column is
+ * nullable and null means nobody has said, so an account created before the
+ * column existed, or invited by an admin who did not classify them, keeps the
+ * board the hall has always shown them.
  */
-export async function progressBoardFor(accountId: string): Promise<Standing[] | null> {
+export async function progressBoardFor(reader: Actor): Promise<Standing[] | null> {
+  if (reader.role === 'prospect') {
+    return null;
+  }
+
   const row = await getDb()
     .selectFrom('accounts')
     .select('investor_type')
-    .where('id', '=', accountId)
+    .where('id', '=', reader.id)
     .executeTakeFirst();
 
   if (row?.investor_type === 'prospect') {

@@ -34,7 +34,7 @@ and a role where a reader is needed. Resolving slides the session, so it is a
 write per resolve rather than per request: a surface resolves once, at the top,
 and passes the actor to its reads.
 
-**Up.** A page or route asks for the reader it needs — `requireInvestor()`,
+**Up.** A page or route asks for the reader it needs — `requireHallReader()`,
 `requireAdmin()` — and gets an actor or the response to return in its place. A
 repository function takes that actor as an argument and filters in SQL. Nothing
 renders a value it then hides: the row was never fetched.
@@ -68,10 +68,10 @@ renders a value it then hides: the row was never fetched.
 
 ### The gate
 
-    requireInvestor(request) -> Actor | Response
+    requireHallReader(request) -> Actor | Response
     requireAdmin(request)    -> Actor | Response
 
-`requireInvestor` admits an admin as well as an investor — an admin may read
+`requireHallReader` admits an admin as well as an investor — an admin may read
 what an investor may — while `requireAdmin` admits only an admin. An `Actor` is
 the account's id and its role: everything a read filters on, and nothing a
 caller can start rendering. What comes back in its place is the

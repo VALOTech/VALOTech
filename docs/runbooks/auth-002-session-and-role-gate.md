@@ -17,7 +17,7 @@ The read side of the session scheme. A request presents a cookie; the gate
 hashes the token, finds the session, checks it has not expired and that its
 account is still `active`, and hands back the reader's id and role — sliding
 `last_seen_at` and `expires_at` in the same statement, so a reader who is
-reading does not time out mid-report. `requireInvestor` admits an investor or an
+reading does not time out mid-report. `requireHallReader` admits an investor or an
 admin; `requireAdmin` admits only an admin. The thing that goes wrong most often
 is a reader who is certain they are signed in and is sent to the form anyway,
 which is almost always a session that expired or an account that was suspended.

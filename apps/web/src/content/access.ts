@@ -101,6 +101,37 @@ export function visibleTo(reader: Actor | null): ContentVisibility {
     return (eb) => eb.lit(true);
   }
 
+  // A prospect (`AUTH-DEC-06`) reads what the company publishes openly, plus
+  // anything an admin has named them on. The `investor` audience is the one they
+  // do not reach, which is the whole of what the role buys: `audience` defaults
+  // to `investor`, so an item nobody thought about is one a prospect cannot see
+  // -- the fail-closed direction, and the reason this is a role rather than a
+  // habit of choosing the right audience in a form.
+  //
+  // The grant clause is theirs too, and deliberately: an admin who wants one
+  // named person to read one document should not have to promote them to do it.
+  if (reader.role === 'prospect') {
+    const prospectId = reader.id;
+
+    return (eb) =>
+      eb.and([
+        eb('content_items.current_revision_id', 'is not', null),
+        eb.or([
+          audienceAdmits('public')(eb),
+          eb.and([
+            eb('content_items.audience', '=', 'granted'),
+            eb.exists(
+              eb
+                .selectFrom('content_grants')
+                .select((grant) => grant.lit(1).as('one'))
+                .whereRef('content_grants.item_id', '=', 'content_items.id')
+                .where('content_grants.account_id', '=', prospectId),
+            ),
+          ]),
+        ]),
+      ]);
+  }
+
   if (reader.role === 'investor') {
     const accountId = reader.id;
 
