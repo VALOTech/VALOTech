@@ -23,6 +23,17 @@ An entry is filed the moment the choice surfaces, not when it is answered. Nothi
 
 ---
 
+<a id="I18N-DEC-03"></a>
+### `I18N-DEC-03` — Whether a technical term stays in English in a locale that does not use the Latin script — OPEN
+
+- **Decision:** `assets/i18n.js` opens by stating that "product and technical terms [are] kept in English", and the dictionary does not follow it consistently: `foot.cookies` reads `Cookie` in `vi, zh, zt, th, id, ms, es, ja, tr, ko` and is translated or glossed in `hi (कुकीज़), bn (কুকিজ), ur (کوکیز), ar (ملفات تعريف الارتباط (Cookie)), ru (Файлы Cookie)`. Which of the two is the rule, for `cookie` and for every technical term after it?
+- **Options:** **A** The stated rule governs and the five translated locales are corrected to `Cookie` — one term, one spelling, and a reader who has met it on any VALO page meets the same word here · **B** The script governs: a Latin-script locale keeps the English term and a non-Latin one takes the word its own readers and its own regulator use, which is what the five locales already do and what `SITE-006`'s legal pages want (`çerez` in Turkish, `쿠키` in Korean, rather than a page headed with a Latin word) · **C** Per-term, decided once each and recorded in a glossary the way the Vietnamese renderings already are in `glossary-vi.json`.
+- **Recommendation:** **B**. The stated rule was written for product names — `ValoLab`, `ValoStack`, `VALO Ads` — where one spelling everywhere is the point, and `cookie` is not a product name but a word with a settled native form in most of these languages, including in the law each of them is read under. The five locales that already translate it are the ones whose scripts make a Latin run genuinely disruptive, so the dictionary's practice is more coherent than its stated rule, and the honest repair is to correct the sentence rather than five locales. **A**'s strongest case is real and is why this is the owner's: a person who meets `Cookie` in the footer of one VALO product and `çerez` on the next page of another cannot tell whether they are the same thing, and consistency across six products is worth more than naturalness on one page — that case wins if the ecosystem ever publishes a shared glossary, which is **C**.
+- **Decision owner:** user
+- **Blocks:** — none —
+- **Revises:** `SITE-006/T1` — the legal pages ship with the natural word in each locale, which is **B** in force before it is chosen
+- **Status:** OPEN. Safe default: the dictionary is left exactly as it is and the legal pages use each locale's natural word, so nothing is rewritten under a rule nobody has confirmed and a reader is never shown a term they cannot read. The mismatch a Turkish or Korean reader meets — a footer link labelled `Cookie` opening a page headed `Çerezler` / `쿠키` — is visible and harmless; the alternative, rewriting `foot.cookies` in five locales on the published page, is neither.
+
 <a id="OPS-DEC-02"></a>
 ### `OPS-DEC-02` — Which `X-Forwarded-For` hop is the client, for the sign-in rate limit — OPEN
 

@@ -55,13 +55,20 @@ in it.
 
 | Storage | Set when | Category |
 |---|---|---|
+| Arrival note (`sessionStorage`, `valotech-arrived`) | On arrival, unless the visitor asks for reduced motion | `necessary` — it is what stops the entry animation replaying on every navigation |
+| Locale preference (`localStorage`, `valotech-lang`) | When a visitor chooses a language | `necessary` |
+| Investor-chapter note (`sessionStorage`, `valotech-investor`) | When a visitor opens the gated chapters on the gateway | `necessary` — `SITE-002/T4` replaces the client-side gate with a served one, and the note goes with it |
+| Consent choice (`localStorage`, `valotech.consent`) | When the banner is answered | `necessary` — it is the record of the answer, and storing it is what stops the banner asking again |
 | Session cookie | After a successful sign-in | `necessary` |
-| Locale preference (`localStorage`) | When a visitor chooses a language | `necessary` |
-| Consent choice (`localStorage`) | When the banner is answered | `necessary` — it is the record of the answer, and storing it is what stops the banner asking again |
 
-**Nothing else is set, and nothing at all is set on arrival before the banner is
-answered.** A visitor who lands, reads and leaves has had one thing written to
-their browser: their answer, if they gave one.
+**Nothing else is set, and nothing in the list is optional or measures
+anything.** One of them is written before the visitor has done anything at all —
+the arrival note — and that is stated rather than glossed: a notice claiming an
+empty browser while `index.html` writes a key on load is wrong in the direction
+that matters, because it is the claim a reader could check in thirty seconds. It
+carries no identifier, survives until the browser closes, and exists so the
+opening animation does not replay on every navigation; `necessary` is the honest
+category for it and the banner does not ask about it.
 
 ### The stored choice
 
@@ -140,6 +147,6 @@ exists.
 
 - `LEGAL-GLOBAL-002/T1` — The three categories, with `necessary` fixed on and both others off until a visitor says otherwise
 - `LEGAL-GLOBAL-002/T2` — The notice states the three storages, when each is set, and that nothing else is set on arrival
-- `LEGAL-GLOBAL-002/T3` — A test proves a visitor who answers nothing, signs in to nothing and chooses no language leaves with an empty cookie jar and empty storage
+- `LEGAL-GLOBAL-002/T3` — A test proves a visitor who answers nothing, signs in to nothing and chooses no language leaves with an empty cookie jar and nothing in storage but the arrival note
 - `LEGAL-GLOBAL-002/T4` — Nothing non-essential is present in the page until consent, rather than present and inert
 - `LEGAL-GLOBAL-002/T5` — The stored choice is versioned, and a bump re-asks rather than extending an old answer

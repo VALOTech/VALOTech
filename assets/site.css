@@ -3076,3 +3076,275 @@ html:not(.can-scene) .planet {
     background: none;
   }
 }
+
+/* ============================================================================
+   Legal pages (`SITE-006`)
+
+   A document, not a chapter: no scene, no glass, no motion. The ground and the
+   type are the gateway's, because a privacy page that looks like somebody
+   else's site is one a reader half-believes. Everything else is stripped back
+   to the one thing these pages are for, which is being read to the end.
+
+   The measure is set on the prose rather than on the page, so the table can run
+   wider than the paragraphs beside it without either being wrapped in a column
+   of its own.
+   ========================================================================== */
+
+.legal {
+  position: relative;
+  z-index: 2;
+  padding: clamp(56px, 9vh, 104px) 0 clamp(48px, 7vh, 80px);
+}
+
+/* A document column, centred, rather than the page's full width. The gateway's
+   `.wrap` is sized for a layout that has the planet filling the other half of
+   the frame; a legal page has no scene, so the same width leaves a column of
+   prose pinned to one edge with rules reaching across empty ground. One measure
+   governs everything here — prose, table, headings and the two rules — so the
+   column has a single edge rather than four ragged ones. */
+.legal .wrap,
+.legal-foot .wrap {
+  max-width: calc(72ch + 2 * var(--gut));
+}
+
+/* The mark and the way back, on one line. The legal pages carry no navigation
+   of their own: a reader arrived from somewhere and the only move that helps
+   them is the one that returns them there. */
+.legal-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-block-end: 28px;
+  margin-block-end: clamp(36px, 5vh, 56px);
+  border-block-end: 1px solid rgba(140, 170, 255, 0.14);
+}
+
+.legal-top .brand {
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.legal-back {
+  font-family: var(--mono);
+  font-size: var(--type-meta);
+  color: var(--text-dim);
+  text-decoration: none;
+  border-block-end: 1px solid transparent;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.legal-back:hover {
+  color: var(--accent-bright);
+  border-block-end-color: var(--accent-dim);
+}
+
+.legal h1 {
+  max-width: 22ch;
+  margin: 0 0 20px;
+  font-size: var(--type-chapter);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.legal-lede {
+  margin: 0 0 12px;
+  font-size: var(--type-intro);
+  line-height: 1.65;
+  color: var(--text-muted);
+}
+
+.legal-date {
+  display: block;
+  margin: 0 0 clamp(40px, 6vh, 64px);
+  font-family: var(--mono);
+  font-size: var(--type-meta);
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+}
+
+.legal section {
+  margin-block-end: clamp(32px, 5vh, 48px);
+}
+
+.legal h2 {
+  margin: 0 0 12px;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+
+.legal p {
+  margin: 0 0 14px;
+  font-size: var(--type-body);
+  line-height: 1.7;
+  color: var(--text-muted);
+}
+
+.legal p:last-child {
+  margin-block-end: 0;
+}
+
+.legal a {
+  color: var(--accent-bright);
+  text-underline-offset: 3px;
+}
+
+/* The storages table. `table-layout: auto` on purpose — the three columns hold
+   very different amounts of text in twenty languages, and a fixed layout sized
+   for English wraps German into four lines. */
+.legal-table {
+  width: 100%;
+  margin: 18px 0 0;
+  border-collapse: collapse;
+  font-size: var(--type-card-body);
+}
+
+.legal-table th,
+.legal-table td {
+  /* The inline gutter is a third of the narrow screen across three columns, so
+     it shrinks with the viewport rather than holding a desktop measure. */
+  padding: 12px clamp(10px, 3vw, 16px) 12px 0;
+  text-align: start;
+  vertical-align: top;
+  border-block-end: 1px solid rgba(140, 170, 255, 0.14);
+}
+
+/* The table is the one thing on these pages allowed to be wider than the column,
+   so it carries its own scroll rather than letting the page body scroll. Two
+   locales still exceeded a 360px screen after the headers were allowed to wrap —
+   Russian by 21px and German by 17 — and a page that scrolls sideways is worse
+   than a table that does, because the reader discovers it by losing the left
+   edge of every paragraph. */
+.legal-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+/* The headers wrap. `nowrap` read well in English and pushed the page 90px wider
+   than a 360px screen in German, 89 in Russian and 70 in French — the three
+   columns are headed by words that are one syllable in English and compounds
+   elsewhere, so a rule that fits the English is a rule that fits one locale of
+   twenty. Measured on all twenty rather than on the one it was written in. */
+.legal-table th {
+  font-family: var(--mono);
+  font-size: var(--type-meta);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent-bright);
+}
+
+.legal-table td {
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* The categories read as definitions rather than as a second table: each has a
+   name, a state and a paragraph, and a three-column grid would give the
+   paragraph a column too narrow to be read. */
+.legal-cat {
+  margin-block-start: 20px;
+  padding-inline-start: 16px;
+  border-inline-start: 2px solid var(--accent-dim);
+}
+
+.legal-cat h3 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 10px;
+  margin: 0 0 8px;
+  font-size: var(--type-card-title);
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+/* On, off — the state is a word, so a reader who cannot see the colour is not
+   reading a blank (`A11Y-R02`). */
+.legal-state {
+  font-family: var(--mono);
+  font-size: var(--type-meta);
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.legal-state[data-on] {
+  color: var(--accent-bright);
+}
+
+/* The row of the other two pages, at the foot of each. */
+.legal-also {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 20px;
+  padding-block-start: 28px;
+  border-block-start: 1px solid rgba(140, 170, 255, 0.14);
+  font-family: var(--mono);
+  font-size: var(--type-meta);
+}
+
+.legal-also-label {
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.legal-also a {
+  color: var(--text-muted);
+  text-decoration: none;
+  border-block-end: 1px solid var(--accent-dim);
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.legal-also a:hover {
+  color: var(--accent-bright);
+  border-block-end-color: var(--accent-bright);
+}
+
+/* The footer's own legal row, on every page. Separate from the ecosystem
+   column because a reader looking for a privacy policy is looking for one
+   thing, and scanning for it among six product names is how they conclude
+   there is not one. */
+.footer-policies {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin-block-start: 20px;
+  font-family: var(--mono);
+  font-size: var(--type-meta);
+}
+
+.footer-policies a {
+  color: var(--text-dim);
+  text-decoration: none;
+  border-block-end: 1px solid transparent;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.footer-policies a:hover {
+  color: var(--accent-bright);
+  border-block-end-color: var(--accent-dim);
+}
+
+/* The legal pages' own foot. Outside `main`, because the row of the other legal
+   pages and the rights line belong to the document rather than to its content —
+   a `footer` inside `main` is the footer of that section and not of the page,
+   and a screen reader's landmark list is where the difference shows. */
+.legal-foot {
+  position: relative;
+  z-index: 2;
+  padding-block-end: clamp(48px, 7vh, 72px);
+}
+
+.legal-foot .legal-date {
+  margin: 14px 0 0;
+}

@@ -7,7 +7,7 @@ depends_on: [LEGAL-GLOBAL-002, SITE-001]
 depended_by: []
 layers_touched: [frontend, ui]
 cross_cutting_rules: [I18N-R01, I18N-R02, I18N-R04, A11Y-R01, A11Y-R02, A11Y-R03, DATA-R02]
-status: design-ready
+status: in-progress
 ---
 
 # `SITE-006` — Legal pages and the consent surface
@@ -42,10 +42,28 @@ control on `legal/cookies` that changes the answer afterwards.
 | `/legal/cookies` | The three storages, when each is set, the three categories, and the control to change the answer | `LEGAL-GLOBAL-002` |
 | `/legal/terms` | What using the site and the investor hall means, and the company that operates them | This design |
 
-Twenty locales, from the same dictionary and through the same parity gate as the
-rest of the page (`I18N-002`). A legal page in English on a page reading Thai is
-the one place a fallback is least acceptable, because it is the page whose whole
-job is to be understood.
+Twenty locales, through the same parity gate as the rest of the site
+(`I18N-002`). A legal page in English on a page reading Thai is the one place a
+fallback is least acceptable, because it is the page whose whole job is to be
+understood.
+
+**A second catalogue, not more keys in the first.** `assets/i18n.js` is loaded by
+the homepage, and these pages' copy is forty-nine keys of legal prose in twenty
+languages; carried there, every visitor pays for it on the critical path of a
+page nobody opened to read it. `assets/legal-i18n.js` holds it instead and the
+legal pages load both — the chrome they share with the footer from the first, so
+`Privacy` is translated once for the whole site, and their own copy from the
+second. `assets/legal.js` is the swap, rather than `site.js`, which drives a
+scene and an investor gate these pages do not have and would title them from the
+homepage's headline.
+
+**`legal/terms` publishes last, and the delay is not a schedule.** It waits on
+[`TERMS-REVIEW`](../../operator-checklist.md#TERMS-REVIEW), and what holds it is
+where its English source lives: [`docs/legal/terms-en.md`](../../legal/terms-en.md)
+is written and complete, and `docs/` never reaches `main`, so there is no page for
+GitHub Pages to serve and no link pointing at one. The other two do not wait —
+they describe what the system does, which this repository knows without asking
+anybody.
 
 **Written to be true rather than complete.** A template listing processing this
 product does not do is worse than a page naming five things accurately — the same
@@ -76,6 +94,14 @@ Appears when no consent choice is stored. It carries:
 It is dismissed by answering. There is no close button that stores nothing,
 because a banner that can be dismissed without an answer asks again on every
 page and teaches people to click the brightest thing.
+
+**Shipping it edits `legal/cookies`, and that is a task rather than a habit.**
+The banner writes a fifth storage — `localStorage["valotech.consent"]` — into a
+browser the cookies page currently tells a reader holds four, and `lc.necessaryBody`
+says in twenty languages that everything in that table is the whole of the
+category. So `SITE-006/T2` adds the row and rewrites that sentence in the same
+commit that ships the banner; a banner that lands without them leaves the page
+stating a number the product has just changed.
 
 ### Accessibility, which is where these are usually wrong
 
@@ -125,23 +151,29 @@ the copy and **`I18N-002`** gates it. **`LEGAL-SG-001`** and
 ## 6. Open questions and trade-offs
 
 - **Three legal pages in twenty locales is a substantial body of copy** — the
-  largest single addition to the dictionary since the gateway shipped, and every
-  word of it goes through the same authoring and review as the rest. That is the
-  real cost of matching the family, and it is paid once.
-- **Terms are the page this repository is least qualified to write.** What ships
-  is a plain statement of who operates the site, what the investor hall is, and
-  what a reader may not do with what they read there. Anything beyond that is a
-  question for counsel, and it is on the operator checklist rather than guessed
-  at here.
+  largest single body of prose written for this site since the gateway shipped,
+  and every word of it goes through the same authoring and review as the rest.
+  That is the real cost of matching the family, and it is paid once. It is paid
+  in a catalogue of its own rather than in the homepage's, which is the one
+  decision here that is about weight rather than words.
+- **Terms are the page this repository is least qualified to write**, so it is
+  the one page that does not publish on its own schedule. What it will say is a
+  plain statement of who operates the site, what the investor hall is, and what a
+  reader may not do with what they read there; what it will not say is anything
+  about governing law or liability, because both are choices rather than
+  descriptions and guessing at either is worse than the page being short. The
+  English source is written and waiting to be read, and the waiting is recorded
+  on the operator checklist rather than in a comment nobody opens.
 - **The banner interrupts a page whose job is persuasion.** Argued and accepted
   at `LEGAL-GLOBAL-002` §6. The mitigation is that it is small, answerable in one
   click either way, and never shown again.
 
 ## 7. Task list
 
-- `SITE-006/T1` — Three legal pages in twenty locales, through the parity gate, linked in a footer row of their own
+- `SITE-006/T1` — The privacy and cookies pages in twenty locales, through the parity gate, linked in a footer row of their own
 - `SITE-006/T2` — The banner: three categories, `necessary` fixed, three controls of equal weight, no dismissal without an answer
 - `SITE-006/T3` — The banner is not first in the tab order, does not trap focus, and carries state without relying on colour
 - `SITE-006/T4` — The stored choice read in a `try`/`catch`; an unreadable store means no answer, and nothing non-essential loads
 - `SITE-006/T5` — A control on `legal/cookies` that changes the answer, and a footer link that reaches it
 - `SITE-006/T6` — The legal pages print in black on white
+- `SITE-006/T7` — The terms page, in twenty locales, once counsel has read its English source

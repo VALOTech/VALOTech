@@ -75,10 +75,10 @@ item leaves this file when its signal is true — not when it feels handled.
 <a id="TERMS-REVIEW"></a>
 ### Have counsel read the terms page before it publishes
 
-- **What:** `SITE-006` builds `legal/terms`, and this repository is the least qualified thing in the company to write it. What ships without review is a plain statement of who operates the site, what the investor hall is, and what a reader may not do with what they read there.
+- **What:** `SITE-006` builds `legal/terms`, and this repository is the least qualified thing in the company to write it. The English source is written and waiting to be read: [`docs/legal/terms-en.md`](legal/terms-en.md). It is bounded to three statements — who operates the site, what the investor hall is, and what a reader may not do with what they read there — and deliberately carries no governing-law clause and no limitation of liability, because both are legal choices rather than descriptions of the system.
 - **Who:** the owner, with counsel.
-- **Done when:** the page's English source has been read by somebody qualified, and the nineteen translations follow it.
-- **Until then:** the page is not published. `legal/privacy` and `legal/cookies` do not wait on this — they describe what the system does, which this repository does know.
+- **Done when:** that English source has been read and corrected by somebody qualified, the nineteen translations are authored from the corrected text, `legal/terms.html` is built beside the other two pages, and the footer's legal row gains its third link (`SITE-006/T7`).
+- **Until then:** the page is not published, and **the mechanism that keeps it unpublished is where the source lives**: `docs/` never reaches `main`, so there is no `legal/terms.html` for GitHub Pages to serve and no link pointing at one. `legal/privacy` and `legal/cookies` do not wait on this — they describe what the system does, which this repository does know, and they ship with a two-link legal row that the third link joins.
 
 <a id="NATIVE-LOCALE-READERS"></a>
 ### Find a reader for each of eleven locales

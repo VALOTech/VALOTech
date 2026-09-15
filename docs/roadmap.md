@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_326 tasks in the plan, 265 closed, 61 outstanding._
+_327 tasks in the plan, 266 closed, 61 outstanding._
 
 ---
 
@@ -106,7 +106,7 @@ _60/67 closed (89%) · 7 outstanding — 1 buildable now · 1 waiting on the own
 
 _The reading surfaces, the hall they sit in, and the gateway served by the application — which is what finally makes the gate on the two hidden chapters real rather than a stylesheet. This wave ends with the product complete and still unpublished; what publishes it is outside the waves, waiting on the owner._
 
-_9/59 closed (15%) · 50 outstanding — 50 buildable now · 0 waiting on the owner · 0 external residue · 0 parked to a later wave._
+_10/60 closed (16%) · 50 outstanding — 49 buildable now · 0 waiting on the owner · 1 external residue · 0 parked to a later wave._
 
 - **DECK-003** · Deck reading — 0/5 closed · depth 9
   - `[ ] DECK-003/T1` — One column with sections in order, the version and date on the page
@@ -170,10 +170,10 @@ _9/59 closed (15%) · 50 outstanding — 50 buildable now · 0 waiting on the ow
   - `[ ] OPS-001/T7` — RDS unreachable from outside the VPC, proved by attempting it rather than by reading the security group
   - `[ ] OPS-001/T8` — Private-subnet egress, and Cloudflare caching that never holds a document
 
-- **SITE-006** · Legal pages and the consent surface — 0/6 closed · depth 10
-  - `[ ] SITE-006/T1` — Three legal pages in twenty locales, through the parity gate, linked in a footer row of their own
+- **SITE-006** · Legal pages and the consent surface — 1/7 closed · depth 10
   - `[ ] SITE-006/T2` — The banner: three categories, `necessary` fixed, three controls of equal weight, no dismissal without an answer
   - `[ ] SITE-006/T3` — The banner is not first in the tab order, does not trap focus, and carries state without relying on colour
   - `[ ] SITE-006/T4` — The stored choice read in a `try`/`catch`; an unreadable store means no answer, and nothing non-essential loads
   - `[ ] SITE-006/T5` — A control on `legal/cookies` that changes the answer, and a footer link that reaches it
   - `[ ] SITE-006/T6` — The legal pages print in black on white
+  - `[!] SITE-006/T7` — The terms page, in twenty locales, once counsel has read its English source  · _external_ · **Blocked by:** pending-external: legal — somebody qualified reads the English, at docs/operator-checklist.md#TERMS-REVIEW. Everything this side can supply is suppli…
