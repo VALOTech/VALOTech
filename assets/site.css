@@ -3555,3 +3555,100 @@ html:not(.can-scene) .planet {
   line-height: 1.6;
   color: var(--text-muted);
 }
+
+/* ============================================================================
+   The legal pages in print (`SITE-006/T6`)
+
+   These are the pages people actually print, which is the whole reason the rule
+   exists — a privacy notice is read once on a screen and kept on paper. The
+   gateway's own print block sits earlier in this file and cannot reach the
+   `.legal*` and `.consent*` rules, because those were written after it and win
+   at equal specificity; so the print rules for them are here, last, where they
+   win back.
+
+   `RPT-003` §Print sets the shape: black on white and the chrome gone.
+
+   **Its link rule is not carried here, and the reason is a measurement.** That
+   rule prints a link's target after its text, because a printed link that can be
+   neither followed nor read is a gap in the sentence. Driven under print
+   emulation, exactly one link survives on either of these pages -- the address on
+   the privacy page -- and its text already *is* its target, so the rule produced
+   ` (mailto:hello@valotech.org)` beside `hello@valotech.org`: the same address
+   twice, the second time with a scheme nobody types. Every other link is
+   navigation and is hidden above. A rule whose only output is noise is not a
+   courtesy withheld; it earns its place on the day a legal page carries a link
+   whose words differ from where it goes.
+   ========================================================================== */
+@media print {
+  /* The page carries its own margin rather than trusting the print dialog's.
+     A notice printed edge to edge cannot be filed or bound, and the default is
+     whatever that particular driver happens to think -- which for a document
+     somebody keeps is not a thing to leave to the driver. */
+  @page {
+    margin: 18mm;
+  }
+
+  .legal,
+  .legal-foot {
+    padding: 0;
+  }
+
+  .legal .wrap,
+  .legal-foot .wrap {
+    max-width: none;
+    padding: 0;
+  }
+
+  /* The way back, the mark's rule and the row of sibling pages are navigation:
+     on paper they are three things that cannot be pressed. */
+  .legal-back,
+  .legal-top,
+  .legal-also {
+    display: none !important;
+  }
+
+  /* The banner never prints. It is a question, and a question on paper is one
+     nobody can answer; the control on the cookies page is the same. */
+  .consent,
+  .consent-control {
+    display: none !important;
+  }
+
+  .legal h1,
+  .legal h2,
+  .legal h3,
+  .legal p,
+  .legal-lede,
+  .legal-date,
+  .legal-state,
+  .legal-table th,
+  .legal-table td {
+    color: #000;
+    filter: none;
+  }
+
+  .legal-date,
+  .legal-table th {
+    letter-spacing: normal;
+  }
+
+  .legal-cat {
+    border-inline-start-color: #999;
+  }
+
+  .legal-table th,
+  .legal-table td {
+    border-block-end-color: #999;
+  }
+
+  .legal-scroll {
+    overflow: visible;
+  }
+
+  /* A page break inside a section splits a statement from the heading that
+     names it, which on a legal page is the difference between a sentence and a
+     fragment somebody quotes. */
+  .legal section {
+    break-inside: avoid;
+  }
+}
