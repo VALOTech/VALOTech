@@ -69,7 +69,16 @@ export interface Config {
   readonly session: { readonly secret: Secret; readonly ttlSeconds: number };
   readonly mail: MailConfig;
   readonly backup: BackupConfig;
-  readonly auth: { readonly maxAttempts: number; readonly windowSeconds: number };
+  readonly auth: {
+    readonly maxAttempts: number;
+    readonly windowSeconds: number;
+    /**
+     * Whether the registration door is open (`AUTH-005`). False unless a
+     * deployment says otherwise, so a tree that has never heard of this
+     * variable runs with the door shut.
+     */
+    readonly registrationOpen: boolean;
+  };
   readonly build: { readonly version: string };
 }
 
@@ -92,6 +101,7 @@ export const DECLARED_VARIABLES = [
   'BACKUP_KEY',
   'AUTH_MAX_ATTEMPTS',
   'AUTH_WINDOW_SECONDS',
+  'AUTH_REGISTRATION_OPEN',
   'BUILD_VERSION',
 ] as const;
 
@@ -283,6 +293,19 @@ export function loadConfig(source: Source = process.env): Config {
   const maxAttempts = optionalPositiveInt(source, 'AUTH_MAX_ATTEMPTS', 5, problems);
   const windowSeconds = optionalPositiveInt(source, 'AUTH_WINDOW_SECONDS', 900, problems);
 
+  // Only the exact string 'true' opens it. Anything else -- absent, 'false',
+  // 'TRUE', a typo, a value an orchestrator substituted an empty string for --
+  // leaves the door shut, because this is the one variable whose wrong reading
+  // admits people rather than refusing them, and a permissive parse would let a
+  // misspelling do it silently. It is refused rather than defaulted when it is
+  // set to something else, so a deployment that meant to open the door and
+  // wrote 'yes' is told at startup rather than serving a 503 nobody expects.
+  const registrationRaw = present(source, 'AUTH_REGISTRATION_OPEN');
+  if (registrationRaw !== undefined && registrationRaw !== 'true' && registrationRaw !== 'false') {
+    problems.push("AUTH_REGISTRATION_OPEN must be 'true' or 'false'");
+  }
+  const registrationOpen = registrationRaw === 'true';
+
   // The build's identity, stamped by the deploy (OPS-001) and surfaced by
   // `/health` so a report about behaviour can be tied to what was running.
   // Absent — a local run, an unstamped image — it is 'unknown' rather than a
@@ -299,7 +322,7 @@ export function loadConfig(source: Source = process.env): Config {
     session: { secret: new Secret(sessionSecret), ttlSeconds: sessionTtlSeconds },
     mail,
     backup,
-    auth: { maxAttempts, windowSeconds },
+    auth: { maxAttempts, windowSeconds, registrationOpen },
     build: { version: buildVersion },
   };
 

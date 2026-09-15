@@ -38,7 +38,7 @@ describe('loadConfig', () => {
     expect(config.db.sslmode).toBe('disable');
     expect(config.session.secret.value).toBe(SESSION_SECRET);
     expect(config.session.ttlSeconds).toBe(600);
-    expect(config.auth).toEqual({ maxAttempts: 5, windowSeconds: 900 });
+    expect(config.auth).toEqual({ maxAttempts: 5, windowSeconds: 900, registrationOpen: false });
 
     expect(Object.isFrozen(config)).toBe(true);
     expect(Object.isFrozen(config.app)).toBe(true);
@@ -55,7 +55,30 @@ describe('loadConfig', () => {
     expect(config.session.ttlSeconds).toBe(43200);
     expect(config.auth.maxAttempts).toBe(5);
     expect(config.auth.windowSeconds).toBe(900);
+    expect(config.auth.registrationOpen).toBe(false);
     expect(config.build.version).toBe('unknown');
+  });
+
+  describe('the registration door (AUTH-005)', () => {
+    it('opens only for the exact string true', () => {
+      expect(loadConfig(validEnv({ AUTH_REGISTRATION_OPEN: 'true' })).auth.registrationOpen).toBe(true);
+      expect(loadConfig(validEnv({ AUTH_REGISTRATION_OPEN: 'false' })).auth.registrationOpen).toBe(false);
+      // Absent and empty both leave it shut: an orchestrator that substitutes an
+      // empty string for an unset variable must not open a door by accident.
+      expect(loadConfig(validEnv()).auth.registrationOpen).toBe(false);
+      expect(loadConfig(validEnv({ AUTH_REGISTRATION_OPEN: '  ' })).auth.registrationOpen).toBe(false);
+    });
+
+    it('refuses a value that is neither, rather than reading it as shut', () => {
+      // This is the one variable whose wrong reading admits people rather than
+      // refusing them, so a deployment that meant to open the door and wrote
+      // `yes` is told at startup instead of serving a 503 nobody expects.
+      for (const value of ['yes', 'TRUE', '1', 'on']) {
+        expect(() => loadConfig(validEnv({ AUTH_REGISTRATION_OPEN: value }))).toThrow(
+          /AUTH_REGISTRATION_OPEN/,
+        );
+      }
+    });
   });
 
   it('reads BUILD_VERSION, the build identity /health reports', () => {
