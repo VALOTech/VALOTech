@@ -31,7 +31,7 @@ import { resumeInvestorMail, stopInvestorMail } from '../../../../mail/unsubscri
 const TEXT_HEADERS: Readonly<Record<string, string>> = { 'Content-Type': 'text/plain; charset=utf-8' };
 
 /** The page that renders the setting, which is where a press returns. */
-const ACCOUNT_MAIL = '/account/mail';
+const ACCOUNT_MAIL = '/hall/account';
 
 /** The two things the form can ask for; anything else is a malformed request. */
 function isIntent(value: unknown): value is 'stop' | 'resume' {

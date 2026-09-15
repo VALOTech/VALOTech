@@ -49,7 +49,6 @@ export default async function HallLayout({ children }: { readonly children: Reac
   const destinations: readonly HallDestination[] = [
     { href: '/hall', label: t('nav.hall') },
     { href: '/hall/reports', label: t('nav.reports') },
-    { href: '/account/sessions', label: t('nav.account') },
   ];
 
   return (
@@ -75,6 +74,24 @@ export default async function HallLayout({ children }: { readonly children: Reac
           <SearchForm />
 
           <LocaleForm current={locale} />
+
+          {/* The account sits with the tools and not in the rail, because it is
+              a thing the reader reaches for rather than a place the company
+              publishes to. The rail names where the writing is; this names
+              where the reader's own settings are. */}
+          <Link href="/hall/account" className={styles.accountLink}>
+            <svg className={styles.icon} viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+              <circle cx="10" cy="6.75" r="3.25" fill="none" stroke="currentColor" strokeWidth="1.6" />
+              <path
+                d="M3.75 17c0-3.2 2.8-5.25 6.25-5.25S16.25 13.8 16.25 17"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.6"
+                strokeLinecap="round"
+              />
+            </svg>
+            <span className={styles.srOnly}>{t('nav.account')}</span>
+          </Link>
 
           {/* A plain form, because the route takes no body and no token: the
               session cookie is SameSite=Lax, so a cross-site post arrives

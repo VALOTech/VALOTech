@@ -70,7 +70,7 @@ const SESSION_STATES: ReadonlyArray<readonly [string, string | null]> = [
   ['a request presenting none', null],
 ];
 
-function requestWith(cookie: string | null, path = '/account/sessions'): NextRequest {
+function requestWith(cookie: string | null, path = '/hall/account'): NextRequest {
   const headers = new Headers();
 
   if (cookie !== null) {
@@ -181,7 +181,7 @@ describe('the security baseline', () => {
     );
   });
 
-  it.each(['/', '/hall', '/hall/2026-q3', '/account/sessions', '/api/auth/sign-out'])(
+  it.each(['/', '/hall', '/hall/2026-q3', '/hall/account', '/api/auth/sign-out'])(
     'sets every header on %s, so no route is exempt',
     (path) => {
       const response = proxy(requestWith(null, path));
@@ -215,7 +215,7 @@ describe('the proxy', () => {
     // `/hall` on the day INV-002 mounts it, and would silently omit it on every
     // day somebody forgets; the cookie is what makes the response an
     // authenticated one, and it is the same cookie on every path.
-    for (const path of ['/', '/hall', '/hall/2026-q3', '/account/sessions', '/api/anything']) {
+    for (const path of ['/', '/hall', '/hall/2026-q3', '/hall/account', '/api/anything']) {
       const response = proxy(requestWith(presentedCookie(), path));
 
       expect(response.headers.get('Cache-Control')).toBe(NO_STORE);
@@ -248,7 +248,7 @@ describe('the proxy', () => {
 });
 
 describe('the matcher', () => {
-  it.each(['/', '/hall', '/account/sessions', '/api/auth/sign-out'])(
+  it.each(['/', '/hall', '/hall/account', '/api/auth/sign-out'])(
     'runs the proxy on %s',
     (path) => {
       expect(matches(path)).toBe(true);

@@ -119,7 +119,7 @@ _9/59 closed (15%) · 50 outstanding — 50 buildable now · 0 waiting on the ow
   - `[ ] DECK-004/T6` — Bulk grant with the names shown before it commits, and no bulk revoke
 
 - **INV-001** · Investor hall shell — 4/6 closed · depth 9
-  - `[~] INV-001/T3` — Flat navigation over four destinations, with the current one marked  · **Note:** the rail and its current-destination mark ship in apps/web/src/app/hall/nav.tsx, which is a client component for one reason — the current path, which…
+  - `[~] INV-001/T3` — Flat navigation over four destinations, with the current one marked  · **Note:** three of the four destinations stand. The rail and its current-destination mark ship in apps/web/src/app/hall/nav.tsx, a client component for one rea…
   - `[ ] INV-001/T6` — The landing's blocks are ordered by who the reader is, and an unclassified reader has an order of their own
 
 - **LEGAL-GLOBAL-002** · Cookie and analytics posture — 0/5 closed · depth 9

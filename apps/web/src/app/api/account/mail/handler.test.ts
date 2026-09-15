@@ -142,7 +142,7 @@ describe.skipIf(!HAS_DATABASE)('POST /api/account/mail (MAIL-002/T2)', () => {
     );
 
     expect(response.status).toBe(303);
-    expect(response.headers.get('Location')).toBe('/account/mail');
+    expect(response.headers.get('Location')).toBe('/hall/account');
     expect(await stopped(reader.id)).toBe(true);
     expect(await auditCount(reader.id)).toBe(1);
   });
