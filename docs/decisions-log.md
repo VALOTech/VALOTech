@@ -162,6 +162,16 @@ An entry is filed the moment the choice surfaces, not when it is answered. Nothi
 ---
 ## Resolved decisions
 
+<a id="ADMIN-DEC-06"></a>
+### `ADMIN-DEC-06` — What a reader may change about their own account without asking — RESOLVED 2026-09-15
+
+- **Decision:** `ADMIN-001/T10` puts correcting a name or an address on the person page as an admin act, and `docs/runbooks/legal-sg-001-rights.md` answers erasure the same way, behind an identity check the admin performs. Both were written when the hall had no account surface of its own. Now that it has one, which of these may a reader do for themselves?
+- **Options:** **A** Password, sessions and the mail preference only — everything that touches the record stays an admin act · **B** Those, plus correcting their own name and address, plus deleting their own account · **C** All of **B** plus downloading their own record.
+- **Recommendation:** **A**, on the grounds that correcting an address changes what a person signs in with and deleting is irreversible, so both are worth a second pair of eyes. The owner chose **B**, and the reason holds: a person asking the company to fix their own name is a round trip that exists only because the form was on the wrong page, and a right the data-protection regimes give the person is a poor thing to make them request.
+- **Decision owner:** user
+- **Settled by:** user
+- **Status:** RESOLVED 2026-09-15 — **B**. The self-service path and the admin path both stand: a reader does it themselves, and an admin still does it for somebody who writes in, because a person locked out of their address cannot sign in to fix it. **The session is the identity check.** The runbook asks an admin to establish who they are speaking to before acting, and an e-mail address is not proof on its own; a signed-in reader has already presented a session this system issued, which is a stronger answer than the one the runbook settles for. Every refusal the acts already carry is unchanged and enforced server-side — an address another account holds, a value the column cannot take, and the two deletions that would strand the hall or let somebody act on their own access. **Downloading a copy stays an admin act**, which is not an oversight: `LEGAL-GLOBAL-001` §3 refuses a self-service export because a link to a person''s whole record is a credential in an inbox, and nothing in this decision disturbs that.
+
 <a id="CFG-DEC-02"></a>
 ### `CFG-DEC-02` — Whether the two `room.*` setting keys are renamed with the surface — RESOLVED 2026-09-15 · loop-settled
 

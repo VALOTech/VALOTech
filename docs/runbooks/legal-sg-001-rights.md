@@ -57,6 +57,12 @@ again.
 
 ## Correction — this is wrong, fix it
 
+**Most of these never reach you.** A signed-in reader corrects their own name and
+address at `/hall/account` (`ADMIN-DEC-06`), so a request arriving here is usually
+from somebody who cannot sign in — which is often the very address that is wrong.
+Establish who they are before touching the record; the console path below is for
+exactly that case.
+
 1. **`/admin/accounts/<id>`**, the Correction form at the foot of the Actions
    section. The two fields open holding what the record holds; change the one
    that is wrong and leave the other alone.
@@ -103,6 +109,12 @@ person may mean "stop mailing me", which is the unsubscribe (`MAIL-002`) and
 leaves their access alone.
 
 ## Erasure — delete me
+
+**A signed-in reader deletes their own account** at `/hall/account`
+(`ADMIN-DEC-06`), with the same confirmation and the same two refusals. A request
+arriving here is from somebody who cannot sign in, or who wrote instead of
+looking; either way the identity check below is the step that stands in for the
+session they did not present.
 
 1. **`/admin/accounts/<id>`**, the Delete control.
 2. The confirmation lists what goes and what stays, and asks for the person's name
