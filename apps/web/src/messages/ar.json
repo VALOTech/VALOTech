@@ -116,6 +116,11 @@
       "gap": "لا يوجد تقرير للقراءة",
       "empty": "لم يُنشر أي تقرير بعد."
     },
+    "footer": {
+      "ecosystem": "منظومة VALO",
+      "policies": "السياسات",
+      "rights": "© 2026 VALO TECH PTE. LTD."
+    },
     "nav": {
       "hall": "القاعة",
       "reports": "التقارير",

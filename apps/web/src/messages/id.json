@@ -116,6 +116,11 @@
       "gap": "Tidak ada laporan untuk dibaca",
       "empty": "Belum ada laporan yang diterbitkan."
     },
+    "footer": {
+      "ecosystem": "Ekosistem VALO",
+      "policies": "Kebijakan",
+      "rights": "© 2026 VALO TECH PTE. LTD."
+    },
     "nav": {
       "hall": "Aula",
       "reports": "Laporan",

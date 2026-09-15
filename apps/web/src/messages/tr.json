@@ -116,6 +116,11 @@
       "gap": "Okunacak rapor yok",
       "empty": "Henüz rapor yayımlanmadı."
     },
+    "footer": {
+      "ecosystem": "VALO ekosistemi",
+      "policies": "Politikalar",
+      "rights": "© 2026 VALO TECH PTE. LTD."
+    },
     "nav": {
       "hall": "Salon",
       "reports": "Raporlar",

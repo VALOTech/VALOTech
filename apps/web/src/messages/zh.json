@@ -116,6 +116,11 @@
       "gap": "没有可阅读的报告",
       "empty": "尚未发布任何报告。"
     },
+    "footer": {
+      "ecosystem": "VALO 生态",
+      "policies": "政策",
+      "rights": "© 2026 VALO TECH PTE. LTD."
+    },
     "nav": {
       "hall": "大厅",
       "reports": "报告",

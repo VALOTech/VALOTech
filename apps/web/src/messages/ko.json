@@ -116,6 +116,11 @@
       "gap": "읽을 리포트 없음",
       "empty": "아직 발행된 리포트가 없습니다."
     },
+    "footer": {
+      "ecosystem": "VALO 생태계",
+      "policies": "정책",
+      "rights": "© 2026 VALO TECH PTE. LTD."
+    },
     "nav": {
       "hall": "라운지",
       "reports": "리포트",

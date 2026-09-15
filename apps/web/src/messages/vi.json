@@ -116,6 +116,11 @@
       "gap": "Không có báo cáo để đọc",
       "empty": "Chưa có báo cáo nào được công bố."
     },
+    "footer": {
+      "ecosystem": "Hệ sinh thái VALO",
+      "policies": "Chính sách",
+      "rights": "© 2026 VALO TECH PTE. LTD."
+    },
     "nav": {
       "hall": "Sảnh",
       "reports": "Báo cáo",

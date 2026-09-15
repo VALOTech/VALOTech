@@ -116,6 +116,11 @@
       "gap": "Walang ulat na mababasa",
       "empty": "Wala pang ulat na nailathala."
     },
+    "footer": {
+      "ecosystem": "Ekosistema ng VALO",
+      "policies": "Mga patakaran",
+      "rights": "© 2026 VALO TECH PTE. LTD."
+    },
     "nav": {
       "hall": "Bulwagan",
       "reports": "Mga ulat",

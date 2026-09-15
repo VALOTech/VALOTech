@@ -6,6 +6,7 @@ import { requireInvestorPage } from '../../auth/page-guard';
 
 import './fonts.css';
 import { LocaleForm } from './locale-form';
+import { ECOSYSTEM } from './ecosystem';
 import { HallNav, type HallDestination } from './nav';
 import { SearchForm } from './search-form';
 import styles from './hall.module.css';
@@ -107,17 +108,62 @@ export default async function HallLayout({ children }: { readonly children: Reac
 
       {children}
 
-      {/* The notice is reachable from inside the hall as well as from the
-          sign-in page (`LEGAL-SG-001/T2`). Somebody deciding whether to accept
-          an invitation reads it before they have an account, which is why the
-          sign-in page carries it; somebody who already has one reads it while
-          signed in, and a notice they would have to sign out to find is one
-          they do not read. It is the same string in the same twenty locales,
-          not a second copy that will drift from the first. */}
+      {/* Two columns, and they are two because they answer two different
+          questions: what else this company builds, and what it does with your
+          data. `SITE-006` §3 asks that the legal pages sit in a row of their
+          own rather than folded in among the product links, and a column is
+          that row — a reader looking for the notice should not have to read
+          past six product names to find it.
+
+          The notice is reachable from inside the hall as well as from the
+          sign-in page (`LEGAL-SG-001/T2`): somebody deciding whether to accept
+          an invitation reads it before they have an account, and somebody who
+          already has one reads it while signed in. A notice they would have to
+          sign out to find is one they do not read.
+
+          **Only pages that exist are linked.** `SITE-006/T1` adds the cookie
+          and terms pages; until it does they are absent rather than present and
+          answering the not-found page, which is a link a reader tries twice. */}
       <footer className={styles.footer}>
-        <a href="/privacy" className={styles.footerLink}>
-          {privacy('link')}
-        </a>
+        <div className={styles.footerColumns}>
+          <nav className={styles.footerColumn} aria-labelledby="foot-eco">
+            <h2 id="foot-eco" className={styles.footerHeading}>
+              {t('footer.ecosystem')}
+            </h2>
+            <ul className={styles.footerList}>
+              {ECOSYSTEM.map((product) => (
+                <li key={product.href}>
+                  {/* `noreferrer` with `noopener`: these are the company's own
+                      sites and the second is the one that matters, but sending
+                      the hall's URL as a referrer to anything says which
+                      surface a reader came from. */}
+                  <a
+                    className={styles.footerLink}
+                    href={product.href}
+                    rel="noopener noreferrer"
+                  >
+                    {product.name}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <nav className={styles.footerColumn} aria-labelledby="foot-legal">
+            <h2 id="foot-legal" className={styles.footerHeading}>
+              {t('footer.policies')}
+            </h2>
+            <ul className={styles.footerList}>
+              <li>
+                <a className={styles.footerLink} href="/privacy">
+                  {privacy('link')}
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+
+        <p className={styles.footerRights}>{t('footer.rights')}</p>
       </footer>
     </div>
   );
