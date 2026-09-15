@@ -21,7 +21,7 @@
     "tooCommon": "Dieses Passwort ist zu gängig. Wählen Sie ein weniger vorhersehbares.",
     "mismatch": "Die beiden Passwörter stimmen nicht überein.",
     "expiredTitle": "Dieser Link funktioniert nicht mehr",
-    "expiredBody": "Er wurde möglicherweise bereits verwendet oder ist abgelaufen. Bitten Sie Ihren Administrator um eine neue Einladung, oder fordern Sie eine weitere Zurücksetzung an.",
+    "expiredBody": "Er wurde möglicherweise bereits verwendet oder ist abgelaufen. Fordern Sie eine weitere Zurücksetzung an, oder bitten Sie VALO Tech um einen neuen Link.",
     "unexpected": "Etwas ist schiefgelaufen. Versuchen Sie es in einem Moment erneut."
   },
   "sessions": {
@@ -39,7 +39,7 @@
     "breachTitle": "Wenn etwas schiefgeht",
     "contactBody": "Schreiben Sie an {address}.",
     "contactTitle": "An wen Sie schreiben",
-    "heldBasis": "Die ersten beiden beruhen auf Ihrer Einwilligung, die Sie mit der Annahme Ihrer Einladung gegeben haben. Die letzten drei beruhen auf unserem berechtigten Interesse daran, Ihr Konto sicher, den Bereich richtig und das Gezeigte Ihrer Zeit wert zu halten.",
+    "heldBasis": "Die ersten beiden beruhen auf Ihrer Einwilligung, die Sie mit der Annahme Ihrer Einladung oder mit Ihrer eigenen Zugangsanfrage gegeben haben. Die letzten drei beruhen auf unserem berechtigten Interesse daran, Ihr Konto sicher, den Bereich richtig und das Gezeigte Ihrer Zeit wert zu halten.",
     "heldIdentity": "Ihren Namen und Ihre E-Mail-Adresse, damit einer namentlich genannten Person Zugang zur Unternehmensberichterstattung gegeben werden kann.",
     "heldReads": "Welche Dokumente Sie geöffnet haben und wann, damit der Bereich Ihnen zeigen kann, was neu ist, und festhält, welche Fassung einer Präsentation Ihnen gezeigt wurde. Das gehört allein Ihnen: es wird nie aggregiert, nie als Analysedaten gemeldet, und es geht mit Ihrem Konto.",
     "heldRole": "Ihre Rolle und den Zustand Ihres Kontos, damit der Bereich weiß, was Sie lesen dürfen.",
@@ -108,7 +108,7 @@
     "tooManyAttempts": "Zu viele Versuche. Warten Sie einen Moment und versuchen Sie es erneut.",
     "unexpected": "Etwas ist schiefgegangen. Versuchen Sie es gleich noch einmal.",
     "backToSignIn": "Zurück zur Anmeldung",
-    "unavailable": "Das Zurücksetzen Ihres Passworts ist derzeit nicht möglich. Wenden Sie sich an die Person, die Sie in den Investorenbereich eingeladen hat."
+    "unavailable": "Das Zurücksetzen Ihres Passworts ist derzeit nicht möglich. Schreiben Sie an VALO Tech, und jemand hilft Ihnen wieder hinein."
   },
   "mailPreference": {
     "title": "Investoren-E-Mails",
@@ -117,11 +117,11 @@
     "stops": "Damit enden die Neuigkeiten für Investoren – die Nachrichten, die VALO Tech an alle mit Zugang zum Investorenbereich sendet.",
     "keeps": "Die Nachrichten, die Sie zur Nutzung Ihres Kontos brauchen, enden damit nicht: eine Einladung, das Zurücksetzen eines Passworts oder ein Hinweis auf eine an Sie gesendete Nachricht. Sie beantworten etwas, worum Sie oder ein Administrator gebeten haben, und erreichen Sie deshalb weiterhin.",
     "stopped": "Investoren-E-Mails sind für dieses Konto beendet.",
-    "stoppedByCompany": "VALO Tech hat die Investoren-E-Mails an dieses Konto beendet. Wenn Sie sie wieder starten und weiterhin keine Nachrichten ankommen, wenden Sie sich an die Person, die Sie eingeladen hat.",
+    "stoppedByCompany": "VALO Tech hat die Investoren-E-Mails an dieses Konto beendet. Wenn Sie sie wieder starten und weiterhin keine Nachrichten ankommen, schreiben Sie an VALO Tech.",
     "on": "Investoren-E-Mails erreichen dieses Konto.",
     "resume": "Investoren-E-Mails wieder starten",
     "hallIntro": "Ob die Neuigkeiten von VALO Tech für Investoren die Adresse Ihres Kontos erreichen.",
-    "expired": "Dieser Link funktioniert nicht mehr. Melden Sie sich an, um diese Einstellung auf Ihrer Kontoseite zu ändern, oder wenden Sie sich an die Person, die Sie eingeladen hat.",
+    "expired": "Dieser Link funktioniert nicht mehr. Melden Sie sich an, um diese Einstellung auf Ihrer Kontoseite zu ändern, oder schreiben Sie an VALO Tech.",
     "signIn": "Anmelden"
   },
   "account": {
@@ -145,7 +145,7 @@
       "title": "Ihr Konto löschen",
       "goes": "Ihr Konto wird gelöscht, und mit ihm die Sitzungen, die Sie geöffnet haben, jede Einladung, die Ihnen geschickt wurde, der Zugang, der Ihnen gewährt wurde, und die Aufzeichnung dessen, was Sie geöffnet haben.",
       "stays": "Was Sie für das Unternehmen geschrieben haben, bleibt, allerdings ohne Ihren Namen. Eine verschlüsselte Sicherung enthält Ihr Konto noch bis zu zwölf Monate, und eine Sicherung wird ausschließlich zur Wiederherstellung verlorener Daten eingespielt.",
-      "final": "Nichts macht das rückgängig. Um im Investorenbereich wieder etwas zu lesen, bräuchten Sie eine neue Einladung.",
+      "final": "Nichts macht das rückgängig. Um im Investorenbereich wieder etwas zu lesen, müsste Ihnen der Zugang neu gewährt werden.",
       "confirmLabel": "Geben Sie zur Bestätigung {name} ein",
       "submit": "Mein Konto löschen",
       "lastAdmin": "Sie sind der einzige Administrator, der sich anmelden kann, deshalb lässt sich dieses Konto nicht löschen: Dem Investorenbereich bliebe niemand, der ihn verwalten könnte. Bitten Sie zuerst darum, einen zweiten Administrator hinzuzufügen."
@@ -154,11 +154,11 @@
       "passwordChanged": "Ihr Passwort wurde geändert. Jede andere Sitzung ist beendet.",
       "passwordRefused": "Das ist nicht das Passwort, das dieses Konto derzeit hat, deshalb wurde nichts geändert.",
       "identityChanged": "Ihr Name und Ihre Adresse wurden gespeichert.",
-      "identityChangedInvitationEnded": "Ihr Name und Ihre Adresse wurden gespeichert. Eine Einladung oder ein Zurücksetzungslink, den Sie nicht verwendet hatten, funktioniert nicht mehr, denn er ging an Ihre alte Adresse; bitten Sie die Person, die Sie eingeladen hat, um einen neuen.",
+      "identityChangedInvitationEnded": "Ihr Name und Ihre Adresse wurden gespeichert. Eine Einladung oder ein Zurücksetzungslink, den Sie nicht verwendet hatten, funktioniert nicht mehr, denn er ging an Ihre alte Adresse; schreiben Sie an VALO Tech, um einen neuen zu erhalten.",
       "identityUnchanged": "Nichts hat sich geändert — Ihr Konto enthielt bereits das, worum Sie gebeten haben.",
       "nameNeeded": "Ein Name wird benötigt.",
       "emailInvalid": "Das ist keine Adresse, die dieses System speichern kann.",
-      "emailUnavailable": "Diese Adresse lässt sich für dieses Konto nicht verwenden. Wenn sie Ihnen gehört, wenden Sie sich an die Person, die Sie eingeladen hat.",
+      "emailUnavailable": "Diese Adresse lässt sich für dieses Konto nicht verwenden. Wenn sie Ihnen gehört, schreiben Sie an VALO Tech.",
       "deleteNameMismatch": "Der eingegebene Name ist nicht der Name Ihres Kontos, deshalb wurde nichts gelöscht.",
       "deleteLastAdmin": "Ihr Konto wurde nicht gelöscht: Sie sind der einzige Administrator, der sich anmelden kann, und dem Investorenbereich bliebe niemand, der ihn verwalten könnte."
     }

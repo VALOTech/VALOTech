@@ -21,7 +21,7 @@
     "tooCommon": "Masyadong karaniwan ang password na ito. Pumili ng mas mahirap hulaan.",
     "mismatch": "Hindi magkatugma ang dalawang password.",
     "expiredTitle": "Hindi na gumagana ang link na ito",
-    "expiredBody": "Maaaring nagamit na ito o nag-expire na. Humingi ng bagong imbitasyon sa iyong administrator, o humiling ng panibagong reset.",
+    "expiredBody": "Maaaring nagamit na ito o nag-expire na. Humiling ng panibagong reset, o humingi ng bagong link sa VALO Tech.",
     "unexpected": "May nangyaring mali. Subukang muli sa ilang sandali."
   },
   "sessions": {
@@ -39,7 +39,7 @@
     "breachTitle": "Kung may mangyaring mali",
     "contactBody": "Sumulat sa {address}.",
     "contactTitle": "Kanino susulat",
-    "heldBasis": "Ang unang dalawa ay nakasalalay sa iyong pahintulot, na ibinigay nang tanggapin mo ang paanyaya. Ang huling tatlo ay nakasalalay sa aming lehitimong interes na panatilihing ligtas ang iyong account, tumpak ang bulwagan, at sulit sa iyong oras ang ipinapakita nito.",
+    "heldBasis": "Ang unang dalawa ay nakasalalay sa iyong pahintulot, na ibinigay nang tanggapin mo ang paanyaya o nang ikaw mismo ang humiling ng akses. Ang huling tatlo ay nakasalalay sa aming lehitimong interes na panatilihing ligtas ang iyong account, tumpak ang bulwagan, at sulit sa iyong oras ang ipinapakita nito.",
     "heldIdentity": "Ang iyong pangalan at e-mail address, upang mabigyan ng akses sa mga ulat ng kompanya ang isang taong may pangalan.",
     "heldReads": "Kung aling mga dokumento ang binuksan mo at kailan, upang maipakita ng bulwagan kung ano ang bago at maitala kung aling bersyon ng presentasyon ang ipinakita sa iyo. Sa iyo lamang ito: hindi kailanman pinagsasama-sama, hindi kailanman iniuulat bilang analytics, at nawawala kasabay ng iyong account.",
     "heldRole": "Ang iyong papel at ang kalagayan ng iyong account, upang malaman ng bulwagan kung ano ang maaari mong basahin.",
@@ -108,7 +108,7 @@
     "tooManyAttempts": "Masyadong maraming pagsubok. Maghintay saglit at subukang muli.",
     "unexpected": "May nangyaring mali. Subukang muli mamaya.",
     "backToSignIn": "Bumalik sa sign-in",
-    "unavailable": "Hindi available sa ngayon ang pag-reset ng sarili mong password. Makipag-ugnayan sa taong nag-imbita sa iyo sa bulwagan ng mamumuhunan."
+    "unavailable": "Hindi available sa ngayon ang pag-reset ng sarili mong password. Sumulat sa VALO Tech at may tutulong sa iyo para makabalik."
   },
   "mailPreference": {
     "title": "Mail para sa investor",
@@ -117,11 +117,11 @@
     "stops": "Ihihinto nito ang mga update para sa investor, ibig sabihin ang mga mensaheng ipinapadala ng VALO Tech sa lahat ng may akses sa bulwagan ng mamumuhunan.",
     "keeps": "Hindi nito ihihinto ang mga mensaheng kailangan mo para magamit ang iyong account: isang imbitasyon, isang pag-reset ng password, o isang abiso tungkol sa mensaheng ipinadala sa iyo. Sumasagot ang mga iyon sa isang bagay na hiniling mo o ng administrator, kaya patuloy pa rin silang darating sa iyo.",
     "stopped": "Nakahinto ang mail para sa investor sa account na ito.",
-    "stoppedByCompany": "Ihininto ng VALO Tech ang mail para sa investor papunta sa account na ito. Kung sisimulan mo itong muli at hindi pa rin dumarating ang mga mensahe, makipag-ugnayan sa taong nag-imbita sa iyo.",
+    "stoppedByCompany": "Ihininto ng VALO Tech ang mail para sa investor papunta sa account na ito. Kung sisimulan mo itong muli at hindi pa rin dumarating ang mga mensahe, sumulat sa VALO Tech.",
     "on": "Dumarating sa account na ito ang mail para sa investor.",
     "resume": "Simulan muli ang mail para sa investor",
     "hallIntro": "Kung dumarating ba sa address ng iyong account ang mga update ng VALO Tech para sa investor.",
-    "expired": "Hindi na gumagana ang link na ito. Mag-sign in para baguhin ang setting sa pahina ng iyong account, o makipag-ugnayan sa taong nag-imbita sa iyo.",
+    "expired": "Hindi na gumagana ang link na ito. Mag-sign in para baguhin ang setting sa pahina ng iyong account, o sumulat sa VALO Tech.",
     "signIn": "Mag-sign in"
   },
   "account": {
@@ -143,9 +143,9 @@
     },
     "delete": {
       "title": "Burahin ang iyong account",
-      "goes": "Mawawala ang iyong account, pati na ang mga session na bukas mo, ang imbitasyong ipinadala sa iyo, ang access na ibinigay sa iyo, at ang tala ng mga binuksan mo.",
+      "goes": "Mawawala ang iyong account, pati na ang mga session na bukas mo, ang imbitasyong ipinadala sa iyo, ang akses na ibinigay sa iyo, at ang tala ng mga binuksan mo.",
       "stays": "Mananatili ang isinulat mo para sa kompanya, ngunit aalisin doon ang pangalan mo. May naka-encrypt na backup na humahawak pa rin sa account mo nang hanggang labindalawang buwan, at ibinabalik lang ang backup kapag may nawalang datos na kailangang mabawi.",
-      "final": "Walang makakapagbawi nito. Para makabasa ulit ng anuman sa bulwagan ng mamumuhunan, kakailanganin mo ng bagong imbitasyon.",
+      "final": "Walang makakapagbawi nito. Para makabasa ulit ng anuman sa bulwagan ng mamumuhunan, kailangang bigyan ka ulit ng akses.",
       "confirmLabel": "I-type ang {name} para kumpirmahin",
       "submit": "Burahin ang account ko",
       "lastAdmin": "Ikaw lang ang administrador na makakapag-sign in, kaya hindi mabubura ang account na ito: mawawalan ng makakapamahala ang bulwagan ng mamumuhunan. Humiling munang magdagdag ng pangalawang administrador."
@@ -154,11 +154,11 @@
       "passwordChanged": "Napalitan ang password mo. Natapos na ang bawat ibang session.",
       "passwordRefused": "Hindi iyan ang password na hawak ng account na ito ngayon, kaya walang nabago.",
       "identityChanged": "Na-save ang pangalan at email address mo.",
-      "identityChangedInvitationEnded": "Na-save ang pangalan at email address mo. Huminto na sa paggana ang imbitasyon o reset link na hindi mo pa nagagamit, dahil ipinadala iyon sa lumang address mo; humingi ng bago sa taong nag-imbita sa iyo.",
+      "identityChangedInvitationEnded": "Na-save ang pangalan at email address mo. Huminto na sa paggana ang imbitasyon o reset link na hindi mo pa nagagamit, dahil ipinadala iyon sa lumang address mo; sumulat sa VALO Tech para humingi ng bago.",
       "identityUnchanged": "Walang nabago — iyan na ang nakalagay sa account mo.",
       "nameNeeded": "Kailangan ng pangalan.",
       "emailInvalid": "Hindi iyan address na kayang itago ng sistemang ito.",
-      "emailUnavailable": "Hindi magagamit ang address na iyan para sa account na ito. Kung sa iyo iyan, makipag-ugnayan sa taong nag-imbita sa iyo.",
+      "emailUnavailable": "Hindi magagamit ang address na iyan para sa account na ito. Kung sa iyo iyan, sumulat sa VALO Tech.",
       "deleteNameMismatch": "Hindi tugma ang pangalang na-type mo sa pangalan sa account mo, kaya walang nabura.",
       "deleteLastAdmin": "Hindi nabura ang account mo: ikaw lang ang administrador na makakapag-sign in, at mawawalan ng makakapamahala ang bulwagan ng mamumuhunan."
     }

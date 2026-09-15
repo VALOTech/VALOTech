@@ -227,3 +227,4 @@ shows an admin who arrived this way, in the same list as everybody else.
 - `AUTH-005/T3` — The form on the gateway, in twenty locales, operable by keyboard
 - `AUTH-005/T4` — A prospect sees the public content and no progress board, asserted against the predicate
 - `AUTH-005/T5` — The `prospect` role: the vocabulary, the predicate's branch of its own, and the row a registration writes
+- `AUTH-005/T6` — The copy that assumed an invitation was the only way in, corrected in twenty locales

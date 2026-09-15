@@ -21,7 +21,7 @@
     "tooCommon": "Esa contraseña es demasiado común. Elija una menos predecible.",
     "mismatch": "Las dos contraseñas no coinciden.",
     "expiredTitle": "Este enlace ya no funciona",
-    "expiredBody": "Es posible que ya se haya usado o que haya caducado. Pida una nueva invitación a su administrador, o solicite otro restablecimiento.",
+    "expiredBody": "Es posible que ya se haya usado o que haya caducado. Solicite otro restablecimiento, o pida un nuevo enlace a VALO Tech.",
     "unexpected": "Algo ha salido mal. Vuelva a intentarlo en un momento."
   },
   "sessions": {
@@ -39,7 +39,7 @@
     "breachTitle": "Si algo sale mal",
     "contactBody": "Escriba a {address}.",
     "contactTitle": "A quién escribir",
-    "heldBasis": "Los dos primeros se basan en su consentimiento, dado al aceptar la invitación. Los tres últimos se basan en nuestro interés legítimo en mantener su cuenta segura, la sala exacta y lo que se le muestra a la altura de su tiempo.",
+    "heldBasis": "Los dos primeros se basan en su consentimiento, dado al aceptar la invitación o al solicitar el acceso por iniciativa propia. Los tres últimos se basan en nuestro interés legítimo en mantener su cuenta segura, la sala exacta y lo que se le muestra a la altura de su tiempo.",
     "heldIdentity": "Su nombre y su dirección de correo electrónico, para poder dar acceso a los informes de la empresa a una persona con nombre.",
     "heldReads": "Qué documentos ha abierto y cuándo, para que la sala pueda mostrarle lo nuevo y registrar qué versión de una presentación se le mostró. Esto es solo suyo: nunca se agrega, nunca se comunica como analítica y desaparece con su cuenta.",
     "heldRole": "Su rol y el estado de su cuenta, para que la sala sepa qué puede leer usted.",
@@ -108,7 +108,7 @@
     "tooManyAttempts": "Demasiados intentos. Espere un momento y vuelva a intentarlo.",
     "unexpected": "Algo ha salido mal. Inténtelo de nuevo en un momento.",
     "backToSignIn": "Volver al inicio de sesión",
-    "unavailable": "En este momento no es posible restablecer su propia contraseña. Escriba a la persona que le invitó a la sala."
+    "unavailable": "En este momento no es posible restablecer su propia contraseña. Escriba a VALO Tech y alguien le ayudará a entrar de nuevo."
   },
   "mailPreference": {
     "title": "Correo para inversores",
@@ -117,11 +117,11 @@
     "stops": "Esto detiene las novedades para inversores, es decir, los mensajes que VALO Tech envía a todas las personas con acceso a la sala de inversores.",
     "keeps": "No detiene los mensajes que necesita para usar su cuenta: una invitación, un restablecimiento de contraseña o un aviso sobre un mensaje enviado a usted. Esos responden a algo que ha pedido usted o un administrador, así que siguen llegándole.",
     "stopped": "El correo para inversores está detenido en esta cuenta.",
-    "stoppedByCompany": "VALO Tech ha detenido el correo para inversores a esta cuenta. Si vuelve a activarlo y los mensajes siguen sin llegar, escriba a la persona que le invitó.",
+    "stoppedByCompany": "VALO Tech ha detenido el correo para inversores a esta cuenta. Si vuelve a activarlo y los mensajes siguen sin llegar, escriba a VALO Tech.",
     "on": "El correo para inversores está llegando a esta cuenta.",
     "resume": "Volver a recibir el correo para inversores",
     "hallIntro": "Si las novedades para inversores de VALO Tech llegan a la dirección de su cuenta.",
-    "expired": "Este enlace ya no funciona. Inicie sesión para cambiar este ajuste en la página de su cuenta, o escriba a la persona que le invitó.",
+    "expired": "Este enlace ya no funciona. Inicie sesión para cambiar este ajuste en la página de su cuenta, o escriba a VALO Tech.",
     "signIn": "Iniciar sesión"
   },
   "account": {
@@ -145,7 +145,7 @@
       "title": "Eliminar su cuenta",
       "goes": "Su cuenta desaparece, y con ella las sesiones que tenga abiertas, cualquier invitación que se le haya enviado, el acceso que se le concedió y el registro de lo que ha abierto.",
       "stays": "Lo que escribió para la empresa se queda, con su nombre retirado. Una copia de seguridad cifrada conserva su cuenta hasta doce meses, y una copia solo se restaura para recuperar datos perdidos.",
-      "final": "Nada deshace esto. Para volver a leer algo en la sala de inversores necesitaría una invitación nueva.",
+      "final": "Nada deshace esto. Para volver a leer algo en la sala de inversores necesitaría que se le concediera el acceso de nuevo.",
       "confirmLabel": "Escriba {name} para confirmar",
       "submit": "Eliminar mi cuenta",
       "lastAdmin": "Usted es el único administrador que puede iniciar sesión, por lo que esta cuenta no se puede eliminar: la sala de inversores se quedaría sin nadie que pudiera gestionarla. Pida primero que se añada un segundo administrador."
@@ -154,11 +154,11 @@
       "passwordChanged": "Su contraseña se ha cambiado. Todas las demás sesiones han finalizado.",
       "passwordRefused": "Esa no es la contraseña que tiene ahora esta cuenta, así que no se ha cambiado nada.",
       "identityChanged": "Se han guardado su nombre y su dirección.",
-      "identityChangedInvitationEnded": "Se han guardado su nombre y su dirección. La invitación o el enlace de restablecimiento que no había usado ha dejado de funcionar, porque se envió a su dirección anterior; pida uno nuevo a la persona que le invitó.",
+      "identityChangedInvitationEnded": "Se han guardado su nombre y su dirección. La invitación o el enlace de restablecimiento que no había usado ha dejado de funcionar, porque se envió a su dirección anterior; escriba a VALO Tech para pedir uno nuevo.",
       "identityUnchanged": "No ha cambiado nada: su cuenta ya contenía lo que ha pedido.",
       "nameNeeded": "Hace falta un nombre.",
       "emailInvalid": "Esa no es una dirección que este sistema pueda guardar.",
-      "emailUnavailable": "Esa dirección no se puede usar para esta cuenta. Si es suya, escriba a la persona que le invitó.",
+      "emailUnavailable": "Esa dirección no se puede usar para esta cuenta. Si es suya, escriba a VALO Tech.",
       "deleteNameMismatch": "El nombre que ha escrito no es el de su cuenta, así que no se ha eliminado nada.",
       "deleteLastAdmin": "Su cuenta no se ha eliminado: usted es el único administrador que puede iniciar sesión, y la sala de inversores se quedaría sin nadie que pudiera gestionarla."
     }

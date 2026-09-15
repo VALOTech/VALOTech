@@ -42,9 +42,22 @@ EVIDENCE_RE = re.compile(r"^\s*Evidence:\s*(.+?)\s*$")
 # A path-shaped token: at least one directory separator or a known extension,
 # and no spaces. Anchored on the left by a boundary so a word inside prose is
 # not mistaken for a path.
+#
+# The character class is spelled out rather than written `\w`, because Python's
+# `\w` is Unicode: `으로/로`, a Korean particle pair written the way every
+# grammar writes it, is two word runs around a slash and matched as a path. No
+# file in this tree is named outside ASCII, so the narrower class costs nothing
+# and stops prose in nineteen languages from being read as a filesystem.
+#
+# The extension alternation ends in a boundary because regex alternation is
+# leftmost-first, not longest: without it `en.json` matches `js` and is checked
+# as `en.js`, and `page.tsx` is checked as `page.ts`. Both then fail against a
+# file that was never cited. Only a bare filename reaches this branch -- a
+# slashed path matches the first alternative whole -- which is why it went
+# unnoticed.
 PATH_RE = re.compile(
-    r"(?<![\w/.-])((?:[\w.-]+/)+[\w.-]+(?::[A-Za-z_][\w.@-]*)?"
-    r"|[\w.-]+\.(?:md|css|js|mjs|ts|tsx|json|html|py|yaml|yml|sql|sh|toml))"
+    r"(?<![A-Za-z0-9_/.-])((?:[A-Za-z0-9_.-]+/)+[A-Za-z0-9_.-]+(?::[A-Za-z_][A-Za-z0-9_.@-]*)?"
+    r"|[A-Za-z0-9_.-]+\.(?:md|css|js|mjs|ts|tsx|json|html|py|yaml|yml|sql|sh|toml)(?![A-Za-z0-9_]))"
 )
 # A task code (`INFRA-001/T3`) is `word/word` and matches PATH_RE, but it is a
 # reference in prose, never a file. An Evidence line legitimately names another

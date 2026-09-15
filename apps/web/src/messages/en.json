@@ -21,7 +21,7 @@
     "tooCommon": "That password is too common. Choose a less predictable one.",
     "mismatch": "The two passwords do not match.",
     "expiredTitle": "This link no longer works",
-    "expiredBody": "It may have been used already, or it has expired. Ask your administrator for a new invitation, or request another reset.",
+    "expiredBody": "It may have been used already, or it has expired. Request another reset, or ask VALO Tech for a new link.",
     "unexpected": "Something went wrong. Try again in a moment."
   },
   "sessions": {
@@ -39,7 +39,7 @@
     "breachTitle": "If something goes wrong",
     "contactBody": "Write to {address}.",
     "contactTitle": "Who to write to",
-    "heldBasis": "The first two rest on your consent, given when you accepted your invitation. The last three rest on our legitimate interest in keeping your account secure, the hall accurate, and what it shows you worth your time.",
+    "heldBasis": "The first two rest on your consent, given when you accepted your invitation or asked for access yourself. The last three rest on our legitimate interest in keeping your account secure, the hall accurate, and what it shows you worth your time.",
     "heldIdentity": "Your name and e-mail address, so a named person can be given access to company reporting.",
     "heldReads": "Which documents you have opened, and when, so the hall can show you what is new and record which version of a deck you were shown. This is yours alone: it is never aggregated, never reported as analytics, and it goes when your account goes.",
     "heldRole": "Your role and the state of your account, so the hall knows what you may read.",
@@ -108,7 +108,7 @@
     "tooManyAttempts": "Too many attempts. Wait a moment and try again.",
     "unexpected": "Something went wrong. Try again in a moment.",
     "backToSignIn": "Back to sign-in",
-    "unavailable": "Resetting your own password is unavailable at the moment. Ask the person who invited you to the hall."
+    "unavailable": "Resetting your own password is unavailable at the moment. Write to VALO Tech and somebody will help you back in."
   },
   "mailPreference": {
     "title": "Investor mail",
@@ -117,11 +117,11 @@
     "stops": "This stops investor updates — the messages VALO Tech sends to everyone with access to the investor hall.",
     "keeps": "It does not stop the messages you need in order to use your account: an invitation, a password reset, or a notice about a message sent to you. Those answer something you or an administrator asked for, so they still reach you.",
     "stopped": "Investor mail is stopped for this account.",
-    "stoppedByCompany": "VALO Tech stopped investor mail to this account. If you start it again and messages still do not arrive, ask the person who invited you.",
+    "stoppedByCompany": "VALO Tech stopped investor mail to this account. If you start it again and messages still do not arrive, write to VALO Tech.",
     "on": "Investor mail is reaching this account.",
     "resume": "Start investor mail again",
     "hallIntro": "Whether VALO Tech's investor updates reach the address on your account.",
-    "expired": "This link no longer works. Sign in to change the setting on your account page, or ask the person who invited you.",
+    "expired": "This link no longer works. Sign in to change the setting on your account page, or write to VALO Tech.",
     "signIn": "Sign in"
   },
   "account": {
@@ -145,7 +145,7 @@
       "title": "Delete your account",
       "goes": "Your account goes, and with it the sessions you have open, any invitation you were sent, the access you were granted, and the record of what you have opened.",
       "stays": "What you wrote for the company stays, with your name taken off it. An encrypted backup still holds your account for up to twelve months, and a backup is only ever restored to recover from data loss.",
-      "final": "Nothing undoes this. To read anything in the hall again you would need a new invitation.",
+      "final": "Nothing undoes this. To read anything in the hall again you would need to be given access afresh.",
       "confirmLabel": "Type {name} to confirm",
       "submit": "Delete my account",
       "lastAdmin": "You are the only administrator who can sign in, so this account cannot be deleted: the hall would be left with nobody able to manage it. Ask for a second administrator first."
@@ -154,11 +154,11 @@
       "passwordChanged": "Your password was changed. Every other session has ended.",
       "passwordRefused": "That is not the password this account holds now, so nothing was changed.",
       "identityChanged": "Your name and address were saved.",
-      "identityChangedInvitationEnded": "Your name and address were saved. An invitation or reset link you had not used has stopped working, because it was sent to your old address; ask the person who invited you for a new one.",
+      "identityChangedInvitationEnded": "Your name and address were saved. An invitation or reset link you had not used has stopped working, because it was sent to your old address; write to VALO Tech for a new one.",
       "identityUnchanged": "Nothing changed — your account already holds what you asked for.",
       "nameNeeded": "A name is needed.",
       "emailInvalid": "That is not an address this system can store.",
-      "emailUnavailable": "That address cannot be used for this account. If it is yours, ask the person who invited you.",
+      "emailUnavailable": "That address cannot be used for this account. If it is yours, write to VALO Tech.",
       "deleteNameMismatch": "The name you typed is not the name on your account, so nothing was deleted.",
       "deleteLastAdmin": "Your account was not deleted: you are the only administrator who can sign in, and the hall would be left with nobody able to manage it."
     }

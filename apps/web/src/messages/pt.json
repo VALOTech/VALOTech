@@ -21,7 +21,7 @@
     "tooCommon": "Essa palavra-passe é demasiado comum. Escolha uma menos previsível.",
     "mismatch": "As duas palavras-passe não coincidem.",
     "expiredTitle": "Esta ligação já não funciona",
-    "expiredBody": "Pode já ter sido usada ou ter expirado. Peça um novo convite ao seu administrador, ou solicite outra reposição.",
+    "expiredBody": "Pode já ter sido usada ou ter expirado. Solicite outra redefinição, ou peça uma nova ligação à VALO Tech.",
     "unexpected": "Ocorreu um erro. Tente novamente dentro de momentos."
   },
   "sessions": {
@@ -39,7 +39,7 @@
     "breachTitle": "Se algo correr mal",
     "contactBody": "Escreva para {address}.",
     "contactTitle": "A quem escrever",
-    "heldBasis": "Os dois primeiros assentam no seu consentimento, dado ao aceitar o convite. Os três últimos assentam no nosso interesse legítimo em manter a sua conta segura, o salão exato e o que lhe é mostrado digno do seu tempo.",
+    "heldBasis": "Os dois primeiros assentam no seu consentimento, dado ao aceitar o convite ou ao pedir acesso por iniciativa própria. Os três últimos assentam no nosso interesse legítimo em manter a sua conta segura, o salão exato e o que lhe é mostrado digno do seu tempo.",
     "heldIdentity": "O seu nome e o seu endereço de e-mail, para que uma pessoa identificada possa ter acesso aos relatórios da empresa.",
     "heldReads": "Que documentos abriu e quando, para que o salão lhe possa mostrar o que é novo e registar que versão de uma apresentação lhe foi mostrada. Isto é só seu: nunca é agregado, nunca é comunicado como análise e desaparece com a sua conta.",
     "heldRole": "A sua função e o estado da sua conta, para que o salão saiba o que pode ler.",
@@ -108,7 +108,7 @@
     "tooManyAttempts": "Demasiadas tentativas. Aguarde um momento e tente novamente.",
     "unexpected": "Algo correu mal. Tente novamente daqui a pouco.",
     "backToSignIn": "Voltar ao início de sessão",
-    "unavailable": "De momento não é possível redefinir a sua própria palavra-passe. Contacte quem o convidou para o salão de investidores."
+    "unavailable": "De momento não é possível redefinir a sua própria palavra-passe. Escreva à VALO Tech e alguém o ajudará a voltar a entrar."
   },
   "mailPreference": {
     "title": "Correio para investidores",
@@ -117,11 +117,11 @@
     "stops": "Isto interrompe as novidades para investidores, ou seja, as mensagens que a VALO Tech envia a todas as pessoas com acesso ao salão de investidores.",
     "keeps": "Não interrompe as mensagens de que precisa para usar a sua conta: um convite, uma redefinição de palavra-passe ou um aviso sobre uma mensagem que lhe foi enviada. Essas respondem a um pedido seu ou de um administrador, por isso continuam a chegar-lhe.",
     "stopped": "O correio para investidores está interrompido nesta conta.",
-    "stoppedByCompany": "A VALO Tech interrompeu o correio para investidores para esta conta. Se voltar a ativá-lo e as mensagens continuarem a não chegar, contacte quem o convidou.",
+    "stoppedByCompany": "A VALO Tech interrompeu o correio para investidores para esta conta. Se voltar a ativá-lo e as mensagens continuarem a não chegar, escreva à VALO Tech.",
     "on": "O correio para investidores está a chegar a esta conta.",
     "resume": "Voltar a receber o correio para investidores",
     "hallIntro": "Se as novidades da VALO Tech para investidores chegam ao endereço da sua conta.",
-    "expired": "Esta ligação já não funciona. Inicie sessão para alterar esta definição na página da sua conta, ou contacte quem o convidou.",
+    "expired": "Esta ligação já não funciona. Inicie sessão para alterar esta definição na página da sua conta, ou escreva à VALO Tech.",
     "signIn": "Iniciar sessão"
   },
   "account": {
@@ -145,7 +145,7 @@
       "title": "Eliminar a sua conta",
       "goes": "A sua conta desaparece, e com ela as sessões que tiver abertas, qualquer convite que lhe tenha sido enviado, o acesso que lhe foi concedido e o registo do que abriu.",
       "stays": "O que escreveu para a empresa fica, com o seu nome retirado. Uma cópia de segurança cifrada mantém a sua conta até doze meses, e uma cópia só é restaurada para recuperar dados perdidos.",
-      "final": "Nada desfaz isto. Para voltar a ler seja o que for no salão de investidores precisaria de um novo convite.",
+      "final": "Nada desfaz isto. Para voltar a ler seja o que for no salão de investidores precisaria que lhe concedessem o acesso de novo.",
       "confirmLabel": "Escreva {name} para confirmar",
       "submit": "Eliminar a minha conta",
       "lastAdmin": "É o único administrador que consegue iniciar sessão, por isso esta conta não pode ser eliminada: o salão de investidores ficaria sem ninguém que o pudesse gerir. Peça primeiro que seja acrescentado um segundo administrador."
@@ -154,11 +154,11 @@
       "passwordChanged": "A sua palavra-passe foi alterada. Todas as outras sessões terminaram.",
       "passwordRefused": "Essa não é a palavra-passe que esta conta tem agora, por isso nada foi alterado.",
       "identityChanged": "O seu nome e o seu endereço foram guardados.",
-      "identityChangedInvitationEnded": "O seu nome e o seu endereço foram guardados. O convite ou a ligação de redefinição que não tinha usado deixou de funcionar, porque foi enviado para o seu endereço anterior; peça um novo a quem o convidou.",
+      "identityChangedInvitationEnded": "O seu nome e o seu endereço foram guardados. O convite ou a ligação de redefinição que não tinha usado deixou de funcionar, porque foi enviado para o seu endereço anterior; escreva à VALO Tech para pedir um novo.",
       "identityUnchanged": "Nada mudou: a sua conta já tinha o que pediu.",
       "nameNeeded": "É necessário um nome.",
       "emailInvalid": "Esse não é um endereço que este sistema possa guardar.",
-      "emailUnavailable": "Esse endereço não pode ser usado nesta conta. Se for seu, contacte quem o convidou.",
+      "emailUnavailable": "Esse endereço não pode ser usado nesta conta. Se for seu, escreva à VALO Tech.",
       "deleteNameMismatch": "O nome que escreveu não é o nome da sua conta, por isso nada foi eliminado.",
       "deleteLastAdmin": "A sua conta não foi eliminada: é o único administrador que consegue iniciar sessão, e o salão de investidores ficaria sem ninguém que o pudesse gerir."
     }

@@ -21,7 +21,7 @@
     "tooCommon": "Mật khẩu này quá phổ biến. Hãy chọn một mật khẩu khó đoán hơn.",
     "mismatch": "Hai mật khẩu không khớp nhau.",
     "expiredTitle": "Liên kết này không còn hiệu lực",
-    "expiredBody": "Liên kết có thể đã được sử dụng hoặc đã hết hạn. Hãy yêu cầu quản trị viên gửi lời mời mới, hoặc yêu cầu đặt lại lần nữa.",
+    "expiredBody": "Liên kết có thể đã được sử dụng hoặc đã hết hạn. Hãy yêu cầu đặt lại lần nữa, hoặc xin VALO Tech một liên kết mới.",
     "unexpected": "Đã có lỗi xảy ra. Vui lòng thử lại sau giây lát."
   },
   "sessions": {
@@ -39,7 +39,7 @@
     "breachTitle": "Nếu có sự cố",
     "contactBody": "Hãy viết tới {address}.",
     "contactTitle": "Viết cho ai",
-    "heldBasis": "Hai mục đầu dựa trên sự đồng ý của bạn, đã đưa ra khi bạn chấp nhận lời mời. Ba mục sau dựa trên lợi ích hợp pháp của chúng tôi trong việc giữ tài khoản của bạn an toàn, giữ cho sảnh chính xác và giữ cho những gì sảnh hiển thị xứng đáng với thời gian của bạn.",
+    "heldBasis": "Hai mục đầu dựa trên sự đồng ý của bạn, đã đưa ra khi bạn chấp nhận lời mời hoặc tự mình yêu cầu quyền truy cập. Ba mục sau dựa trên lợi ích hợp pháp của chúng tôi trong việc giữ tài khoản của bạn an toàn, giữ cho sảnh chính xác và giữ cho những gì sảnh hiển thị xứng đáng với thời gian của bạn.",
     "heldIdentity": "Tên và địa chỉ e-mail của bạn, để một người có tên cụ thể được cấp quyền đọc báo cáo của công ty.",
     "heldReads": "Bạn đã mở tài liệu nào và vào lúc nào, để sảnh cho bạn thấy những gì còn mới và ghi lại phiên bản bộ tài liệu bạn đã xem. Thông tin này chỉ thuộc về bạn: không bao giờ được tổng hợp, không bao giờ được báo cáo như số liệu phân tích, và sẽ mất đi cùng tài khoản của bạn.",
     "heldRole": "Vai trò và trạng thái tài khoản của bạn, để sảnh biết bạn được phép đọc những gì.",
@@ -108,7 +108,7 @@
     "tooManyAttempts": "Quá nhiều lần thử. Hãy đợi một lát rồi thử lại.",
     "unexpected": "Đã có lỗi xảy ra. Hãy thử lại sau giây lát.",
     "backToSignIn": "Quay lại đăng nhập",
-    "unavailable": "Hiện không thể tự đặt lại mật khẩu. Hãy liên hệ người đã mời bạn vào sảnh nhà đầu tư."
+    "unavailable": "Hiện không thể tự đặt lại mật khẩu. Hãy viết thư cho VALO Tech, sẽ có người giúp bạn vào lại."
   },
   "mailPreference": {
     "title": "Thư dành cho nhà đầu tư",
@@ -117,11 +117,11 @@
     "stops": "Việc này dừng các bản tin dành cho nhà đầu tư, tức là những thư VALO Tech gửi cho tất cả những người có quyền vào sảnh nhà đầu tư.",
     "keeps": "Việc này không dừng những thư bạn cần để sử dụng tài khoản: lời mời, đặt lại mật khẩu, hay thông báo về một tin nhắn gửi cho bạn. Những thư đó đáp lại điều mà bạn hoặc quản trị viên đã yêu cầu, nên vẫn đến với bạn.",
     "stopped": "Thư dành cho nhà đầu tư đã dừng đối với tài khoản này.",
-    "stoppedByCompany": "VALO Tech đã dừng thư dành cho nhà đầu tư tới tài khoản này. Nếu bạn bật lại mà thư vẫn không đến, hãy liên hệ người đã mời bạn.",
+    "stoppedByCompany": "VALO Tech đã dừng thư dành cho nhà đầu tư tới tài khoản này. Nếu bạn bật lại mà thư vẫn không đến, hãy viết thư cho VALO Tech.",
     "on": "Thư dành cho nhà đầu tư đang được gửi tới tài khoản này.",
     "resume": "Nhận lại thư dành cho nhà đầu tư",
     "hallIntro": "Các bản tin dành cho nhà đầu tư của VALO Tech có đến địa chỉ trên tài khoản của bạn hay không.",
-    "expired": "Liên kết này không còn hiệu lực. Hãy đăng nhập để thay đổi thiết lập trên trang tài khoản của bạn, hoặc liên hệ người đã mời bạn.",
+    "expired": "Liên kết này không còn hiệu lực. Hãy đăng nhập để thay đổi thiết lập trên trang tài khoản của bạn, hoặc viết thư cho VALO Tech.",
     "signIn": "Đăng nhập"
   },
   "account": {
@@ -145,7 +145,7 @@
       "title": "Xóa tài khoản của bạn",
       "goes": "Tài khoản của bạn sẽ bị xóa, cùng với các phiên đang mở, lời mời từng gửi cho bạn, quyền truy cập bạn được cấp, và ghi nhận về những gì bạn đã mở.",
       "stays": "Những gì bạn viết cho công ty vẫn ở lại, nhưng tên bạn được gỡ khỏi đó. Bản sao lưu đã mã hóa vẫn giữ tài khoản của bạn tối đa mười hai tháng, và bản sao lưu chỉ được khôi phục khi cần cứu dữ liệu bị mất.",
-      "final": "Không có cách nào hoàn tác. Muốn đọc lại bất cứ thứ gì trong sảnh nhà đầu tư, bạn sẽ cần một lời mời mới.",
+      "final": "Không có cách nào hoàn tác. Muốn đọc lại bất cứ thứ gì trong sảnh nhà đầu tư, bạn sẽ cần được cấp lại quyền truy cập.",
       "confirmLabel": "Nhập {name} để xác nhận",
       "submit": "Xóa tài khoản của tôi",
       "lastAdmin": "Bạn là quản trị viên duy nhất còn đăng nhập được, nên tài khoản này không thể xóa: sảnh nhà đầu tư sẽ không còn ai quản lý. Hãy đề nghị thêm một quản trị viên thứ hai trước đã."
@@ -154,11 +154,11 @@
       "passwordChanged": "Mật khẩu của bạn đã được đổi. Mọi phiên khác đã kết thúc.",
       "passwordRefused": "Đó không phải mật khẩu hiện tại của tài khoản này, nên không có gì thay đổi.",
       "identityChanged": "Đã lưu tên và địa chỉ email của bạn.",
-      "identityChangedInvitationEnded": "Đã lưu tên và địa chỉ email của bạn. Lời mời hoặc liên kết đặt lại mật khẩu bạn chưa dùng đã ngừng hoạt động, vì nó được gửi tới địa chỉ cũ; hãy xin người đã mời bạn một liên kết mới.",
+      "identityChangedInvitationEnded": "Đã lưu tên và địa chỉ email của bạn. Lời mời hoặc liên kết đặt lại mật khẩu bạn chưa dùng đã ngừng hoạt động, vì nó được gửi tới địa chỉ cũ; hãy viết thư cho VALO Tech để xin một liên kết mới.",
       "identityUnchanged": "Không có gì thay đổi — tài khoản của bạn vốn đã ghi đúng như vậy.",
       "nameNeeded": "Cần có tên.",
       "emailInvalid": "Đây không phải địa chỉ mà hệ thống có thể lưu.",
-      "emailUnavailable": "Không thể dùng địa chỉ này cho tài khoản này. Nếu đó đúng là địa chỉ của bạn, hãy liên hệ người đã mời bạn.",
+      "emailUnavailable": "Không thể dùng địa chỉ này cho tài khoản này. Nếu đó đúng là địa chỉ của bạn, hãy viết thư cho VALO Tech.",
       "deleteNameMismatch": "Tên bạn nhập không khớp với tên trên tài khoản, nên không có gì bị xóa.",
       "deleteLastAdmin": "Tài khoản của bạn chưa bị xóa: bạn là quản trị viên duy nhất còn đăng nhập được, và sảnh nhà đầu tư sẽ không còn ai quản lý."
     }

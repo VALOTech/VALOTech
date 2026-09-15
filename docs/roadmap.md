@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_330 tasks in the plan, 268 closed, 62 outstanding._
+_331 tasks in the plan, 269 closed, 62 outstanding._
 
 ---
 
@@ -78,7 +78,7 @@ _75/76 closed (98%) · 1 outstanding — 0 buildable now · 1 waiting on the own
 
 _The three content types, and the compliance posture that governs what is held about the people reading them. Updates come before decks, and not only because they are the simpler shape of the same problem: they are what the hall is for. An investor signs in to find out what has happened since they last looked._
 
-_61/68 closed (89%) · 7 outstanding — 1 buildable now · 1 waiting on the owner · 3 external residue · 2 parked to a later wave._
+_62/69 closed (89%) · 7 outstanding — 1 buildable now · 1 waiting on the owner · 3 external residue · 2 parked to a later wave._
 
 - **DECK-001** · Deck authoring — 6/6 closed
 - **LEGAL-SG-001** · PDPA posture — 5/8 closed · depth 7
@@ -89,7 +89,7 @@ _61/68 closed (89%) · 7 outstanding — 1 buildable now · 1 waiting on the own
 - **MAIL-001** · Investor mail — 8/8 closed
 - **POST-001** · Update authoring — 6/6 closed
 - **RPT-001** · Investor report authoring — 5/5 closed
-- **AUTH-005** · Registration for people considering an investment — 4/5 closed · depth 8
+- **AUTH-005** · Registration for people considering an investment — 5/6 closed · depth 8
   - `[!] AUTH-005/T3` — The form on the gateway, in twenty locales, operable by keyboard  · _cross-wave-parked_ · **Blocked by:** SITE-005/T1 — the gateway is not served by the application, so there is no page that can carry the form.
 
 - **DECK-002** · Deck versioning and publishing — 5/6 closed · depth 8

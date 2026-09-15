@@ -21,7 +21,7 @@
     "tooCommon": "Kata sandi ini terlalu umum. Pilih yang lebih sulit ditebak.",
     "mismatch": "Kedua kata sandi tidak cocok.",
     "expiredTitle": "Tautan ini sudah tidak berlaku",
-    "expiredBody": "Tautan mungkin sudah digunakan atau kedaluwarsa. Mintalah undangan baru kepada administrator Anda, atau minta penyetelan ulang lagi.",
+    "expiredBody": "Tautan mungkin sudah digunakan atau kedaluwarsa. Mintalah penyetelan ulang lagi, atau minta tautan baru kepada VALO Tech.",
     "unexpected": "Terjadi kesalahan. Coba lagi dalam beberapa saat."
   },
   "sessions": {
@@ -39,7 +39,7 @@
     "breachTitle": "Jika terjadi sesuatu",
     "contactBody": "Tulislah ke {address}.",
     "contactTitle": "Kepada siapa menulis",
-    "heldBasis": "Dua hal pertama bersandar pada persetujuan Anda, yang diberikan saat menerima undangan. Tiga hal terakhir bersandar pada kepentingan sah kami menjaga akun Anda tetap aman, aula ini tetap akurat, dan apa yang ditampilkan kepada Anda sepadan dengan waktu Anda.",
+    "heldBasis": "Dua hal pertama bersandar pada persetujuan Anda, yang diberikan saat menerima undangan atau saat Anda sendiri meminta akses. Tiga hal terakhir bersandar pada kepentingan sah kami menjaga akun Anda tetap aman, aula ini tetap akurat, dan apa yang ditampilkan kepada Anda sepadan dengan waktu Anda.",
     "heldIdentity": "Nama dan alamat surel Anda, agar seseorang yang disebut namanya dapat diberi akses ke laporan perusahaan.",
     "heldReads": "Dokumen mana yang Anda buka dan kapan, agar aula ini dapat menunjukkan apa yang baru dan mencatat versi paparan mana yang Anda lihat. Ini milik Anda sendiri: tidak pernah diagregasi, tidak pernah dilaporkan sebagai analitik, dan hilang bersama akun Anda.",
     "heldRole": "Peran dan status akun Anda, agar aula ini tahu apa yang boleh Anda baca.",
@@ -108,7 +108,7 @@
     "tooManyAttempts": "Terlalu banyak percobaan. Tunggu sebentar lalu coba lagi.",
     "unexpected": "Terjadi kesalahan. Coba lagi sebentar lagi.",
     "backToSignIn": "Kembali ke halaman masuk",
-    "unavailable": "Mengatur ulang kata sandi sendiri tidak tersedia saat ini. Hubungi orang yang mengundang Anda ke aula investor."
+    "unavailable": "Mengatur ulang kata sandi sendiri tidak tersedia saat ini. Tulislah kepada VALO Tech, nanti ada yang membantu Anda masuk kembali."
   },
   "mailPreference": {
     "title": "Email investor",
@@ -117,11 +117,11 @@
     "stops": "Ini menghentikan kabar terbaru untuk investor, yaitu pesan yang dikirim VALO Tech kepada semua orang yang punya akses ke aula investor.",
     "keeps": "Ini tidak menghentikan pesan yang Anda perlukan untuk menggunakan akun Anda: undangan, pengaturan ulang kata sandi, atau pemberitahuan tentang pesan yang dikirim kepada Anda. Pesan seperti itu menjawab sesuatu yang Anda atau administrator minta, jadi tetap sampai kepada Anda.",
     "stopped": "Email investor dihentikan untuk akun ini.",
-    "stoppedByCompany": "VALO Tech menghentikan email investor ke akun ini. Jika Anda menyalakannya lagi dan pesan tetap tidak sampai, hubungi orang yang mengundang Anda.",
+    "stoppedByCompany": "VALO Tech menghentikan email investor ke akun ini. Jika Anda menyalakannya lagi dan pesan tetap tidak sampai, tulislah kepada VALO Tech.",
     "on": "Email investor sampai ke akun ini.",
     "resume": "Nyalakan lagi email investor",
     "hallIntro": "Apakah kabar terbaru VALO Tech untuk investor sampai ke alamat pada akun Anda.",
-    "expired": "Tautan ini sudah tidak berlaku. Masuk untuk mengubah setelan ini di halaman akun Anda, atau hubungi orang yang mengundang Anda.",
+    "expired": "Tautan ini sudah tidak berlaku. Masuk untuk mengubah setelan ini di halaman akun Anda, atau tulislah kepada VALO Tech.",
     "signIn": "Masuk"
   },
   "account": {
@@ -145,7 +145,7 @@
       "title": "Hapus akun Anda",
       "goes": "Akun Anda dihapus, beserta sesi yang sedang terbuka, undangan yang pernah dikirim kepada Anda, akses yang diberikan kepada Anda, dan catatan tentang apa yang pernah Anda buka.",
       "stays": "Apa yang Anda tulis untuk perusahaan tetap ada, dengan nama Anda dilepas darinya. Cadangan terenkripsi masih menyimpan akun Anda hingga dua belas bulan, dan cadangan hanya dipulihkan untuk memulihkan data yang hilang.",
-      "final": "Tidak ada yang membatalkan ini. Untuk membaca apa pun di aula investor lagi, Anda memerlukan undangan baru.",
+      "final": "Tidak ada yang membatalkan ini. Untuk membaca apa pun di aula investor lagi, Anda perlu diberi akses kembali.",
       "confirmLabel": "Ketik {name} untuk mengonfirmasi",
       "submit": "Hapus akun saya",
       "lastAdmin": "Anda satu-satunya administrator yang dapat masuk, sehingga akun ini tidak dapat dihapus: aula investor akan tinggal tanpa seorang pun yang dapat mengelolanya. Mintalah administrator kedua ditambahkan lebih dulu."
@@ -154,11 +154,11 @@
       "passwordChanged": "Kata sandi Anda telah diubah. Setiap sesi lain telah berakhir.",
       "passwordRefused": "Itu bukan kata sandi yang dipegang akun ini sekarang, jadi tidak ada yang diubah.",
       "identityChanged": "Nama dan alamat email Anda telah disimpan.",
-      "identityChangedInvitationEnded": "Nama dan alamat email Anda telah disimpan. Undangan atau tautan pengaturan ulang yang belum Anda pakai berhenti bekerja, karena dikirim ke alamat lama Anda; mintalah yang baru kepada orang yang mengundang Anda.",
+      "identityChangedInvitationEnded": "Nama dan alamat email Anda telah disimpan. Undangan atau tautan pengaturan ulang yang belum Anda pakai berhenti bekerja, karena dikirim ke alamat lama Anda; tulislah kepada VALO Tech untuk meminta yang baru.",
       "identityUnchanged": "Tidak ada yang berubah — akun Anda memang sudah berisi apa yang Anda minta.",
       "nameNeeded": "Nama diperlukan.",
       "emailInvalid": "Itu bukan alamat yang dapat disimpan sistem ini.",
-      "emailUnavailable": "Alamat itu tidak dapat dipakai untuk akun ini. Jika itu milik Anda, hubungi orang yang mengundang Anda.",
+      "emailUnavailable": "Alamat itu tidak dapat dipakai untuk akun ini. Jika itu milik Anda, tulislah kepada VALO Tech.",
       "deleteNameMismatch": "Nama yang Anda ketik bukan nama pada akun Anda, jadi tidak ada yang dihapus.",
       "deleteLastAdmin": "Akun Anda tidak dihapus: Anda satu-satunya administrator yang dapat masuk, dan aula investor akan tinggal tanpa seorang pun yang dapat mengelolanya."
     }

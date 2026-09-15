@@ -21,7 +21,7 @@
     "tooCommon": "Kata laluan ini terlalu biasa. Pilih yang lebih sukar diteka.",
     "mismatch": "Kedua-dua kata laluan tidak sepadan.",
     "expiredTitle": "Pautan ini tidak lagi berfungsi",
-    "expiredBody": "Pautan mungkin telah digunakan atau telah tamat tempoh. Minta jemputan baharu daripada pentadbir anda, atau minta tetapan semula sekali lagi.",
+    "expiredBody": "Pautan mungkin telah digunakan atau telah tamat tempoh. Minta tetapan semula sekali lagi, atau minta pautan baharu daripada VALO Tech.",
     "unexpected": "Berlaku ralat. Cuba lagi dalam beberapa saat."
   },
   "sessions": {
@@ -39,7 +39,7 @@
     "breachTitle": "Jika berlaku sesuatu",
     "contactBody": "Tuliskan kepada {address}.",
     "contactTitle": "Kepada siapa hendak menulis",
-    "heldBasis": "Dua yang pertama bersandar pada persetujuan anda, yang diberikan semasa menerima jemputan. Tiga yang terakhir bersandar pada kepentingan sah kami untuk memastikan akaun anda selamat, dewan ini tepat, dan apa yang ditunjukkan kepada anda berbaloi dengan masa anda.",
+    "heldBasis": "Dua yang pertama bersandar pada persetujuan anda, yang diberikan semasa menerima jemputan atau semasa anda sendiri meminta akses. Tiga yang terakhir bersandar pada kepentingan sah kami untuk memastikan akaun anda selamat, dewan ini tepat, dan apa yang ditunjukkan kepada anda berbaloi dengan masa anda.",
     "heldIdentity": "Nama dan alamat e-mel anda, supaya seseorang yang dinamakan boleh diberi akses kepada laporan syarikat.",
     "heldReads": "Dokumen mana yang anda buka dan bila, supaya dewan ini boleh menunjukkan apa yang baharu dan merekodkan versi pembentangan mana yang ditunjukkan kepada anda. Ini milik anda sahaja: tidak pernah diagregatkan, tidak pernah dilaporkan sebagai analitik, dan hilang bersama akaun anda.",
     "heldRole": "Peranan dan keadaan akaun anda, supaya dewan ini tahu apa yang boleh anda baca.",
@@ -108,7 +108,7 @@
     "tooManyAttempts": "Terlalu banyak percubaan. Tunggu sebentar dan cuba lagi.",
     "unexpected": "Sesuatu telah berlaku. Cuba lagi sebentar lagi.",
     "backToSignIn": "Kembali ke log masuk",
-    "unavailable": "Menetapkan semula kata laluan sendiri tidak tersedia buat masa ini. Hubungi orang yang menjemput anda ke dewan pelabur."
+    "unavailable": "Menetapkan semula kata laluan sendiri tidak tersedia buat masa ini. Tulis kepada VALO Tech dan seseorang akan membantu anda masuk semula."
   },
   "mailPreference": {
     "title": "E-mel pelabur",
@@ -117,11 +117,11 @@
     "stops": "Ini menghentikan berita terkini untuk pelabur, iaitu mesej yang dihantar VALO Tech kepada semua orang yang mempunyai akses ke dewan pelabur.",
     "keeps": "Ia tidak menghentikan mesej yang anda perlukan untuk menggunakan akaun anda: jemputan, penetapan semula kata laluan, atau pemberitahuan tentang mesej yang dihantar kepada anda. Mesej begitu menjawab sesuatu yang anda atau pentadbir minta, jadi ia tetap sampai kepada anda.",
     "stopped": "E-mel pelabur dihentikan bagi akaun ini.",
-    "stoppedByCompany": "VALO Tech telah menghentikan e-mel pelabur ke akaun ini. Jika anda menghidupkannya semula dan mesej masih tidak sampai, hubungi orang yang menjemput anda.",
+    "stoppedByCompany": "VALO Tech telah menghentikan e-mel pelabur ke akaun ini. Jika anda menghidupkannya semula dan mesej masih tidak sampai, tulis kepada VALO Tech.",
     "on": "E-mel pelabur sedang sampai ke akaun ini.",
     "resume": "Hidupkan semula e-mel pelabur",
     "hallIntro": "Sama ada berita terkini VALO Tech untuk pelabur sampai ke alamat pada akaun anda.",
-    "expired": "Pautan ini tidak lagi berfungsi. Log masuk untuk menukar tetapan ini pada halaman akaun anda, atau hubungi orang yang menjemput anda.",
+    "expired": "Pautan ini tidak lagi berfungsi. Log masuk untuk menukar tetapan ini pada halaman akaun anda, atau tulis kepada VALO Tech.",
     "signIn": "Log masuk"
   },
   "account": {
@@ -145,7 +145,7 @@
       "title": "Padam akaun anda",
       "goes": "Akaun anda dipadam, berserta sesi yang sedang dibuka, jemputan yang pernah dihantar kepada anda, akses yang diberikan kepada anda, dan rekod tentang apa yang pernah anda buka.",
       "stays": "Apa yang anda tulis untuk syarikat kekal, dengan nama anda ditanggalkan daripadanya. Sandaran tersulit masih menyimpan akaun anda sehingga dua belas bulan, dan sandaran hanya dipulihkan untuk memulihkan data yang hilang.",
-      "final": "Tiada apa-apa yang membatalkannya. Untuk membaca apa-apa di dewan pelabur semula, anda memerlukan jemputan baharu.",
+      "final": "Tiada apa-apa yang membatalkannya. Untuk membaca apa-apa di dewan pelabur semula, anda perlu diberi akses sekali lagi.",
       "confirmLabel": "Taip {name} untuk mengesahkan",
       "submit": "Padam akaun saya",
       "lastAdmin": "Anda satu-satunya pentadbir yang boleh log masuk, jadi akaun ini tidak boleh dipadam: dewan pelabur akan tinggal tanpa sesiapa yang boleh menguruskannya. Mintalah pentadbir kedua ditambah dahulu."
@@ -154,11 +154,11 @@
       "passwordChanged": "Kata laluan anda telah ditukar. Setiap sesi lain telah tamat.",
       "passwordRefused": "Itu bukan kata laluan yang dipegang akaun ini sekarang, jadi tiada apa-apa yang ditukar.",
       "identityChanged": "Nama dan alamat e-mel anda telah disimpan.",
-      "identityChangedInvitationEnded": "Nama dan alamat e-mel anda telah disimpan. Jemputan atau pautan tetapan semula yang belum anda gunakan sudah berhenti berfungsi, kerana ia dihantar ke alamat lama anda; mintalah yang baharu daripada orang yang menjemput anda.",
+      "identityChangedInvitationEnded": "Nama dan alamat e-mel anda telah disimpan. Jemputan atau pautan tetapan semula yang belum anda gunakan sudah berhenti berfungsi, kerana ia dihantar ke alamat lama anda; tulis kepada VALO Tech untuk mendapatkan yang baharu.",
       "identityUnchanged": "Tiada apa-apa berubah — akaun anda memang sudah menyimpan apa yang anda minta.",
       "nameNeeded": "Nama diperlukan.",
       "emailInvalid": "Itu bukan alamat yang boleh disimpan oleh sistem ini.",
-      "emailUnavailable": "Alamat itu tidak boleh digunakan untuk akaun ini. Jika ia milik anda, hubungi orang yang menjemput anda.",
+      "emailUnavailable": "Alamat itu tidak boleh digunakan untuk akaun ini. Jika ia milik anda, tulis kepada VALO Tech.",
       "deleteNameMismatch": "Nama yang anda taip bukan nama pada akaun anda, jadi tiada apa-apa yang dipadam.",
       "deleteLastAdmin": "Akaun anda tidak dipadam: anda satu-satunya pentadbir yang boleh log masuk, dan dewan pelabur akan tinggal tanpa sesiapa yang boleh menguruskannya."
     }
