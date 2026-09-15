@@ -14,7 +14,7 @@
 .content td {
   text-align: left;
   padding: 0.4rem 0.6rem;
-  border-bottom: 1px solid var(--admin-line, #e4e4ea);
+  border-bottom: 1px solid var(--admin-line, var(--admin-line));
   vertical-align: top;
 }
 
@@ -56,7 +56,7 @@
 /* Three states, each a word first and a colour second, never a colour alone
    (A11Y-R03). */
 .yes {
-  color: #166534;
+  color: var(--admin-ok-ink);
   font-weight: 600;
 }
 
@@ -65,7 +65,7 @@
 }
 
 .pending {
-  color: #854d0e;
+  color: var(--admin-warn-ink);
   font-weight: 600;
 }
 

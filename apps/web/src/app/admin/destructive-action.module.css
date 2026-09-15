@@ -1,18 +1,18 @@
 /* The destructive control and its confirmation (ADMIN-002/T3). It sits inside the
    admin console, which is a light, plain staff surface, so the red is measured
-   against that ground (A11Y-R03): #7f1d1d on white and white on #991b1b both
+   against that ground (A11Y-R03): var(--admin-danger-ink) on white and white on var(--admin-danger-ink) both
    clear WCAG AA for body text at this size. The colour is never the message —
    the verb is on the control, the consequence is a sentence, and whether the act
    can be undone is written out — so the panel still reads correctly in
    monochrome or to somebody who cannot separate the hues. */
 
 .destructive {
-  --danger-ink: #7f1d1d;
-  --danger-solid: #991b1b;
-  --danger-bg: #fef2f2;
-  --danger-line: #b91c1c;
-  --danger-muted: #52525b;
-  --danger-off-bg: #f4f4f5;
+  --danger-ink: var(--admin-danger-ink);
+  --danger-solid: var(--admin-danger-ink);
+  --danger-bg: var(--admin-danger-bg);
+  --danger-line: var(--admin-danger-line);
+  --danger-muted: var(--admin-dim);
+  --danger-off-bg: var(--admin-panel);
 
   display: block;
 }
@@ -29,7 +29,7 @@
 
 .trigger {
   border: 1px solid var(--danger-line);
-  background: #fff;
+  background: var(--admin-panel);
   color: var(--danger-ink);
 }
 
@@ -107,7 +107,7 @@
   padding: 0.35rem 0.5rem;
   border: 1px solid var(--danger-line);
   border-radius: 6px;
-  background: #fff;
+  background: var(--admin-panel);
 }
 
 .hint {
@@ -125,11 +125,11 @@
 .confirm {
   border: 1px solid var(--danger-solid);
   background: var(--danger-solid);
-  color: #fff;
+  color: var(--admin-on-accent);
 }
 
 .confirm:hover {
-  background: #7f1d1d;
+  background: var(--admin-danger-ink);
 }
 
 .confirm:disabled {
@@ -141,6 +141,6 @@
 
 .cancel {
   border: 1px solid var(--danger-muted);
-  background: #fff;
+  background: var(--admin-panel);
   color: var(--danger-muted);
 }

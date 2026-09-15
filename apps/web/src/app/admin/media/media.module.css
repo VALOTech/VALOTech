@@ -26,24 +26,24 @@
 }
 
 .zone:hover {
-  border-color: var(--admin-link);
+  border-color: var(--admin-accent);
 }
 
 /* Focus is visible on the box itself, because the box is what takes focus. An
    outline offset keeps the ring off the dashed edge, where the two would read as
    one thick border rather than as a ring (A11Y-R01). */
 .zone:focus-visible {
-  outline: 2px solid var(--admin-link);
+  outline: 2px solid var(--admin-accent);
   outline-offset: 3px;
-  border-color: var(--admin-link);
+  border-color: var(--admin-accent);
 }
 
 /* Dragging over says so by more than a colour: the edge becomes solid, so the
    state survives a display that renders the two hues alike (A11Y-R03). */
 .zoneOver {
   border-style: solid;
-  border-color: var(--admin-link);
-  background: color-mix(in srgb, var(--admin-link) 8%, transparent);
+  border-color: var(--admin-accent);
+  background: color-mix(in srgb, var(--admin-accent) 8%, transparent);
 }
 
 .zone[aria-disabled='true'] {
@@ -84,8 +84,8 @@
 /* Both outcomes are a sentence first. The rule on the left carries the
    difference in shape as well as in hue, so neither depends on colour alone. */
 .stored {
-  border-left: 3px solid var(--admin-link);
-  background: color-mix(in srgb, var(--admin-link) 7%, transparent);
+  border-left: 3px solid var(--admin-accent);
+  background: color-mix(in srgb, var(--admin-accent) 7%, transparent);
 }
 
 .refused {

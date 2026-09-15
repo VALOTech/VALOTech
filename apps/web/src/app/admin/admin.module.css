@@ -1,19 +1,61 @@
-/* The admin console chrome (ADMIN-002). Deliberately plain: a staff surface,
-   English, legible, and not competing with the gateway's scene. Colours are
-   named as tokens so a later theme pass changes them in one place. */
+/* The admin console chrome (`ADMIN-002`), on the Gateway theme.
+ *
+ * The console stands on the same ground as every other surface the company
+ * serves: `brand/GUIDELINES.md` declares no light variant, and a second palette
+ * is a second thing to keep in step — the one that drifts is always the one
+ * fewer people look at. What keeps a work surface legible is not a pale ground
+ * but contrast, spacing, and a single accent that means one thing; those are
+ * what this file declares.
+ *
+ * Every colour on every console page resolves to one of these tokens. A page
+ * reaching for a literal is a page that will not follow the next change, and a
+ * console whose pages each hold their own shade of the same idea is one nobody
+ * can retheme without reading all nineteen stylesheets.
+ */
 
 .console {
-  --admin-ink: #1a1a2e;
-  --admin-rail: #f4f4f7;
-  --admin-line: #d8d8e0;
-  --admin-link: #2b3a8c;
-  /* The not-production warning: amber, a hue the console uses nowhere else, so
-     it cannot be mistaken for an ordinary surface. Meaning is never carried by
-     the colour alone — the bar also names the environment (A11Y-R03). */
-  --admin-warn-bg: #fde68a;
-  --admin-warn-ink: #713f12;
+  /* Ground and paper. The rail is lifted off the void rather than tinted, so
+     the two read as depth instead of as two different materials. */
+  --admin-void: #080a10;
+  --admin-bg: #0b0d14;
+  --admin-rail: #0e111a;
+  --admin-panel: rgba(255, 255, 255, 0.03);
+  --admin-raised: rgba(255, 255, 255, 0.06);
+  --admin-line: rgba(255, 255, 255, 0.12);
+  --admin-line-soft: rgba(255, 255, 255, 0.07);
 
+  /* Type. Three weights of emphasis and no more: a fourth is a distinction
+     nobody can hold while reading a table. */
+  --admin-ink: rgba(248, 248, 255, 0.96);
+  --admin-muted: rgba(228, 232, 248, 0.78);
+  --admin-dim: rgba(210, 215, 240, 0.55);
+
+  /* The one accent, and it marks the interactive and the current — never a
+     decoration and never a status (`brand/GUIDELINES.md`). */
+  --admin-accent: #8c9eff;
+  --admin-accent-bright: #b9c2ff;
+  --admin-accent-soft: rgba(140, 158, 255, 0.14);
+  --admin-accent-line: rgba(170, 195, 255, 0.4);
+  --admin-on-accent: #080a10;
+
+  /* Status, each a hue the console uses for nothing else. Meaning is never
+     carried by the colour alone — every one of these is set beside a word that
+     says the same thing (`A11Y-R03`). */
+  --admin-warn-bg: rgba(253, 230, 138, 0.14);
+  --admin-warn-ink: #fcd34d;
+  --admin-warn-line: rgba(253, 230, 138, 0.35);
+  --admin-danger-bg: rgba(248, 113, 113, 0.12);
+  --admin-danger-ink: #fca5a5;
+  --admin-danger-line: rgba(248, 113, 113, 0.4);
+  --admin-ok-bg: rgba(52, 211, 153, 0.12);
+  --admin-ok-ink: #6ee7b7;
+
+  --admin-radius: 10px;
+  --admin-ease: cubic-bezier(0.16, 1, 0.3, 1);
+
+  box-sizing: border-box;
   min-height: 100vh;
+  background: var(--admin-bg);
   color: var(--admin-ink);
   font:
     15px/1.5 system-ui,
@@ -22,8 +64,23 @@
     sans-serif;
 }
 
+/* Width is the whole box on this surface, for the reason the hall declares it:
+   the application ships no reset, so a padded element that is `width: 100%` is
+   wider than what holds it by exactly its padding. */
+.console,
+.console *,
+.console *::before,
+.console *::after {
+  box-sizing: border-box;
+}
+
+/* The not-production warning: amber, a hue the console uses nowhere else, so it
+   cannot be mistaken for an ordinary surface. The bar also names the
+   environment, because a warning carried by colour alone is no warning to a
+   reader who does not see the colour (`A11Y-R03`). */
 .envBar {
   background: var(--admin-warn-bg);
+  border-block-end: 1px solid var(--admin-warn-line);
   color: var(--admin-warn-ink);
   padding: 0.4rem 1rem;
   text-align: center;
@@ -42,17 +99,23 @@
 }
 
 .rail {
-  flex: 0 0 14rem;
+  flex: 0 0 15rem;
   background: var(--admin-rail);
-  border-right: 1px solid var(--admin-line);
-  padding: 1.25rem 1rem;
+  border-inline-end: 1px solid var(--admin-line-soft);
+  padding: 1.25rem 0.85rem;
 }
 
 .wordmark {
   display: block;
+  padding-inline: 0.6rem;
+  margin-bottom: 1.5rem;
+  color: var(--admin-ink);
   font-weight: 700;
   letter-spacing: 0.04em;
-  margin-bottom: 1.25rem;
+}
+
+.wordmarkAccent {
+  color: var(--admin-accent);
 }
 
 .rail ul {
@@ -62,26 +125,51 @@
 }
 
 .rail li {
-  margin: 0.15rem 0;
+  margin: 0.1rem 0;
 }
 
+/* An entry is an icon and a word. The icon is what the eye finds on the fourth
+   visit and the word is what tells a new admin what it is, so neither stands
+   alone — an icon-only rail is a rail somebody has to learn. */
 .rail a {
-  display: block;
-  padding: 0.4rem 0.6rem;
-  border-radius: 6px;
-  color: var(--admin-link);
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.5rem 0.6rem;
+  border-radius: var(--admin-radius);
+  color: var(--admin-muted);
   text-decoration: none;
+  transition:
+    background 0.18s var(--admin-ease),
+    color 0.18s var(--admin-ease);
 }
 
-.rail a:hover,
+.rail a:hover {
+  background: var(--admin-raised);
+  color: var(--admin-ink);
+}
+
 .rail a:focus-visible {
-  background: #fff;
-  outline: 2px solid var(--admin-link);
+  outline: 2px solid var(--admin-accent);
   outline-offset: -2px;
+}
+
+/* The current section, marked by the accent and by a rule down its edge: the
+   two together survive a reader who does not separate the hues. */
+.railCurrent {
+  background: var(--admin-accent-soft);
+  color: var(--admin-accent-bright) !important;
+  box-shadow: inset 2px 0 0 var(--admin-accent);
+}
+
+.railIcon {
+  flex: none;
+  width: 18px;
+  height: 18px;
 }
 
 .content {
   flex: 1 1 auto;
-  padding: 1.5rem 2rem;
-  max-width: 60rem;
+  padding: 1.75rem 2rem 4rem;
+  max-width: 64rem;
 }

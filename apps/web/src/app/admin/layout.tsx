@@ -26,6 +26,8 @@ import type { ReactElement, ReactNode } from 'react';
 import { requireAdminPage } from '../../auth/page-guard';
 import { getConfig } from '../../config/index';
 
+import { AdminRail } from './rail';
+
 import styles from './admin.module.css';
 
 /** The console's destinations, in the order the rail lists them (`ADMIN-002` §3). */
@@ -67,14 +69,10 @@ export default async function AdminLayout({
       ) : null}
       <div className={styles.frame}>
         <nav className={styles.rail} aria-label="Admin sections">
-          <span className={styles.wordmark}>VALO Tech</span>
-          <ul>
-            {DESTINATIONS.map((destination) => (
-              <li key={destination.href}>
-                <a href={destination.href}>{destination.label}</a>
-              </li>
-            ))}
-          </ul>
+          <span className={styles.wordmark}>
+            VALO <span className={styles.wordmarkAccent}>Tech</span>
+          </span>
+          <AdminRail destinations={DESTINATIONS} />
         </nav>
         <main className={styles.content}>{children}</main>
       </div>

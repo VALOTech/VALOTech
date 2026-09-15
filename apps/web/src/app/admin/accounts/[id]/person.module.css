@@ -43,7 +43,7 @@
 .rows td {
   text-align: left;
   padding: 0.4rem 0.6rem;
-  border-bottom: 1px solid #e4e4ea;
+  border-bottom: 1px solid var(--admin-line);
   vertical-align: top;
 }
 
@@ -77,31 +77,31 @@
   font: inherit;
   font-size: 0.85rem;
   padding: 0.35rem 0.7rem;
-  border: 1px solid #2b3a8c;
+  border: 1px solid var(--admin-accent);
   border-radius: 6px;
-  background: #fff;
-  color: #2b3a8c;
+  background: var(--admin-panel);
+  color: var(--admin-accent);
   cursor: pointer;
 }
 
 .action:hover {
-  background: #eef1fb;
+  background: var(--admin-accent-soft);
 }
 
 .action:disabled {
-  border-color: #52525b;
-  color: #52525b;
+  border-color: var(--admin-dim);
+  color: var(--admin-dim);
   cursor: not-allowed;
 }
 
 .action:focus-visible {
-  outline: 2px solid #2b3a8c;
+  outline: 2px solid var(--admin-accent);
   outline-offset: 1px;
 }
 
 .note {
   font-size: 0.8rem;
-  color: #52525b;
+  color: var(--admin-dim);
 }
 
 /* A link wearing the acts' button, because what it does belongs beside them and
@@ -111,19 +111,19 @@
   margin-block-start: 0.6rem;
   font-size: 0.85rem;
   padding: 0.35rem 0.7rem;
-  border: 1px solid #2b3a8c;
+  border: 1px solid var(--admin-accent);
   border-radius: 6px;
-  background: #fff;
-  color: #2b3a8c;
+  background: var(--admin-panel);
+  color: var(--admin-accent);
   text-decoration: none;
 }
 
 .download:hover {
-  background: #eef1fb;
+  background: var(--admin-accent-soft);
 }
 
 .download:focus-visible {
-  outline: 2px solid #2b3a8c;
+  outline: 2px solid var(--admin-accent);
   outline-offset: 1px;
 }
 
@@ -158,7 +158,7 @@
   padding: 0.4rem 0.5rem;
   font: inherit;
   font-size: 0.9rem;
-  border: 1px solid #52525b;
+  border: 1px solid var(--admin-dim);
   border-radius: 4px;
 }
 
@@ -170,16 +170,16 @@
 .field input:focus-visible,
 .field select:focus-visible,
 .field textarea:focus-visible {
-  outline: 2px solid #2b3a8c;
+  outline: 2px solid var(--admin-accent);
   outline-offset: 1px;
 }
 
 .outcome {
   margin: 1rem 0 0;
   padding: 0.6rem 0.75rem;
-  border: 1px solid #2b3a8c;
+  border: 1px solid var(--admin-accent);
   border-radius: 6px;
-  background: #eef1fb;
+  background: var(--admin-accent-soft);
   font-size: 0.9rem;
   max-width: 44rem;
 }
@@ -194,7 +194,7 @@
    message that has just taken focus must show that it has. */
 .outcome:focus,
 .failure:focus {
-  outline: 3px solid #2b3a8c;
+  outline: 3px solid var(--admin-accent);
   outline-offset: 2px;
 }
 
@@ -207,9 +207,9 @@
 .link {
   display: block;
   padding: 0.4rem 0.5rem;
-  border: 1px solid #d8d8e0;
+  border: 1px solid var(--admin-line);
   border-radius: 4px;
-  background: #fff;
+  background: var(--admin-panel);
   font-size: 0.8rem;
   overflow-wrap: anywhere;
 }
@@ -217,10 +217,10 @@
 .failure {
   margin: 1rem 0 0;
   padding: 0.5rem 0.75rem;
-  border: 1px solid #7f1d1d;
+  border: 1px solid var(--admin-danger-ink);
   border-radius: 6px;
-  background: #fde2e1;
-  color: #7f1d1d;
+  background: var(--admin-danger-bg);
+  color: var(--admin-danger-ink);
   font-size: 0.9rem;
   max-width: 44rem;
 }

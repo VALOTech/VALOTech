@@ -1,8 +1,8 @@
 /* The muted ink the admin modules share for a field’s supporting line.
-   #52525b on the console’s white is 7.5:1, which clears AA for the small
+   var(--admin-dim) on the console’s white is 7.5:1, which clears AA for the small
    text this is used at (A11Y-R03). */
 .form {
-  --invite-muted: #52525b;
+  --invite-muted: var(--admin-dim);
   display: flex;
   flex-direction: column;
   gap: 0.75rem;

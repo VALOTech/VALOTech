@@ -9,11 +9,11 @@
    work a word is not also doing (A11Y-R03). */
 
 .composer {
-  --compose-ink: #1a1a2e;
-  --compose-muted: #52525b;
-  --compose-line: #d8d8e0;
-  --compose-accent: #2b3a8c;
-  --compose-refused: #9f1239;
+  --compose-ink: var(--admin-ink);
+  --compose-muted: var(--admin-dim);
+  --compose-line: var(--admin-line);
+  --compose-accent: var(--admin-accent);
+  --compose-refused: var(--admin-danger-ink);
 
   display: flex;
   flex-direction: column;
@@ -66,7 +66,7 @@
 .choice:has(input:checked) {
   border-color: var(--compose-accent);
   background: var(--compose-accent);
-  color: #ffffff;
+  color: var(--admin-on-accent);
 }
 
 .choice:has(input:focus-visible) {
@@ -102,7 +102,7 @@
   padding: 0.55rem 0.65rem;
   border: 1px solid var(--compose-line);
   border-radius: 8px;
-  background: #ffffff;
+  background: var(--admin-panel);
 }
 
 .body {
@@ -140,7 +140,7 @@
   padding: 0.55rem 1.1rem;
   font: inherit;
   font-weight: 600;
-  color: #ffffff;
+  color: var(--admin-on-accent);
   background: var(--compose-accent);
   border: 1px solid transparent;
   border-radius: 8px;
@@ -148,7 +148,7 @@
 }
 
 .file:hover:not(:disabled) {
-  background: #212d6d;
+  background: var(--admin-accent);
 }
 
 .file:focus-visible {
@@ -177,7 +177,7 @@
   margin: 0;
   padding: 0.6rem 0.8rem;
   border-left: 3px solid var(--compose-line);
-  background: #fafafb;
+  background: var(--admin-panel);
 }
 
 .standing p {
@@ -196,7 +196,7 @@
   padding: 0.75rem 0.9rem;
   border: 1px solid var(--compose-line);
   border-radius: 8px;
-  background: #fafafb;
+  background: var(--admin-panel);
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -215,14 +215,14 @@
   font: inherit;
   font-weight: 600;
   color: var(--compose-accent);
-  background: #ffffff;
+  background: var(--admin-panel);
   border: 1px solid var(--compose-accent);
   border-radius: 8px;
   cursor: pointer;
 }
 
 .move:hover:not(:disabled) {
-  background: #eef1fb;
+  background: var(--admin-accent-soft);
 }
 
 .move:focus-visible {

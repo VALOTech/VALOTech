@@ -5,14 +5,14 @@
    sentence, and a block's type is its written name, not a shape. */
 
 .editor {
-  --edit-ink: #1a1a2e;
-  --edit-line: #d8d8e0;
-  --edit-accent: #2b3a8c;
-  --edit-dirty-bg: #fde68a;
-  --edit-dirty-ink: #713f12;
-  --edit-error-bg: #fde2e1;
-  --edit-error-ink: #7f1d1d;
-  --edit-muted: #52525b;
+  --edit-ink: var(--admin-ink);
+  --edit-line: var(--admin-line);
+  --edit-accent: var(--admin-accent);
+  --edit-dirty-bg: var(--admin-warn-bg);
+  --edit-dirty-ink: var(--admin-warn-ink);
+  --edit-error-bg: var(--admin-danger-bg);
+  --edit-error-ink: var(--admin-danger-ink);
+  --edit-muted: var(--admin-dim);
 
   color: var(--edit-ink);
   max-width: 48rem;
@@ -27,7 +27,7 @@
   border-radius: 6px;
   font-size: 0.9rem;
   border: 1px solid var(--edit-line);
-  background: #fff;
+  background: var(--admin-panel);
 }
 
 .dirty {
@@ -55,7 +55,7 @@
   padding: 0.6rem 0.75rem;
   border-radius: 6px;
   border: 1px solid var(--edit-accent);
-  background: #eef1fb;
+  background: var(--admin-accent-soft);
   font-size: 0.9rem;
 }
 
@@ -74,7 +74,7 @@
   border-radius: 8px;
   padding: 0.75rem;
   margin: 0 0 0.6rem;
-  background: #fff;
+  background: var(--admin-panel);
 }
 
 /* The block row is the keyboard hub: it is focusable, and the arrow, Enter and
@@ -127,7 +127,7 @@
   padding: 0.35rem 0.5rem;
   border: 1px solid var(--edit-line);
   border-radius: 6px;
-  background: #fff;
+  background: var(--admin-panel);
 }
 
 .select {
@@ -198,22 +198,22 @@
   padding: 0.35rem 0.7rem;
   border: 1px solid var(--edit-accent);
   border-radius: 6px;
-  background: #fff;
+  background: var(--admin-panel);
   color: var(--edit-accent);
   cursor: pointer;
 }
 
 .button:hover {
-  background: #eef1fb;
+  background: var(--admin-accent-soft);
 }
 
 .primary {
   background: var(--edit-accent);
-  color: #fff;
+  color: var(--admin-on-accent);
 }
 
 .primary:hover {
-  background: #22307a;
+  background: var(--admin-accent);
 }
 
 .empty {
@@ -228,7 +228,7 @@
 }
 
 .button:disabled:hover {
-  background: #fff;
+  background: var(--admin-panel);
 }
 
 /* A paragraph is its text and the marks over it (CMS-002/T4). Marks are applied
@@ -276,7 +276,7 @@
   padding: 0.3rem 0.5rem;
   border: 1px solid var(--edit-line);
   border-radius: 6px;
-  background: #f7f7fb;
+  background: var(--admin-panel);
 }
 
 .markKind {
@@ -311,7 +311,7 @@
   margin: 0.75rem 0 0;
   padding: 0.75rem 0.9rem;
   border-left: 3px solid var(--edit-accent);
-  background: #f6f6fa;
+  background: var(--admin-panel);
   font-size: 0.9rem;
 }
 
