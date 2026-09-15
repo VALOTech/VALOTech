@@ -29,6 +29,9 @@ import styles from './hall.module.css';
  * **The search is here rather than on the landing**, because a field that
  * sits on one page is one a reader navigates back to before they can use it.
  *
+ * **The footer carries one thing.** A reader signed in still needs the privacy
+ * notice, and one they would have to sign out to reach is one they do not read.
+ *
  * **The rail names only destinations that exist.** Reports and decks are
  * reading views `RPT-003` and `DECK-003` build, and an entry pointing at a page
  * that answers the not-found page is one somebody tries twice; each returns
@@ -36,7 +39,11 @@ import styles from './hall.module.css';
  */
 export default async function HallLayout({ children }: { readonly children: ReactNode }): Promise<ReactElement> {
   await requireInvestorPage();
-  const [t, locale] = await Promise.all([getTranslations('hall'), getLocale()]);
+  const [t, privacy, locale] = await Promise.all([
+    getTranslations('hall'),
+    getTranslations('privacy'),
+    getLocale(),
+  ]);
 
   const destinations: readonly HallDestination[] = [
     { href: '/hall', label: t('nav.hall') },
@@ -98,6 +105,19 @@ export default async function HallLayout({ children }: { readonly children: Reac
       </header>
 
       {children}
+
+      {/* The notice is reachable from inside the hall as well as from the
+          sign-in page (`LEGAL-SG-001/T2`). Somebody deciding whether to accept
+          an invitation reads it before they have an account, which is why the
+          sign-in page carries it; somebody who already has one reads it while
+          signed in, and a notice they would have to sign out to find is one
+          they do not read. It is the same string in the same twenty locales,
+          not a second copy that will drift from the first. */}
+      <footer className={styles.footer}>
+        <a href="/privacy" className={styles.footerLink}>
+          {privacy('link')}
+        </a>
+      </footer>
     </div>
   );
 }
