@@ -111,8 +111,14 @@
     "failed": "Dies konnte nicht geladen werden.",
     "retry": "Erneut versuchen",
     "title": "Investorenbereich",
+    "archive": {
+      "title": "Berichte",
+      "gap": "Kein Bericht zu lesen",
+      "empty": "Es wurde noch kein Bericht veröffentlicht."
+    },
     "nav": {
       "hall": "Der Bereich",
+      "reports": "Berichte",
       "account": "Konto"
     },
     "signOut": "Abmelden",

@@ -111,8 +111,14 @@
     "failed": "此处未能加载。",
     "retry": "重试",
     "title": "投资人大厅",
+    "archive": {
+      "title": "报告",
+      "gap": "没有可阅读的报告",
+      "empty": "尚未发布任何报告。"
+    },
     "nav": {
       "hall": "大厅",
+      "reports": "报告",
       "account": "账户"
     },
     "signOut": "退出",

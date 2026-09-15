@@ -111,8 +111,14 @@
     "failed": "Hindi ito na-load.",
     "retry": "Subukan ulit",
     "title": "Bulwagan ng mamumuhunan",
+    "archive": {
+      "title": "Mga ulat",
+      "gap": "Walang ulat na mababasa",
+      "empty": "Wala pang ulat na nailathala."
+    },
     "nav": {
       "hall": "Bulwagan",
+      "reports": "Mga ulat",
       "account": "Account"
     },
     "signOut": "Mag-sign out",

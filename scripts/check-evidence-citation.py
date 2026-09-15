@@ -51,7 +51,12 @@ PATH_RE = re.compile(
 # task -- which task owns a neighbouring half of the work -- and that name must
 # not be checked as a path that does not exist. It is excluded before the path
 # scan rather than after, so the reference is invisible to the file check.
-TASK_CODE_RE = re.compile(r"\b[A-Z][A-Z0-9-]*-\d{3}/T\d+[a-z]?\d*\b")
+#
+# `REVIEW/T<N>` is the second form and carries no domain number, because a review
+# mints no code of its own and files its findings under the one code (CLAUDE.md
+# §12). Leaving it out made the gate refuse the very cross-reference that section
+# asks every finding to carry.
+TASK_CODE_RE = re.compile(r"\b(?:[A-Z][A-Z0-9-]*-\d{3}|REVIEW)/T\d+[a-z]?\d*\b")
 SHA_RE = re.compile(r"(?<![\w])(?:commit\s+)?([0-9a-f]{7,40})(?![\w])")
 MAKE_RE = re.compile(r"\bmake\s+([a-z][a-z0-9-]*)")
 

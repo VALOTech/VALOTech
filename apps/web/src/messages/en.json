@@ -111,8 +111,14 @@
     "failed": "This did not load.",
     "retry": "Try again",
     "title": "Investor hall",
+    "archive": {
+      "title": "Reports",
+      "gap": "No report to read",
+      "empty": "No report has been published yet."
+    },
     "nav": {
       "hall": "The hall",
+      "reports": "Reports",
       "account": "Account"
     },
     "signOut": "Sign out",

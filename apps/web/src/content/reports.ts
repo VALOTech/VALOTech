@@ -94,6 +94,182 @@ export async function currentReport(reader: Actor | null): Promise<ContentItem |
   return report ?? null;
 }
 
+/** One row of the archive: a period, and the report filling it or nothing. */
+export interface ArchiveEntry {
+  readonly period: string;
+  /** The report, or `null` where the period is a gap. */
+  readonly report: ContentItem | null;
+  /**
+   * When the report was published, or `null` for a gap.
+   *
+   * The revision's, not the item's `updated_at`: an audience change or a
+   * correction moves the row without republishing anything, and a list that
+   * dated a report by the last time somebody touched it would say a report from
+   * two years ago was published this morning.
+   */
+  readonly publishedAt: Date | null;
+  /** When this reader first opened it, or `null` for unread and for a gap. */
+  readonly readAt: Date | null;
+}
+
+/** A year of the archive, newest period first. */
+export interface ArchiveYear {
+  readonly year: string;
+  readonly entries: readonly ArchiveEntry[];
+}
+
+/** The quarter or month a period names, or `null` when it is neither. */
+function slotOf(period: string): { readonly year: string; readonly index: number } | null {
+  const match = /^([0-9]{4})-(Q[1-4]|0[1-9]|1[0-2])$/.exec(period);
+  if (match === null) {
+    return null;
+  }
+
+  const [, year, slot] = match;
+  return { year: year as string, index: Number((slot as string).replace('Q', '')) };
+}
+
+/** Whether a period names a quarter rather than a month. */
+function isQuarter(period: string): boolean {
+  return /^[0-9]{4}-Q[1-4]$/.test(period);
+}
+
+/**
+ * How many periods a year holds under the cadence this archive is kept in, or
+ * `null` when that cannot be known.
+ *
+ * The period vocabulary admits a quarter or a month (`RPT-002` §6), so the set a
+ * year is missing from cannot be assumed — eleven fabricated gaps is what
+ * assuming quarters does to a year reported monthly, and the design calls a gap
+ * *information*, which makes a fabricated one the worst kind. The cadence is read
+ * from the whole archive rather than per year, because a year holding no reports
+ * has no cadence of its own and would otherwise need one invented for it.
+ *
+ * An archive kept both ways is the one case where the expected set is genuinely
+ * unknown, so nothing is asserted: the reports are listed and no gap is drawn.
+ */
+function expectedSlots(periods: readonly string[]): number | null {
+  const quarters = periods.filter(isQuarter).length;
+  if (quarters === periods.length) {
+    return 4;
+  }
+
+  return quarters === 0 ? 12 : null;
+}
+
+function periodName(year: string, index: number, quarterly: boolean): string {
+  return quarterly ? `${year}-Q${index}` : `${year}-${String(index).padStart(2, '0')}`;
+}
+
+export async function reportArchive(reader: Actor | null): Promise<readonly ArchiveYear[]> {
+  const reports = await getDb()
+    .selectFrom('content_items')
+    .innerJoin('content_revisions', 'content_revisions.id', 'content_items.current_revision_id')
+    .selectAll('content_items')
+    .select('content_revisions.published_at as published_at')
+    .where('content_items.type', '=', 'report')
+    .where('content_items.period', 'is not', null)
+    .where(visibleTo(reader))
+    .orderBy('content_items.period', 'desc')
+    .execute();
+
+  if (reports.length === 0) {
+    return [];
+  }
+
+  const readAt = new Map<string, Date>();
+  if (reader !== null) {
+    const rows = await getDb()
+      .selectFrom('report_reads')
+      .select(['item_id', 'read_at'])
+      .where('account_id', '=', reader.id)
+      .execute();
+    for (const row of rows) {
+      readAt.set(row.item_id, row.read_at);
+    }
+  }
+
+  const byPeriod = new Map<string, (typeof reports)[number]>();
+  for (const report of reports) {
+    if (report.period !== null) {
+      byPeriod.set(report.period, report);
+    }
+  }
+
+  const earliest = slotOf(reports[reports.length - 1]?.period ?? '');
+  const newest = slotOf(reports[0]?.period ?? '');
+  const now = new Date();
+  const thisYear = String(now.getUTCFullYear());
+
+  // The years the list spans, newest first. It runs to the period we are in,
+  // because one that has arrived with nothing published is the gap an investor
+  // most wants to see — and past it when a report is filed for a period still to
+  // come, because a list that stopped at today would drop a document the reader
+  // may read in order to keep a tidy range.
+  const years: string[] = [];
+  const endYear = Math.max(Number(thisYear), Number(newest?.year ?? thisYear));
+  for (let y = endYear; y >= Number(earliest?.year ?? thisYear); y -= 1) {
+    years.push(String(y));
+  }
+
+  const everyPeriod = [...byPeriod.keys()];
+  const slots = expectedSlots(everyPeriod);
+  const quarterly = slots !== 12;
+
+  return years.map((year) => {
+    const held = everyPeriod.filter((period) => period.startsWith(`${year}-`));
+
+    // Nothing is drawn past the period we are in, and nothing before the reader's
+    // first report: a gap either side of the range is a period the archive never
+    // claimed to cover. The exception is a period still to come that already
+    // holds a report — it is drawn because it exists, while the empty periods
+    // after it are not, since a gap in the future is not a gap at all.
+    const heldHere = held.map((period) => slotOf(period)?.index ?? 0);
+    const newestHeld = heldHere.length === 0 ? 0 : Math.max(...heldHere);
+    const current = quarterly ? Math.floor(now.getUTCMonth() / 3) + 1 : now.getUTCMonth() + 1;
+    const last =
+      slots === null
+        ? 0
+        : Number(year) < Number(thisYear)
+          ? slots
+          : Number(year) > Number(thisYear)
+            ? newestHeld
+            : Math.max(current, newestHeld);
+    const first = slots !== null && year === earliest?.year ? earliest.index : 1;
+
+    const drawn: ArchiveEntry[] = [];
+    for (let index = last; index >= first; index -= 1) {
+      const period = periodName(year, index, quarterly);
+      const report = byPeriod.get(period) ?? null;
+      drawn.push({
+        period,
+        report,
+        publishedAt: report?.published_at ?? null,
+        readAt: report === null ? null : (readAt.get(report.id) ?? null),
+      });
+    }
+
+    // An archive kept both ways draws no slots, so the reports that exist are
+    // listed and nothing is asserted about what is missing between them.
+    const entries =
+      slots === null
+        ? held
+            .sort((a, b) => b.localeCompare(a))
+            .map((period) => {
+              const report = byPeriod.get(period) ?? null;
+              return {
+                period,
+                report,
+                publishedAt: report?.published_at ?? null,
+                readAt: report === null ? null : (readAt.get(report.id) ?? null),
+              };
+            })
+        : drawn;
+
+    return { year, entries };
+  });
+}
+
 /**
  * The report an author is currently drafting: the one of the greatest period that
  * has an unpublished revision open (`POST-001/T5`).

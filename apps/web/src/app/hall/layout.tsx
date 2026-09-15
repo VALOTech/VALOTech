@@ -47,6 +47,7 @@ export default async function HallLayout({ children }: { readonly children: Reac
 
   const destinations: readonly HallDestination[] = [
     { href: '/hall', label: t('nav.hall') },
+    { href: '/hall/reports', label: t('nav.reports') },
     { href: '/account/sessions', label: t('nav.account') },
   ];
 

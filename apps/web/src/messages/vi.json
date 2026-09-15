@@ -111,8 +111,14 @@
     "failed": "Phần này không tải được.",
     "retry": "Thử lại",
     "title": "Sảnh nhà đầu tư",
+    "archive": {
+      "title": "Báo cáo",
+      "gap": "Không có báo cáo để đọc",
+      "empty": "Chưa có báo cáo nào được công bố."
+    },
     "nav": {
       "hall": "Sảnh",
+      "reports": "Báo cáo",
       "account": "Tài khoản"
     },
     "signOut": "Đăng xuất",

@@ -111,8 +111,14 @@
     "failed": "Ceci n’a pas pu être chargé.",
     "retry": "Réessayer",
     "title": "Hall investisseurs",
+    "archive": {
+      "title": "Rapports",
+      "gap": "Aucun rapport à lire",
+      "empty": "Aucun rapport n'a encore été publié."
+    },
     "nav": {
       "hall": "Le hall",
+      "reports": "Rapports",
       "account": "Compte"
     },
     "signOut": "Se déconnecter",

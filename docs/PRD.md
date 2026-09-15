@@ -132,7 +132,7 @@ because an investor navigates each of them differently.
 | Code | Feature | Status | What it is |
 |---|---|---|---|
 | `RPT-001` | Investor report authoring | building | A report for a named period — a quarter, a month — composed in sections. This is the document an investor expects on a schedule and files when it arrives |
-| `RPT-002` | Report periods and archive | building | One published report per period, navigable by date, with the current one surfaced and the rest reachable. A period cannot carry two published reports, because "the Q3 report" must name one document |
+| `RPT-002` | Report periods and archive | live | One published report per period, navigable by date, with the current one surfaced and the rest reachable. A period cannot carry two published reports, because "the Q3 report" must name one document |
 | `RPT-003` | Report reading | design | The investor's view: sequential, readable on a phone, printable, and stating the period and publication date on the page itself |
 | `POST-001` | Update authoring | live | A short update, of a stated kind: an announcement, an achievement, or a progress note. Kinds exist because the three are read differently and an investor scanning for one should not have to read the other two |
 | `POST-002` | Update publishing and audience | building | An update is public, investor-only, or draft; audience is enforced at the query, and the stream is ordered newest first |

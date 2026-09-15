@@ -111,8 +111,14 @@
     "failed": "Bagian ini gagal dimuat.",
     "retry": "Coba lagi",
     "title": "Aula investor",
+    "archive": {
+      "title": "Laporan",
+      "gap": "Tidak ada laporan untuk dibaca",
+      "empty": "Belum ada laporan yang diterbitkan."
+    },
     "nav": {
       "hall": "Aula",
+      "reports": "Laporan",
       "account": "Akun"
     },
     "signOut": "Keluar",

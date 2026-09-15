@@ -7,7 +7,7 @@ depends_on: [CMS-004, CMS-006, RPT-001]
 depended_by: [INV-001, RPT-003]
 layers_touched: [data, domain, service, api, frontend, ui]
 cross_cutting_rules: [CMS-R03, SEC-R04, DATA-R05, A11Y-R01, I18N-R01]
-status: in-progress
+status: implemented
 ---
 
 # `RPT-002` — Report periods and archive
@@ -62,7 +62,29 @@ published report appear as an explicit gap.
 
 Every query composes `CMS-006`'s predicate, so a report an investor may not read
 is not in the list and its period appears as a gap rather than as a refusal —
-which is the same answer they would get if it did not exist, deliberately.
+which is the same answer they would get if it did not exist, deliberately. **The
+range is composed from that predicate too**, and not only the rows: a list
+beginning at the earliest report *in the database* would start at a period whose
+only evidence is a document this reader may not know about, so its extent would
+disclose what its rows are careful not to. A reader with nothing to read has an
+empty archive rather than a run of gaps, for the same reason — an archive of
+nothing but gaps states that reports exist and are being withheld.
+
+**Gaps are drawn in the cadence the archive is actually kept in.** A period is a
+quarter or a month (§6), so the set a year is missing from is read from the
+reports rather than assumed: all quarters is measured against four slots a year,
+all months against twelve. The cadence is one property of the whole archive and
+not of each year, because a year holding no reports has no cadence of its own and
+would otherwise need one invented for it. An archive kept both ways is the single
+case where the expected set is unknown; it lists what exists and draws no gap at
+all, because this design calls a gap information and a fabricated one is
+information that is false.
+
+The far end is the period we are in, not the newest report — a quarter that has
+arrived with nothing published in it is the gap an investor most wants to see —
+and past it when a report is already filed for a period still to come, because a
+list that stopped at today would drop a document the reader may read in order to
+keep a tidy range.
 
 ### The current report
 

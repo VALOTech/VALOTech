@@ -111,8 +111,14 @@
     "failed": "Bu bölüm yüklenemedi.",
     "retry": "Yeniden dene",
     "title": "Yatırımcı salonu",
+    "archive": {
+      "title": "Raporlar",
+      "gap": "Okunacak rapor yok",
+      "empty": "Henüz rapor yayımlanmadı."
+    },
     "nav": {
       "hall": "Salon",
+      "reports": "Raporlar",
       "account": "Hesap"
     },
     "signOut": "Çıkış yap",

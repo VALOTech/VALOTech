@@ -111,8 +111,14 @@
     "failed": "Isto não foi carregado.",
     "retry": "Tentar de novo",
     "title": "Salão de investidores",
+    "archive": {
+      "title": "Relatórios",
+      "gap": "Nenhum relatório para ler",
+      "empty": "Ainda não foi publicado nenhum relatório."
+    },
     "nav": {
       "hall": "O salão",
+      "reports": "Relatórios",
       "account": "Conta"
     },
     "signOut": "Terminar sessão",

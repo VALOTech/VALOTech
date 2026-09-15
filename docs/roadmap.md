@@ -8,7 +8,7 @@ Ordering only. What each task *is* lives in [docs/tasks.md](tasks.md); why the p
 
 **Active wave: W0 — The ground**
 
-_321 tasks in the plan, 259 closed, 62 outstanding._
+_321 tasks in the plan, 261 closed, 60 outstanding._
 
 ---
 
@@ -77,7 +77,7 @@ _73/74 closed (98%) · 1 outstanding — 0 buildable now · 1 waiting on the own
 
 _The three content types, and the compliance posture that governs what is held about the people reading them. Updates come before decks, and not only because they are the simpler shape of the same problem: they are what the hall is for. An investor signs in to find out what has happened since they last looked._
 
-_55/63 closed (87%) · 8 outstanding — 3 buildable now · 1 waiting on the owner · 3 external residue · 1 parked to a later wave._
+_57/63 closed (90%) · 6 outstanding — 1 buildable now · 1 waiting on the owner · 3 external residue · 1 parked to a later wave._
 
 - **DECK-001** · Deck authoring — 6/6 closed
 - **LEGAL-SG-001** · PDPA posture — 5/8 closed · depth 7
@@ -91,17 +91,14 @@ _55/63 closed (87%) · 8 outstanding — 3 buildable now · 1 waiting on the own
 - **DECK-002** · Deck versioning and publishing — 5/6 closed · depth 8
   - `[!] DECK-002/T3` — An unpinned reader is told once when the version changed, with what changed by section  · _cross-wave-parked_ · **Blocked by:** DECK-003/T1 (the deck reading view) — DECK-002 §3 puts the notice in the reading view itself, where an unpinned reader whose deck has moved is told o…
 
-- **LEGAL-GLOBAL-001** · GDPR posture for EU investors — 4/6 closed · depth 8
-  - `[ ] LEGAL-GLOBAL-001/T1` — The notice carries the additional GDPR statements, in twenty locales
+- **LEGAL-GLOBAL-001** · GDPR posture for EU investors — 5/6 closed · depth 8
   - `[!] LEGAL-GLOBAL-001/T6` — The GDPR articles this design rests on are in the tree, and every claim cites one  · _external_ · **Blocked by:** pending-external: legal — the article text is obtained by the owner or counsel, at docs/operator-checklist.md#COMPLIANCE-SOURCES. The operational rul…
 
 - **MAIL-002** · Mail log and unsubscribe — 6/6 closed
 - **POST-002** · Update publishing and audience — 5/6 closed · depth 8
   - `[ ] POST-002/T6` — Unread marking from the per-account read state, and a paging control rather than infinite scroll
 
-- **RPT-002** · Report periods and archive — 5/6 closed · depth 8
-  - `[ ] RPT-002/T3` — The archive lists by period, groups by year, and shows a period with no report as a gap
-
+- **RPT-002** · Report periods and archive — 6/6 closed
 ## W4 — The hall
 
 _The reading surfaces, the hall they sit in, and the gateway served by the application — which is what finally makes the gate on the two hidden chapters real rather than a stylesheet. This wave ends with the product complete and still unpublished; what publishes it is outside the waves, waiting on the owner._

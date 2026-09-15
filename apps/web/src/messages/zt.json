@@ -111,8 +111,14 @@
     "failed": "此處未能載入。",
     "retry": "重試",
     "title": "投資人大廳",
+    "archive": {
+      "title": "報告",
+      "gap": "沒有可閱讀的報告",
+      "empty": "尚未發布任何報告。"
+    },
     "nav": {
       "hall": "大廳",
+      "reports": "報告",
       "account": "帳戶"
     },
     "signOut": "登出",

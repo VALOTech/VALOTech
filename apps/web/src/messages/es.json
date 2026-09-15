@@ -111,8 +111,14 @@
     "failed": "Esto no se ha cargado.",
     "retry": "Inténtelo de nuevo",
     "title": "Sala de inversores",
+    "archive": {
+      "title": "Informes",
+      "gap": "Ningún informe que leer",
+      "empty": "Todavía no se ha publicado ningún informe."
+    },
     "nav": {
       "hall": "La sala",
+      "reports": "Informes",
       "account": "Cuenta"
     },
     "signOut": "Cerrar sesión",

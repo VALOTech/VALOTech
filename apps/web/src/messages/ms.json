@@ -111,8 +111,14 @@
     "failed": "Bahagian ini gagal dimuatkan.",
     "retry": "Cuba lagi",
     "title": "Dewan pelabur",
+    "archive": {
+      "title": "Laporan",
+      "gap": "Tiada laporan untuk dibaca",
+      "empty": "Belum ada laporan diterbitkan."
+    },
     "nav": {
       "hall": "Dewan",
+      "reports": "Laporan",
       "account": "Akaun"
     },
     "signOut": "Log keluar",
