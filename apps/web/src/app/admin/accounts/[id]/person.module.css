@@ -104,6 +104,29 @@
   color: #52525b;
 }
 
+/* A link wearing the acts' button, because what it does belongs beside them and
+   what it is — a navigation that needs no script — is why it is an anchor. */
+.download {
+  display: inline-block;
+  margin-block-start: 0.6rem;
+  font-size: 0.85rem;
+  padding: 0.35rem 0.7rem;
+  border: 1px solid #2b3a8c;
+  border-radius: 6px;
+  background: #fff;
+  color: #2b3a8c;
+  text-decoration: none;
+}
+
+.download:hover {
+  background: #eef1fb;
+}
+
+.download:focus-visible {
+  outline: 2px solid #2b3a8c;
+  outline-offset: 1px;
+}
+
 /* The two controls on the page that carry a value rather than a press — the
    correction (ADMIN-001/T10) and the investor type (ADMIN-001/T11). Both are laid
    out as a column of labelled fields like the invite form, and both use the same

@@ -230,6 +230,24 @@ export default async function PersonPage({
         />
       </section>
 
+      {/* A portability request is answered by sending this file, so the control
+          is a link and not a scripted act: an admin working to a thirty-day
+          clock should not be one broken bundle away from being unable to answer
+          (`LEGAL-GLOBAL-001` §3). It carries the person's whole record, which is
+          why it says what is in it before it is pressed rather than after. */}
+      <section aria-labelledby="held-heading">
+        <h2 id="held-heading">Everything held</h2>
+        <p className={styles.note}>
+          The account&rsquo;s own fields, the decks granted, which documents were opened and
+          when, and the subjects and dates of mail sent — as JSON, for a request to be given a
+          copy in a machine-readable form. Send the file to the person: nothing here mails a
+          link, because a link to somebody&rsquo;s whole record is a credential in an inbox.
+        </p>
+        <a className={styles.download} href={`/admin/accounts/${person.id}/export`} download>
+          Download the record
+        </a>
+      </section>
+
       <section aria-labelledby="investor-mail-heading">
         <h2 id="investor-mail-heading">Investor mail</h2>
         <StopSending
