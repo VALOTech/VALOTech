@@ -37,11 +37,12 @@
   "privacy": {
     "contactBody": "Schreiben Sie an {address}.",
     "contactTitle": "An wen Sie schreiben",
-    "heldBasis": "Die ersten beiden beruhen auf Ihrer Einwilligung, die Sie mit der Annahme Ihrer Einladung gegeben haben. Die letzten beiden beruhen auf unserem berechtigten Interesse daran, Ihr Konto sicher und den Bereich richtig zu halten.",
+    "heldBasis": "Die ersten beiden beruhen auf Ihrer Einwilligung, die Sie mit der Annahme Ihrer Einladung gegeben haben. Die letzten drei beruhen auf unserem berechtigten Interesse daran, Ihr Konto sicher, den Bereich richtig und das Gezeigte Ihrer Zeit wert zu halten.",
     "heldIdentity": "Ihren Namen und Ihre E-Mail-Adresse, damit einer namentlich genannten Person Zugang zur Unternehmensberichterstattung gegeben werden kann.",
     "heldReads": "Welche Dokumente Sie geöffnet haben und wann, damit der Bereich Ihnen zeigen kann, was neu ist, und festhält, welche Fassung einer Präsentation Ihnen gezeigt wurde. Das gehört allein Ihnen: es wird nie aggregiert, nie als Analysedaten gemeldet, und es geht mit Ihrem Konto.",
     "heldRole": "Ihre Rolle und den Zustand Ihres Kontos, damit der Bereich weiß, was Sie lesen dürfen.",
     "heldSessions": "Ihre letzte Anmeldung und Ihre offenen Sitzungen, damit Sie und eine Administratorin sie sehen und beenden können.",
+    "heldType": "Ob wir Sie als bereits investiert oder als noch unentschlossen vermerkt haben, damit der Bereich das zuerst zeigt, weswegen Sie gekommen sind. Das ordnet die Seite und ändert nie, welche Dokumente Sie lesen dürfen.",
     "heldTitle": "Was wir speichern, und warum",
     "intro": "VALO Tech speichert eine kurze Liste von Angaben über die Personen, die seine Investorenberichte lesen. Diese Seite sagt, was, warum, wie lange, und worum Sie uns bitten können.",
     "keptBackups": "Verschlüsselte Sicherungen werden bis zu zwölf Monate aufbewahrt; wer heute gelöscht wird, kann daher noch in einer älteren Sicherung erscheinen. Diese Sicherungen werden nur geöffnet, um Datenverlust zu beheben, nie um eine Person nachzuschlagen.",

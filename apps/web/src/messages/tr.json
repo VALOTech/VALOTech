@@ -37,11 +37,12 @@
   "privacy": {
     "contactBody": "{address} adresine yazın.",
     "contactTitle": "Kime yazmalı",
-    "heldBasis": "İlk ikisi, daveti kabul ederken verdiğiniz rızaya dayanır. Son ikisi, hesabınızı güvende ve salonu doğru tutmaktaki meşru menfaatimize dayanır.",
+    "heldBasis": "İlk ikisi, daveti kabul ederken verdiğiniz rızaya dayanır. Son üçü, hesabınızı güvende, salonu doğru ve size gösterilenleri zamanınıza değer tutmaktaki meşru menfaatimize dayanır.",
     "heldIdentity": "Adınız ve e-posta adresiniz; adı belli bir kişiye şirket raporlarına erişim verilebilsin diye.",
     "heldReads": "Hangi belgeleri ne zaman açtığınız; salon size yeni olanı gösterebilsin ve sunumun hangi sürümünün gösterildiğini kaydedebilsin diye. Bu yalnızca size aittir: hiçbir zaman toplulaştırılmaz, hiçbir zaman analitik olarak raporlanmaz ve hesabınızla birlikte silinir.",
     "heldRole": "Rolünüz ve hesabınızın durumu; salon neyi okuyabileceğinizi bilsin diye.",
     "heldSessions": "Son girişiniz ve açık oturumlarınız; siz ve bir yönetici bunları görüp sonlandırabilesiniz diye.",
+    "heldType": "Sizi yatırım yapmış biri olarak mı yoksa hâlâ karar veren biri olarak mı kaydettiğimiz; salon buraya ne için geldiyseniz onu öne alsın diye. Bu yalnızca sayfayı sıralar ve hangi belgeleri okuyabileceğinizi asla değiştirmez.",
     "heldTitle": "Neyi tutuyoruz ve neden",
     "intro": "VALO Tech, yatırımcı raporlarını okuyan kişiler hakkında yalnızca kısa bir liste tutar. Bu sayfa neyi, neden, ne kadar süreyle tuttuğumuzu ve bizden neler isteyebileceğinizi anlatır.",
     "keptBackups": "Şifreli yedekler en fazla on iki ay saklanır; bu yüzden bugün silinen biri, daha önce alınmış bir yedekte hâlâ görünebilir. Bu yedekler yalnızca veri kaybından kurtulmak için açılır, hiçbir zaman bir kişiyi aramak için değil.",

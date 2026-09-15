@@ -37,11 +37,12 @@
   "privacy": {
     "contactBody": "Hãy viết tới {address}.",
     "contactTitle": "Viết cho ai",
-    "heldBasis": "Hai mục đầu dựa trên sự đồng ý của bạn, đã đưa ra khi bạn chấp nhận lời mời. Hai mục sau dựa trên lợi ích hợp pháp của chúng tôi trong việc giữ tài khoản của bạn an toàn và giữ cho sảnh chính xác.",
+    "heldBasis": "Hai mục đầu dựa trên sự đồng ý của bạn, đã đưa ra khi bạn chấp nhận lời mời. Ba mục sau dựa trên lợi ích hợp pháp của chúng tôi trong việc giữ tài khoản của bạn an toàn, giữ cho sảnh chính xác và giữ cho những gì sảnh hiển thị xứng đáng với thời gian của bạn.",
     "heldIdentity": "Tên và địa chỉ e-mail của bạn, để một người có tên cụ thể được cấp quyền đọc báo cáo của công ty.",
     "heldReads": "Bạn đã mở tài liệu nào và vào lúc nào, để sảnh cho bạn thấy những gì còn mới và ghi lại phiên bản bộ tài liệu bạn đã xem. Thông tin này chỉ thuộc về bạn: không bao giờ được tổng hợp, không bao giờ được báo cáo như số liệu phân tích, và sẽ mất đi cùng tài khoản của bạn.",
     "heldRole": "Vai trò và trạng thái tài khoản của bạn, để sảnh biết bạn được phép đọc những gì.",
     "heldSessions": "Lần đăng nhập gần nhất và các phiên đang mở của bạn, để bạn và quản trị viên có thể xem và kết thúc chúng.",
+    "heldType": "Việc chúng tôi ghi nhận bạn là người đã đầu tư hay người còn đang cân nhắc, để sảnh đặt lên trước điều bạn đến để tìm. Nó chỉ sắp xếp thứ tự trang và không bao giờ thay đổi những tài liệu bạn được phép đọc.",
     "heldTitle": "Chúng tôi giữ gì, và vì sao",
     "intro": "VALO Tech lưu giữ một danh sách ngắn về những người đọc báo cáo dành cho nhà đầu tư. Trang này cho biết chúng tôi giữ gì, vì sao, trong bao lâu, và bạn có thể yêu cầu những gì.",
     "keptBackups": "Bản sao lưu được mã hóa và giữ tối đa mười hai tháng, nên người bị xóa hôm nay vẫn có thể xuất hiện trong một bản sao lưu tạo trước đó. Những bản sao lưu ấy chỉ được mở để khôi phục khi mất dữ liệu, không bao giờ để tra cứu một người.",

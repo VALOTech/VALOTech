@@ -37,11 +37,12 @@
   "privacy": {
     "contactBody": "Write to {address}.",
     "contactTitle": "Who to write to",
-    "heldBasis": "The first two rest on your consent, given when you accepted your invitation. The last two rest on our legitimate interest in keeping your account secure and the hall accurate.",
+    "heldBasis": "The first two rest on your consent, given when you accepted your invitation. The last three rest on our legitimate interest in keeping your account secure, the hall accurate, and what it shows you worth your time.",
     "heldIdentity": "Your name and e-mail address, so a named person can be given access to company reporting.",
     "heldReads": "Which documents you have opened, and when, so the hall can show you what is new and record which version of a deck you were shown. This is yours alone: it is never aggregated, never reported as analytics, and it goes when your account goes.",
     "heldRole": "Your role and the state of your account, so the hall knows what you may read.",
     "heldSessions": "Your last sign-in and your open sessions, so you and an administrator can see them and end them.",
+    "heldType": "Whether we have recorded you as having invested or as still deciding, so the hall can put first what you came for. It orders the page and never changes which documents you may read.",
     "heldTitle": "What we hold, and why",
     "intro": "VALO Tech holds a short list of things about the people who read its investor reporting. This page says what, why, how long, and what you can ask us for.",
     "keptBackups": "Encrypted backups are kept for up to twelve months, so somebody deleted today can still appear in a backup taken before that. Those backups are opened only to recover from data loss, never to look a person up.",

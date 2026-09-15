@@ -37,11 +37,12 @@
   "privacy": {
     "contactBody": "Tuliskan kepada {address}.",
     "contactTitle": "Kepada siapa hendak menulis",
-    "heldBasis": "Dua yang pertama bersandar pada persetujuan anda, yang diberikan semasa menerima jemputan. Dua yang terakhir bersandar pada kepentingan sah kami untuk memastikan akaun anda selamat dan dewan ini tepat.",
+    "heldBasis": "Dua yang pertama bersandar pada persetujuan anda, yang diberikan semasa menerima jemputan. Tiga yang terakhir bersandar pada kepentingan sah kami untuk memastikan akaun anda selamat, dewan ini tepat, dan apa yang ditunjukkan kepada anda berbaloi dengan masa anda.",
     "heldIdentity": "Nama dan alamat e-mel anda, supaya seseorang yang dinamakan boleh diberi akses kepada laporan syarikat.",
     "heldReads": "Dokumen mana yang anda buka dan bila, supaya dewan ini boleh menunjukkan apa yang baharu dan merekodkan versi pembentangan mana yang ditunjukkan kepada anda. Ini milik anda sahaja: tidak pernah diagregatkan, tidak pernah dilaporkan sebagai analitik, dan hilang bersama akaun anda.",
     "heldRole": "Peranan dan keadaan akaun anda, supaya dewan ini tahu apa yang boleh anda baca.",
     "heldSessions": "Log masuk terakhir anda dan sesi anda yang terbuka, supaya anda dan pentadbir boleh melihat serta menamatkannya.",
+    "heldType": "Sama ada kami merekodkan anda sebagai pihak yang sudah melabur atau yang masih menimbang, supaya dewan ini boleh mendahulukan apa yang anda cari. Ia hanya menyusun halaman dan tidak pernah mengubah dokumen mana yang boleh anda baca.",
     "heldTitle": "Apa yang kami simpan, dan mengapa",
     "intro": "VALO Tech menyimpan senarai ringkas tentang orang yang membaca laporan pelaburnya. Halaman ini menerangkan apa, mengapa, berapa lama, dan apa yang boleh anda minta daripada kami.",
     "keptBackups": "Sandaran yang disulitkan disimpan sehingga dua belas bulan, jadi seseorang yang dipadam hari ini masih boleh muncul dalam sandaran yang dibuat sebelum itu. Sandaran itu hanya dibuka untuk memulihkan kehilangan data, tidak pernah untuk mencari seseorang.",

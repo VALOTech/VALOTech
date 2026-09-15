@@ -37,6 +37,19 @@ export const ACCOUNT_STATES = ['invited', 'active', 'suspended'] as const;
 
 export type AccountState = (typeof ACCOUNT_STATES)[number];
 
+/**
+ * Whether a person has already invested or is still deciding (`INV-DEC-02`).
+ *
+ * Two values and no third for "nobody has said", because that is the column
+ * being null and a token for it would make the unanswered case indistinguishable
+ * from an answered one. What it decides is the order of the hall's landing; it
+ * decides nothing about access, which is `content_grants` and the item's
+ * `audience` alone (`CMS-006`).
+ */
+export const INVESTOR_TYPES = ['current', 'prospect'] as const;
+
+export type InvestorType = (typeof INVESTOR_TYPES)[number];
+
 export const CONTENT_TYPES = ['report', 'update', 'deck'] as const;
 
 export type ContentType = (typeof CONTENT_TYPES)[number];
@@ -66,6 +79,7 @@ export const AUDIT_ACTIONS = [
   'account.invitation_resend',
   'account.password_reset_request',
   'account.correct',
+  'account.investor_type_change',
   'grant.add',
   'grant.remove',
   'content.publish',
@@ -166,6 +180,10 @@ export interface AccountsTable {
   // known, which is a different statement from `en` and is why the column is
   // nullable: the composer falls back rather than recording a guess.
   locale: Locale | null;
+  // Whether the person has invested or is deciding (`INV-DEC-02`). Null means
+  // nobody has said, which is not `prospect`, and is why there is no default:
+  // an account nobody has described must read as undescribed.
+  investor_type: InvestorType | null;
   created_at: Generated<Date>;
   updated_at: Generated<Date>;
 }
@@ -397,11 +415,17 @@ export const SCHEMA: Readonly<Record<keyof Database, TableSpec>> = {
       { name: 'last_sign_in', type: 'timestamptz', notNull: false, hasDefault: false, unique: false },
       { name: 'read_tracking_objected', type: 'boolean', notNull: true, hasDefault: true, unique: false },
       { name: 'locale', type: 'text', notNull: false, hasDefault: false, unique: false },
+      { name: 'investor_type', type: 'text', notNull: false, hasDefault: false, unique: false },
       { name: 'created_at', type: 'timestamptz', notNull: true, hasDefault: true, unique: false },
       { name: 'updated_at', type: 'timestamptz', notNull: true, hasDefault: true, unique: false },
     ],
     primaryKey: ['id'],
-    checks: { role: ACCOUNT_ROLES, state: ACCOUNT_STATES, locale: LOCALES },
+    checks: {
+      role: ACCOUNT_ROLES,
+      state: ACCOUNT_STATES,
+      locale: LOCALES,
+      investor_type: INVESTOR_TYPES,
+    },
   },
   sessions: {
     migration: '_auth_store.sql',

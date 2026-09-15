@@ -42,12 +42,17 @@ by writing to that contact.
 | Role, state | To decide what they may read | Same |
 | Last sign-in, session records | To let the person and an admin see and end sessions, and to let an admin find an account nobody is using any more | Legitimate interests — security of the account, and closing access that is no longer needed |
 | What they opened, and when | To show them what is unread; for a deck, to record which version they were shown | Legitimate interests, stated in the notice |
+| Whether they have invested or are deciding | To order the hall's landing so what they came for is first | Legitimate interests, stated in the notice |
 
-The last two rows are behavioural, so they are disclosed rather than assumed:
-last sign-in, whose narrow purpose — letting an admin find an account nobody is
-using — is stated above and nowhere exceeded, and what they opened, which is
-theirs alone, not aggregated, not reported to an admin as analytics, and not kept
-after the account goes.
+The last three rows are disclosed rather than assumed. Two are behavioural: last
+sign-in, whose narrow purpose — letting an admin find an account nobody is using
+— is stated above and nowhere exceeded, and what they opened, which is theirs
+alone, not aggregated, not reported to an admin as analytics, and not kept after
+the account goes. The third is not behavioural but an opinion the company has
+formed and written down (`INV-DEC-02`), which makes disclosing it more necessary
+rather than less: it is set by an admin, it is `null` until somebody says
+otherwise, it orders a page and never decides what the person may read, and it is
+returned with everything else on an access request.
 
 ### The notice
 
@@ -64,7 +69,7 @@ this product does not do is worse than a page naming five things accurately.
 | Right | How |
 |---|---|
 | Access | Write to the contact; an admin reads the person's page and replies. No self-service export (`DATA-002` §3) |
-| Correction | Write to the contact; an admin edits the account (`ADMIN-001/T10` — until it lands there is no control, and `docs/runbooks/legal-sg-001-rights.md` carries the two paths that work today) |
+| Correction | Write to the contact; an admin edits the account from the person page (`ADMIN-001/T10`), and `docs/runbooks/legal-sg-001-rights.md` carries the steps |
 | Withdrawal of consent | Write to the contact, or ask an admin. Withdrawal means the account is deleted, because the only purpose is access |
 | Erasure | `DATA-002`'s manifest-driven delete |
 

@@ -104,10 +104,10 @@
   color: #52525b;
 }
 
-/* The correction form (ADMIN-001/T10). It is the one control on the page that
-   takes typed values rather than a press, so it is laid out as a column of
-   labelled fields like the invite form, and its button is the same button as the
-   acts above it. */
+/* The two controls on the page that carry a value rather than a press — the
+   correction (ADMIN-001/T10) and the investor type (ADMIN-001/T11). Both are laid
+   out as a column of labelled fields like the invite form, and both use the same
+   button as the acts above them. */
 .correction {
   display: flex;
   flex-direction: column;
@@ -130,6 +130,7 @@
 }
 
 .field input,
+.field select,
 .field textarea {
   padding: 0.4rem 0.5rem;
   font: inherit;
@@ -144,6 +145,7 @@
 }
 
 .field input:focus-visible,
+.field select:focus-visible,
 .field textarea:focus-visible {
   outline: 2px solid #2b3a8c;
   outline-offset: 1px;

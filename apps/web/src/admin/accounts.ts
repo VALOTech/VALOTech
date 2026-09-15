@@ -1,10 +1,10 @@
 /**
  * What an admin does to somebody else's account (`ADMIN-001`): the list of who
- * can sign in and the one person behind a row of it, the seven acts that change
+ * can sign in and the one person behind a row of it, the eight acts that change
  * an account — suspend, role change, reinstate, end every session, erase, honour
- * a read-tracking objection, and correct a name or an address — and a read of
- * everything held about one, for a data-portability request
- * (`LEGAL-GLOBAL-001/T2`).
+ * a read-tracking objection, correct a name or an address, and say whether the
+ * person has invested or is deciding — and a read of everything held about one,
+ * for a data-portability request (`LEGAL-GLOBAL-001/T2`).
  *
  * The reads are plain and carry none of what follows. Each act is one carrying
  * several writes, and the design is that the writes are one
@@ -63,7 +63,7 @@ import { isAddressShaped, lockAddress, normaliseAddress } from '../auth/address'
 import { invalidateAllForAccountIn } from '../auth/session';
 import { type AccountGrant, erasureContentCounts, grantsForAccount } from '../content/grants';
 import { getDb } from '../db/index';
-import type { AccountRole, AccountState, Database } from '../db/types';
+import type { AccountRole, AccountState, Database, InvestorType } from '../db/types';
 
 /** One person on the account list, and everything the list says about them. */
 export interface AccountListRow {
@@ -126,13 +126,15 @@ export interface PersonIdentity {
   readonly createdAt: Date;
   /** `null` when the person has never signed in. */
   readonly lastSignIn: Date | null;
+  /** `null` when nobody has said, which is not the same as `prospect` (`INV-DEC-02`). */
+  readonly investorType: InvestorType | null;
 }
 
 /**
  * The one person a page is about, or `null` when no account holds the id
  * (`ADMIN-001/T2`).
  *
- * Seven fields, which is the identity section and the whole of what the record
+ * Eight fields, which is the identity section and the whole of what the record
  * holds about a person worth showing (`DATA-R01`): the password hash stays in the
  * database, `updated_at` is the row's own clock rather than anything about them,
  * and there is no note field to read because there is no note field.
@@ -148,7 +150,7 @@ export async function personIdentity(accountId: string): Promise<PersonIdentity 
 
   const account = await getDb()
     .selectFrom('accounts')
-    .select(['id', 'email', 'name', 'role', 'state', 'created_at', 'last_sign_in'])
+    .select(['id', 'email', 'name', 'role', 'state', 'created_at', 'last_sign_in', 'investor_type'])
     .where('id', '=', accountId)
     .executeTakeFirst();
 
@@ -164,6 +166,7 @@ export async function personIdentity(accountId: string): Promise<PersonIdentity 
     state: account.state,
     createdAt: account.created_at,
     lastSignIn: account.last_sign_in,
+    investorType: account.investor_type,
   };
 }
 
@@ -587,6 +590,70 @@ export async function correctIdentity(
 }
 
 /**
+ * Say whether this person has already invested or is still deciding, or that
+ * nobody has said (`INV-DEC-02`). Returns whether anything moved — `false` for a value the row already holds and
+ * for an id no account holds, in both of which nothing is written and nothing is
+ * recorded.
+ *
+ * **It orders the hall's landing and gates nothing.** What a reader may read is
+ * their grants and each document's audience through `CMS-006`, and nothing here
+ * reaches either: the predicate those compose is handed an `Actor`, which carries
+ * an id and a role and no type at all, so an access rule cannot read this column
+ * without somebody first widening what the gate resolves. A person set to the
+ * wrong type sees an oddly ordered page and never a document that is not theirs,
+ * and that is a property of the shape rather than of the care taken here.
+ *
+ * **`null` is offered as deliberately as the other two.** It is what the column
+ * says when nobody has described this person, and an admin who classified the
+ * wrong account has to be able to put it back — a control that could only ever
+ * add a judgement would make "nobody has said" a state the product can leave and
+ * never return to.
+ *
+ * **The trail holds that the act happened and neither value** (`SEC-DEC-01`).
+ * `account.investor_type_change` names no recordable field, so the row is the
+ * actor, the subject and the act: recording the value would keep a statement
+ * about a named person in a table retained seven years past their erasure, which
+ * is the same reasoning that keeps a correction's two values out of it
+ * (`ADMIN-001/T10`, `DATA-R02`). The audit is written in the transaction that
+ * writes the column, so neither can happen without the other (`SEC-R04`).
+ *
+ * The narrowed `UPDATE` is the check, as in the acts above: two admins choosing
+ * at once serialise on the row lock, and the second re-evaluates `is distinct
+ * from` against the value the first committed, so setting a type already held
+ * matches nothing and the trail carries one act rather than two.
+ */
+export async function setInvestorType(
+  accountId: string,
+  investorType: InvestorType | null,
+  actorId: string,
+): Promise<boolean> {
+  return getDb()
+    .transaction()
+    .execute(async (trx) => {
+      const moved = await trx
+        .updateTable('accounts')
+        .set({ investor_type: investorType })
+        .where('id', '=', accountId)
+        .where('investor_type', 'is distinct from', investorType)
+        .returning('id')
+        .executeTakeFirst();
+
+      if (moved === undefined) {
+        return false;
+      }
+
+      await recordAudit(trx, {
+        actorId,
+        action: 'account.investor_type_change',
+        subjectType: 'account',
+        subjectId: accountId,
+      });
+
+      return true;
+    });
+}
+
+/**
  * End every session an account holds, on any device, at an admin's hand
  * (`ADMIN-001/T2`, `AUTH-004`). Returns whether anything was ended — `false` when
  * the account held no live session, in which case nothing is written and nothing
@@ -822,6 +889,13 @@ export interface PersonExport {
     readonly role: AccountRole;
     readonly state: AccountState;
     readonly lastSignIn: Date | null;
+    /**
+     * Whether the company has recorded this person as having invested or as
+     * deciding, `null` where nobody has said. It is a statement about them, so a
+     * request for what is held is answered with it or is answered incompletely
+     * (`INV-DEC-02`, `DATA-R03`).
+     */
+    readonly investorType: InvestorType | null;
   };
   readonly decksGranted: readonly AccountGrant[];
   readonly decksRead: readonly {
@@ -841,7 +915,8 @@ export interface PersonExport {
  * to a person's whole record is a credential in an inbox (`DATA-R02`).
  *
  * It reads the five things the system holds about a person: the account's own
- * fields — never the password hash — the decks they were granted, which deck
+ * fields — never the password hash, and including whether the company has
+ * recorded them as an investor or as deciding — the decks they were granted, which deck
  * versions and which reports they opened and when, and the subjects and dates of
  * the mail they were sent. The grants read is delegated to `content/grants`,
  * because the grant table lives behind the audience predicate's module boundary;
@@ -853,7 +928,7 @@ export async function exportPersonData(accountId: string): Promise<PersonExport 
 
   const account = await db
     .selectFrom('accounts')
-    .select(['email', 'name', 'role', 'state', 'last_sign_in'])
+    .select(['email', 'name', 'role', 'state', 'last_sign_in', 'investor_type'])
     .where('id', '=', accountId)
     .executeTakeFirst();
   if (account === undefined) {
@@ -891,6 +966,7 @@ export async function exportPersonData(accountId: string): Promise<PersonExport 
       role: account.role,
       state: account.state,
       lastSignIn: account.last_sign_in,
+      investorType: account.investor_type,
     },
     decksGranted,
     decksRead: deckRead.map((row) => ({

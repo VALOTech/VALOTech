@@ -57,6 +57,9 @@ is a compile error rather than a leak (`DATA-R05`).
 | `password_hash` | `text` | null until an invitation is accepted |
 | `state` | `text` not null | `invited`, `active`, `suspended` |
 | `last_sign_in` | `timestamptz` | null until the person first signs in; the one behavioural column (`ADMIN-001` §6) |
+| `read_tracking_objected` | `boolean` not null | false until the person objects, after which no read of theirs is recorded (`LEGAL-GLOBAL-001/T3`) |
+| `locale` | `text` | the language they are written to in; null means not known, which a default of `en` could not say (`AUTH-003/T3`) |
+| `investor_type` | `text` | `current` or `prospect`; null means nobody has said, which is not `prospect`. It orders the hall's landing and never gates a document (`INV-DEC-02`) |
 | `created_at`, `updated_at` | `timestamptz` not null | UTC, always |
 
 **`sessions`** — server-side, so a sign-out ends a session rather than asking the

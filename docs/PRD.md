@@ -103,7 +103,7 @@ A third role — an editor who may draft but not publish, an analyst who may rea
 | `AUTH-002` | Session and role gate | live | httpOnly cookie, rotation on privilege change, server-side invalidation; every gated read scoped by role at the query |
 | `AUTH-003` | Invitation and password reset | blocked | An admin invites; the invitee sets their own password from a single-use, expiring link — invitation works by hand, reset needs the `SMTP_URL` credential because a reset link may never be shown to an admin |
 | `AUTH-004` | Sign-out | live | Session destroyed server-side, not merely cleared client-side |
-| `ADMIN-001` | Account management | building | Create, suspend and delete investor accounts; correct a person's name and address; grant and revoke deck access; audited |
+| `ADMIN-001` | Account management | live | Create, suspend and delete investor accounts; correct a person's name and address; say whether a person has invested or is deciding; grant and revoke deck access; audited |
 | `ADMIN-002` | Admin console shell | live | The staff surface the other admin features live in |
 
 ### 5.3 The content system — `CMS`

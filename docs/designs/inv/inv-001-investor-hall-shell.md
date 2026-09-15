@@ -3,7 +3,7 @@ code: INV-001
 title: Investor hall shell
 domain: inv
 prd_refs: [INV-001, SEC-R01, DATA-R05]
-depends_on: [AUTH-002, CMS-006, CMS-007, POST-002, RPT-002]
+depends_on: [ADMIN-001, AUTH-002, CMS-006, CMS-007, POST-002, RPT-002]
 depended_by: [INV-003]
 layers_touched: [api, frontend, ui]
 cross_cutting_rules: [SEC-R01, DATA-R05, I18N-R01, A11Y-R01, A11Y-R02, A11Y-R03]

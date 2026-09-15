@@ -4,10 +4,10 @@ title: Account management
 domain: admin
 prd_refs: [ADMIN-001, DATA-R01, DATA-R03, SEC-R04]
 depends_on: [ADMIN-002, AUTH-003, AUTH-004, SEC-002]
-depended_by: [DATA-002, DECK-004, MAIL-001]
+depended_by: [DATA-002, DECK-004, INV-001, MAIL-001]
 layers_touched: [data, domain, service, api, frontend, ui]
 cross_cutting_rules: [DATA-R01, DATA-R02, DATA-R03, SEC-R04, A11Y-R01, A11Y-R02]
-status: in-progress
+status: implemented
 ---
 
 # `ADMIN-001` — Account management
@@ -44,10 +44,10 @@ person who lost interest or an account nobody remembered to close.
 
 | Section | What it answers |
 |---|---|
-| Identity | Name, address, role, state, created, last sign-in |
+| Identity | Name, address, role, state, created, last sign-in, investor type |
 | Access | Every deck granted, with pin and last opened (`DECK-004`) |
 | Sessions | Live sessions, and a control to end them all (`AUTH-004`) |
-| Actions | Resend invitation, reset password, suspend, reinstate, correct the name or the address, delete |
+| Actions | Resend invitation, reset password, suspend, reinstate, correct the name or the address, say whether they have invested, delete |
 
 ### The action route
 
@@ -192,6 +192,58 @@ A blank name and an address the sign-in door would turn away are refused as a
 `400` naming which of the two fields it was, because a form with two inputs that
 says only "refused" is a form the admin has to guess at.
 
+### Whether they have invested
+
+The hall serves two people whose reasons for being there are opposite, and
+`accounts.investor_type` is where it learns which this one is
+([`INV-DEC-02`](../../decisions-log.md#INV-DEC-02)). An admin says so from this
+page, because the company is the only party that knows and there is nowhere else
+to record it.
+
+    POST /admin/accounts/<id>/investor-type   { investorType }
+
+Its own route, for the reason correcting and deleting each have one: this carries
+a value beyond its own name. The value is `current`, `prospect`, or `null`, and
+`null` is sent as a value rather than by leaving the field out — a body that omits
+it is a `400`, because "set this to nobody has said" and "I am asking for nothing"
+are opposite requests and a caller that meant one must never silently get the
+other.
+
+**Null is a state and not a gap.** It is what the record says about a person the
+company has not described, it is what an account created before the column
+existed keeps, and it is distinct from `prospect` — the guess that costs most is
+showing the persuasion order to somebody who has already paid. So the column
+carries no default, the control offers the unsaid state first, and an admin who
+classified the wrong account can put it back.
+
+**It orders the hall's landing and gates nothing.** What this person may read is
+their grants and each document's audience through `CMS-006`, which this act does
+not touch and this column cannot reach: the predicate those compose is handed an
+`Actor`, which is an id and a role, so a rule that read the type would have to
+widen the auth boundary first. A person set to the wrong type sees an oddly
+ordered page and never a document that is not theirs. Both the surface and the
+sentence under the control say so, because a control an admin mistakes for an
+access control is the one way this page can mislead.
+
+**The trail holds the act and neither value.** `account.investor_type_change`
+names no recordable field, so the row is the actor, the subject and the act.
+Which field moved is already the action's name, and the value on either side
+would keep a judgement about a named person in a table retained seven years past
+their erasure to record the act of forming it once — the reasoning that keeps a
+correction's two values out of it (`SEC-DEC-01`, `DATA-R02`). Setting the value
+the row already holds writes nothing and records nothing: restating a judgement
+is not a second act of forming one.
+
+**No session ends**, for the correction's reason and more plainly: nothing about
+what this person may read has moved, so no live session's claims are stale
+(`SEC-R02`).
+
+It is personal data about a named person, so it is named in the privacy notice's
+table of what is held (`LEGAL-SG-001` §3), carried in the record of processing on
+the same legitimate-interests basis as the two behavioural rows beside it, and
+returned by the data-portability export — a request for what is held that omitted
+it would be answered incompletely (`LEGAL-GLOBAL-001/T2`).
+
 ## 4. Integration
 
 **`ADMIN-002`** is the console and the destructive-action component.
@@ -201,13 +253,15 @@ action. **`DATA-002`** is the erasure design this implements the admin half of.
 
 ## 5. Cross-cutting compliance
 
-- **`DATA-R01`** — a name, an address, a role, a state, and when they last
-  signed in — the one behavioural column, and §6 says why. Nothing else.
+- **`DATA-R01`** — a name, an address, a role, a state, when they last signed
+  in — the one behavioural column, and §6 says why — and whether the company has
+  said this person invested or is deciding, which the notice declares. Nothing
+  else.
 - **`DATA-R02`** — no personal data in the audit or in a log.
 - **`DATA-R03`** — deletion is a delete, and the confirmation says what
   survives.
-- **`SEC-R04`** — create, suspend, role change, correct, delete, and every grant
-  change.
+- **`SEC-R04`** — create, suspend, role change, correct, set the investor type,
+  delete, and every grant change.
 - **`A11Y-R01`**, **`A11Y-R02`** — the lists and the confirmations are
   operable and named.
 

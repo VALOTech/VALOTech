@@ -25,13 +25,17 @@ owner names a person, the notice publishes no name and this record claims none.
 | Role, state | To decide what they may read | Same |
 | Last sign-in, session records | To let the person and an admin see and end sessions, and to let an admin find an account nobody is using any more | Legitimate interests — security of the account, and closing accounts that are unused |
 | What they opened, and when | To show them what is unread; for a deck, to record which version they were shown | Legitimate interests, stated in the notice |
+| Whether they have invested or are deciding | To order the hall's landing so what they came for is first | Legitimate interests, stated in the notice |
 
 The people are investors and admins — the two roles this product has
 (`.claude/CLAUDE.md` §7.3). No other category of person has an account, and none
-is profiled: the last two rows are behavioural, so they are disclosed in the
-notice rather than assumed, and what a person opened is theirs alone. It is not
-aggregated, not reported to an admin as analytics, and not kept after the account
-goes (`LEGAL-SG-001` §3).
+is profiled. The last three rows are disclosed in the notice rather than assumed.
+Two are behavioural, and what a person opened is theirs alone: not aggregated,
+not reported to an admin as analytics, and not kept after the account goes
+(`LEGAL-SG-001` §3). The third is an opinion an admin records rather than a
+behaviour observed (`INV-DEC-02`); it is empty until somebody states it, it
+decides the order of the hall's landing and never what the person may read, and
+it leaves with the account like everything else on the row.
 
 A person may object to the read-tracking. Honouring the objection keeps the
 account working, stops the records being written, and deletes the ones already

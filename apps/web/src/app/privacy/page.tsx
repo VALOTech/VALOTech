@@ -13,8 +13,9 @@ export const metadata: Metadata = { title: 'Privacy' };
  * how long, and what they can ask for (`LEGAL-SG-001/T1`, `LEGAL-SG-001/T6`).
  *
  * **Written to be true rather than complete** (`LEGAL-SG-001` §3). It names the
- * four things actually held — the account, the role and state, the sessions,
- * and what a person opened — and no more; a generic template listing processing
+ * five things actually held — the account, the role and state, the sessions,
+ * what a person opened, and whether the company has recorded them as having
+ * invested or as deciding — and no more; a generic template listing processing
  * this product does not do is worse than a page naming five things accurately,
  * and it is short because a notice nobody finishes is a notice nobody has read.
  *
@@ -52,6 +53,7 @@ export default async function PrivacyPage(): Promise<ReactElement> {
             <li>{t('heldRole')}</li>
             <li>{t('heldSessions')}</li>
             <li>{t('heldReads')}</li>
+            <li>{t('heldType')}</li>
           </ul>
           <p>{t('heldBasis')}</p>
         </section>

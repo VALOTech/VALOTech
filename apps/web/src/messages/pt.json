@@ -37,11 +37,12 @@
   "privacy": {
     "contactBody": "Escreva para {address}.",
     "contactTitle": "A quem escrever",
-    "heldBasis": "Os dois primeiros assentam no seu consentimento, dado ao aceitar o convite. Os dois últimos assentam no nosso interesse legítimo em manter a sua conta segura e o salão exato.",
+    "heldBasis": "Os dois primeiros assentam no seu consentimento, dado ao aceitar o convite. Os três últimos assentam no nosso interesse legítimo em manter a sua conta segura, o salão exato e o que lhe é mostrado digno do seu tempo.",
     "heldIdentity": "O seu nome e o seu endereço de e-mail, para que uma pessoa identificada possa ter acesso aos relatórios da empresa.",
     "heldReads": "Que documentos abriu e quando, para que o salão lhe possa mostrar o que é novo e registar que versão de uma apresentação lhe foi mostrada. Isto é só seu: nunca é agregado, nunca é comunicado como análise e desaparece com a sua conta.",
     "heldRole": "A sua função e o estado da sua conta, para que o salão saiba o que pode ler.",
     "heldSessions": "A sua última entrada e as suas sessões abertas, para que você e um administrador as possam ver e terminar.",
+    "heldType": "Se o registámos como alguém que já investiu ou como alguém que ainda está a decidir, para que o salão coloque primeiro aquilo que o trouxe aqui. Isto apenas ordena a página e nunca altera que documentos pode ler.",
     "heldTitle": "O que guardamos, e porquê",
     "intro": "A VALO Tech guarda uma lista breve de dados sobre as pessoas que leem os seus relatórios a investidores. Esta página diz o quê, porquê, durante quanto tempo e o que nos pode pedir.",
     "keptBackups": "As cópias de segurança cifradas são guardadas até doze meses, pelo que alguém apagado hoje ainda pode constar de uma cópia anterior. Essas cópias só são abertas para recuperar de uma perda de dados, nunca para procurar uma pessoa.",

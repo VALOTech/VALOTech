@@ -99,3 +99,18 @@ export type AccountCorrectionAnswer = Extract<
   CorrectionResult,
   { outcome: 'changed' | 'unchanged' }
 >;
+
+/**
+ * What came of saying whether a person has invested or is deciding
+ * (`ADMIN-001/T11`, `INV-DEC-02`).
+ *
+ * Its own answer rather than the acts' above, because setting a type is not one
+ * of the five that route performs and none of that type's other fields can occur
+ * here: there is no `requested`, no link and no delivery sentence. `changed`
+ * means the column moved; `unchanged` means the account already held the value
+ * asked for, in which case nothing was written and nothing recorded — restating
+ * a judgement is not a second act of forming one.
+ */
+export interface InvestorTypeAnswer {
+  readonly outcome: 'changed' | 'unchanged';
+}

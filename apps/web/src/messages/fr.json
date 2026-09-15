@@ -37,11 +37,12 @@
   "privacy": {
     "contactBody": "Écrivez à {address}.",
     "contactTitle": "À qui écrire",
-    "heldBasis": "Les deux premiers reposent sur votre consentement, donné lorsque vous avez accepté votre invitation. Les deux derniers reposent sur notre intérêt légitime à protéger votre compte et à garder ce hall exact.",
+    "heldBasis": "Les deux premiers reposent sur votre consentement, donné lorsque vous avez accepté votre invitation. Les trois derniers reposent sur notre intérêt légitime à protéger votre compte, à garder ce hall exact et à rendre ce qu’il vous montre digne de votre temps.",
     "heldIdentity": "Votre nom et votre adresse e-mail, afin qu'une personne nommée puisse accéder aux rapports de la société.",
     "heldReads": "Les documents que vous avez ouverts et quand, afin que ce hall puisse vous montrer ce qui est nouveau et retenir quelle version d'une présentation vous avez vue. Cela n'appartient qu'à vous : jamais agrégé, jamais transmis comme mesure d'audience, et supprimé avec votre compte.",
     "heldRole": "Votre rôle et l’état de votre compte, afin que ce hall sache ce que vous pouvez lire.",
     "heldSessions": "Votre dernière connexion et vos sessions ouvertes, afin que vous et un administrateur puissiez les voir et y mettre fin.",
+    "heldType": "Si nous vous avons enregistré comme ayant déjà investi ou comme étant encore en train de décider, afin que ce hall place en premier ce pour quoi vous êtes venu. Cela ordonne la page et ne change jamais les documents que vous pouvez lire.",
     "heldTitle": "Ce que nous conservons, et pourquoi",
     "intro": "VALO Tech conserve une courte liste d'informations sur les personnes qui lisent ses rapports aux investisseurs. Cette page indique quoi, pourquoi, combien de temps, et ce que vous pouvez nous demander.",
     "keptBackups": "Les sauvegardes chiffrées sont conservées jusqu'à douze mois : une personne supprimée aujourd'hui peut donc encore figurer dans une sauvegarde antérieure. Ces sauvegardes ne sont ouvertes que pour réparer une perte de données, jamais pour rechercher quelqu'un.",

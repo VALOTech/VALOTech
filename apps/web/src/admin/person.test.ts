@@ -178,7 +178,7 @@ describe.skipIf(!HAS_DATABASE)('the person page reads and acts (ADMIN-001/T2)', 
   });
 
   describe('personIdentity', () => {
-    it('carries the seven things the identity section states, and nothing else about the person', async () => {
+    it('carries the eight things the identity section states, and nothing else about the person', async () => {
       const signedIn = new Date('2026-04-05T06:07:08.000Z');
       const account = await getDb()
         .insertInto('accounts')
@@ -188,6 +188,7 @@ describe.skipIf(!HAS_DATABASE)('the person page reads and acts (ADMIN-001/T2)', 
           role: 'admin',
           state: 'suspended',
           last_sign_in: signedIn,
+          investor_type: 'current',
         })
         .returning('id')
         .executeTakeFirstOrThrow();
@@ -204,7 +205,12 @@ describe.skipIf(!HAS_DATABASE)('the person page reads and acts (ADMIN-001/T2)', 
         state: 'suspended',
         createdAt: expect.any(Date),
         lastSignIn: signedIn,
+        investorType: 'current',
       });
+    });
+
+    it('says nobody has classified this person as a null rather than as prospect', async () => {
+      expect((await personIdentity(await newAccount('invited')))?.investorType).toBeNull();
     });
 
     it('says never signed in as a null rather than inventing a moment', async () => {

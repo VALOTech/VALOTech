@@ -5,6 +5,7 @@ import { erasureCounts, personIdentity, type PersonIdentity } from '../../../../
 import { requireAdminPage } from '../../../../auth/page-guard';
 import { type LiveSession, liveSessionsForAccount } from '../../../../auth/session';
 import { type AccountDeckAccess, grantedDecksForAccount } from '../../../../content/decks';
+import type { InvestorType } from '../../../../db/types';
 import { investorMailPreference } from '../../../../mail/unsubscribe';
 
 import { EndSessions, PersonActions } from './actions';
@@ -16,18 +17,20 @@ import { StopSending } from './stop-sending';
  * this person reach, and what would happen if I removed them.
  *
  * Five sections in the order an admin reads them. **Identity** is the record
- * itself, which is a name, an address, a role, a state and two timestamps and
- * nothing else — there is no notes field to show because there is no notes field
- * to write into (`DATA-R01`). **Access** is every deck granted, with the pin and
- * when it was last opened, which is the column that separates a grant somebody
- * uses from one nobody remembered to revoke. **Sessions** is the ways in that are
- * live right now, and the control that ends them. **Actions** is what can be done
- * about any of it, ending with the correction that fixes a wrong name or a wrong
- * address (`ADMIN-001/T10`) — the one act there that writes the record rather
- * than acting on the access it grants. **Investor mail** is last because it is
- * about the messages that leave rather than the access that lets somebody in:
- * whether the list is stopping them, and the control that stops them with the
- * reason (`MAIL-002/T4`).
+ * itself, which is a name, an address, a role, a state, two timestamps and
+ * whether the company has said this person invested or is deciding, and nothing
+ * else — there is no notes field to show because there is no notes field to write
+ * into (`DATA-R01`). **Access** is every deck granted, with the pin and when it
+ * was last opened, which is the column that separates a grant somebody uses from
+ * one nobody remembered to revoke. **Sessions** is the ways in that are live
+ * right now, and the control that ends them. **Actions** is what can be done
+ * about any of it, ending with the two controls that write the record rather than
+ * act on the access it grants: the correction that fixes a wrong name or address
+ * (`ADMIN-001/T10`), and the investor type that orders this person's hall landing
+ * and gates nothing (`ADMIN-001/T11`, `INV-DEC-02`). **Investor mail** is last
+ * because it is about the messages that leave rather than the access that lets
+ * somebody in: whether the list is stopping them, and the control that stops them
+ * with the reason (`MAIL-002/T4`).
  *
  * Deleting is the only one of them nothing undoes, so the page reads
  * what it would cost before offering it (`ADMIN-001/T4`): the confirmation states
@@ -46,6 +49,21 @@ import { StopSending } from './stop-sending';
 /** A timestamp as UTC, or the word for not having one. */
 function when(at: Date | null): string {
   return at === null ? 'never' : at.toISOString();
+}
+
+/**
+ * What the record says about having invested, in the words the control offers.
+ * `null` reads as nobody having said rather than as a blank, because a blank in
+ * a definition list is indistinguishable from a value that failed to load, and
+ * this is the one field whose unanswered state is a statement of its own
+ * (`INV-DEC-02`).
+ */
+function investorTypeSaid(investorType: InvestorType | null): string {
+  if (investorType === null) {
+    return 'nobody has said';
+  }
+
+  return investorType === 'current' ? 'has invested' : 'still deciding';
 }
 
 function Identity({ person }: { readonly person: PersonIdentity }): ReactElement {
@@ -81,6 +99,10 @@ function Identity({ person }: { readonly person: PersonIdentity }): ReactElement
         <div className={styles.pair}>
           <dt>Last sign-in (UTC)</dt>
           <dd className={styles.when}>{when(person.lastSignIn)}</dd>
+        </div>
+        <div className={styles.pair}>
+          <dt>Investor type</dt>
+          <dd>{investorTypeSaid(person.investorType)}</dd>
         </div>
       </dl>
     </section>
@@ -202,6 +224,7 @@ export default async function PersonPage({
           name={person.name}
           email={person.email}
           state={person.state}
+          investorType={person.investorType}
           self={self}
           erasure={erasure}
         />

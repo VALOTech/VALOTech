@@ -53,6 +53,25 @@ CREATE TABLE accounts (
   -- compares this constraint against, so a locale in one and not the other is a
   -- red test rather than a row whose language has no messages.
   locale        text CHECK (locale IS NULL OR locale IN ('en', 'zh', 'zt', 'vi', 'th', 'id', 'ms', 'tl', 'hi', 'es', 'ar', 'fr', 'bn', 'pt', 'ru', 'ur', 'de', 'ja', 'tr', 'ko')),
+  -- Whether this person has already invested or is still deciding, which is what
+  -- the hall's landing orders its blocks by (INV-DEC-02).
+  --
+  -- Nullable, and null means nobody has said -- which is not 'prospect'. An
+  -- account that existed before this column did has not been described by
+  -- anybody, and classifying it by default would show the order built to
+  -- persuade to somebody who has already paid. The two named values are the two
+  -- somebody has actually stated.
+  --
+  -- It orders a page and never gates one. What a reader may read is decided by
+  -- content_grants and content_items.audience alone; a second column able to
+  -- withhold a document would be a second access model, and the second one is
+  -- the one that goes stale when the rule changes. Whoever adds a clause reading
+  -- this column into an access predicate has built that second model.
+  --
+  -- An attribute an admin sets rather than a behavioural column, so unlike
+  -- last_sign_in and read_tracking_objected it is named in the updated_at
+  -- trigger's WHEN below and a change to it restamps the account.
+  investor_type text CHECK (investor_type IS NULL OR investor_type IN ('current', 'prospect')),
   created_at    timestamptz NOT NULL DEFAULT now(),
   updated_at    timestamptz NOT NULL DEFAULT now()
 );
@@ -80,7 +99,8 @@ CREATE TRIGGER accounts_set_updated_at
      OR OLD.name IS DISTINCT FROM NEW.name
      OR OLD.role IS DISTINCT FROM NEW.role
      OR OLD.state IS DISTINCT FROM NEW.state
-     OR OLD.locale IS DISTINCT FROM NEW.locale)
+     OR OLD.locale IS DISTINCT FROM NEW.locale
+     OR OLD.investor_type IS DISTINCT FROM NEW.investor_type)
   EXECUTE FUNCTION set_updated_at();
 
 -- Down Migration

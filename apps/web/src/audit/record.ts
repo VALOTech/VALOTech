@@ -70,6 +70,12 @@ export const RECORDABLE_FIELDS: Readonly<Record<AuditAction, readonly string[]>>
   // moved column names joined by a comma — `name`, `email`, or `name,email` —
   // which is a fact about the act rather than a value the row took.
   'account.correct': ['fields'],
+  // A judgement one person has formed about another, so the trail holds that it
+  // was formed and never what it was. Which field moved is already the action's
+  // name, and the value on either side would keep a statement about a named
+  // person for seven years past their erasure to record the act of making it
+  // once (`INV-DEC-02`, `DATA-R02`).
+  'account.investor_type_change': [],
   'grant.add': [],
   'grant.remove': [],
   // `CMS-R07` — a publication is audited with what it replaced, which is the

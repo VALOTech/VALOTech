@@ -60,6 +60,7 @@ import {
   listAccounts,
   objectToReadTracking,
   reinstateAccount,
+  setInvestorType,
   suspendAccount,
 } from './accounts';
 
@@ -1123,6 +1124,20 @@ describe.skipIf(!HAS_DATABASE)('ADMIN-001 account mutations', () => {
       expect(out?.reportsRead).toHaveLength(1);
       expect(out?.reportsRead[0]?.reportId).toBe(report.id);
       expect(out?.mail).toEqual([{ subject: 'An invitation to the hall', at: expect.any(Date) }]);
+    });
+
+    it('carries whether the company has said this person invested, because that is held about them', async () => {
+      const person = await newAccount('active');
+      const admin = await newAccount('active', 'admin');
+
+      // Nobody has said, which the export states as such rather than omitting:
+      // an access request answered with a missing field cannot be told from one
+      // answered with a field that holds nothing.
+      expect(await exportPersonData(person).then((out) => out?.account.investorType)).toBeNull();
+
+      await setInvestorType(person, 'current', admin);
+
+      expect(await exportPersonData(person).then((out) => out?.account.investorType)).toBe('current');
     });
 
     it('scopes to the one account and not another person', async () => {

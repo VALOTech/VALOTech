@@ -31,11 +31,12 @@ import { useEffect, useRef, useState } from 'react';
 import type { ReactElement } from 'react';
 
 import type { ErasureCounts } from '../../../../admin/accounts';
-import type { AccountState } from '../../../../db/types';
+import type { AccountState, InvestorType } from '../../../../db/types';
 import { DestructiveAction } from '../../destructive-action';
 
 import type { AccountAction, AccountActionAnswer, AccountDeleteAnswer } from './account-actions';
 import { CorrectIdentity } from './correction';
+import { SetInvestorType } from './investor-type';
 import styles from './person.module.css';
 
 /** One act and the answer it came back with, held so the page can report it. */
@@ -346,6 +347,7 @@ export function PersonActions({
   name,
   email,
   state,
+  investorType,
   self,
   erasure,
 }: {
@@ -355,6 +357,8 @@ export function PersonActions({
   /** The address the record holds, which the correction field opens on. */
   readonly email: string;
   readonly state: AccountState;
+  /** What the record says about having invested, which its control opens on. */
+  readonly investorType: InvestorType | null;
   /** Whether the admin reading the page is the person it is about. */
   readonly self: boolean;
   /** What a delete would remove and leave, which its confirmation states. */
@@ -437,6 +441,9 @@ export function PersonActions({
 
       <h3>Correction</h3>
       <CorrectIdentity accountId={accountId} name={name} email={email} disabled={held} />
+
+      <h3>Investor type</h3>
+      <SetInvestorType accountId={accountId} investorType={investorType} disabled={held} />
     </>
   );
 }
