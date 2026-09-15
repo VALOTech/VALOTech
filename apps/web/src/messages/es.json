@@ -35,6 +35,8 @@
     "endEverywhereHint": "Finaliza todas las sesiones, incluida esta. Tendrá que iniciar sesión de nuevo."
   },
   "privacy": {
+    "breachBody": "Si sus datos se pierden o quedan expuestos de un modo que pueda afectarle, se lo comunicamos dentro de las setenta y dos horas siguientes al momento en que lo sabemos. Es un límite y no un calendario: si entendemos lo ocurrido la primera mañana, tendrá noticias nuestras esa misma mañana. Un solo plazo, para todo el mundo, esté donde esté.",
+    "breachTitle": "Si algo sale mal",
     "contactBody": "Escriba a {address}.",
     "contactTitle": "A quién escribir",
     "heldBasis": "Los dos primeros se basan en su consentimiento, dado al aceptar la invitación. Los tres últimos se basan en nuestro interés legítimo en mantener su cuenta segura, la sala exacta y lo que se le muestra a la altura de su tiempo.",
@@ -51,10 +53,15 @@
     "rightsAccess": "Una copia de lo que guardamos sobre usted.",
     "rightsCorrection": "Una corrección, si algo es incorrecto.",
     "rightsErasure": "La eliminación.",
+    "rightsObjection": "Pedirnos que dejemos de registrar lo que abre. Dejamos de hacerlo y borramos lo ya registrado; su cuenta sigue funcionando, pero la sala ya no puede señalar lo nuevo, de modo que todo parece sin leer.",
+    "rightsPortability": "Sus datos en un archivo que una máquina pueda leer, si quiere llevárselos a otro sitio. Le enviamos el archivo mismo, nunca un enlace para descargarlo.",
     "rightsTitle": "Qué puede pedir",
     "rightsWhen": "Respondemos en un plazo de treinta días.",
     "rightsWithdrawal": "Retirar su consentimiento, lo que supone eliminar su cuenta, porque sus datos solo están aquí para darle acceso.",
     "title": "Cómo esta sala trata sus datos",
+    "whereBody": "VALO Tech es una empresa de Singapur, y sus datos están a nuestro cuidado. Solo llegan a otros dos: la empresa cuyos servidores utilizamos y el proveedor que entrega nuestro correo.",
+    "whereTitle": "Dónde se guardan",
+    "whereTransfer": "Por eso pueden encontrarse en un país distinto de aquel en el que usted está. Estén donde estén, no van a ninguna parte sin un acuerdo escrito que obligue a quien los recibe a la misma protección que tienen aquí: en el caso ordinario, las cláusulas contractuales tipo.",
     "link": "Cómo tratamos sus datos"
   },
   "invitationMail": {

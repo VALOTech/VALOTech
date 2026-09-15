@@ -10,7 +10,8 @@ export const metadata: Metadata = { title: 'Privacy' };
 
 /**
  * `GET /privacy` — what this hall holds about the people who read it, why, for
- * how long, and what they can ask for (`LEGAL-SG-001/T1`, `LEGAL-SG-001/T6`).
+ * how long, where it rests, and what they can ask for (`LEGAL-SG-001/T1`,
+ * `LEGAL-SG-001/T6`, `LEGAL-GLOBAL-001/T1`).
  *
  * **Written to be true rather than complete** (`LEGAL-SG-001` §3). It names the
  * five things actually held — the account, the role and state, the sessions,
@@ -23,6 +24,22 @@ export const metadata: Metadata = { title: 'Privacy' };
  * An erased person survives in an encrypted backup for up to twelve months
  * (`DATA-003` §3), which every system has and few notices admit; a notice
  * implying otherwise is the inaccurate one.
+ *
+ * **It states a practice, never a law** (`LEGAL-GLOBAL-001` §3). No article,
+ * section or regime is named anywhere on it: the source text is not in this tree
+ * (`docs/operator-checklist.md#COMPLIANCE-SOURCES`), and a rule paraphrased from
+ * memory reads as authoritative exactly where it is wrong. The portability,
+ * objection, transfer and breach statements therefore say what this company
+ * does — the seventy-two-hour clock among them, one commitment to every reader
+ * wherever they are, and a ceiling rather than a schedule.
+ *
+ * **The transfer paragraph names no country, deliberately.** Which region holds
+ * the data is open at `decisions-log.md#OPS-DEC-03`, and the page first becomes
+ * reachable at the deployment that answers it, so a sentence reporting today's
+ * arrangement would be false on the day it is first read. It carries the
+ * undertaking that survives either answer instead: wherever the data rests, it
+ * crosses no border without an agreement binding whoever receives it.
+ * `LEGAL-SG-001/T7`, blocked on that same decision, is what names the country.
  *
  * The page signs nobody in and is served to anyone, because a notice behind a
  * login is a notice the person deciding whether to accept an invitation cannot
@@ -66,13 +83,30 @@ export default async function PrivacyPage(): Promise<ReactElement> {
           <p>{t('keptBackups')}</p>
         </section>
 
+        <section aria-labelledby="where">
+          <h2 id="where" className={styles.heading}>
+            {t('whereTitle')}
+          </h2>
+          <p>{t('whereBody')}</p>
+          <p>{t('whereTransfer')}</p>
+        </section>
+
+        <section aria-labelledby="breach">
+          <h2 id="breach" className={styles.heading}>
+            {t('breachTitle')}
+          </h2>
+          <p>{t('breachBody')}</p>
+        </section>
+
         <section aria-labelledby="rights">
           <h2 id="rights" className={styles.heading}>
             {t('rightsTitle')}
           </h2>
           <ul className={styles.list}>
             <li>{t('rightsAccess')}</li>
+            <li>{t('rightsPortability')}</li>
             <li>{t('rightsCorrection')}</li>
+            <li>{t('rightsObjection')}</li>
             <li>{t('rightsWithdrawal')}</li>
             <li>{t('rightsErasure')}</li>
           </ul>

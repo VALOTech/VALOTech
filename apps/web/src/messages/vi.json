@@ -35,6 +35,8 @@
     "endEverywhereHint": "Kết thúc mọi phiên, kể cả phiên này. Bạn sẽ cần đăng nhập lại."
   },
   "privacy": {
+    "breachBody": "Nếu dữ liệu của bạn bị mất hoặc bị lộ theo cách có thể ảnh hưởng đến bạn, chúng tôi báo cho bạn trong vòng bảy mươi hai giờ kể từ khi biết được. Đó là giới hạn chứ không phải lịch trình: nếu ngay buổi sáng đầu tiên chúng tôi đã hiểu chuyện gì xảy ra, ngay sáng hôm đó bạn sẽ nhận được tin. Một mốc duy nhất, cho tất cả mọi người, dù bạn ở đâu.",
+    "breachTitle": "Nếu có sự cố",
     "contactBody": "Hãy viết tới {address}.",
     "contactTitle": "Viết cho ai",
     "heldBasis": "Hai mục đầu dựa trên sự đồng ý của bạn, đã đưa ra khi bạn chấp nhận lời mời. Ba mục sau dựa trên lợi ích hợp pháp của chúng tôi trong việc giữ tài khoản của bạn an toàn, giữ cho sảnh chính xác và giữ cho những gì sảnh hiển thị xứng đáng với thời gian của bạn.",
@@ -51,10 +53,15 @@
     "rightsAccess": "Một bản sao những gì chúng tôi giữ về bạn.",
     "rightsCorrection": "Sửa lại, nếu có gì sai.",
     "rightsErasure": "Xóa dữ liệu.",
+    "rightsObjection": "Yêu cầu chúng tôi ngừng ghi lại những gì bạn mở. Chúng tôi ngừng, và xóa những gì đã ghi; tài khoản của bạn vẫn hoạt động, nhưng sảnh không còn đánh dấu được cái gì là mới, nên mọi thứ đều trông như chưa đọc.",
+    "rightsPortability": "Dữ liệu của bạn dưới dạng một tệp mà máy đọc được, nếu bạn muốn mang đi nơi khác. Chúng tôi gửi cho bạn chính tệp đó, không bao giờ gửi một liên kết để tải về.",
     "rightsTitle": "Bạn có thể yêu cầu những gì",
     "rightsWhen": "Chúng tôi trả lời trong vòng ba mươi ngày.",
     "rightsWithdrawal": "Rút lại sự đồng ý của bạn, nghĩa là xóa tài khoản, vì dữ liệu của bạn ở đây chỉ để phục vụ việc truy cập.",
     "title": "Cách sảnh này xử lý dữ liệu của bạn",
+    "whereBody": "VALO Tech là một công ty Singapore, và dữ liệu của bạn do chúng tôi trông giữ. Nó chỉ đến tay hai bên khác: công ty vận hành máy chủ nơi dữ liệu được lưu, và đơn vị chuyển phát e-mail của chúng tôi.",
+    "whereTitle": "Dữ liệu được giữ ở đâu",
+    "whereTransfer": "Vì vậy dữ liệu có thể nằm ở một quốc gia khác với nơi bạn đang ở. Dù nằm ở đâu, nó cũng không đi đâu cả nếu chưa có một thỏa thuận bằng văn bản buộc bên nhận phải bảo vệ nó đúng như ở đây: thông thường là các điều khoản hợp đồng tiêu chuẩn.",
     "link": "Cách chúng tôi xử lý dữ liệu của bạn"
   },
   "invitationMail": {

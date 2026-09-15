@@ -41,8 +41,8 @@
   margin: 0 0 0.9rem;
 }
 
-/* The list carries the four things held and the four that can be asked for.
-   Each is a sentence, so the markers sit outside and the text stays aligned. */
+/* The lists carry what is held and what can be asked for. Each item is a
+   sentence, so the markers sit outside and the text stays aligned. */
 .list {
   margin: 0 0 0.9rem;
   padding-left: 1.25rem;

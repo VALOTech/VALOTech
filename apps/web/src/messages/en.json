@@ -35,6 +35,8 @@
     "endEverywhereHint": "Ends every session, including this one. You will need to sign in again."
   },
   "privacy": {
+    "breachBody": "If your data is lost or exposed in a way that could affect you, we tell you within seventy-two hours of learning of it. That is a limit and not a schedule: if we understand what happened on the first morning, you hear from us that morning. One clock, for everybody, wherever you are.",
+    "breachTitle": "If something goes wrong",
     "contactBody": "Write to {address}.",
     "contactTitle": "Who to write to",
     "heldBasis": "The first two rest on your consent, given when you accepted your invitation. The last three rest on our legitimate interest in keeping your account secure, the hall accurate, and what it shows you worth your time.",
@@ -51,10 +53,15 @@
     "rightsAccess": "A copy of what we hold about you.",
     "rightsCorrection": "A correction, if something is wrong.",
     "rightsErasure": "Deletion.",
+    "rightsObjection": "To tell us to stop recording what you open. We stop, and we delete what is already there; your account keeps working, but the hall can no longer mark what is new, so everything looks unread.",
+    "rightsPortability": "Your data as a file a machine can read, if you want to take it elsewhere. We send you the file itself, never a link to fetch it.",
     "rightsTitle": "What you can ask for",
     "rightsWhen": "We answer within thirty days.",
     "rightsWithdrawal": "To withdraw your consent, which means deleting your account, because access is the only thing your data is here for.",
     "title": "How this hall handles your data",
+    "whereBody": "VALO Tech is a Singapore company, and your data is ours to look after. It reaches only two others: the company whose servers we run it on, and the carrier that delivers our e-mail.",
+    "whereTitle": "Where it is held",
+    "whereTransfer": "So it may rest in a country other than the one you are in. Wherever it rests, it goes nowhere without a written agreement binding whoever receives it to the protection it has here: standard contractual clauses, in the ordinary case.",
     "link": "How we handle your data"
   },
   "invitationMail": {

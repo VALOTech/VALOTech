@@ -35,6 +35,8 @@
     "endEverywhereHint": "Bu oturum dahil tüm oturumları sonlandırır. Yeniden oturum açmanız gerekir."
   },
   "privacy": {
+    "breachBody": "Verileriniz sizi etkileyebilecek bir biçimde kaybolur ya da açığa çıkarsa, bunu öğrendiğimiz andan itibaren yetmiş iki saat içinde size söylüyoruz. Bu bir üst sınır, bir takvim değil: ne olduğunu ilk sabah anlarsak, o sabah bizden haber alırsınız. Herkes için tek bir süre, nerede olursanız olun.",
+    "breachTitle": "Bir şey ters giderse",
     "contactBody": "{address} adresine yazın.",
     "contactTitle": "Kime yazmalı",
     "heldBasis": "İlk ikisi, daveti kabul ederken verdiğiniz rızaya dayanır. Son üçü, hesabınızı güvende, salonu doğru ve size gösterilenleri zamanınıza değer tutmaktaki meşru menfaatimize dayanır.",
@@ -51,10 +53,15 @@
     "rightsAccess": "Hakkınızda tuttuklarımızın bir kopyası.",
     "rightsCorrection": "Bir şey yanlışsa düzeltme.",
     "rightsErasure": "Silme.",
+    "rightsObjection": "Neyi açtığınızı kaydetmeyi bırakmamızı istemek. Bırakırız ve kayıtlı olanı sileriz; hesabınız çalışmayı sürdürür, ama salon artık neyin yeni olduğunu işaretleyemez, bu yüzden her şey okunmamış görünür.",
+    "rightsPortability": "Verilerinizi başka bir yere götürmek isterseniz, makinenin okuyabileceği bir dosya olarak. Size dosyanın kendisini gönderiyoruz, indirme bağlantısı asla.",
     "rightsTitle": "Neler isteyebilirsiniz",
     "rightsWhen": "Otuz gün içinde yanıt veriyoruz.",
     "rightsWithdrawal": "Rızanızı geri çekmek; bu, hesabınızın silinmesi anlamına gelir, çünkü verileriniz burada yalnızca erişim içindir.",
     "title": "Bu salon verilerinizi nasıl işliyor",
+    "whereBody": "VALO Tech bir Singapur şirketidir ve verileriniz bizim gözetimimizdedir. Bizden başka yalnızca iki tarafa ulaşır: verileri üzerinde tuttuğumuz sunucuları işleten şirket ve e-postamızı ileten taşıyıcı.",
+    "whereTitle": "Nerede tutuluyor",
+    "whereTransfer": "Bu nedenle bulunduğunuz ülkeden başka bir ülkede durabilir. Nerede duruyorsa dursun, kendisini alan tarafı burada sahip olduğu korumaya bağlayan yazılı bir anlaşma olmadan hiçbir yere gitmez: olağan durumda standart sözleşme hükümleri.",
     "link": "Verilerinizi nasıl işliyoruz"
   },
   "invitationMail": {

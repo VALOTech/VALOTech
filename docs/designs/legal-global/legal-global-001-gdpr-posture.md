@@ -41,7 +41,7 @@ requires.
 | Lawful basis stated per purpose | `LEGAL-SG-001`'s table already does this; the wording is reused rather than duplicated |
 | **Portability** | A person may ask for their data in a machine-readable form. The system holds five fields and two lists, so the answer is a JSON file an admin generates from the account page |
 | **Objection to legitimate interests** | The read-tracking basis can be objected to. Honouring it means the account keeps working and the read records stop being written and are deleted |
-| **International transfer** | Data sits in Singapore, or wherever `INFRA-DEC-03` puts it. The transfer needs a lawful mechanism — Standard Contractual Clauses in the ordinary case |
+| **International transfer** | `INFRA-DEC-03` put the application on AWS; `OPS-DEC-03` decides the region and is open, so the notice names no country. A transfer needs a lawful mechanism — Standard Contractual Clauses in the ordinary case — and the notice carries that undertaking; `LEGAL-SG-001/T7` names the country once the region lands |
 | **Records of processing** | One page, because there is one processing activity |
 | **72-hour breach notification** | One clock, 72 hours from awareness, for every person wherever they are. Which regime is stricter is not asserted here: that is a comparison of two statutes and `LEGAL-GLOBAL-001/T6` owes the text |
 

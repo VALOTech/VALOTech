@@ -35,6 +35,8 @@
     "endEverywhereHint": "Beendet jede Sitzung, auch diese. Sie müssen sich erneut anmelden."
   },
   "privacy": {
+    "breachBody": "Gehen Ihre Daten verloren oder werden sie so offengelegt, dass es Sie betreffen kann, sagen wir es Ihnen innerhalb von zweiundsiebzig Stunden, nachdem wir davon erfahren. Das ist eine Grenze und kein Zeitplan: verstehen wir am ersten Morgen, was geschehen ist, hören Sie noch an diesem Morgen von uns. Eine Frist, für alle, wo immer Sie sind.",
+    "breachTitle": "Wenn etwas schiefgeht",
     "contactBody": "Schreiben Sie an {address}.",
     "contactTitle": "An wen Sie schreiben",
     "heldBasis": "Die ersten beiden beruhen auf Ihrer Einwilligung, die Sie mit der Annahme Ihrer Einladung gegeben haben. Die letzten drei beruhen auf unserem berechtigten Interesse daran, Ihr Konto sicher, den Bereich richtig und das Gezeigte Ihrer Zeit wert zu halten.",
@@ -51,10 +53,15 @@
     "rightsAccess": "Eine Kopie dessen, was wir über Sie gespeichert haben.",
     "rightsCorrection": "Eine Berichtigung, wenn etwas falsch ist.",
     "rightsErasure": "Löschung.",
+    "rightsObjection": "Uns zu sagen, dass wir nicht mehr aufzeichnen sollen, was Sie öffnen. Wir hören damit auf und löschen, was schon aufgezeichnet ist; Ihr Konto läuft weiter, aber der Bereich kann nicht mehr anzeigen, was neu ist, sodass alles ungelesen aussieht.",
+    "rightsPortability": "Ihre Daten als Datei, die eine Maschine lesen kann, wenn Sie sie woanders hin mitnehmen wollen. Wir senden Ihnen die Datei selbst, nie einen Link zum Herunterladen.",
     "rightsTitle": "Worum Sie bitten können",
     "rightsWhen": "Wir antworten innerhalb von dreißig Tagen.",
     "rightsWithdrawal": "Den Widerruf Ihrer Einwilligung, was die Löschung Ihres Kontos bedeutet, denn Ihre Daten dienen hier allein dem Zugang.",
     "title": "Wie dieser Bereich mit Ihren Daten umgeht",
+    "whereBody": "VALO Tech ist ein Unternehmen aus Singapur, und Ihre Daten sind in unserer Obhut. Sie erreichen nur zwei weitere: das Unternehmen, auf dessen Servern wir sie halten, und den Dienst, der unsere E-Mail ausliefert.",
+    "whereTitle": "Wo sie liegen",
+    "whereTransfer": "Sie können daher in einem anderen Land liegen als dem, in dem Sie sind. Wo sie auch liegen, sie gehen nirgendwohin ohne eine schriftliche Vereinbarung, die den Empfänger auf denselben Schutz verpflichtet, den sie hier haben: im Regelfall die Standardvertragsklauseln.",
     "link": "Wie wir mit Ihren Daten umgehen"
   },
   "invitationMail": {

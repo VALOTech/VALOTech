@@ -35,6 +35,8 @@
     "endEverywhereHint": "Tinatapos ang bawat session, kasama ito. Kakailanganin mong mag-sign in ulit."
   },
   "privacy": {
+    "breachBody": "Kung mawala o malantad ang iyong datos sa paraang maaaring makaapekto sa iyo, sasabihin namin sa iyo sa loob ng pitumpu't dalawang oras mula nang malaman namin ito. Hangganan iyon at hindi iskedyul: kung naunawaan namin ang nangyari nang unang umaga, maririnig mo ito mula sa amin nang umagang iyon din. Iisang takdang panahon, para sa lahat, saan ka man naroon.",
+    "breachTitle": "Kung may mangyaring mali",
     "contactBody": "Sumulat sa {address}.",
     "contactTitle": "Kanino susulat",
     "heldBasis": "Ang unang dalawa ay nakasalalay sa iyong pahintulot, na ibinigay nang tanggapin mo ang paanyaya. Ang huling tatlo ay nakasalalay sa aming lehitimong interes na panatilihing ligtas ang iyong account, tumpak ang bulwagan, at sulit sa iyong oras ang ipinapakita nito.",
@@ -51,10 +53,15 @@
     "rightsAccess": "Isang kopya ng itinatago namin tungkol sa iyo.",
     "rightsCorrection": "Pagwawasto, kung may mali.",
     "rightsErasure": "Pagbura.",
+    "rightsObjection": "Ang hilingin sa aming itigil ang pagtatala ng binubuksan mo. Titigil kami, at buburahin namin ang naitala na; patuloy na gumagana ang iyong account, ngunit hindi na maaaring markahan ng bulwagan kung ano ang bago, kaya lahat ay mukhang hindi pa nababasa.",
+    "rightsPortability": "Ang iyong datos bilang isang file na kayang basahin ng makina, kung nais mo itong dalhin sa ibang lugar. Ang file mismo ang ipinapadala namin sa iyo, hindi kailanman isang link na kukunan nito.",
     "rightsTitle": "Ano ang maaari mong hilingin",
     "rightsWhen": "Sumasagot kami sa loob ng tatlumpung araw.",
     "rightsWithdrawal": "Ang pag-urong ng iyong pahintulot, na nangangahulugang pagtanggal ng iyong account, dahil ang iyong datos ay narito para lamang sa akses.",
     "title": "Paano pinangangasiwaan ng bulwagan na ito ang iyong datos",
+    "whereBody": "Ang VALO Tech ay isang kompanyang Singaporean, at ang iyong datos ay nasa aming pangangalaga. Dalawang iba pa lamang ang nakakahawak nito: ang kompanyang nagpapatakbo ng mga server na pinaglalagyan namin nito, at ang tagahatid ng aming e-mail.",
+    "whereTitle": "Saan ito itinatago",
+    "whereTransfer": "Kaya maaaring nasa ibang bansa ito kaysa sa kinaroroonan mo. Saanman ito naroon, hindi ito napupunta kahit saan nang walang nakasulat na kasunduang nagtatali sa sinumang tumatanggap nito sa proteksiyong taglay nito rito: sa karaniwang pagkakataon, ang mga karaniwang sugnay sa kontrata.",
     "link": "Paano namin pinangangasiwaan ang iyong datos"
   },
   "invitationMail": {

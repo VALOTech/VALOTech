@@ -35,6 +35,8 @@
     "endEverywhereHint": "Met fin à toutes les sessions, y compris celle-ci. Vous devrez vous reconnecter."
   },
   "privacy": {
+    "breachBody": "Si vos données sont perdues ou exposées d'une manière susceptible de vous affecter, nous vous prévenons dans les soixante-douze heures qui suivent le moment où nous l'apprenons. C'est une limite et non un calendrier : si nous comprenons ce qui s'est passé le premier matin, vous avez de nos nouvelles ce matin-là. Un seul délai, pour tout le monde, où que vous soyez.",
+    "breachTitle": "Si quelque chose tourne mal",
     "contactBody": "Écrivez à {address}.",
     "contactTitle": "À qui écrire",
     "heldBasis": "Les deux premiers reposent sur votre consentement, donné lorsque vous avez accepté votre invitation. Les trois derniers reposent sur notre intérêt légitime à protéger votre compte, à garder ce hall exact et à rendre ce qu’il vous montre digne de votre temps.",
@@ -51,10 +53,15 @@
     "rightsAccess": "Une copie de ce que nous conservons à votre sujet.",
     "rightsCorrection": "Une correction, si quelque chose est inexact.",
     "rightsErasure": "La suppression.",
+    "rightsObjection": "Nous demander de cesser d'enregistrer ce que vous ouvrez. Nous cessons, et nous effaçons ce qui l'est déjà ; votre compte continue de fonctionner, mais le hall ne peut plus signaler ce qui est nouveau, si bien que tout paraît non lu.",
+    "rightsPortability": "Vos données sous forme de fichier lisible par une machine, si vous souhaitez les emporter ailleurs. Nous vous envoyons le fichier lui-même, jamais un lien pour le télécharger.",
     "rightsTitle": "Ce que vous pouvez demander",
     "rightsWhen": "Nous répondons sous trente jours.",
     "rightsWithdrawal": "Le retrait de votre consentement, ce qui entraîne la suppression de votre compte, car vos données ne servent ici qu'à vous donner accès.",
     "title": "Comment ce hall traite vos données",
+    "whereBody": "VALO Tech est une société singapourienne, et vos données sont à notre garde. Elles ne parviennent qu'à deux autres : la société dont nous utilisons les serveurs, et le prestataire qui achemine nos e-mails.",
+    "whereTitle": "Où elles sont conservées",
+    "whereTransfer": "Elles peuvent donc se trouver dans un autre pays que le vôtre. Où qu'elles se trouvent, elles ne vont nulle part sans un accord écrit imposant à celui qui les reçoit la protection dont elles bénéficient ici : dans le cas ordinaire, les clauses contractuelles types.",
     "link": "Comment nous traitons vos données"
   },
   "invitationMail": {

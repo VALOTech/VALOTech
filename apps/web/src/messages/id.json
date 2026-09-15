@@ -35,6 +35,8 @@
     "endEverywhereHint": "Mengakhiri setiap sesi, termasuk yang ini. Anda perlu masuk lagi."
   },
   "privacy": {
+    "breachBody": "Jika data Anda hilang atau terpapar dengan cara yang dapat berdampak pada Anda, kami memberi tahu Anda dalam tujuh puluh dua jam sejak kami mengetahuinya. Itu batas, bukan jadwal: jika kami sudah memahami apa yang terjadi pada pagi pertama, Anda mendengarnya dari kami pagi itu juga. Satu tenggat, untuk semua orang, di mana pun Anda berada.",
+    "breachTitle": "Jika terjadi sesuatu",
     "contactBody": "Tulislah ke {address}.",
     "contactTitle": "Kepada siapa menulis",
     "heldBasis": "Dua hal pertama bersandar pada persetujuan Anda, yang diberikan saat menerima undangan. Tiga hal terakhir bersandar pada kepentingan sah kami menjaga akun Anda tetap aman, aula ini tetap akurat, dan apa yang ditampilkan kepada Anda sepadan dengan waktu Anda.",
@@ -51,10 +53,15 @@
     "rightsAccess": "Salinan dari apa yang kami simpan tentang Anda.",
     "rightsCorrection": "Perbaikan, jika ada yang keliru.",
     "rightsErasure": "Penghapusan.",
+    "rightsObjection": "Meminta kami berhenti mencatat apa yang Anda buka. Kami berhenti, dan kami hapus apa yang sudah tercatat; akun Anda tetap berjalan, tetapi aula tidak lagi dapat menandai apa yang baru, sehingga semuanya tampak belum dibaca.",
+    "rightsPortability": "Data Anda sebagai berkas yang dapat dibaca mesin, jika Anda ingin membawanya ke tempat lain. Kami mengirimkan berkasnya sendiri kepada Anda, tidak pernah tautan untuk mengunduh.",
     "rightsTitle": "Apa yang dapat Anda minta",
     "rightsWhen": "Kami menjawab dalam tiga puluh hari.",
     "rightsWithdrawal": "Menarik persetujuan Anda, yang berarti menghapus akun Anda, karena data Anda ada di sini hanya untuk akses.",
     "title": "Bagaimana aula ini menangani data Anda",
+    "whereBody": "VALO Tech adalah perusahaan Singapura, dan data Anda ada dalam pemeliharaan kami. Data itu hanya sampai ke dua pihak lain: perusahaan yang menjalankan server tempat kami menyimpannya, dan pengantar surel kami.",
+    "whereTitle": "Di mana data itu disimpan",
+    "whereTransfer": "Karena itu data Anda dapat berada di negara selain negara tempat Anda berada. Di mana pun ia berada, ia tidak pergi ke mana-mana tanpa perjanjian tertulis yang mengikat pihak penerima pada perlindungan yang sama seperti di sini: dalam keadaan biasa, klausul kontraktual standar.",
     "link": "Bagaimana kami menangani data Anda"
   },
   "invitationMail": {

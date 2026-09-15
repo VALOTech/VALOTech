@@ -35,6 +35,8 @@
     "endEverywhereHint": "Menamatkan setiap sesi, termasuk sesi ini. Anda perlu log masuk semula."
   },
   "privacy": {
+    "breachBody": "Jika data anda hilang atau terdedah dengan cara yang boleh menjejaskan anda, kami memberitahu anda dalam tempoh tujuh puluh dua jam selepas kami mengetahuinya. Itu had, bukan jadual: jika kami sudah faham apa yang berlaku pada pagi pertama, anda mendengarnya daripada kami pagi itu juga. Satu tempoh, untuk semua orang, di mana jua anda berada.",
+    "breachTitle": "Jika berlaku sesuatu",
     "contactBody": "Tuliskan kepada {address}.",
     "contactTitle": "Kepada siapa hendak menulis",
     "heldBasis": "Dua yang pertama bersandar pada persetujuan anda, yang diberikan semasa menerima jemputan. Tiga yang terakhir bersandar pada kepentingan sah kami untuk memastikan akaun anda selamat, dewan ini tepat, dan apa yang ditunjukkan kepada anda berbaloi dengan masa anda.",
@@ -51,10 +53,15 @@
     "rightsAccess": "Salinan apa yang kami simpan tentang anda.",
     "rightsCorrection": "Pembetulan, jika ada yang salah.",
     "rightsErasure": "Pemadaman.",
+    "rightsObjection": "Meminta kami berhenti merekodkan apa yang anda buka. Kami berhenti, dan kami padam apa yang sudah direkodkan; akaun anda terus berfungsi, tetapi dewan tidak lagi boleh menandakan apa yang baharu, jadi semuanya kelihatan belum dibaca.",
+    "rightsPortability": "Data anda sebagai fail yang boleh dibaca mesin, jika anda mahu membawanya ke tempat lain. Kami menghantar failnya sendiri kepada anda, bukan pautan untuk memuat turun.",
     "rightsTitle": "Apa yang boleh anda minta",
     "rightsWhen": "Kami menjawab dalam tempoh tiga puluh hari.",
     "rightsWithdrawal": "Menarik balik persetujuan anda, yang bermakna memadam akaun anda, kerana data anda berada di sini semata-mata untuk akses.",
     "title": "Bagaimana dewan ini mengendalikan data anda",
+    "whereBody": "VALO Tech ialah sebuah syarikat Singapura, dan data anda dalam jagaan kami. Data itu sampai kepada dua pihak lain sahaja: syarikat yang mengendalikan pelayan tempat kami menyimpannya, dan pembawa yang menghantar e-mel kami.",
+    "whereTitle": "Di mana data itu disimpan",
+    "whereTransfer": "Oleh itu data anda mungkin berada di negara selain negara tempat anda berada. Di mana jua ia berada, ia tidak pergi ke mana-mana tanpa perjanjian bertulis yang mengikat pihak penerima kepada perlindungan yang sama seperti di sini: dalam keadaan biasa, klausa kontrak standard.",
     "link": "Bagaimana kami mengendalikan data anda"
   },
   "invitationMail": {
