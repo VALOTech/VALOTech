@@ -4,7 +4,7 @@ title: Audience and access
 domain: cms
 prd_refs: [CMS-006, CMS-R03, CMS-R02, SEC-R01, DATA-R05]
 depends_on: [AUTH-002, CMS-001]
-depended_by: [CMS-007, DECK-004, INV-001, POST-002, RPT-002]
+depended_by: [AUTH-005, CMS-007, DECK-004, INV-001, POST-002, RPT-002]
 layers_touched: [data, domain, service, api]
 cross_cutting_rules: [CMS-R02, CMS-R03, SEC-R01, DATA-R05, SEC-R04]
 status: implemented

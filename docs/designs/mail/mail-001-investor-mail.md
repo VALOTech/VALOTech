@@ -4,7 +4,7 @@ title: Investor mail
 domain: mail
 prd_refs: [MAIL-001, DATA-R04, SEC-R05, SEC-R04]
 depends_on: [ADMIN-001, CMS-004, CRED-001]
-depended_by: [MAIL-002]
+depended_by: [AUTH-005, MAIL-002]
 layers_touched: [service, api, frontend, ui]
 cross_cutting_rules: [DATA-R04, DATA-R02, SEC-R04, SEC-R05, I18N-R01, A11Y-R01]
 status: in-progress

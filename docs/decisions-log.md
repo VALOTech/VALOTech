@@ -10,6 +10,19 @@ An entry is filed the moment the choice surfaces, not when it is answered. Nothi
 
 ## Open decisions
 
+<a id="AUTH-DEC-06"></a>
+### `AUTH-DEC-06` — What a registered prospect may read, given that a registration gives them the investor role — OPEN
+
+- **Decision:** `AUTH-005` writes `role: investor` for somebody who registered themselves, and `CMS-006` §3 admits any account of that role to the `investor` audience — which is the audience `content_items.audience` defaults to. So a confirmed prospect reads every published item nobody deliberately narrowed, where this feature was specified to admit them to what is public. What should a prospect be admitted to?
+- **Options:** **A** Leave `CMS-006` alone: a prospect reads the `investor` audience, and the specification is corrected to say so · **B** Narrow what `investor` means, so a report or a deck reaches a prospect only by grant — a change to what every item already published is published to · **C** A third role, which `.claude/CLAUDE.md` §7.3 reserves to the owner · **D** Read `investor_type` in `visibleTo`, which is the second access model `INV-DEC-02` refused and which `apps/web/src/content/investor-type-access.test.ts` pins against.
+- **Recommendation:** **B**, narrowed to the two types that carry a body — `report` and `deck` default to `granted` while `update` keeps `investor`. It keeps one access model, keeps the type non-gating, and makes the promise true; the cost is a migration changing the column default and an admin habit of granting a report rather than relying on it. **D** is out under `INV-DEC-02` whatever its convenience, and **A** is the option to take only if a prospect reading investor updates is what was wanted.
+- **Decision owner:** user
+- **Blocks:** — none —
+- **Revises:** AUTH-005/T1, AUTH-005/T2, AUTH-005/T4 — all three ship the safe default; **B** or **C** changes what `registerAccount` writes or what `visibleTo` admits, and **A** corrects the specification instead
+- **Status:** OPEN. Safe default: `AUTH_REGISTRATION_OPEN` defaults to `false` and the route answers `503 registration_closed`, so no deployment can produce such a reader; the route is also closed whenever no message can be sent, so no unreachable account is written. The behaviour that makes the question real is pinned by `apps/web/src/content/prospect-access.test.ts:admits a prospect to the investor audience, because the predicate reads the role`.
+
+---
+
 <a id="OPS-DEC-02"></a>
 ### `OPS-DEC-02` — Which `X-Forwarded-For` hop is the client, for the sign-in rate limit — OPEN
 

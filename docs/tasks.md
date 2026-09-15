@@ -865,3 +865,17 @@ What a review found, bound to the work it bears on rather than merged into it.
   Impact to: AUTH-003/T5 — the reset it closed sets the hash and the state and nothing else.
   Evidence: **found while building the self-service password change, by reading what the neighbouring path already did.** `AUTH-002` §3 states that a password change is a privilege change and that "every session for that account is deleted. The change is not complete until they are." apps/web/src/auth/password-change.ts:changeOwnPassword executes that; apps/web/src/auth/invitation.ts:setPasswordWithToken did not — it wrote `password_hash` and `state` and touched no session. **The path where it matters most is the one that had it missing**: a reset is what somebody asks for when they believe their account is in the wrong hands, so a reset that leaves the other party's session alive returns the account's name to its owner and its access to whoever took it, and does so at the exact moment the owner believes they have taken it back. The delete is in the transaction that writes the hash, because a window between the two is a window that keeps them signed in. Verified against PostgreSQL 17.11 by three tests in apps/web/src/auth/invitation.test.ts (62 passed): two live sessions are both gone after a completed reset, another account's session is untouched, and a refused reset ends nothing — a refusal that emptied the sessions would be a denial of service anybody holding a spent token could aim at an account. Mutation-proved and restored byte-identical: removing the delete — which is the state this row found — reddens all three, and widening it to every account reddens the isolation case (`DATA-R05`).
   Refer to: ADMIN-001/T12 — the self-service change is where the neighbouring path was read.
+
+## AUTH-005 · Registration for people considering an investment
+Design: [docs/designs/auth/auth-005-registration.md](designs/auth/auth-005-registration.md) · PRD: `AUTH-005`
+
+- [ ] AUTH-005/T1 — A registration writes the same row an invitation writes, with the type that says how they arrived
+
+- [ ] AUTH-005/T2 — One answer whatever the address, with the limiter on the path
+
+- [!] AUTH-005/T3 — The form on the gateway, in twenty locales, operable by keyboard
+  Blocked by: SITE-005/T1 — the gateway is not served by the application, so there is no page that can carry the form.
+  Note: `index.html` reaches valotech.org through GitHub Pages from `main`, a static host with no origin behind it, so a form there posts to nothing; pointing it at the application instead is a cross-site post that apps/web/src/app/api/auth/register/handler.ts refuses with `403` before reading the body, exactly as sign-in and the reset form refuse one. The page's only form today unlocks a stylesheet class. Everything the form would post to is built and pinned — the route, the row, the token, the two messages in twenty locales, the limiter — so this row is one form wired to a surface whose behaviour is already asserted. No i18n keys were authored for it, because a string with no renderer is the speculative code §1.10 refuses.
+
+- [ ] AUTH-005/T4 — A prospect sees the public content and no progress board, asserted against the predicate
+
