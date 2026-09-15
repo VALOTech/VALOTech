@@ -68,7 +68,7 @@
     "subject": "VALO Tech yatırımcı salonuna davet",
     "greeting": "Merhaba {name},",
     "intro": "{inviter} sizi VALO Tech yatırımcı salonuna davet etti; şirket raporlarını burada, kendisine yatırım yapanlar için yayımlıyor.",
-    "action": "Parola belirlemek ve oturum açmak için bu bağlantıyı açın:",
+    "action": "Parola belirlemek ve giriş yapmak için bu bağlantıyı açın:",
     "expiry": "Bağlantı yalnızca bir kez kullanılabilir ve {days, plural, one {# gün} other {# gün}} sonra çalışmayı durdurur.",
     "ignore": "Bu iletiyi beklemiyorduysanız yok sayabilirsiniz. Bağlantı açılana kadar hiçbir şey olmaz.",
     "signature": "VALO Tech"
@@ -86,7 +86,7 @@
     "subject": "VALO Tech yatırımcı salonuna erişiminiz",
     "greeting": "Merhaba {name},",
     "intro": "Birisi bu adresle VALO Tech yatırımcı salonuna erişim istedi. Aşağıdaki bağlantıyı açmak hem parolanızı belirler hem de adresin size ait olduğunu doğrular.",
-    "action": "Parola belirlemek ve oturum açmak için bu bağlantıyı açın:",
+    "action": "Parola belirlemek ve giriş yapmak için bu bağlantıyı açın:",
     "expiry": "Bağlantı yalnızca bir kez kullanılabilir ve {days, plural, one {# gün} other {# gün}} sonra çalışmayı durdurur.",
     "ignore": "Bunu siz istemediyseniz bu iletiyi yok sayabilirsiniz. Bağlantı açılana kadar hiçbir şey olmaz.",
     "signature": "VALO Tech"
@@ -95,7 +95,7 @@
     "subject": "Zaten bir VALO Tech hesabınız var",
     "greeting": "Merhaba {name},",
     "intro": "Birisi bu adresle VALO Tech yatırımcı salonuna erişim istedi; bu adresi kullanan bir hesap zaten var. İkinci bir hesap oluşturulmadı.",
-    "action": "Oturum açmak için bu bağlantıyı açın. Parolanızı unuttuysanız, o sayfada yeni bir parola belirlemek için bir bağlantı var:",
+    "action": "Giriş yapmak için bu bağlantıyı açın. Parolanızı unuttuysanız, o sayfada yeni bir parola belirlemek için bir bağlantı var:",
     "ignore": "Bu siz değilseniz hiçbir şey değişmedi ve yapmanız gereken bir şey yok.",
     "signature": "VALO Tech"
   },

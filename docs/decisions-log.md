@@ -176,6 +176,53 @@ An entry is filed the moment the choice surfaces, not when it is answered. Nothi
 
 ---
 
+<a id="I18N-DEC-08"></a>
+### `I18N-DEC-08` — Whether the English source names the kind of address it means — RESOLVED 2026-09-16
+
+- **Decision:** The account surface's English says `Your name and address`, `The address is what you sign in with`, `That address cannot be used for this account`. The thing it means is an e-mail address, and it is the only address this system holds. Sixteen of the nineteen translations say so explicitly at `account.identity.title`, eleven at `signInChanges` — the translators qualified it without being asked. Does the English follow them, or is the short form deliberate?
+- **Options:** **A** Qualify the English wherever nothing beside it says which kind of address it is · **B** Leave it — the form label directly above already says `Email address`, so the short form reads as an ordinary back-reference.
+- **Recommendation:** **A**. The English is the source every one of the nineteen is translated from, so an imprecision here is copied nineteen times, and on a surface that lists what a company holds about a person, a bare `address` can be read as a postal address this product has never asked for. **B**'s strongest case is real and shaped the answer rather than losing to it: a sentence that says `email address` three times is its own defect, so the qualification lands on first mention and the back-references inside the same sentence keep the short form.
+- **Decision owner:** user
+- **Settled by:** user
+- **Blocks:** — none —
+- **Revises:** `ADMIN-001/T12` — the reader's own account page shipped with the short form in its heading and its two notices
+- **Status:** RESOLVED 2026-09-16 — **A**. Thirteen English strings across `apps/web/src/messages/en.json` and `assets/legal-i18n.js` now name the kind of address on first mention; the nineteen translations were already saying it and were not touched. The same pass retired the four `e-mail` spellings the glossary had settled as `email`, which is why `privacy.heldIdentity` changed twice in one edit.
+
+<a id="I18N-DEC-07"></a>
+### `I18N-DEC-07` — Whether the ecosystem glossary propagates to the six sibling products — RESOLVED 2026-09-16
+
+- **Decision:** `docs/glossary/` was assembled by harvesting the siblings: 153 of its 200 entries are the word a sibling's own catalogue already uses, and 47 are a ruling where two of them disagreed. It lives in VALO Tech alone. VALO Tech is the ecosystem's hub, so the question the harvest raises is whether the settled answers flow back.
+- **Options:** **A** VALO Tech publishes it as the ecosystem's glossary and each sibling adopts it on its own schedule · **B** VALO Tech writes it into all six repositories now · **C** It stays VALO Tech's own.
+- **Recommendation:** **A**. The 47 rulings are worth something to a sibling precisely because they were decided once rather than six times, so publishing is the point; but a repository that writes into six others is writing over working trees other sessions hold, which every one of those repositories forbids in its own §1.1 and §11.2. **B**'s strongest case is that a glossary nobody adopts is a glossary that has not settled anything, and it is a fair objection — the answer is that adoption is visible: a sibling that has adopted carries the file, and one that has not is a fact anybody can read. **C** loses on the owner's own premise: a hub that keeps the answer to itself leaves the six products disagreeing, which is the condition the glossary was built to end.
+- **Decision owner:** user
+- **Settled by:** user
+- **Blocks:** — none —
+- **Status:** RESOLVED 2026-09-16 — **A**. `docs/glossary/` is the published ecosystem glossary and stays here; no sibling repository is written to from this one. A sibling adopts by reading these files and settling its own catalogue against them, which is work for that repository's own loop and is filed there when it starts.
+
+<a id="I18N-DEC-06"></a>
+### `I18N-DEC-06` — Who clears the glossary's owed exemptions, and how far — RESOLVED 2026-09-16
+
+- **Decision:** `I18N-001/T5` shipped the glossary with 141 owed exemptions — served strings that use a rendering the glossary refuses. Seventy-nine were one term, `investor hall`, across ten locales, created by [`I18N-DEC-05`](#I18N-DEC-05) making the application's word canonical. Four were English spellings. The remainder sit mid-sentence, where changing the noun moves the agreement around it. Who clears them, and how much of it happens now?
+- **Options:** **A** Clear what needs no grammar now — the English spellings and the labels that swap whole — and fold the rest into `I18N-001/T4`, the native-reader pass already waiting · **B** Clear all 141 now · **C** Leave them; the exemption list is the record and the gate stays green either way.
+- **Recommendation:** **A**, on the grounds that rewriting a Spanish or Urdu sentence around a new noun is a translation, that `I18N-001/T4` exists to have a native speaker read exactly those sentences, and that doing it twice is doing it twice. **The owner chose B and the reason stands against the recommendation:** an exemption list is a promise to come back, `I18N-001/T4` is blocked on readers who are not available, and a promise with no date is how 141 rows become permanent by attrition. **C** was refused on the same ground the glossary was built on — ten locales would keep one word for the hall on the legal pages and another in the application.
+- **Decision owner:** user
+- **Settled by:** user
+- **Blocks:** — none —
+- **Revises:** `I18N-001/T5` — the glossary shipped with the 141 rows this settles
+- **Status:** RESOLVED 2026-09-16 — **B**. 138 rows cleared across sixteen locales; `docs/glossary/exemptions.json` now holds four rows, all permanent, and `scripts/check-glossary.py` reports **0 owed**. **Three of the 141 were not a debt and are recorded as decided rather than drained**: `अकाउंट` matches inside `अकाउंटिंग सॉफ़्टवेयर` in two Hindi strings, and `entrar` in one Portuguese string is the ordinary verb for getting into something rather than signing in. No boundary rule separates those from a real violation, and rewriting correct copy to satisfy a rule about a different word would make the product worse, so the rule stands and the three rows carry their reason. **What this costs is named rather than implied**: the rewritten sentences were composed by the loop against each language's own agreement rules and not read by a native speaker, so `I18N-001/T4` now covers more than it did and matters more — the legal pages are the surface where a sentence that is merely grammatical is not enough.
+
+<a id="I18N-DEC-05"></a>
+### `I18N-DEC-05` — Which shipped rendering is canonical when two surfaces settled one term differently — RESOLVED 2026-09-15
+
+- **Decision:** `I18N-DEC-03` has the glossary harvest a settled rendering rather than mint one, and for nine of its ten terms the ecosystem had already agreed. `investor hall` is the one it had not. The application's `hall.title` and the legal pages' prose were written by different lanes and reached different words in ten of the twenty locales — `Sảnh nhà đầu tư` against `khu vực nhà đầu tư`, `投资人大厅` against `投资人专区`, `sala de inversores` against `área de inversores`. Neither is wrong and neither is forced by anything in the tree. Which one does the glossary settle?
+- **Options:** **A** The application's rendering — the name the surface gives itself, on the page the term denotes · **B** The legal pages' rendering — the natural description in each language, and what a regulator reading the notice meets · **C** Per locale, each decided on its own merits.
+- **Recommendation:** **A**. A term names a thing, and the thing here is a room a reader signs into; the words over its door are the words it is called by, and a glossary that settled the other way would forbid the surface its own heading. **B**'s strongest case, in its own terms, is that the legal pages are the one place where being understood outranks being consistent — a Spanish reader meets `área de inversores` and knows immediately what is meant, where `sala` asks them to accept a metaphor — and that case is why this was the owner's rather than the loop's. **C** loses to both: deciding per locale is how the two lanes reached different answers in the first place, and it leaves nothing for a sibling product to adopt.
+- **Decision owner:** user
+- **Settled by:** user
+- **Blocks:** — none —
+- **Revises:** `SITE-006/T1` — the legal pages were written before any glossary existed, and in ten locales they carry a word this answer overturns
+- **Status:** RESOLVED 2026-09-15 — **A**. `docs/glossary/<locale>.json` records the application's rendering as `preferred` for `investor hall` in all twenty locales, and where the legal pages differ their word is listed as `forbidden`. **The debt this creates is counted rather than described**: seventy-nine of the hundred and forty-two rows in `docs/glossary/exemptions.json` are this term, across `vi, zh, zt, th, es, fr, bn, pt, ru, ur`, each naming the string that ships and the word settled for it. They are exemptions rather than edits because a noun that changes gender or measure word moves agreement through the sentence around it, so the swap is a translation pass and not a substitution; `scripts/check-glossary.py` reports a row that no longer covers a violation as stale, so the list can only shrink. Ten locales needed nothing — `en, id, ms, tl, hi, ar, de, ja, tr, ko` had already reached one word on both surfaces.
+
 <a id="I18N-DEC-04"></a>
 ### `I18N-DEC-04` — Whether the company's slogan follows the glossary into each language — RESOLVED 2026-09-15
 
@@ -196,7 +243,7 @@ An entry is filed the moment the choice surfaces, not when it is answered. Nothi
 - **Decision owner:** user
 - **Settled by:** user
 - **Blocks:** — none —
-- **Revises:** `SITE-006/T1` — the legal pages shipped with each locale's natural word, which the glossary is expected to ratify rather than overturn
+- **Revises:** `SITE-006/T1` — the legal pages shipped each locale's own word before a glossary existed to hold them to one; which word that is, where the two surfaces disagreed, is [`I18N-DEC-05`](#I18N-DEC-05)
 - **Status:** RESOLVED 2026-09-15 — **C**, a glossary decided once per term, **and the owner's answer went past the option**: this repository builds it, and it builds it by harvesting rather than by invention. VALO Tech is the ecosystem's hub, the sibling products have each already settled these words for themselves, and a hub that mints a twenty-first opinion is the reason six products disagree. So the glossary is assembled from what the siblings already publish, the remainder is authored through this repository's own translation process, and `assets/i18n.js`'s header sentence is rewritten to describe the rule the glossary states rather than one the file itself does not follow. Filed as `I18N-001/T5`.
 
 <a id="ADMIN-DEC-06"></a>

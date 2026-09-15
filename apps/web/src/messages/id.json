@@ -40,7 +40,7 @@
     "contactBody": "Tulislah ke {address}.",
     "contactTitle": "Kepada siapa menulis",
     "heldBasis": "Dua hal pertama bersandar pada persetujuan Anda, yang diberikan saat menerima undangan atau saat Anda sendiri meminta akses. Tiga hal terakhir bersandar pada kepentingan sah kami menjaga akun Anda tetap aman, aula ini tetap akurat, dan apa yang ditampilkan kepada Anda sepadan dengan waktu Anda.",
-    "heldIdentity": "Nama dan alamat surel Anda, agar seseorang yang disebut namanya dapat diberi akses ke laporan perusahaan.",
+    "heldIdentity": "Nama dan alamat email Anda, agar seseorang yang disebut namanya dapat diberi akses ke laporan perusahaan.",
     "heldReads": "Dokumen mana yang Anda buka dan kapan, agar aula ini dapat menunjukkan apa yang baru dan mencatat versi paparan mana yang Anda lihat. Ini milik Anda sendiri: tidak pernah diagregasi, tidak pernah dilaporkan sebagai analitik, dan hilang bersama akun Anda.",
     "heldRole": "Peran dan status akun Anda, agar aula ini tahu apa yang boleh Anda baca.",
     "heldSessions": "Waktu masuk terakhir dan sesi Anda yang terbuka, agar Anda dan administrator dapat melihat serta mengakhirinya.",
@@ -59,7 +59,7 @@
     "rightsWhen": "Kami menjawab dalam tiga puluh hari.",
     "rightsWithdrawal": "Menarik persetujuan Anda, yang berarti menghapus akun Anda, karena data Anda ada di sini hanya untuk akses.",
     "title": "Bagaimana aula ini menangani data Anda",
-    "whereBody": "VALO Tech adalah perusahaan Singapura, dan data Anda ada dalam pemeliharaan kami. Data itu hanya sampai ke dua pihak lain: perusahaan yang menjalankan server tempat kami menyimpannya, dan pengantar surel kami.",
+    "whereBody": "VALO Tech adalah perusahaan Singapura, dan data Anda ada dalam pemeliharaan kami. Data itu hanya sampai ke dua pihak lain: perusahaan yang menjalankan server tempat kami menyimpannya, dan pengantar email kami.",
     "whereTitle": "Di mana data itu disimpan",
     "whereTransfer": "Karena itu data Anda dapat berada di negara selain negara tempat Anda berada. Di mana pun ia berada, ia tidak pergi ke mana-mana tanpa perjanjian tertulis yang mengikat pihak penerima pada perlindungan yang sama seperti di sini: dalam keadaan biasa, klausul kontraktual standar.",
     "link": "Bagaimana kami menangani data Anda"

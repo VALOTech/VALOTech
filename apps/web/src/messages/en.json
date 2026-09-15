@@ -40,7 +40,7 @@
     "contactBody": "Write to {address}.",
     "contactTitle": "Who to write to",
     "heldBasis": "The first two rest on your consent, given when you accepted your invitation or asked for access yourself. The last three rest on our legitimate interest in keeping your account secure, the hall accurate, and what it shows you worth your time.",
-    "heldIdentity": "Your name and e-mail address, so a named person can be given access to company reporting.",
+    "heldIdentity": "Your name and email address, so a named person can be given access to company reporting.",
     "heldReads": "Which documents you have opened, and when, so the hall can show you what is new and record which version of a deck you were shown. This is yours alone: it is never aggregated, never reported as analytics, and it goes when your account goes.",
     "heldRole": "Your role and the state of your account, so the hall knows what you may read.",
     "heldSessions": "Your last sign-in and your open sessions, so you and an administrator can see them and end them.",
@@ -59,7 +59,7 @@
     "rightsWhen": "We answer within thirty days.",
     "rightsWithdrawal": "To withdraw your consent, which means deleting your account, because access is the only thing your data is here for.",
     "title": "How this hall handles your data",
-    "whereBody": "VALO Tech is a Singapore company, and your data is ours to look after. It reaches only two others: the company whose servers we run it on, and the carrier that delivers our e-mail.",
+    "whereBody": "VALO Tech is a Singapore company, and your data is ours to look after. It reaches only two others: the company whose servers we run it on, and the carrier that delivers our email.",
     "whereTitle": "Where it is held",
     "whereTransfer": "So it may rest in a country other than the one you are in. Wherever it rests, it goes nowhere without a written agreement binding whoever receives it to the protection it has here: standard contractual clauses, in the ordinary case.",
     "link": "How we handle your data"
@@ -76,7 +76,7 @@
   "resetMail": {
     "subject": "Reset your VALO Tech password",
     "greeting": "Hello {name},",
-    "intro": "Somebody asked to reset the password for this address at the VALO Tech investor hall.",
+    "intro": "Somebody asked to reset the password for this email address at the VALO Tech investor hall.",
     "action": "If that was you, open this link to choose a new password:",
     "expiry": "The link can be used once, and it stops working after {hours, plural, one {# hour} other {# hours}}.",
     "ignore": "If that was not you, your password has not changed and there is nothing you need to do.",
@@ -85,7 +85,7 @@
   "registrationMail": {
     "subject": "Your access to the VALO Tech investor hall",
     "greeting": "Hello {name},",
-    "intro": "Somebody asked for access to the VALO Tech investor hall using this address. Opening the link below chooses a password and settles that the address is yours.",
+    "intro": "Somebody asked for access to the VALO Tech investor hall using this email address. Opening the link below chooses a password and settles that the address is yours.",
     "action": "Open this link to choose a password and sign in:",
     "expiry": "The link can be used once, and it stops working after {days, plural, one {# day} other {# days}}.",
     "ignore": "If you did not ask for this, you can ignore this message. Nothing happens until the link is opened.",
@@ -94,7 +94,7 @@
   "registrationExistsMail": {
     "subject": "You already have a VALO Tech account",
     "greeting": "Hello {name},",
-    "intro": "Somebody asked for access to the VALO Tech investor hall using this address, and an account already uses it. No second account was created.",
+    "intro": "Somebody asked for access to the VALO Tech investor hall using this email address, and an account already uses it. No second account was created.",
     "action": "Open this link to sign in. If you have forgotten your password, that page has a link for choosing a new one:",
     "ignore": "If that was not you, nothing has changed and there is nothing you need to do.",
     "signature": "VALO Tech"
@@ -104,7 +104,7 @@
     "intro": "Enter your email address. If an account uses it, a link for choosing a new password is sent there.",
     "email": "Email address",
     "submit": "Send the reset link",
-    "sent": "If an account uses that address, a link is on its way. It can be used once and stops working after an hour.",
+    "sent": "If an account uses that email address, a link is on its way. It can be used once and stops working after an hour.",
     "tooManyAttempts": "Too many attempts. Wait a moment and try again.",
     "unexpected": "Something went wrong. Try again in a moment.",
     "backToSignIn": "Back to sign-in",
@@ -120,17 +120,17 @@
     "stoppedByCompany": "VALO Tech stopped investor mail to this account. If you start it again and messages still do not arrive, write to VALO Tech.",
     "on": "Investor mail is reaching this account.",
     "resume": "Start investor mail again",
-    "hallIntro": "Whether VALO Tech's investor updates reach the address on your account.",
+    "hallIntro": "Whether VALO Tech's investor updates reach the email address on your account.",
     "expired": "This link no longer works. Sign in to change the setting on your account page, or write to VALO Tech.",
     "signIn": "Sign in"
   },
   "account": {
     "identity": {
-      "title": "Your name and address",
+      "title": "Your name and email address",
       "intro": "What your account says about you. Put it right here — you do not need to ask anybody.",
       "name": "Name",
       "email": "Email address",
-      "signInChanges": "The address is what you sign in with, so changing it changes your sign-in. It also stops an invitation or reset link you have not used yet, because that link was sent to the old address.",
+      "signInChanges": "The email address is what you sign in with, so changing it changes your sign-in. It also stops an invitation or reset link you have not used yet, because that link was sent to the old address.",
       "submit": "Save changes"
     },
     "password": {
@@ -153,12 +153,12 @@
     "notice": {
       "passwordChanged": "Your password was changed. Every other session has ended.",
       "passwordRefused": "That is not the password this account holds now, so nothing was changed.",
-      "identityChanged": "Your name and address were saved.",
-      "identityChangedInvitationEnded": "Your name and address were saved. An invitation or reset link you had not used has stopped working, because it was sent to your old address; write to VALO Tech for a new one.",
+      "identityChanged": "Your name and email address were saved.",
+      "identityChangedInvitationEnded": "Your name and email address were saved. An invitation or reset link you had not used has stopped working, because it was sent to your old address; write to VALO Tech for a new one.",
       "identityUnchanged": "Nothing changed — your account already holds what you asked for.",
       "nameNeeded": "A name is needed.",
-      "emailInvalid": "That is not an address this system can store.",
-      "emailUnavailable": "That address cannot be used for this account. If it is yours, write to VALO Tech.",
+      "emailInvalid": "That is not an email address this system can store.",
+      "emailUnavailable": "That email address cannot be used for this account. If it is yours, write to VALO Tech.",
       "deleteNameMismatch": "The name you typed is not the name on your account, so nothing was deleted.",
       "deleteLastAdmin": "Your account was not deleted: you are the only administrator who can sign in, and the hall would be left with nobody able to manage it."
     }

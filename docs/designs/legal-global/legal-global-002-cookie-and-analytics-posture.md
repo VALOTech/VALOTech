@@ -109,6 +109,17 @@ who signed in, not a cookie and not analytics, and conflating the two categories
 is how a privacy notice becomes wrong. The banner does not ask about it, because
 the banner is about a visitor and this is about a member of the hall.
 
+### The printed date
+
+Both pages print `Last updated` over a `<time>` the markup carries directly, and
+it moves whenever the served text moves — a wording pass included, not only a
+change of substance. The reason is that the date is a claim the page makes about
+itself, so a page whose sentences changed yesterday under a date from last month
+is stating something untrue, and a reader has no other way to tell. The cost is
+accepted rather than unnoticed: somebody who watches the date for a change to
+their rights will occasionally find only a changed word, which is the cheaper of
+the two errors because it fails toward looking.
+
 ## 4. Integration
 
 **`SITE-006`** builds the pages, the banner and the stored choice.

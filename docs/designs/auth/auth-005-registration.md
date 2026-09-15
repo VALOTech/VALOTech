@@ -24,9 +24,13 @@ themselves, and it admits them to less.
 ## 2. Layer walkthrough
 
 **Down.** No new table, no new column, no new account state. A registration
-creates the same `accounts` row an invitation creates — `role: investor`,
-`state: invited` until the address is confirmed — with `investor_type` set to
-`prospect`, which is the one field that says how this person arrived.
+creates the `accounts` row an invitation creates — same table, `state: invited`
+until the address is confirmed, same single-use token — differing in the two
+columns that record who this person is: `role: prospect`, which bounds what they
+may read ([`AUTH-DEC-06`](../../decisions-log.md#AUTH-DEC-06)), and
+`investor_type: prospect`, which says they have not invested and orders the
+landing without gating it. The role is a third value in a column that already
+existed, which is why there is still no new table and no new column.
 
 **Up.** A form on the gateway, a message carrying a single-use link, and the
 set-password view `AUTH-003/T4` already serves. Past that the reader is in the
