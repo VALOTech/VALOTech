@@ -92,6 +92,37 @@
       <p data-i18n="lc.notLoadedBody">Not loaded and then switched off — not loaded at all. A script that arrives and afterwards checks a setting has already made its request, and the request is the part you would have been agreeing to.</p>
     </section>
 
+    <section aria-labelledby="lc-change">
+      <h2 id="lc-change" data-i18n="consent.controlTitle">Change your answer</h2>
+      <p data-i18n="consent.controlSay">This is the same choice the banner asks for, and it is stored in your browser alone. Changing it takes effect on your next page load.</p>
+
+      <!-- The three sentences the script reports with, carried as markup rather
+           than built in JavaScript so they are `data-i18n` nodes like every
+           other string and reach twenty languages through the same dictionary.
+           They are never shown as themselves. -->
+      <div hidden>
+        <span id="consentUnanswered" data-i18n="consent.unanswered">You have not answered yet, so nothing optional is loaded.</span>
+        <span id="consentAnswered" data-i18n="consent.answered">Your answer is stored in this browser.</span>
+        <span id="consentSaved" data-i18n="consent.saved">Saved. This browser now holds your answer.</span>
+      </div>
+
+      <form class="consent-control" id="consentControl">
+        <fieldset class="consent-cats">
+          <legend data-i18n="consent.cats">Categories</legend>
+          <label class="consent-cat"><input type="checkbox" checked disabled /><span data-i18n="consent.necessary">Necessary — always on</span></label>
+          <label class="consent-cat"><input type="checkbox" data-consent="analytics" /><span data-i18n="consent.analytics">Analytics</span></label>
+          <label class="consent-cat"><input type="checkbox" data-consent="marketing" /><span data-i18n="consent.marketing">Marketing</span></label>
+        </fieldset>
+        <div class="consent-acts">
+          <button type="submit" class="consent-act" data-i18n="consent.save">Save</button>
+        </div>
+        <!-- Mounted from the first render and empty, because a live region that
+             appears in the same render as its own first text is not reliably
+             announced. -->
+        <p class="consent-said" role="status" id="consentSaid"></p>
+      </form>
+    </section>
+
     <section aria-labelledby="lc-clear">
       <h2 id="lc-clear" data-i18n="lc.clearTitle">Clearing what is there</h2>
       <p data-i18n="lc.clearBody">Your browser's own site-data control removes all of it. The animation note and the investor-chapter note last only until you close your browser; signing out of the investor hall ends the session cookie; and choosing a language again replaces the language preference.</p>
@@ -118,5 +149,6 @@
 <script src="/assets/i18n.js"></script>
 <script src="/assets/legal-i18n.js"></script>
 <script src="/assets/legal.js"></script>
+<script src="/assets/consent.js"></script>
 </body>
 </html>

@@ -44,13 +44,13 @@ const legalEn = Object.assign({}, en, L.dict.en);
    matching the scanner would otherwise vanish without a sound. */
 const LEGAL_PAGES = [
   { path: "legal/privacy.html", titleKey: "lp.title", nodes: 22 },
-  { path: "legal/cookies.html", titleKey: "lc.title", nodes: 41 }
+  { path: "legal/cookies.html", titleKey: "lc.title", nodes: 51 }
 ];
 
 const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
 /* A node that stops matching the scanner would otherwise vanish without a sound. */
-const EXPECTED_NODES = 247;
+const EXPECTED_NODES = 257;
 
 /* Nothing else enforces that the twenty dictionaries carry the same keys, and a
    locale missing one silently falls back to English at runtime. Both catalogues

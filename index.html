@@ -665,9 +665,49 @@
   <svg class="i" aria-hidden="true"><use href="#i-arrow-up"/></svg>
 </button>
 
+<!-- The consent banner (`SITE-006/T2`, `/T3`). It sits here, after the footer and
+     after the back-to-top control, because it must not be the first thing in the
+     tab order or the first region a screen reader meets: the skip link and the
+     page's own landmarks come first, and this is announced after them. It is a
+     `region` and not a `dialog`, so focus is never trapped and the page beneath
+     stays readable -- somebody who wants to read the cookies page before
+     answering can reach it.
+
+     It ships `hidden`, and `assets/consent.js` unhides it only when nobody has
+     answered. A visitor with no JavaScript therefore never meets a question they
+     could not answer, which is the right silence: nothing optional could have
+     loaded for them either. -->
+<section class="consent" id="consent" role="region" aria-labelledby="consentTitle" hidden>
+  <div class="consent-wrap">
+    <div class="consent-say">
+      <h2 class="eyebrow" id="consentTitle" data-i18n="consent.region">Your choice about what is stored</h2>
+      <p data-i18n="consent.say">This site stores a note that the opening animation has played, and the language you choose. Nothing else is stored unless you say so, and nothing here is loaded until you have answered.</p>
+      <p><a href="/legal/cookies" data-i18n="consent.more">What is stored, and when</a></p>
+      <fieldset class="consent-cats">
+        <legend data-i18n="consent.cats">Categories</legend>
+        <!-- `necessary` is shown checked and disabled rather than omitted: a
+             visitor is entitled to see what is always on. The state is carried by
+             the control's own semantics rather than by colour (`A11Y-R02`). -->
+        <label class="consent-cat"><input type="checkbox" checked disabled /><span data-i18n="consent.necessary">Necessary — always on</span></label>
+        <label class="consent-cat"><input type="checkbox" data-consent="analytics" /><span data-i18n="consent.analytics">Analytics</span></label>
+        <label class="consent-cat"><input type="checkbox" data-consent="marketing" /><span data-i18n="consent.marketing">Marketing</span></label>
+      </fieldset>
+    </div>
+    <!-- Three controls, one class, one size. A reject rendered as a grey link
+         beside a bright accept is a dark pattern, and a company arguing for
+         audit-defensible systems cannot ship one. -->
+    <div class="consent-acts">
+      <button type="button" class="consent-act" id="consentAll" data-i18n="consent.all">Accept all</button>
+      <button type="button" class="consent-act" id="consentNone" data-i18n="consent.none">Reject all</button>
+      <button type="button" class="consent-act" id="consentMine" data-i18n="consent.mine">Save my choice</button>
+    </div>
+  </div>
+</section>
+
 <script src="assets/scene/stars.js" defer></script>
 <script type="module" src="assets/scene/boot.js"></script>
 <script src="assets/i18n.js"></script>
 <script src="assets/site.js"></script>
+<script src="assets/consent.js"></script>
 </body>
 </html>

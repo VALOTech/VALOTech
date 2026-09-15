@@ -165,8 +165,17 @@ the copy and **`I18N-002`** gates it. **`LEGAL-SG-001`** and
   English source is written and waiting to be read, and the waiting is recorded
   on the operator checklist rather than in a comment nobody opens.
 - **The banner interrupts a page whose job is persuasion.** Argued and accepted
-  at `LEGAL-GLOBAL-002` §6. The mitigation is that it is small, answerable in one
-  click either way, and never shown again.
+  at `LEGAL-GLOBAL-002` §6. Two of the three mitigations hold as written: it is
+  answerable in one click either way, and it is never shown again. **The third
+  was optimistic and the measurement says so** — on a 390×844 screen the banner
+  runs from 302px in Korean to 401px in French, which is a third to a half of the
+  view. Three lines of explanation, three categories and three controls cost
+  that, and the parts that could honestly be reduced have been: the padding, the
+  gaps, and an attempt to give each control an equal share of the row, which was
+  reverted because it made every locale wrap where five had fitted. Shortening
+  the words is the one lever left and it is the wrong one, because what the
+  sentence buys is that it names what this site actually stores rather than
+  reassuring anybody about experience.
 
 ## 7. Task list
 

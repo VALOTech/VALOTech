@@ -3348,3 +3348,210 @@ html:not(.can-scene) .planet {
 .legal-foot .legal-date {
   margin: 14px 0 0;
 }
+
+/* ============================================================================
+   The consent banner (`SITE-006/T2`, `/T3`)
+
+   A region at the foot of the viewport, on the same glass as the rest of the
+   system. It does not animate in: the brand is lit from inside and moves only
+   when a reader touches it, and a consent banner that slides up is the one that
+   reads as a growth tactic rather than a question.
+
+   **The three controls are one class and one size.** That is the whole of the
+   accessibility and honesty argument in this block: a reject rendered as a grey
+   link beside a bright accept is a dark pattern, and this company's own
+   argument is for audit-defensible systems. If a future edit gives one of them
+   an accent, it has broken the rule this comment exists to state.
+   ========================================================================== */
+
+.consent {
+  position: fixed;
+  inset-inline: 0;
+  inset-block-end: 0;
+  z-index: 300;
+  padding: clamp(16px, 3vw, 24px);
+  border-block-start: 1px solid var(--glass-border);
+  background: var(--card-bg);
+  box-shadow: var(--card-shadow);
+  color: var(--text-muted);
+  font-size: var(--type-card-body);
+  line-height: 1.6;
+}
+
+.consent-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 16px clamp(20px, 4vw, 40px);
+  width: 100%;
+  max-width: var(--maxw);
+  margin: 0 auto;
+}
+
+/* Capped, so the controls sit beside the question rather than at the far edge of
+   a wide frame. Without the cap this column absorbs every spare pixel while its
+   own paragraph stays at its measure, and the answer ends up a screen away from
+   what it is answering -- which looks on a diff exactly like it looks correct. */
+.consent-say {
+  flex: 1 1 22rem;
+  max-width: 68ch;
+  min-width: 0;
+}
+
+.consent-say p {
+  margin: 0 0 10px;
+  max-width: 64ch;
+}
+
+.consent-say a {
+  color: var(--accent-bright);
+  text-underline-offset: 3px;
+}
+
+/* The categories. `necessary` is rendered checked and disabled rather than
+   omitted, because a visitor is entitled to see what is always on. */
+.consent-cats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 22px;
+  margin: 12px 0 0;
+  padding: 0;
+  border: 0;
+}
+
+.consent-cats legend {
+  padding: 0;
+  font-family: var(--mono);
+  font-size: var(--type-meta);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.consent-cat {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--type-card-body);
+}
+
+.consent-cat input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--accent-bright);
+}
+
+/* Disabled and still legible: a control a visitor is being told about must not
+   be dimmer than the text explaining it (`A11Y-R03`). */
+.consent-cat input:disabled + span {
+  color: var(--text-dim);
+}
+
+.consent-acts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  flex: 0 1 auto;
+  align-self: center;
+  max-width: 100%;
+}
+
+/* One rule for all three, so none of them can be made louder than the others
+   without changing what every one of them looks like. */
+.consent-act {
+  padding: 10px 18px;
+  border: 1px solid var(--glass-border-strong);
+  border-radius: var(--r-pill);
+  background: var(--glass-bg);
+  color: var(--text);
+  font-family: inherit;
+  font-size: var(--type-card-body);
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.consent-act:hover {
+  background: var(--glass-bg-hover);
+  border-color: var(--accent-bright);
+}
+
+.consent-act:focus-visible {
+  outline: 2px solid var(--accent-bright);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .consent-act {
+    transition-duration: 0.001ms;
+  }
+}
+
+/* On a phone the banner is intrinsically tall -- three lines of explanation,
+   three categories and three controls -- and measured across twenty locales it
+   reached 417px of an 844px screen in French, which is not the small thing the
+   design promised. The gaps and the padding are what can honestly be reduced;
+   the words cannot, because shortening them is what turns a notice into the
+   reassurance this one exists to avoid.
+
+   Giving each control an equal share of the row was tried and reverted: it made
+   every locale wrap to two rows, including the five whose labels fit on one.
+   What is left is the honest floor -- on a phone this content costs about four
+   hundred pixels, and the design's word for that was "small". */
+@media (max-width: 34rem) {
+  .consent {
+    padding: 14px;
+  }
+
+  .consent-wrap {
+    gap: 12px;
+  }
+
+  .consent-say p {
+    margin-block-end: 8px;
+  }
+
+  .consent-cats {
+    gap: 6px 18px;
+    margin-block-start: 10px;
+  }
+
+  .consent-acts {
+    width: 100%;
+    gap: 8px;
+  }
+
+  .consent-act {
+    padding: 10px 14px;
+  }
+}
+
+/* The same choice on `legal/cookies`, where somebody comes back to change it
+   (`SITE-006/T5`). It is the banner's controls without the banner's urgency. */
+.legal .consent-control {
+  margin-block-start: 18px;
+  padding: 18px;
+  border: 1px solid rgba(140, 170, 255, 0.18);
+  border-radius: var(--r-panel);
+}
+
+.legal .consent-control .consent-cats {
+  margin-block-start: 0;
+}
+
+.legal .consent-control .consent-acts {
+  margin-block-start: 16px;
+}
+
+/* What the control reports back. It was briefly given the date style, which is
+   mono and tracked -- and a sentence set like a timestamp reads as a log line
+   rather than as an answer, which is the sort of thing a measurement passes and
+   a look does not. */
+.legal .consent-said {
+  margin: 12px 0 0;
+  min-height: 1.5em;
+  font-size: var(--type-card-body);
+  line-height: 1.6;
+  color: var(--text-muted);
+}
