@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="VALO Ads mark">
+  <!-- Transparent mark for a dark / Aurora surface. The folded V of VALO
+       cradles a cent of aurora light: white-lit front face, violet shadow
+       face, a violet orb where the three business lines converge. -->
+  <defs>
+    <linearGradient id="lit" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#EDEAFF"/></linearGradient>
+    <linearGradient id="shadow" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#A78BFA"/><stop offset="1" stop-color="#6D5CFF"/></linearGradient>
+    <radialGradient id="orb" cx="0.40" cy="0.34" r="0.80"><stop offset="0" stop-color="#FFFFFF"/><stop offset="0.42" stop-color="#C084FC"/><stop offset="1" stop-color="#6D5CFF"/></radialGradient>
+    <radialGradient id="halo" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#8B7BFF" stop-opacity="0.62"/><stop offset="1" stop-color="#8B7BFF" stop-opacity="0"/></radialGradient>
+  </defs>
+  <circle cx="256" cy="258" r="120" fill="url(#halo)"/>
+  <path d="M256 350 L366 146" fill="none" stroke="url(#shadow)" stroke-width="84" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M146 146 L256 350" fill="none" stroke="url(#lit)" stroke-width="84" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="256" cy="258" r="52" fill="url(#orb)"/>
+  <ellipse cx="242" cy="244" rx="14" ry="10" fill="#FFFFFF" fill-opacity="0.55"/>
+</svg>

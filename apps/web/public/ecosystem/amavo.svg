@@ -1,0 +1,19 @@
+<svg width="352" height="372" viewBox="80 70 352 372" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Amavo play-heart">
+  <title>Amavo — play-heart mark (transparent, for any surface)</title>
+  <defs>
+    <linearGradient id="mk-ember" x1="120" y1="100" x2="392" y2="412" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FF9E6E"/><stop offset="0.52" stop-color="#FF5777"/><stop offset="1" stop-color="#C9184A"/>
+    </linearGradient>
+    <linearGradient id="mk-emberv" x1="256" y1="96" x2="256" y2="420" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FFB088"/><stop offset="0.5" stop-color="#FF5777"/><stop offset="1" stop-color="#C9184A"/>
+    </linearGradient>
+    <radialGradient id="mk-core" cx="50%" cy="42%" r="62%">
+      <stop offset="0" stop-color="#FFFBEF"/><stop offset="0.55" stop-color="#FFD98A"/><stop offset="1" stop-color="#ECA63E"/>
+    </radialGradient>
+    <filter id="mk-glow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <path d="M256 396 C 158 322, 104 256, 104 196 C 104 148, 144 118, 190 122 C 222 125, 246 146, 256 170 L 256 396 Z" fill="url(#mk-ember)" filter="url(#mk-glow)"/>
+  <path d="M256 396 C 354 322, 408 256, 408 196 C 408 148, 368 118, 322 122 C 290 125, 266 146, 256 170 L 256 396 Z" fill="url(#mk-emberv)" filter="url(#mk-glow)"/>
+  <path d="M 222 197 L 222 301 L 314 249 Z" fill="#FFF3F0" stroke="#FFF3F0" stroke-width="16" stroke-linejoin="round"/>
+  <g transform="translate(332,150) scale(0.36) translate(-256,-256)"><path d="M256 84 C271 208 304 241 404 256 C304 271 271 304 256 428 C241 304 208 271 108 256 C208 241 241 208 256 84 Z" fill="url(#mk-core)"/></g>
+</svg>

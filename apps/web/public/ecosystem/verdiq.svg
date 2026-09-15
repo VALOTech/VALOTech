@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="Verdiq mark">
+  <!-- Verdiq — the gold check (the verdict, proven) rises and pierces the upper-right
+       edge of a closed platinum hexagon (the standard). Struck-metal sheen: platinum
+       and gold gradients lit from the upper-left, a bright specular glint on each,
+       and a soft gold glow behind the check. On a dark / Sterling surface. -->
+  <defs>
+    <linearGradient id="plat" x1="0.12" y1="0.02" x2="0.9" y2="1">
+      <stop offset="0" stop-color="#FCFDFF"/><stop offset="0.32" stop-color="#E2E7F0"/><stop offset="0.58" stop-color="#C9D0DD"/><stop offset="0.82" stop-color="#B3BCCE"/><stop offset="1" stop-color="#9FAABE"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0.22" y1="0" x2="0.78" y2="1">
+      <stop offset="0" stop-color="#FFF4D2"/><stop offset="0.36" stop-color="#F5CB6E"/><stop offset="0.62" stop-color="#EFC25A"/><stop offset="0.83" stop-color="#D9A62E"/><stop offset="1" stop-color="#B27E18"/>
+    </linearGradient>
+    <filter id="glow" x="-45%" y="-45%" width="190%" height="190%"><feGaussianBlur stdDeviation="7"/></filter>
+  </defs>
+  <path d="M256 84 L405 170 L405 342 L256 428 L107 342 L107 170 Z" fill="none" stroke="url(#plat)" stroke-width="26" stroke-linejoin="round"/>
+  <g filter="url(#glow)" opacity="0.5"><path d="M162 262 L222 322 L374 108" fill="none" stroke="#EFC25A" stroke-width="40" stroke-linecap="round" stroke-linejoin="round"/></g>
+  <path d="M162 262 L222 322 L374 108" fill="none" stroke="url(#gold)" stroke-width="40" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

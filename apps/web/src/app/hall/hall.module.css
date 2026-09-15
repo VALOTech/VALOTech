@@ -764,6 +764,24 @@
   text-underline-offset: 3px;
 }
 
+/* The mark and the name read as one thing, so they align on the text's centre
+   and the gap is the space between a word and the word before it. */
+.footerProduct {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+/* A fixed box, because six marks drawn on six different grids would otherwise
+   sit at six different weights on the same line. `object-fit` keeps each one
+   whole inside it rather than cropping whichever is least square. */
+.footerMark {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+}
+
 .footerRights {
   max-width: 56rem;
   margin: 2rem auto 0;

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Farola mark">
+  <title>Farola</title>
+  <!-- The beam, not the tower. A farola IS the lamp, and what reaches a family
+       9,000 km away is never the building. The sweep is doubled so its outer
+       edge fades: a lighthouse beam has a RANGE, not an edge, and a hard stop
+       would read as an arrow - an arrow points, a beacon is seen. The lamp
+       anchors it low-left so the diagonal mass fills a square frame. -->
+  <path d="M14 50 L64 4 V26 L26 56 Z" fill="#F5A524" opacity="0.42"/>
+  <path d="M14 50 L64 18 V34 L22 56 Z" fill="#F5A524"/>
+  <circle cx="13" cy="51" r="12" fill="#F5A524"/>
+</svg>

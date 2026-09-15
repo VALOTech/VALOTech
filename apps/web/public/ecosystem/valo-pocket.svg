@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="VALO Pocket mark">
+  <!-- The VALO Pocket mark: a Verdant wallet-card, stitched at the edge, printed
+       with the folded V of VALO cradling the cent of light. Self-contained — sits
+       on any surface. -->
+  <defs><linearGradient id="tile" x1="0.08" y1="0.04" x2="0.9" y2="1"><stop offset="0" stop-color="#0C5C3C"/><stop offset="0.58" stop-color="#0A6B45"/><stop offset="1" stop-color="#128A5C"/></linearGradient>
+    <radialGradient id="bloom" cx="0.28" cy="0.16" r="0.8"><stop offset="0" stop-color="#33D89A" stop-opacity="0.55"/><stop offset="0.62" stop-color="#33D89A" stop-opacity="0"/></radialGradient>
+    <linearGradient id="lit" x1="0.1" y1="0" x2="0.6" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="0.55" stop-color="#F2FBF6"/><stop offset="1" stop-color="#CDEBDD"/></linearGradient>
+    <linearGradient id="sha" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#A6F0CD"/><stop offset="1" stop-color="#4ECF98"/></linearGradient>
+    <radialGradient id="orb" cx="0.4" cy="0.34" r="0.8"><stop offset="0" stop-color="#ECFFF6"/><stop offset="0.42" stop-color="#6DF3B4"/><stop offset="1" stop-color="#15B074"/></radialGradient>
+    <linearGradient id="sheen" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF" stop-opacity="0.22"/><stop offset="0.5" stop-color="#FFFFFF" stop-opacity="0"/></linearGradient><clipPath id="sq"><rect width="512" height="512" rx="116"/></clipPath></defs>
+  <g clip-path="url(#sq)">
+    <rect width="512" height="512" fill="url(#tile)"/>
+    <rect width="512" height="512" fill="url(#bloom)"/>
+    <rect width="512" height="232" fill="url(#sheen)"/>
+    <rect x="40" y="40" width="432" height="432" rx="86" fill="none" stroke="#08583A" stroke-width="9" stroke-opacity="0.85"/>
+    <rect x="56" y="56" width="400" height="400" rx="72" fill="none" stroke="#8CECC0" stroke-width="4.5" stroke-dasharray="2 16" stroke-opacity="0.78"/>
+    <g transform="translate(256 256) scale(0.62) translate(-256 -258)">
+      <path d="M256 350 L366 146" fill="none" stroke="url(#sha)" stroke-width="82" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M146 146 L256 350" fill="none" stroke="url(#lit)" stroke-width="82" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M146 146 L210 264" fill="none" stroke="#FFFFFF" stroke-width="14" stroke-linecap="round" stroke-opacity="0.5"/>
+      <circle cx="256" cy="258" r="50" fill="url(#orb)"/>
+      <ellipse cx="241" cy="243" rx="14" ry="10" fill="#FFFFFF" fill-opacity="0.6"/>
+    </g>
+  </g>
+</svg>

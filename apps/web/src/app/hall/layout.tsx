@@ -138,10 +138,13 @@ export default async function HallLayout({ children }: { readonly children: Reac
                       the hall's URL as a referrer to anything says which
                       surface a reader came from. */}
                   <a
-                    className={styles.footerLink}
+                    className={`${styles.footerLink} ${styles.footerProduct}`}
                     href={product.href}
                     rel="noopener noreferrer"
                   >
+                    {/* Decorative: the name is beside it, and a screen reader
+                        that read both would say the product twice. */}
+                    <img src={product.mark} alt="" className={styles.footerMark} width={18} height={18} />
                     {product.name}
                   </a>
                 </li>
